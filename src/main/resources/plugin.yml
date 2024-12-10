@@ -1,0 +1,5 @@
+name: LunaSpring
+version: '${project.version}'
+main: org.example.novasparkle.LunaSpring
+api-version: '1.16'
+author: NovaSparkle
