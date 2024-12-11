@@ -3,6 +3,7 @@ package org.example.novasparkle.Configuration;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -11,7 +12,9 @@ public class Configuration extends IConfig {
     public Configuration(String fileName, String filePath) {
         super(fileName, filePath);
     }
-
+    public Configuration(File container, String fileName) {
+        super(container, fileName);
+    }
 
     public void setString(String path, String value) {
         this.config.set(path, value);
@@ -40,8 +43,6 @@ public class Configuration extends IConfig {
     public void setItemStack(String path, ItemStack value) {
         this.config.set(path, value);
     }
-
-
     public void save() {
         try {
             this.config.save(this.file);
