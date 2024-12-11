@@ -11,21 +11,20 @@ import java.io.File;
 import java.util.List;
 
 public class IConfig {
-
     protected final FileConfiguration config;
     protected File file;
-
-
     public IConfig(Plugin plugin) {
         this.config = plugin.getConfig();
     }
 
     public IConfig(String fileName, String filePath) {
-        this.file = new File(filePath + File.pathSeparator + fileName);
+        this.file = new File(filePath + File.pathSeparator + fileName + ".yml");
         this.config = YamlConfiguration.loadConfiguration(this.file);
     }
-
-
+    public IConfig(File container, String fileName) {
+        this.file = new File(container, fileName + ".yml");
+        this.config = YamlConfiguration.loadConfiguration(this.file);
+    }
     public String getString(String path) {
         return this.config.getString(path);
     }
