@@ -45,15 +45,12 @@ public abstract class AMenu implements IMenu {
         this.decoration = new Decoration(decorationSection);
         this.decoration.insert(this);
     }
-
-
     public List<Item> findItems(ItemStack itemStack) {
         return this.itemList.stream().filter(i -> i.getItemStack().equals(itemStack)).collect(Collectors.toList());
     }
     public Item findFirstItem(ItemStack itemStack) {
         return this.itemList.stream().filter(i -> i.getItemStack().equals(itemStack)).findFirst().orElse(null);
     }
-
     public List<Item> findItems(Material material) {
         return this.itemList.stream().filter(i -> i.getItemStack().getType().equals(material)).collect(Collectors.toList());
     }
@@ -63,16 +60,10 @@ public abstract class AMenu implements IMenu {
     public void insertAllItems() {
         this.itemList.forEach(i -> i.insert(this.getInventory()));
     }
-    public void fillItemsList(ConfigurationSection section) {
-        for (String key : section.getKeys(false)) {
-            ConfigurationSection itemSection = section.getConfigurationSection(key);
-            assert itemSection != null;
-            Item item = new Item(itemSection);
-            this.itemList.add(item);
-        }
-    }
     public void fillItemsList(Item... items) {
         this.itemList.addAll(Arrays.asList(items));
     }
-
+    public void fillItemsList(List<Item> items) {
+        this.itemList.addAll(items);
+    }
 }
