@@ -15,7 +15,6 @@ public class Configuration extends IConfig {
     public Configuration(File container, String fileName) {
         super(container, fileName);
     }
-
     public void setString(String path, String value) {
         this.config.set(path, value);
     }
