@@ -25,42 +25,42 @@ public class IConfig {
         this.file = new File(container, fileName + ".yml");
         this.config = YamlConfiguration.loadConfiguration(this.file);
     }
-    protected void reload() {
+    public void reload() {
         this.config = YamlConfiguration.loadConfiguration(this.file);
     }
-    protected void reload(Plugin plugin) {
+    public void reload(Plugin plugin) {
         plugin.reloadConfig();
         this.config = plugin.getConfig();
     }
-    protected String getString(String path) {
+    public String getString(String path) {
         return this.config.getString(path);
     }
 
-    protected boolean getBoolean(String path) {
+    public boolean getBoolean(String path) {
         return this.config.getBoolean(path);
     }
 
-    protected List<String> getStringList(String path) {
+    public List<String> getStringList(String path) {
         return this.config.getStringList(path);
     }
 
-    protected int getInt(String path) {
+    public int getInt(String path) {
         return this.config.getInt(path);
     }
 
-    protected ItemStack getItemStack(String path) {
+    public ItemStack getItemStack(String path) {
         return this.config.getItemStack(path);
     }
 
-    protected List<Integer> getIntList(String path) {
+    public List<Integer> getIntList(String path) {
         return this.config.getIntegerList(path);
     }
 
-    protected ConfigurationSection getSection(String path) {
+    public ConfigurationSection getSection(String path) {
         return this.config.getConfigurationSection(path);
     }
 
-    protected Material getMaterial(String path) {
+    public Material getMaterial(String path) {
         return Material.getMaterial(this.getString(path));
     }
 }
