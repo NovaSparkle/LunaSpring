@@ -17,34 +17,30 @@ import java.util.stream.Collectors;
 public abstract class AMenu implements IMenu {
 
     @Getter
-    private final Inventory inventory;
+    private Inventory inventory;
     @Getter
     private final Player player;
-    private final Decoration decoration;
+    private Decoration decoration;
     protected final List<Item> itemList = new ArrayList<>();
 
-
     @SuppressWarnings("deprecation")
-    public AMenu(Player player, ConfigurationSection section) {
-        this.player = player;
-
-        String title = section.getString("menuTitle");
-        assert title != null;
-        this.inventory = Bukkit.createInventory(this.player, section.getInt("menuSize"), title);
-
-        ConfigurationSection decorationSection = section.getConfigurationSection("decoration");
-        assert decorationSection != null;
-        this.decoration = new Decoration(decorationSection);
-
-        this.decoration.insert(this);
-    }
-    @SuppressWarnings("deprecation")
-    public AMenu(Player player, String title, byte size, ConfigurationSection decorationSection) {
+    public AMenu(Player player, String title, byte size) {
         this.player = player;
         this.inventory = Bukkit.createInventory(this.player, size, title);
-        this.decoration = new Decoration(decorationSection);
+    }
+    public AMenu(Player player) {
+        this.player = player;
+    }
+
+    @SuppressWarnings("deprecation")
+    public void initialize(ConfigurationSection section) {
+        String title = section.getString("menuTitle");
+        this.decoration = new Decoration(section);
+        assert title != null;
+        this.inventory = Bukkit.createInventory(this.player, section.getInt("menuSize"), title);
         this.decoration.insert(this);
     }
+
     public List<Item> findItems(ItemStack itemStack) {
         return this.itemList.stream().filter(i -> i.getItemStack().equals(itemStack)).collect(Collectors.toList());
     }
