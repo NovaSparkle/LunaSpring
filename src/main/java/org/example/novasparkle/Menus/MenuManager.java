@@ -15,6 +15,7 @@ public class MenuManager {
 
     public static void openInventory(Player player, IMenu menu) {
         register(menu.getInventory(), menu);
+        System.out.println(activeInventories);
         player.openInventory(menu.getInventory());
     }
 
