@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.example.novasparkle.Items.Item;
+import org.example.novasparkle.Util.Utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,7 +27,7 @@ public abstract class AMenu implements IMenu {
     @SuppressWarnings("deprecation")
     public AMenu(Player player, String title, byte size) {
         this.player = player;
-        this.inventory = Bukkit.createInventory(this.player, size, title);
+        this.inventory = Bukkit.createInventory(this.player, size, Utils.color(title));
     }
     public AMenu(Player player) {
         this.player = player;

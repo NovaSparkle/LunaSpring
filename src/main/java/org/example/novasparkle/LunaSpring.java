@@ -15,6 +15,7 @@ public final class LunaSpring extends JavaPlugin {
     public void onDisable() {
 
     }
+
     private void registerEvent(Listener listener) {
         this.getServer().getPluginManager().registerEvents(listener, this);
     }

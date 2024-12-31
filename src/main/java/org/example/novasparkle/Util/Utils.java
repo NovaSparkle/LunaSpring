@@ -1,12 +1,14 @@
 package org.example.novasparkle.Util;
 
+import lombok.experimental.UtilityClass;
 import org.bukkit.ChatColor;
 
+@UtilityClass
 public class Utils {
-    public static int getIndex(int row, int col) {
+    public int getIndex(int row, int col) {
         return (row - 1) * 9 + col - 1;
     }
-    public static String color(String text) {
+    public String color(String text) {
         return ChatColor.translateAlternateColorCodes('&', text);
     }
     public static int toInt(String text) {
