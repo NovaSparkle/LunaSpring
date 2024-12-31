@@ -72,6 +72,18 @@ public class Item {
         this.amount = section.getInt("amount");
         this.itemStack = new ItemStack(this.material, this.amount);
     }
+    public Item(ConfigurationSection section, int row, int column) {
+        String material = section.getString("material");
+        assert material != null;
+        this.material = Material.getMaterial(material);
+        this.displayName = Utils.color(section.getString("displayName"));
+        List<String> lore = section.getStringList("lore");
+        lore.replaceAll(Utils::color);
+        this.lore = lore;
+        this.slot = (byte) Utils.getIndex(row, column);
+        this.amount = section.getInt("amount");
+        this.itemStack = new ItemStack(this.material, this.amount);
+    }
 
 
     public void setMaterial(Material material) {
@@ -118,6 +130,10 @@ public class Item {
     }
     public void insert(Inventory inventory, byte slot) {
         this.slot = slot;
+        inventory.setItem(slot, this.itemStack);
+    }
+    public void insert(Inventory inventory, byte row, byte column) {
+        this.slot = (byte) Utils.getIndex(row, column);
         inventory.setItem(slot, this.itemStack);
     }
 
