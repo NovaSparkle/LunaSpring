@@ -9,4 +9,7 @@ public class Utils {
     public static String color(String text) {
         return ChatColor.translateAlternateColorCodes('&', text);
     }
+    public static int toInt(String text) {
+        return Integer.parseInt(text);
+    }
 }

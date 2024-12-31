@@ -34,10 +34,10 @@ public abstract class AMenu implements IMenu {
 
     @SuppressWarnings("deprecation")
     public void initialize(ConfigurationSection section) {
-        String title = section.getString("menuTitle");
+        String title = section.getString("title");
         this.decoration = new Decoration(section);
         assert title != null;
-        this.inventory = Bukkit.createInventory(this.player, section.getInt("menuSize"), title);
+        this.inventory = Bukkit.createInventory(this.player, section.getInt("size"), title);
         this.decoration.insert(this);
     }
 
@@ -56,10 +56,11 @@ public abstract class AMenu implements IMenu {
     public void insertAllItems() {
         this.itemList.forEach(i -> i.insert(this.getInventory()));
     }
-    public void fillItemsList(Item... items) {
+
+    public void addItems(Item... items) {
         this.itemList.addAll(Arrays.asList(items));
     }
-    public void fillItemsList(List<Item> items) {
+    public void addItems(List<Item> items) {
         this.itemList.addAll(items);
     }
 }
