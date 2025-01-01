@@ -1,4 +1,4 @@
-package org.example.novasparkle.Items;
+package org.novasparkle.lunaspring.Items;
 
 import lombok.Getter;
 import org.bukkit.Material;
@@ -8,7 +8,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.example.novasparkle.Util.Utils;
+import org.novasparkle.lunaspring.Util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,7 +84,6 @@ public class Item {
         this.amount = section.getInt("amount");
         this.itemStack = new ItemStack(this.material, this.amount);
     }
-
 
     public void setMaterial(Material material) {
         this.material = material;

@@ -1,14 +1,14 @@
-package org.example.novasparkle.Menus;
+package org.novasparkle.lunaspring.Menus;
 
 import lombok.Getter;
+import org.novasparkle.lunaspring.Items.Item;
+import org.novasparkle.lunaspring.Util.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.example.novasparkle.Items.Item;
-import org.example.novasparkle.Util.Utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;

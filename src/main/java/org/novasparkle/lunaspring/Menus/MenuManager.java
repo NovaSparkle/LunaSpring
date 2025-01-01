@@ -1,4 +1,4 @@
-package org.example.novasparkle.Menus;
+package org.novasparkle.lunaspring.Menus;
 
 import lombok.Getter;
 import org.bukkit.entity.Player;

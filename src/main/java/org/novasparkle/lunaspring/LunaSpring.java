@@ -1,8 +1,8 @@
-package org.example.novasparkle;
+package org.novasparkle.lunaspring;
 
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.example.novasparkle.Events.MenuHandler;
+import org.novasparkle.lunaspring.Events.MenuHandler;
 
 public final class LunaSpring extends JavaPlugin {
 

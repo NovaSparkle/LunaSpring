@@ -1,4 +1,4 @@
-package org.example.novasparkle.Configuration;
+package org.novasparkle.lunaspring.Configuration;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;

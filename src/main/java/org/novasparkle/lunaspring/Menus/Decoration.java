@@ -1,8 +1,8 @@
-package org.example.novasparkle.Menus;
+package org.novasparkle.lunaspring.Menus;
 
+import org.novasparkle.lunaspring.Items.Item;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
-import org.example.novasparkle.Items.Item;
 
 import java.util.ArrayList;
 import java.util.List;

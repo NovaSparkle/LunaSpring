@@ -1,4 +1,4 @@
-package org.example.novasparkle.Util;
+package org.novasparkle.lunaspring.Util;
 
 import lombok.experimental.UtilityClass;
 import org.bukkit.ChatColor;

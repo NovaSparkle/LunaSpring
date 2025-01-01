@@ -1,4 +1,4 @@
-package org.example.novasparkle.Menus;
+package org.novasparkle.lunaspring.Menus;
 
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;

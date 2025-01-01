@@ -1,11 +1,11 @@
-package org.example.novasparkle.Events;
+package org.novasparkle.lunaspring.Events;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
-import org.example.novasparkle.Menus.MenuManager;
+import org.novasparkle.lunaspring.Menus.MenuManager;
 
 public class MenuHandler implements Listener {
     @EventHandler
