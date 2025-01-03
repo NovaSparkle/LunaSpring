@@ -63,4 +63,7 @@ public class IConfig {
     public Material getMaterial(String path) {
         return Material.getMaterial(this.getString(path));
     }
+    public FileConfiguration self() {
+        return this.config;
+    }
 }
