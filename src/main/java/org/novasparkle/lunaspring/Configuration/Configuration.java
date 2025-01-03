@@ -15,6 +15,14 @@ public class Configuration extends IConfig {
     public Configuration(File container, String fileName) {
         super(container, fileName);
     }
+    public Configuration(File file) {
+        super(file);
+    }
+
+    public void set(String path, Object value) {
+        this.config.set(path, value);
+    }
+
     public void setString(String path, String value) {
         this.config.set(path, value);
     }
@@ -42,6 +50,7 @@ public class Configuration extends IConfig {
     public void setItemStack(String path, ItemStack value) {
         this.config.set(path, value);
     }
+
     public void save() {
         try {
             this.config.save(this.file);

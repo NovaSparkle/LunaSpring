@@ -25,6 +25,10 @@ public class IConfig {
         this.file = new File(container, fileName + ".yml");
         this.config = YamlConfiguration.loadConfiguration(this.file);
     }
+    public IConfig(File file) {
+        this.file = file;
+        this.config = YamlConfiguration.loadConfiguration(this.file);
+    }
     public void reload() {
         this.config = YamlConfiguration.loadConfiguration(this.file);
     }
@@ -32,6 +36,11 @@ public class IConfig {
         plugin.reloadConfig();
         this.config = plugin.getConfig();
     }
+
+    public Object getObject(String path) {
+        return this.config.get(path);
+    }
+
     public String getString(String path) {
         return this.config.getString(path);
     }
