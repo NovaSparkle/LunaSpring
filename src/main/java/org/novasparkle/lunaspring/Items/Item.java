@@ -72,7 +72,7 @@ public class Item {
         this.amount = section.getInt("amount");
         this.itemStack = new ItemStack(this.material, this.amount);
     }
-    public Item(ConfigurationSection section, int row, int column) {
+    public Item(ConfigurationSection section, boolean rowCol) {
         String material = section.getString("material");
         assert material != null;
         this.material = Material.getMaterial(material);
@@ -80,7 +80,7 @@ public class Item {
         List<String> lore = section.getStringList("lore");
         lore.replaceAll(Utils::color);
         this.lore = lore;
-        this.slot = (byte) Utils.getIndex(row, column);
+        this.slot = (byte) Utils.getIndex(section.getInt("slot.row"), section.getInt("slot.column"));
         this.amount = section.getInt("amount");
         this.itemStack = new ItemStack(this.material, this.amount);
     }
