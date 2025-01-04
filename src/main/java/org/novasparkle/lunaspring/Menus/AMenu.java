@@ -47,7 +47,7 @@ public abstract class AMenu implements IMenu {
     public void initialize(ConfigurationSection section, boolean decorate) {
         String title = section.getString("title");
         assert title != null;
-        this.inventory = Bukkit.createInventory(this.player, section.getInt("size"), title);
+        this.inventory = Bukkit.createInventory(this.player, section.getInt("size"), Utils.color(title));
         if (decorate) {
             this.decoration = new Decoration(Objects.requireNonNull(section.getConfigurationSection("decoration")));
             this.decoration.insert(this);
