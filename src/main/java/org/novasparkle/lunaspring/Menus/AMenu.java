@@ -25,9 +25,15 @@ public abstract class AMenu implements IMenu {
     protected final List<Item> itemList = new ArrayList<>();
 
     @SuppressWarnings("deprecation")
-    public AMenu(Player player, String title, byte size, ConfigurationSection menuSection) {
+    public AMenu(Player player, String title, byte size) {
         this.player = player;
         this.inventory = Bukkit.createInventory(this.player, size, Utils.color(title));
+    }
+    @SuppressWarnings("deprecation")
+    public AMenu(Player player, ConfigurationSection menuSection) {
+        this.player = player;
+        String title = menuSection.getString("title");
+        this.inventory = Bukkit.createInventory(this.player, menuSection.getInt("size"), Utils.color(title));
         this.decoration = new Decoration(menuSection);
         this.decoration.insert(this);
     }
@@ -36,12 +42,14 @@ public abstract class AMenu implements IMenu {
     }
 
     @SuppressWarnings("deprecation")
-    public void initialize(ConfigurationSection section) {
+    public void initialize(ConfigurationSection section, boolean decorate) {
         String title = section.getString("title");
-        this.decoration = new Decoration(section);
         assert title != null;
         this.inventory = Bukkit.createInventory(this.player, section.getInt("size"), title);
-        this.decoration.insert(this);
+        if (decorate) {
+            this.decoration = new Decoration(section);
+            this.decoration.insert(this);
+        }
     }
 
     public List<Item> findItems(ItemStack itemStack) {
