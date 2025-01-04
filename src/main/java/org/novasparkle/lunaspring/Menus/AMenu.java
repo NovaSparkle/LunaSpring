@@ -13,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public abstract class AMenu implements IMenu {
@@ -35,7 +36,7 @@ public abstract class AMenu implements IMenu {
         this.player = player;
         String title = menuSection.getString("title");
         this.inventory = Bukkit.createInventory(this.player, menuSection.getInt("size"), Utils.color(title));
-        this.decoration = new Decoration(menuSection);
+        this.decoration = new Decoration(Objects.requireNonNull(menuSection.getConfigurationSection("decoration")));
         this.decoration.insert(this);
     }
     public AMenu(Player player) {
@@ -48,7 +49,7 @@ public abstract class AMenu implements IMenu {
         assert title != null;
         this.inventory = Bukkit.createInventory(this.player, section.getInt("size"), title);
         if (decorate) {
-            this.decoration = new Decoration(section);
+            this.decoration = new Decoration(Objects.requireNonNull(section.getConfigurationSection("decoration")));
             this.decoration.insert(this);
         }
     }
