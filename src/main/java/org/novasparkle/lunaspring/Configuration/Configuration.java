@@ -9,8 +9,8 @@ import java.util.List;
 
 public class Configuration extends IConfig {
 
-    public Configuration(String fileName, String filePath) {
-        super(fileName, filePath);
+    public Configuration(String filePath) {
+        super(filePath);
     }
     public Configuration(File container, String fileName) {
         super(container, fileName);

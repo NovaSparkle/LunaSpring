@@ -17,8 +17,8 @@ public class IConfig {
         this.config = plugin.getConfig();
     }
 
-    public IConfig(String fileName, String filePath) {
-        this.file = new File(filePath + File.pathSeparator + fileName + ".yml");
+    public IConfig(String filePath) {
+        this.file = new File(filePath);
         this.config = YamlConfiguration.loadConfiguration(this.file);
     }
     public IConfig(File container, String fileName) {
