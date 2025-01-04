@@ -29,6 +29,7 @@ public abstract class AMenu implements IMenu {
         this.player = player;
         this.inventory = Bukkit.createInventory(this.player, size, Utils.color(title));
     }
+
     @SuppressWarnings("deprecation")
     public AMenu(Player player, ConfigurationSection menuSection) {
         this.player = player;
