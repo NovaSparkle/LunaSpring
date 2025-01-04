@@ -37,16 +37,19 @@ public class Item {
         this.lore = lore;
         this.amount = amount;
         this.itemStack = new ItemStack(this.material, this.amount);
+        this.update();
     }
     public Item(Material material) {
         this.material = material;
         this.amount = 1;
         this.itemStack = new ItemStack(this.material, this.amount);
+        this.update();
     }
     public Item(Material material, int amount) {
         this.material = material;
         this.amount = amount;
         this.itemStack = new ItemStack(this.material, this.amount);
+        this.update();
     }
     public Item(ConfigurationSection section) {
         String material = section.getString("material");
@@ -58,7 +61,11 @@ public class Item {
         this.lore = lore;
         this.slot = (byte) section.getInt("slot");
         this.amount = section.getInt("amount");
+        if (this.amount == 0) {
+            this.amount++;
+        }
         this.itemStack = new ItemStack(this.material, this.amount);
+        this.update();
     }
     public Item(ConfigurationSection section, int slot) {
         String material = section.getString("material");
@@ -70,7 +77,11 @@ public class Item {
         this.lore = lore;
         this.slot = (byte) slot;
         this.amount = section.getInt("amount");
+        if (this.amount == 0) {
+            this.amount++;
+        }
         this.itemStack = new ItemStack(this.material, this.amount);
+        this.update();
     }
     public Item(ConfigurationSection section, boolean rowCol) {
         String material = section.getString("material");
@@ -82,7 +93,11 @@ public class Item {
         this.lore = lore;
         this.slot = (byte) Utils.getIndex(section.getInt("slot.row"), section.getInt("slot.column"));
         this.amount = section.getInt("amount");
+        if (this.amount == 0) {
+            this.amount++;
+        }
         this.itemStack = new ItemStack(this.material, this.amount);
+        this.update();
     }
 
     public void setMaterial(Material material) {
