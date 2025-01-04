@@ -15,6 +15,9 @@ public class Configuration extends IConfig {
     public Configuration(File container, String fileName) {
         super(container, fileName);
     }
+    public Configuration(File container, File file) {
+        super(container, file);
+    }
     public Configuration(File file) {
         super(file);
     }
