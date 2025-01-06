@@ -1,5 +1,7 @@
 package org.novasparkle.lunaspring.Menus;
 
+import lombok.Getter;
+import org.bukkit.inventory.ItemStack;
 import org.novasparkle.lunaspring.Items.Item;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -7,11 +9,9 @@ import org.bukkit.configuration.ConfigurationSection;
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 public class Decoration {
-
     private final List<Item> decorationItems = new ArrayList<>();
-
-
     public Decoration(ConfigurationSection decorationSection) {
         for (String key : decorationSection.getKeys(false)) {
 
@@ -49,5 +49,9 @@ public class Decoration {
 
     public boolean checkMaterial(Material material) {
         return this.decorationItems.stream().anyMatch(i -> i.getMaterial().equals(material));
+    }
+
+    public boolean checkItemStack(ItemStack itemStack) {
+        return this.decorationItems.stream().anyMatch(i -> i.getItemStack().equals(itemStack));
     }
 }
