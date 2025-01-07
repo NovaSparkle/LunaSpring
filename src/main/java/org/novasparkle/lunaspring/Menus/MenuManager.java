@@ -26,19 +26,20 @@ public class MenuManager {
         activeInventories.remove(inventory);
     }
 
-
     public static void handleOpen(InventoryOpenEvent event) {
         IMenu menu = activeInventories.get(event.getInventory());
         if (menu != null) {
             menu.onOpen(event);
         }
     }
+
     public static void handleClick(InventoryClickEvent event) {
         IMenu menu = activeInventories.get(event.getInventory());
         if (menu != null) {
             menu.onClick(event);
         }
     }
+
     public static void handleClose(InventoryCloseEvent event) {
         Inventory inventory = event.getInventory();
         IMenu menu = activeInventories.get(event.getInventory());
@@ -46,6 +47,5 @@ public class MenuManager {
             menu.onClose(event);
             unregister(inventory);
         }
-
     }
 }

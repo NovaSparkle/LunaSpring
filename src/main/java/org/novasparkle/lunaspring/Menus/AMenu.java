@@ -18,10 +18,8 @@ import java.util.stream.Collectors;
 
 public abstract class AMenu implements IMenu {
 
-    @Getter
-    private Inventory inventory;
-    @Getter
-    private final Player player;
+    @Getter private Inventory inventory;
+    @Getter private final Player player;
     private Decoration decoration;
     protected final List<Item> itemList = new ArrayList<>();
 
@@ -39,6 +37,15 @@ public abstract class AMenu implements IMenu {
         this.decoration = new Decoration(Objects.requireNonNull(menuSection.getConfigurationSection("decoration")));
         this.decoration.insert(this);
     }
+
+    @SuppressWarnings("deprecation")
+    public AMenu(Player player, String title, byte size, ConfigurationSection decorSection) {
+        this.player = player;
+        this.inventory = Bukkit.createInventory(this.player, size, Utils.color(title));
+        this.decoration = new Decoration(decorSection);
+        this.decoration.insert(this);
+    }
+
     public AMenu(Player player) {
         this.player = player;
     }
@@ -54,15 +61,27 @@ public abstract class AMenu implements IMenu {
         }
     }
 
+    @SuppressWarnings("deprecation")
+    public void initialize(String title, byte size, ConfigurationSection decorSection, boolean decorate) {
+        this.inventory = Bukkit.createInventory(this.player, size, Utils.color(title));
+        if (decorate) {
+            this.decoration = new Decoration(decorSection);
+            this.decoration.insert(this);
+        }
+    }
+
     public List<Item> findItems(ItemStack itemStack) {
         return this.itemList.stream().filter(i -> i.getItemStack().equals(itemStack)).collect(Collectors.toList());
     }
+
     public Item findFirstItem(ItemStack itemStack) {
         return this.itemList.stream().filter(i -> i.getItemStack().equals(itemStack)).findFirst().orElse(null);
     }
+
     public List<Item> findItems(Material material) {
         return this.itemList.stream().filter(i -> i.getItemStack().getType().equals(material)).collect(Collectors.toList());
     }
+
     public Item findFirstItem(Material material) {
         return this.itemList.stream().filter(i -> i.getMaterial().equals(material)).findFirst().orElse(null);
     }
@@ -74,6 +93,7 @@ public abstract class AMenu implements IMenu {
     public void addItems(Item... items) {
         this.itemList.addAll(Arrays.asList(items));
     }
+
     public void addItems(List<Item> items) {
         this.itemList.addAll(items);
     }
