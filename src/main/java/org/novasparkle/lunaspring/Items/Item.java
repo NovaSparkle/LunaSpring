@@ -16,6 +16,7 @@ import java.util.List;
 
 @Getter
 public class Item {
+
     private final ItemStack itemStack;
     private Material material;
     private String displayName;
