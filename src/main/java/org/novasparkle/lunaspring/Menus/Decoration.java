@@ -5,6 +5,7 @@ import org.bukkit.inventory.ItemStack;
 import org.novasparkle.lunaspring.Items.Item;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+import org.novasparkle.lunaspring.Util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +32,7 @@ public class Decoration {
                 for (String slotStr : slotsStr) {
                     String[] strArray = slotStr.split("-");
 
-                    for (int slot = Integer.parseInt(strArray[0]); slot < Integer.parseInt(strArray[1]); slot++) {
+                    for (int slot = Utils.toInt(strArray[0]); slot <= Utils.toInt(strArray[1]); slot++) {
                         this.decorationItems.add(new Item(itemSection, slot));
                     }
                 }
