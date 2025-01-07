@@ -20,7 +20,11 @@ public class ColorService implements LunaService {
         }
     }
     public String color(String text) {
-        this.colorList.forEach(e -> text.replaceAll(e.getAbbr(), e.getVariable()));
+        System.out.println(text);
+        for (Color color : this.colorList) {
+            text = text.replaceAll(color.getAbbr(), color.getVariable());
+        }
+        System.out.println(text);
         return Utils.color(text);
     }
     public Color getColor(String abbr) {
