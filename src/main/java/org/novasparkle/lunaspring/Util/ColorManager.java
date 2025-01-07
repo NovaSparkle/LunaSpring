@@ -15,6 +15,7 @@ public class ColorManager {
         return colorService.color(text);
     }
     public static Color getColor(String abbr) {
+        System.out.println(colorService);
         if (colorService == null || (!LunaSpring.getProvider().isRegistered(ColorManager.class))) {
             throw new ServiceRegistrationException(ColorManager.class);
         }
