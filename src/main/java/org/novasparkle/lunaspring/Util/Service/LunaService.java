@@ -1,3 +1,5 @@
 package org.novasparkle.lunaspring.Util.Service;
 
-public interface LunaService {}
+public interface LunaService {
+//    void initialize(FileConfiguration configuration);
+}
