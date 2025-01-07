@@ -9,7 +9,7 @@ public class ServiceProvider {
         this.services.add(service);
     }
     public boolean isRegistered(Class<?> clazz) {
-        return this.services.stream().anyMatch(s -> s.getClass().isInstance(clazz));
+        return this.services.stream().anyMatch(s -> clazz.isInstance(s.getClass()));
     }
     public void unregister(LunaService service) {
         this.services.remove(service);
