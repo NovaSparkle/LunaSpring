@@ -9,7 +9,6 @@ public class ServiceProvider {
         this.services.add(service);
     }
     public boolean isRegistered(Class<?> clazz) {
-        System.out.println(clazz);
         return this.services.stream().anyMatch(s -> clazz.equals(s.getClass()));
     }
     public void unregister(LunaService service) {
