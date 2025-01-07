@@ -3,6 +3,7 @@ package org.novasparkle.lunaspring.Util.Service;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.novasparkle.lunaspring.Util.Color;
+import org.novasparkle.lunaspring.Util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,8 +20,8 @@ public class ColorService implements LunaService {
         }
     }
     public String color(String text) {
-        System.out.println(this.colorList);
-        return this.colorList.stream().map(e -> text.replaceAll(e.getAbbr(), e.getVariable())).findFirst().orElseThrow();
+        this.colorList.forEach(e -> text.replaceAll(e.getAbbr(), e.getVariable()));
+        return Utils.color(text);
     }
     public Color getColor(String abbr) {
         return this.colorList.stream().filter(c -> c.getAbbr().equals(abbr)).findFirst().orElseThrow();
