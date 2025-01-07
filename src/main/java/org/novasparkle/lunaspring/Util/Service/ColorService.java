@@ -19,7 +19,7 @@ public class ColorService implements LunaService {
         }
     }
     public String color(String text) {
-        return this.colorList.stream().map(e -> text.replaceAll(e.getAbbr(), e.toLegacy())).findFirst().orElseThrow();
+        return this.colorList.stream().map(e -> text.replaceAll(e.getAbbr(), e.getVariable())).findFirst().orElseThrow();
     }
     public Color getColor(String abbr) {
         return this.colorList.stream().filter(c -> c.getAbbr().equals(abbr)).findFirst().orElseThrow();

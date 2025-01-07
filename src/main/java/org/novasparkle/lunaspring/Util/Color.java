@@ -7,6 +7,7 @@ public class Color {
 
     private final String abbr;
 
+    @Getter
     private final String variable;
 
     public Color(String abbr, String variable) {
