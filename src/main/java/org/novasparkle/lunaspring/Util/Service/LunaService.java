@@ -1,5 +1,3 @@
 package org.novasparkle.lunaspring.Util.Service;
 
-public interface LunaService {
-
-}
+public interface LunaService {}

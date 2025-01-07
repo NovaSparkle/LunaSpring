@@ -15,6 +15,14 @@ public class Color {
         this.variable = variable;
     }
 
+    @Override
+    public String toString() {
+        return "Color{" +
+                "abbr='" + abbr + '\'' +
+                ", variable='" + variable + '\'' +
+                '}';
+    }
+
     public String toHex() {
         if (this.variable.length() == 14)
             return this.variable.replaceAll("&", "").replace("x", "#");

@@ -1,14 +1,15 @@
 package org.novasparkle.lunaspring.Menus;
 
 import lombok.Getter;
-import org.novasparkle.lunaspring.Items.Item;
-import org.novasparkle.lunaspring.Util.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.novasparkle.lunaspring.Items.Item;
+import org.novasparkle.lunaspring.Util.ColorManager;
+import org.novasparkle.lunaspring.Util.Utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,7 +34,7 @@ public abstract class AMenu implements IMenu {
     public AMenu(Player player, ConfigurationSection menuSection) {
         this.player = player;
         String title = menuSection.getString("title");
-        this.inventory = Bukkit.createInventory(this.player, menuSection.getInt("size"), Utils.color(title));
+        this.inventory = Bukkit.createInventory(this.player, menuSection.getInt("size"), ColorManager.color(title));
         this.decoration = new Decoration(Objects.requireNonNull(menuSection.getConfigurationSection("decoration")));
         this.decoration.insert(this);
     }
@@ -41,7 +42,7 @@ public abstract class AMenu implements IMenu {
     @SuppressWarnings("deprecation")
     public AMenu(Player player, String title, byte size, ConfigurationSection decorSection) {
         this.player = player;
-        this.inventory = Bukkit.createInventory(this.player, size, Utils.color(title));
+        this.inventory = Bukkit.createInventory(this.player, size, ColorManager.color(title));
         this.decoration = new Decoration(decorSection);
         this.decoration.insert(this);
     }
@@ -54,7 +55,7 @@ public abstract class AMenu implements IMenu {
     public void initialize(ConfigurationSection section, boolean decorate) {
         String title = section.getString("title");
         assert title != null;
-        this.inventory = Bukkit.createInventory(this.player, section.getInt("size"), Utils.color(title));
+        this.inventory = Bukkit.createInventory(this.player, section.getInt("size"), ColorManager.color(title));
         if (decorate) {
             this.decoration = new Decoration(Objects.requireNonNull(section.getConfigurationSection("decoration")));
             this.decoration.insert(this);
@@ -63,7 +64,7 @@ public abstract class AMenu implements IMenu {
 
     @SuppressWarnings("deprecation")
     public void initialize(String title, byte size, ConfigurationSection decorSection, boolean decorate) {
-        this.inventory = Bukkit.createInventory(this.player, size, Utils.color(title));
+        this.inventory = Bukkit.createInventory(this.player, size, ColorManager.color(title));
         if (decorate) {
             this.decoration = new Decoration(decorSection);
             this.decoration.insert(this);

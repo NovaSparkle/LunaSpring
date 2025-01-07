@@ -9,6 +9,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.novasparkle.lunaspring.Util.ColorManager;
 import org.novasparkle.lunaspring.Util.Utils;
 
 import java.util.ArrayList;
@@ -27,9 +28,9 @@ public class Item {
     public Item(Material material, String displayName, List<String> lore, int amount, byte slot) {
         this.material = material;
         this.slot = slot;
-        this.displayName = Utils.color(displayName);
+        this.displayName = ColorManager.color(displayName);
+        lore.replaceAll(ColorManager::color);
 
-        lore.replaceAll(Utils::color);
         this.lore = lore;
         this.amount = amount;
         this.itemStack = new ItemStack(this.material, this.amount);
@@ -50,33 +51,16 @@ public class Item {
         this.update();
     }
 
-    public Item(ConfigurationSection section) {
-        String material = section.getString("material");
-        assert material != null;
-        this.material = Material.getMaterial(material);
-        this.displayName = Utils.color(section.getString("displayName"));
-
-        List<String> lore = section.getStringList("lore");
-        lore.replaceAll(Utils::color);
-        this.lore = lore;
-        this.slot = (byte) section.getInt("slot");
-
-        this.amount = section.getInt("amount");
-        if (this.amount == 0) {
-            this.amount++;
-        }
-        this.itemStack = new ItemStack(this.material, this.amount);
-        this.update();
-    }
-
     public Item(ConfigurationSection section, int slot) {
         String material = section.getString("material");
         assert material != null;
         this.material = Material.getMaterial(material);
-        this.displayName = Utils.color(section.getString("displayName"));
-
         List<String> lore = section.getStringList("lore");
-        lore.replaceAll(Utils::color);
+
+        this.displayName = ColorManager.color(displayName);
+        lore.replaceAll(ColorManager::color);
+
+
         this.lore = lore;
         this.slot = (byte) slot;
 
@@ -91,12 +75,16 @@ public class Item {
         String material = section.getString("material");
         assert material != null;
         this.material = Material.getMaterial(material);
-        this.displayName = Utils.color(section.getString("displayName"));
-
         List<String> lore = section.getStringList("lore");
-        lore.replaceAll(Utils::color);
+
+        this.displayName = ColorManager.color(displayName);
+        lore.replaceAll(ColorManager::color);
         this.lore = lore;
-        this.slot = (byte) Utils.getIndex(section.getInt("slot.row"), section.getInt("slot.column"));
+        if (rowCol)
+            this.slot = (byte) Utils.getIndex(section.getInt("slot.row"), section.getInt("slot.column"));
+        else {
+            this.slot = (byte) section.getInt("slot");
+        }
         this.amount = section.getInt("amount");
 
         if (this.amount == 0) {
@@ -117,12 +105,13 @@ public class Item {
     }
 
     public void setDisplayName(String displayName) {
-        this.displayName = Utils.color(displayName);
+        this.displayName = ColorManager.color(displayName);
         this.update();
     }
 
     public void setLore(List<String> lore) {
-        lore.replaceAll(Utils::color);
+        lore.replaceAll(ColorManager::color);
+
         this.lore = lore;
         this.update();
     }

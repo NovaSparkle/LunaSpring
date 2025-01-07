@@ -9,9 +9,15 @@ public class ColorManager {
         colorService = new ColorService(configuration);
     }
     public static String color(String text) {
+        if (colorService == null) {
+            return Utils.color(text);
+        }
         return colorService.color(text);
     }
     public static Color getColor(String abbr) {
+        if (colorService == null) {
+            throw new ServiceRegistrationException(ColorManager.class);
+        }
         return colorService.getColor(abbr);
     }
 }
