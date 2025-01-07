@@ -78,10 +78,12 @@ public class Item {
         assert material != null;
         this.material = Material.getMaterial(material);
         List<String> lore = section.getStringList("lore");
+        String displayName = section.getString("displayName");
 
         this.displayName = ColorManager.color(displayName);
         lore.replaceAll(ColorManager::color);
         this.lore = lore;
+
         if (rowCol)
             this.slot = (byte) Utils.getIndex(section.getInt("slot.row"), section.getInt("slot.column"));
         else {
