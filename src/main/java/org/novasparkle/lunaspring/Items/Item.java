@@ -55,7 +55,9 @@ public class Item {
         String material = section.getString("material");
         assert material != null;
         this.material = Material.getMaterial(material);
+
         List<String> lore = section.getStringList("lore");
+        String displayName = section.getString("displayName");
 
         this.displayName = ColorManager.color(displayName);
         lore.replaceAll(ColorManager::color);
