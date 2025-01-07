@@ -7,19 +7,14 @@ import org.novasparkle.lunaspring.Util.Service.ServiceProvider;
 
 public final class LunaSpring extends JavaPlugin {
     @Getter
-    private static LunaSpring INSTANCE;
-    @Getter
-    private final ServiceProvider provider = new ServiceProvider();
+    private static final ServiceProvider provider = new ServiceProvider();
     @Override
-    public void onEnable() {
-        INSTANCE = this;
-    }
+    public void onEnable() {}
 
     @Override
     public void onDisable() {
 
     }
-
     private void registerEvent(Listener listener) {
         this.getServer().getPluginManager().registerEvents(listener, this);
     }

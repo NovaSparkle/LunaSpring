@@ -1,5 +1,5 @@
 name: LunaSpring
 version: '${project.version}'
-main: org.example.novasparkle.LunaSpring
+main: org.novasparkle.lunaspring.LunaSpring
 api-version: '1.16'
 author: NovaSparkle
