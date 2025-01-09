@@ -21,17 +21,17 @@ public class Decoration {
 
             List<String> slots = itemSection.getStringList("slots");
             if (!slots.isEmpty()) {
-                for (String unsplitedSlots : slots) {
+                slots.forEach(unsplitedSlots -> {
                     String[] splitedSlots = unsplitedSlots.split("-");
                     if (splitedSlots.length == 1) {
-                        this.decorationItems.add(new Item(itemSection, Integer.parseInt(splitedSlots[0])));
+                        this.decorationItems.add(new Item(itemSection, Byte.parseByte(splitedSlots[0])));
                     }
                     else if (splitedSlots.length >= 2) {
-                        Arrays.stream(splitedSlots).forEach(slot -> {
-                            this.decorationItems.add(new Item(itemSection, Integer.parseInt(slot)));
-                        });
+                        for (byte slot = Byte.parseByte(splitedSlots[0]); slot < Byte.parseByte(splitedSlots[1]); slot++) {
+                            this.decorationItems.add(new Item(itemSection, slot));
+                        }
                     }
-                }
+                });
             }
         }
     }
