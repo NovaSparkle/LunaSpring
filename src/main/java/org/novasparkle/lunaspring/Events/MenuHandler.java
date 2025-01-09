@@ -8,7 +8,6 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.novasparkle.lunaspring.Menus.MenuManager;
 
 public class MenuHandler implements Listener {
-
     @EventHandler
     private void onOpen(InventoryOpenEvent e) {
         MenuManager.handleOpen(e);

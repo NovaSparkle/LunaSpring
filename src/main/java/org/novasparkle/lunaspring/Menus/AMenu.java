@@ -7,7 +7,8 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.novasparkle.lunaspring.Items.Item;
+import org.novasparkle.lunaspring.Menus.Items.Decoration;
+import org.novasparkle.lunaspring.Menus.Items.Item;
 import org.novasparkle.lunaspring.Util.ColorManager;
 import org.novasparkle.lunaspring.Util.Utils;
 
@@ -18,7 +19,6 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public abstract class AMenu implements IMenu {
-
     @Getter private Inventory inventory;
     @Getter private final Player player;
     private Decoration decoration;

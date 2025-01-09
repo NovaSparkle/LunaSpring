@@ -1,13 +1,14 @@
-package org.novasparkle.lunaspring.Menus;
+package org.novasparkle.lunaspring.Menus.Items;
 
 import lombok.Getter;
 import org.bukkit.inventory.ItemStack;
-import org.novasparkle.lunaspring.Items.Item;
+import org.novasparkle.lunaspring.Menus.IMenu;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.novasparkle.lunaspring.Util.Utils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Getter
@@ -15,25 +16,20 @@ public class Decoration {
     private final List<Item> decorationItems = new ArrayList<>();
     public Decoration(ConfigurationSection decorationSection) {
         for (String key : decorationSection.getKeys(false)) {
-
             ConfigurationSection itemSection = decorationSection.getConfigurationSection(key);
             assert itemSection != null;
 
-            List<String> slotsStr = itemSection.getStringList("slotsStr");
-
-            if (slotsStr.isEmpty()) {
-                List<Integer> slotsInt = itemSection.getIntegerList("slotsInt");
-
-                for (int slot : slotsInt) {
-                    this.decorationItems.add(new Item(itemSection, slot));
-                }
-
-            } else {
-                for (String slotStr : slotsStr) {
-                    String[] strArray = slotStr.split("-");
-
-                    for (int slot = Utils.toInt(strArray[0]); slot <= Utils.toInt(strArray[1]); slot++) {
-                        this.decorationItems.add(new Item(itemSection, slot));
+            List<String> slots = itemSection.getStringList("slots");
+            if (!slots.isEmpty()) {
+                for (String unsplitedSlots : slots) {
+                    String[] splitedSlots = unsplitedSlots.split("-");
+                    if (splitedSlots.length == 1) {
+                        this.decorationItems.add(new Item(itemSection, Integer.parseInt(splitedSlots[0])));
+                    }
+                    else if (splitedSlots.length >= 2) {
+                        Arrays.stream(splitedSlots).forEach(slot -> {
+                            this.decorationItems.add(new Item(itemSection, Integer.parseInt(slot)));
+                        });
                     }
                 }
             }

@@ -19,6 +19,7 @@ public class Utils {
     public static int toInt(String text) {
         return Integer.parseInt(text);
     }
+
     public static void info(String text) {
         Logger logger = Logger.getLogger("Minecraft");
 

@@ -33,9 +33,11 @@ public class IConfig {
         this.file = file;
         this.config = YamlConfiguration.loadConfiguration(this.file);
     }
+
     public void reload() {
         this.config = YamlConfiguration.loadConfiguration(this.file);
     }
+
     public void reload(Plugin plugin) {
         plugin.reloadConfig();
         this.config = plugin.getConfig();
@@ -76,6 +78,7 @@ public class IConfig {
     public Material getMaterial(String path) {
         return Material.getMaterial(this.getString(path));
     }
+
     public FileConfiguration self() {
         return this.config;
     }

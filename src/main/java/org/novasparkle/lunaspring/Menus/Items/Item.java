@@ -1,4 +1,4 @@
-package org.novasparkle.lunaspring.Items;
+package org.novasparkle.lunaspring.Menus.Items;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -17,7 +17,6 @@ import java.util.List;
 
 @Getter
 public class Item {
-
     private final ItemStack itemStack;
     private Material material;
     private String displayName;
