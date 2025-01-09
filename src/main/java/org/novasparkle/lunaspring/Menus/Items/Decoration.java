@@ -27,7 +27,7 @@ public class Decoration {
                         this.decorationItems.add(new Item(itemSection, Byte.parseByte(splitedSlots[0])));
                     }
                     else if (splitedSlots.length >= 2) {
-                        for (byte slot = Byte.parseByte(splitedSlots[0]); slot < Byte.parseByte(splitedSlots[1]); slot++) {
+                        for (byte slot = Byte.parseByte(splitedSlots[0]); slot <= Byte.parseByte(splitedSlots[1]); slot++) {
                             this.decorationItems.add(new Item(itemSection, slot));
                         }
                     }
