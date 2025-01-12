@@ -2,4 +2,8 @@ name: LunaSpring
 version: '${project.version}'
 main: org.novasparkle.lunaspring.LunaSpring
 api-version: '1.16'
-author: NovaSparkle
+authors:
+  - NovaSparkle
+  - ProGiple
+softdepend:
+  - NBTAPI

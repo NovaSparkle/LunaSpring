@@ -4,6 +4,8 @@ import lombok.experimental.UtilityClass;
 import org.bukkit.ChatColor;
 import org.novasparkle.lunaspring.LunaSpring;
 
+import java.util.List;
+import java.util.Random;
 import java.util.logging.Logger;
 
 @UtilityClass
@@ -26,5 +28,21 @@ public class Utils {
         if (LunaSpring.getProvider().isRegistered(ColorManager.getColorService().getClass())) {
             logger.info(ColorManager.color(text));
         } else logger.info(Utils.color(text));
+    }
+
+    public static String getRKey(byte size) {
+        String kit = "qwertyuiopasdfghjklzxcvbnm1234567890";
+        return Utils.getRKey(size, kit);
+    }
+
+    public static String getRKey(byte size, String kit) {
+        StringBuilder endValue = new StringBuilder();
+        byte kitSize = (byte) kit.toCharArray().length;
+
+        Random random = new Random();
+        for (byte i = 0; i < size; i++) {
+            endValue.append(kit.charAt(random.nextInt(kitSize)));
+        }
+        return endValue.toString();
     }
 }
