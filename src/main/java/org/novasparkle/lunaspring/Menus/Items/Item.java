@@ -3,6 +3,7 @@ package org.novasparkle.lunaspring.Menus.Items;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.Inventory;
@@ -19,7 +20,7 @@ import java.util.Objects;
 
 @Getter
 public class Item {
-    private final ItemStack itemStack;
+    private ItemStack itemStack;
     private final String id = Utils.getRKey((byte) 24);
     private Material material;
     private String displayName;
@@ -137,6 +138,11 @@ public class Item {
         this.itemStack.removeItemFlags(ItemFlag.HIDE_ENCHANTS);
     }
 
+    public void setItemStack(ItemStack stack) {
+        this.itemStack = stack;
+        this.update();
+    }
+
     public void setAll(Material material, int amount, String displayName, List<String> lore, boolean enchanted) {
         this.setMaterial(material);
         this.setAmount(amount);
@@ -163,6 +169,10 @@ public class Item {
         NBTManager.base64head(this.itemStack, value);
     }
 
+    public void applyBaseHead(OfflinePlayer player) {
+        this.setItemStack(NBTManager.base64head(player));
+    }
+
     public boolean checkId(String id) {
         return Objects.equals(id, this.id);
     }
@@ -184,11 +194,6 @@ public class Item {
     public void insert(Inventory inventory, byte row, byte column) {
         this.slot = (byte) Utils.getIndex(row, column);
         inventory.setItem(slot, this.itemStack);
-    }
-
-    public void reInsert(Inventory inventory, byte newSlot) {
-        this.remove(inventory);
-        this.insert(inventory, newSlot);
     }
 
     public void remove(Inventory inventory) {
