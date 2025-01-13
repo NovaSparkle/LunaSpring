@@ -21,8 +21,8 @@ import java.util.stream.Collectors;
 public abstract class AMenu implements IMenu {
     @Getter private Inventory inventory;
     @Getter private final Player player;
-    private Decoration decoration;
-    protected final List<Item> itemList = new ArrayList<>();
+    @Getter private Decoration decoration;
+    private final List<Item> itemList = new ArrayList<>();
 
     @SuppressWarnings("deprecation")
     public AMenu(Player player, String title, byte size) {
@@ -97,5 +97,8 @@ public abstract class AMenu implements IMenu {
 
     public void addItems(List<Item> items) {
         this.itemList.addAll(items);
+    }
+    public void drawItems() {
+        this.itemList.forEach(System.out::println);
     }
 }

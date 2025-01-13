@@ -1,14 +1,12 @@
 package org.novasparkle.lunaspring.Menus.Items;
 
 import lombok.Getter;
-import org.bukkit.inventory.ItemStack;
-import org.novasparkle.lunaspring.Menus.IMenu;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
-import org.novasparkle.lunaspring.Util.Utils;
+import org.bukkit.inventory.ItemStack;
+import org.novasparkle.lunaspring.Menus.IMenu;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Getter
@@ -38,6 +36,10 @@ public class Decoration {
 
     public void insert(IMenu imenu) {
         this.decorationItems.forEach(i -> i.insert(imenu.getInventory()));
+    }
+
+    public int getDecorationsAmount() {
+        return this.decorationItems.size();
     }
 
     public boolean checkSlot(byte slot) {
