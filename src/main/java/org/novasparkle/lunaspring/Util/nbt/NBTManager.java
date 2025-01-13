@@ -8,7 +8,9 @@ import lombok.Getter;
 import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -19,7 +21,16 @@ public class NBTManager {
     static {
         enabled = (Bukkit.getServer().getPluginManager().getPlugin("NBTAPI") == null);
     }
-
+    public ItemStack base64head(OfflinePlayer player) {
+        if (NBTManager.isEnabled()) {
+            ItemStack head = new ItemStack(Material.PLAYER_HEAD);
+            SkullMeta meta = (SkullMeta) head.getItemMeta();
+            meta.setOwningPlayer(player);
+            head.setItemMeta(meta);
+            return head;
+        }
+        return null;
+    }
     public void base64head(ItemStack head, String value, UUID uuid) {
         if (NBTManager.isEnabled() && head.getType() == Material.PLAYER_HEAD)
             NBT.modify(head, nbt -> {
