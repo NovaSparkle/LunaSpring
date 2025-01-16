@@ -1,5 +1,6 @@
 package org.novasparkle.lunaspring.Configuration;
 
+import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -12,7 +13,8 @@ import java.util.List;
 
 public class IConfig {
     protected FileConfiguration config;
-    protected File file;
+    @Getter
+    private File file;
     public IConfig(Plugin plugin) {
         this.config = plugin.getConfig();
     }

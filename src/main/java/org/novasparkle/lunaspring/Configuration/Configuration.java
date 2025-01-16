@@ -59,7 +59,7 @@ public class Configuration extends IConfig {
 
     public void save() {
         try {
-            this.config.save(this.file);
+            this.config.save(this.getFile());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
