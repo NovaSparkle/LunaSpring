@@ -12,6 +12,14 @@ import java.util.List;
 @Getter
 public class Decoration {
     private final List<Item> decorationItems = new ArrayList<>();
+
+    @Override
+    public String toString() {
+        return "Decoration{" +
+                "decorationItems=" + decorationItems +
+                '}';
+    }
+
     public Decoration(ConfigurationSection decorationSection) {
         for (String key : decorationSection.getKeys(false)) {
             ConfigurationSection itemSection = decorationSection.getConfigurationSection(key);

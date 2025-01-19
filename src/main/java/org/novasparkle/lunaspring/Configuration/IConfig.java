@@ -27,6 +27,15 @@ public class IConfig {
         this.file = new File(container, fileName + ".yml");
         this.config = YamlConfiguration.loadConfiguration(this.file);
     }
+
+    @Override
+    public String toString() {
+        return "IConfig{" +
+                "config=" + config +
+                ", file=" + file.getName() +
+                '}';
+    }
+
     public IConfig(File container, File file) {
         this.file = new File(container, file.getName());
         this.config = YamlConfiguration.loadConfiguration(this.file);

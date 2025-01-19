@@ -62,6 +62,14 @@ public abstract class AMenu implements IMenu {
         }
     }
 
+    @Override
+    public String toString() {
+        return "AMenu{" +
+                "player=" + player +
+                ", itemList=" + itemList +
+                '}';
+    }
+
     @SuppressWarnings("deprecation")
     public void initialize(String title, byte size, ConfigurationSection decorSection, boolean decorate) {
         this.inventory = Bukkit.createInventory(this.player, size, ColorManager.color(title));

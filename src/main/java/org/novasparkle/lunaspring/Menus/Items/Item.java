@@ -133,6 +133,18 @@ public class Item {
         this.itemStack.addItemFlags(ItemFlag.HIDE_ENCHANTS);
     }
 
+    @Override
+    public String toString() {
+        return "Item{" +
+                "id='" + id + '\'' +
+                ", material=" + material +
+                ", displayName='" + displayName + '\'' +
+                ", lore=" + lore +
+                ", amount=" + amount +
+                ", slot=" + slot +
+                '}';
+    }
+
     public void removeGlowing() {
         this.itemStack.removeEnchantment(Enchantment.LUCK);
         this.itemStack.removeItemFlags(ItemFlag.HIDE_ENCHANTS);
