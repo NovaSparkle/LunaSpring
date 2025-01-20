@@ -20,6 +20,7 @@ import java.util.Objects;
 
 @Getter
 public class Item {
+    @Setter
     private ItemStack itemStack;
     private final String id = Utils.getRKey((byte) 24);
     private Material material;
@@ -148,11 +149,6 @@ public class Item {
     public void removeGlowing() {
         this.itemStack.removeEnchantment(Enchantment.LUCK);
         this.itemStack.removeItemFlags(ItemFlag.HIDE_ENCHANTS);
-    }
-
-    public void setItemStack(ItemStack stack) {
-        this.itemStack = stack;
-        this.update();
     }
 
     public void setAll(Material material, int amount, String displayName, List<String> lore, boolean enchanted) {

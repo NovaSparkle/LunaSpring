@@ -28,7 +28,7 @@ public class NBTManager {
             meta.setOwningPlayer(player);
             head.setItemMeta(meta);
             return head;
-        }
+        } else System.out.println("NBTManager is disabled!");
         return null;
     }
     public void base64head(ItemStack head, String value, UUID uuid) {
