@@ -1,4 +1,4 @@
-package org.novasparkle.lunaspring.Util;
+package org.novasparkle.lunaspring.Util.Service;
 
 public class ServiceRegistrationException extends RuntimeException {
     public ServiceRegistrationException(Class<?> service) {

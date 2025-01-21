@@ -3,8 +3,8 @@ package org.novasparkle.lunaspring.Util;
 import lombok.experimental.UtilityClass;
 import org.bukkit.ChatColor;
 import org.novasparkle.lunaspring.LunaSpring;
+import org.novasparkle.lunaspring.Util.managers.ColorManager;
 
-import java.util.List;
 import java.util.Random;
 import java.util.logging.Logger;
 

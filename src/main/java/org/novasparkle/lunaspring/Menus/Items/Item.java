@@ -10,9 +10,9 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.novasparkle.lunaspring.Util.ColorManager;
+import org.novasparkle.lunaspring.Util.managers.ColorManager;
 import org.novasparkle.lunaspring.Util.Utils;
-import org.novasparkle.lunaspring.Util.nbt.NBTManager;
+import org.novasparkle.lunaspring.Util.managers.NBTManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -168,7 +168,7 @@ public class Item {
         this.itemStack.setAmount(this.amount);
         this.itemStack.setItemMeta(meta);
 
-        if (!NBTManager.hasTag(this.itemStack, "lunaspring-item-id") && NBTManager.isEnabled()) {
+        if (!NBTManager.hasTag(this.itemStack, "lunaspring-item-id")) {
             NBTManager.setString(this.itemStack, "lunaspring-item-id", this.id);
         }
     }

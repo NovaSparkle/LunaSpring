@@ -9,7 +9,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.novasparkle.lunaspring.Menus.Items.Decoration;
 import org.novasparkle.lunaspring.Menus.Items.Item;
-import org.novasparkle.lunaspring.Util.ColorManager;
+import org.novasparkle.lunaspring.Util.managers.ColorManager;
 import org.novasparkle.lunaspring.Util.Utils;
 
 import java.util.ArrayList;
