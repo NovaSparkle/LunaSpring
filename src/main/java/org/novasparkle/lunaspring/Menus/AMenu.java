@@ -78,7 +78,9 @@ public abstract class AMenu implements IMenu {
             this.decoration.insert(this);
         }
     }
-
+    public void clear() {
+        this.itemList.clear();
+    }
     public List<Item> findItems(ItemStack itemStack) {
         return this.itemList.stream().filter(i -> i.getItemStack().equals(itemStack)).collect(Collectors.toList());
     }
