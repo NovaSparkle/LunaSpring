@@ -28,7 +28,6 @@ public class ColorService implements LunaService {
     public Color getColor(String abbr) {
         return this.colorList.stream().filter(c -> c.getAbbr().equals(abbr)).findFirst().orElseThrow();
     }
-
     @Override
     public String toString() {
         return "ColorService{" +

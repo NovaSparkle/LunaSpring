@@ -57,7 +57,7 @@ public class Item {
 
     public Item(ConfigurationSection section, int slot) {
         String material = section.getString("material");
-        assert material != null;
+        if (material == null) material = "AIR";
         this.material = Material.getMaterial(material);
 
         List<String> lore = section.getStringList("lore");
@@ -82,7 +82,7 @@ public class Item {
 
     public Item(ConfigurationSection section, boolean rowCol) {
         String material = section.getString("material");
-        assert material != null;
+        if (material == null) material = "AIR";
         this.material = Material.getMaterial(material);
         List<String> lore = section.getStringList("lore");
         String displayName = section.getString("displayName");
@@ -152,6 +152,7 @@ public class Item {
     }
 
     public void setAll(Material material, int amount, String displayName, List<String> lore, boolean enchanted) {
+        if (material == null) material = Material.AIR;
         this.setMaterial(material);
         this.setAmount(amount);
         this.setLore(lore);
