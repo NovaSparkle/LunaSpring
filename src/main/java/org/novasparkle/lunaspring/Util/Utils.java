@@ -25,7 +25,7 @@ public class Utils {
     public void info(String text) {
         Logger logger = Logger.getLogger("Minecraft");
 
-        if (LunaSpring.getProvider().isRegistered(ColorManager.getColorService().getClass())) {
+        if (LunaSpring.getServiceProvider().isRegistered(ColorManager.getColorService().getClass())) {
             logger.info(ColorManager.color(text));
         } else logger.info(Utils.color(text));
     }

@@ -14,13 +14,13 @@ public class ColorManager {
         colorService = service;
     }
     public static String color(String text) {
-        if (colorService == null || (!LunaSpring.getProvider().isRegistered(ColorManager.getColorService().getClass()))) {
+        if (colorService == null || (!LunaSpring.getServiceProvider().isRegistered(ColorManager.getColorService().getClass()))) {
             return Utils.color(text);
         }
         return colorService.color(text);
     }
     public static Color getColor(String abbr) {
-        if (colorService == null || (!LunaSpring.getProvider().isRegistered(ColorManager.getColorService().getClass()))) {
+        if (colorService == null || (!LunaSpring.getServiceProvider().isRegistered(ColorManager.getColorService().getClass()))) {
             throw new ServiceRegistrationException(ColorManager.class);
         }
         return colorService.getColor(abbr);
