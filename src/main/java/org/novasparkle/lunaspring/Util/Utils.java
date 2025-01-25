@@ -18,11 +18,11 @@ public class Utils {
         return ChatColor.translateAlternateColorCodes('&', text);
     }
 
-    public static int toInt(String text) {
+    public int toInt(String text) {
         return Integer.parseInt(text);
     }
 
-    public static void info(String text) {
+    public void info(String text) {
         Logger logger = Logger.getLogger("Minecraft");
 
         if (LunaSpring.getProvider().isRegistered(ColorManager.getColorService().getClass())) {
@@ -30,12 +30,12 @@ public class Utils {
         } else logger.info(Utils.color(text));
     }
 
-    public static String getRKey(byte size) {
+    public String getRKey(byte size) {
         String kit = "qwertyuiopasdfghjklzxcvbnm1234567890";
         return Utils.getRKey(size, kit);
     }
 
-    public static String getRKey(byte size, String kit) {
+    public String getRKey(byte size, String kit) {
         StringBuilder endValue = new StringBuilder();
         byte kitSize = (byte) kit.toCharArray().length;
 

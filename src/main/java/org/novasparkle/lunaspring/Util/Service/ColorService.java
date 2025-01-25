@@ -8,8 +8,8 @@ import org.novasparkle.lunaspring.Util.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ColorService implements LunaService {
-    protected final List<Color> colorList = new ArrayList<>();
+public final class ColorService implements LunaService {
+    private final List<Color> colorList = new ArrayList<>();
     public ColorService(FileConfiguration configuration) {
         ConfigurationSection section = configuration.getConfigurationSection("colors");
         if (section == null) throw new RuntimeException("Секция с цветами не найдена, нужная секция: colors");

@@ -12,7 +12,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public class NBTService implements LunaService {
+public final class NBTService implements LunaService {
     public ItemStack generatePlayerHead(OfflinePlayer player) {
         ItemStack head = new ItemStack(Material.PLAYER_HEAD);
         SkullMeta meta = (SkullMeta) head.getItemMeta();

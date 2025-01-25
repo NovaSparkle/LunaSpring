@@ -3,7 +3,7 @@ package org.novasparkle.lunaspring.Util.Service;
 import java.util.HashSet;
 import java.util.Set;
 
-public class ServiceProvider {
+public final class ServiceProvider {
     private final Set<LunaService> services = new HashSet<>();
     public void register(LunaService service) {
         this.services.add(service);

@@ -1,21 +1,17 @@
 package org.novasparkle.lunaspring;
 
 import lombok.Getter;
-import org.bukkit.event.Listener;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.novasparkle.lunaspring.Events.MenuHandler;
 import org.novasparkle.lunaspring.Util.Service.ServiceProvider;
+import org.novasparkle.lunaspring.Util.managers.ColorManager;
 
 public final class LunaSpring extends JavaPlugin {
     @Getter
-    private static final ServiceProvider provider = new ServiceProvider();
-    @Override
-    public void onEnable() {}
-
-    @Override
-    public void onDisable() {
-
-    }
-    private void registerEvent(Listener listener) {
-        this.getServer().getPluginManager().registerEvents(listener, this);
+    private static final ServiceProvider serviceProvider = new ServiceProvider();
+    public static MenuHandler initialize(Plugin plugin) {
+        plugin.getLogger().info(ColorManager.color("&fEngined with &5&lLunaSpring &fby &cNovaSparkle"));
+        return new MenuHandler();
     }
 }
