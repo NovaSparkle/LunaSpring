@@ -23,7 +23,7 @@ public class Utils {
     }
 
     public void info(String text) {
-        Logger logger = Logger.getLogger("Minecraft");
+        Logger logger = LunaSpring.getPlugin().getLogger();
 
         if (LunaSpring.getServiceProvider().isRegistered(ColorManager.getColorService().getClass())) {
             logger.info(ColorManager.color(text));
