@@ -57,11 +57,11 @@ public class Configuration extends IConfig {
     public void setItemStack(String path, ItemStack value) {
         this.config.set(path, value);
     }
-    public void createSection(ConfigurationSection section, String name) {
-        section.createSection(name);
+    public ConfigurationSection createSection(ConfigurationSection section, String name) {
+        return section.createSection(name);
     }
-    public void createSection(String path, String name) {
-        this.getSection(path).createSection(name);
+    public ConfigurationSection createSection(String path, String name) {
+        return this.getSection(path).createSection(name);
     }
 
     public void save() {
