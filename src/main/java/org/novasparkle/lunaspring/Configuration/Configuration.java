@@ -61,6 +61,8 @@ public class Configuration extends IConfig {
         return section.createSection(name);
     }
     public ConfigurationSection createSection(String path, String name) {
+        if (path == null)
+            return this.config.createSection(name);
         return this.getSection(path).createSection(name);
     }
 
