@@ -35,11 +35,6 @@ public class IConfig {
                 ", file=" + file.getName() +
                 '}';
     }
-
-    public IConfig(File container, File file) {
-        this.file = new File(container, file.getName());
-        this.config = YamlConfiguration.loadConfiguration(this.file);
-    }
     public IConfig(File file) {
         this.file = file;
         this.config = YamlConfiguration.loadConfiguration(this.file);

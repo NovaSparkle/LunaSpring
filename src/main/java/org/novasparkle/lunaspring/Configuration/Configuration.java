@@ -18,10 +18,6 @@ public class Configuration extends IConfig {
         super(container, fileName);
     }
 
-    public Configuration(File container, File file) {
-        super(container, file);
-    }
-
     public Configuration(File file) {
         super(file);
     }
