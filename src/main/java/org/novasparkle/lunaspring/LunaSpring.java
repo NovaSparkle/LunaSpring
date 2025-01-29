@@ -16,7 +16,7 @@ public final class LunaSpring extends JavaPlugin {
     private static Plugin plugin = null;
     public static MenuHandler initialize(Plugin plugin) {
         LunaSpring.plugin = plugin;
-        Arrays.asList("", Utils.color(String.format("&b%s &e%s           &cEngined with LunaSpring v2.1.9", plugin.getName(), plugin.getDescription().getVersion())), Utils.color("                    &8Author: &cNova Sparkle"), "").forEach(System.out::println);
+        Arrays.asList("", Utils.color(String.format("    &b%s &e%s", plugin.getName(), plugin.getDescription().getVersion())), Utils.color("                    &cEngined with LunaSpring v2.1.9"), Utils.color("                    &8Author: &cNova Sparkle"), "").forEach(System.out::println);
         return new MenuHandler();
     }
 }
