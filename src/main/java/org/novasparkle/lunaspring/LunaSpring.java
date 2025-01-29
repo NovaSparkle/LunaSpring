@@ -11,12 +11,19 @@ import java.util.Arrays;
 
 public final class LunaSpring extends JavaPlugin {
     @Getter
+    private static LunaSpring INSTANCE;
+    @Getter
     private static final ServiceProvider serviceProvider = new ServiceProvider();
     @Getter
     private static Plugin plugin = null;
+
+    public void onEnable() {
+        INSTANCE = this;
+    }
+
     public static MenuHandler initialize(Plugin plugin) {
         LunaSpring.plugin = plugin;
-        Arrays.asList("", Utils.color(String.format("    &b%s &e%s", plugin.getName(), plugin.getDescription().getVersion())), Utils.color("                    &cEngined with LunaSpring v2.1.9"), Utils.color("                    &8Author: &cNova Sparkle"), "").forEach(System.out::println);
+        Arrays.asList("", Utils.color(String.format("    &b%s &e%s", plugin.getName(), plugin.getDescription().getVersion())), Utils.color(String.format("                    &cEngined with LunaSpring %s", INSTANCE.getDescription().getVersion())), Utils.color("                    &8Author: &cNova Sparkle"), "").forEach(System.out::println);
         return new MenuHandler();
     }
 }
