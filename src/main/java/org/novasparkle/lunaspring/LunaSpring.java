@@ -5,7 +5,9 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.novasparkle.lunaspring.Events.MenuHandler;
 import org.novasparkle.lunaspring.Util.Service.ServiceProvider;
-import org.novasparkle.lunaspring.Util.managers.ColorManager;
+import org.novasparkle.lunaspring.Util.Utils;
+
+import java.util.Arrays;
 
 public final class LunaSpring extends JavaPlugin {
     @Getter
@@ -14,7 +16,10 @@ public final class LunaSpring extends JavaPlugin {
     private static Plugin plugin = null;
     public static MenuHandler initialize(Plugin plugin) {
         LunaSpring.plugin = plugin;
-        plugin.getLogger().info(ColorManager.color("&fEngined with &5&lLunaSpring &fby &cNovaSparkle"));
+        Arrays.asList("", Utils.color(String.format("&b%s &e%s           &cEngined with LunaSpring v2.1.9", plugin.getName(), plugin.getDescription().getVersion())), Utils.color("                    &8Author: &cNova Sparkle"), "").forEach(System.out::println);
         return new MenuHandler();
     }
 }
+
+
+
