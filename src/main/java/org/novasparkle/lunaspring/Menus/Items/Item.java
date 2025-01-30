@@ -56,6 +56,7 @@ public class Item {
         this.update();
     }
 
+
     public Item(ConfigurationSection section, int slot) {
         String material = section.getString("material");
         if (material == null) material = "AIR";
