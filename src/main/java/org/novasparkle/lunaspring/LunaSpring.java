@@ -1,13 +1,14 @@
 package org.novasparkle.lunaspring;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.novasparkle.lunaspring.Events.MenuHandler;
 import org.novasparkle.lunaspring.Util.Service.ServiceProvider;
 import org.novasparkle.lunaspring.Util.Utils;
 
-import java.util.Arrays;
+import java.util.List;
 
 public final class LunaSpring extends JavaPlugin {
     @Getter
@@ -15,15 +16,17 @@ public final class LunaSpring extends JavaPlugin {
     @Getter
     private static final ServiceProvider serviceProvider = new ServiceProvider();
     @Getter
+    @Setter
     private static Plugin plugin = null;
 
     public void onEnable() {
         INSTANCE = this;
     }
 
-    public static MenuHandler initialize(Plugin plugin) {
-        LunaSpring.plugin = plugin;
-        Arrays.asList("", Utils.color(String.format("    &b%s &e%s", plugin.getName(), plugin.getDescription().getVersion())), Utils.color(String.format("                    &cEngined with LunaSpring %s", INSTANCE.getDescription().getVersion())), Utils.color("                    &8Author: &cNova Sparkle"), "").forEach(System.out::println);
+    public static MenuHandler initialize() {
+        List<String> startMessage = INSTANCE.getConfig().getStringList("startMessage");
+        startMessage.replaceAll(m -> m.replace("[pluginName]", plugin.getName()).replace("[pluginVersion]", plugin.getDescription().getVersion()).replace("[LSVersion]", INSTANCE.getDescription().getVersion()));
+        startMessage.forEach(Utils::info);
         return new MenuHandler();
     }
 }

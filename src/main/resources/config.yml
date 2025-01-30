@@ -1,0 +1,6 @@
+startMessage:
+  - ''
+  - '    &b&l[pluginName] &1v[pluginVersion]'
+  - '        &cEngined with &c&nLunaSpring v[LSVersion]'
+  - '        &8Author: &bNova Sparkle'
+  - ''
