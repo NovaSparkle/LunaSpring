@@ -22,6 +22,7 @@ import java.util.Objects;
 public class Item {
     @Setter
     private ItemStack itemStack;
+    private Inventory inventory;
     private final String id = Utils.getRKey((byte) 24);
     private Material material;
     private String displayName;
@@ -192,15 +193,18 @@ public class Item {
     }
 
     public void insert(Inventory inventory) {
+        this.inventory = inventory;
         inventory.setItem(this.slot, this.itemStack);
     }
 
     public void insert(Inventory inventory, byte slot) {
+        this.inventory = inventory;
         this.slot = slot;
         inventory.setItem(slot, this.itemStack);
     }
 
     public void insert(Inventory inventory, byte row, byte column) {
+        this.inventory = inventory;
         this.slot = (byte) Utils.getIndex(row, column);
         inventory.setItem(slot, this.itemStack);
     }
