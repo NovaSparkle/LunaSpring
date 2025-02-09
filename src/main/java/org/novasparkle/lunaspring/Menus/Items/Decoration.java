@@ -43,7 +43,7 @@ public class Decoration {
     }
 
     public void insert(IMenu imenu) {
-        this.decorationItems.forEach(i -> i.insert(imenu.getInventory()));
+        this.decorationItems.forEach(i -> i.insert(imenu));
     }
 
     public int getDecorationsAmount() {

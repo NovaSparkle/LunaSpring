@@ -98,7 +98,7 @@ public abstract class AMenu implements IMenu {
     }
 
     public void insertAllItems() {
-        this.itemList.forEach(i -> i.insert(this.getInventory()));
+        this.itemList.forEach(i -> i.insert(this));
     }
 
     public void addItems(Item... items) {

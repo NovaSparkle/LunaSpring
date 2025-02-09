@@ -10,8 +10,9 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.novasparkle.lunaspring.Util.managers.ColorManager;
+import org.novasparkle.lunaspring.Menus.IMenu;
 import org.novasparkle.lunaspring.Util.Utils;
+import org.novasparkle.lunaspring.Util.managers.ColorManager;
 import org.novasparkle.lunaspring.Util.managers.NBTManager;
 
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ import java.util.Objects;
 public class Item {
     @Setter
     private ItemStack itemStack;
-    private Inventory inventory;
+    private IMenu menu;
     private final String id = Utils.getRKey((byte) 24);
     private Material material;
     private String displayName;
@@ -193,21 +194,21 @@ public class Item {
         return id != null && !id.isEmpty() && this.checkId(id);
     }
 
-    public void insert(Inventory inventory) {
-        this.inventory = inventory;
-        inventory.setItem(this.slot, this.itemStack);
+    public void insert(IMenu aMenu) {
+        this.menu = aMenu;
+        aMenu.getInventory().setItem(this.slot, this.itemStack);
     }
 
-    public void insert(Inventory inventory, byte slot) {
-        this.inventory = inventory;
+    public void insert(IMenu aMenu, byte slot) {
+        this.menu = aMenu;
         this.slot = slot;
-        inventory.setItem(slot, this.itemStack);
+        aMenu.getInventory().setItem(slot, this.itemStack);
     }
 
-    public void insert(Inventory inventory, byte row, byte column) {
-        this.inventory = inventory;
+    public void insert(IMenu aMenu, byte row, byte column) {
+        this.menu = aMenu;
         this.slot = (byte) Utils.getIndex(row, column);
-        inventory.setItem(slot, this.itemStack);
+        aMenu.getInventory().setItem(slot, this.itemStack);
     }
 
     public void remove(Inventory inventory) {
