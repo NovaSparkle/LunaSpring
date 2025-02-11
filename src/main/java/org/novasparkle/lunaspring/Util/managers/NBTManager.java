@@ -1,7 +1,6 @@
 package org.novasparkle.lunaspring.Util.managers;
 
 import de.tr7zw.nbtapi.iface.ReadWriteItemNBT;
-import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -19,16 +18,14 @@ public class NBTManager {
         nbtService = (NBTService) service;
     }
 
-    public static ItemStack base64head(OfflinePlayer player) {
+    public static ItemStack base64head(ItemStack head, OfflinePlayer player) {
         if (nbtService == null || (!LunaSpring.getServiceProvider().isRegistered(nbtService.getClass()))) {
             throw new ServiceRegistrationException(NBTManager.class);
         }
-        ItemStack head = new ItemStack(Material.PLAYER_HEAD);
         SkullMeta meta = (SkullMeta) head.getItemMeta();
         meta.setOwningPlayer(player);
         head.setItemMeta(meta);
         return head;
-
     }
     public static void base64head(ItemStack head, String value, UUID uuid) {
         if (nbtService == null || (!LunaSpring.getServiceProvider().isRegistered(nbtService.getClass()))) {

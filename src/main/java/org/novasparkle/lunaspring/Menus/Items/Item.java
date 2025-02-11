@@ -10,6 +10,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
 import org.novasparkle.lunaspring.Menus.IMenu;
 import org.novasparkle.lunaspring.Util.Utils;
 import org.novasparkle.lunaspring.Util.managers.ColorManager;
@@ -24,11 +25,13 @@ public class Item {
     @Setter
     private ItemStack itemStack;
     private IMenu menu;
-    private final String id = Utils.getRKey((byte) 24);
+    private final String id = Utils.getRKey((byte) 12);
     private Material material;
     private String displayName;
     private List<String> lore = new ArrayList<>();
     private int amount;
+    private boolean glowing;
+    private String headValue;
     @Setter private byte slot;
 
     public Item(Material material, String displayName, List<String> lore, int amount, byte slot) {
@@ -39,6 +42,7 @@ public class Item {
 
         this.lore = lore;
         this.amount = amount;
+        if (this.amount == 0) this.amount++;
         this.itemStack = new ItemStack(this.material, this.amount);
         this.update();
     }
@@ -53,6 +57,7 @@ public class Item {
     public Item(Material material, int amount) {
         this.material = material;
         this.amount = amount;
+        if (this.amount == 0) this.amount++;
         this.itemStack = new ItemStack(this.material, this.amount);
         this.update();
     }
@@ -69,18 +74,21 @@ public class Item {
         this.displayName = ColorManager.color(displayName);
         lore.replaceAll(ColorManager::color);
 
+        this.setGlowing(section.getBoolean("enchanted"));
         this.lore = lore;
         this.slot = (byte) slot;
 
         this.amount = section.getInt("amount");
-        if (this.amount == 0) {
-            this.amount++;
-        }
+        if (this.amount == 0) this.amount++;
+
         this.itemStack = new ItemStack(this.material, this.amount);
         this.update();
 
         String baseHeadValue = section.getString("baseHead");
-        if (baseHeadValue != null && !baseHeadValue.isEmpty()) this.applyBaseHead(baseHeadValue);
+        if (baseHeadValue != null && !baseHeadValue.isEmpty()) {
+            this.headValue = baseHeadValue;
+            this.applyBaseHead(baseHeadValue);
+        }
     }
 
     public Item(ConfigurationSection section, boolean rowCol) {
@@ -93,22 +101,24 @@ public class Item {
         this.displayName = ColorManager.color(displayName);
         lore.replaceAll(ColorManager::color);
         this.lore = lore;
+        this.setGlowing(section.getBoolean("enchanted"));
 
         if (rowCol)
             this.slot = (byte) Utils.getIndex(section.getInt("slot.row"), section.getInt("slot.column"));
-        else {
-            this.slot = (byte) section.getInt("slot");
-        }
+        else this.slot = (byte) section.getInt("slot");
+
         this.amount = section.getInt("amount");
 
-        if (this.amount == 0) {
-            this.amount++;
-        }
+        if (this.amount == 0) this.amount++;
+
         this.itemStack = new ItemStack(this.material, this.amount);
         this.update();
 
         String baseHeadValue = section.getString("baseHead");
-        if (baseHeadValue != null && !baseHeadValue.isEmpty()) this.applyBaseHead(baseHeadValue);
+        if (baseHeadValue != null && !baseHeadValue.isEmpty()) {
+            this.applyBaseHead(baseHeadValue);
+            this.headValue = baseHeadValue;
+        };
     }
 
     public void setMaterial(Material material) {
@@ -132,7 +142,9 @@ public class Item {
         this.update();
     }
 
-    public void setGlowing() {
+    public void setGlowing(boolean enchanted) {
+        this.glowing = enchanted;
+        if (!enchanted) return;
         this.itemStack.addUnsafeEnchantment(Enchantment.LUCK, 1);
         this.itemStack.addItemFlags(ItemFlag.HIDE_ENCHANTS);
     }
@@ -149,7 +161,18 @@ public class Item {
                 '}';
     }
 
+    public void serialize(@NotNull ConfigurationSection section) {
+        section.set("material", this.getMaterial().name());
+        section.set("amount", this.getAmount());
+        section.set("displayName", this.getDisplayName());
+        section.set("lore", this.getLore());
+        section.set("enchanted", this.glowing);
+        section.set("headValue", this.headValue);
+        section.set("id", this.id);
+    }
+
     public void removeGlowing() {
+        this.glowing = false;
         this.itemStack.removeEnchantment(Enchantment.LUCK);
         this.itemStack.removeItemFlags(ItemFlag.HIDE_ENCHANTS);
     }
@@ -160,7 +183,7 @@ public class Item {
         this.setAmount(amount);
         this.setLore(lore);
         this.setDisplayName(displayName);
-        if (enchanted) this.setGlowing();
+        this.setGlowing(enchanted);
     }
 
     @SuppressWarnings("deprecation")
@@ -182,7 +205,7 @@ public class Item {
     }
 
     public void applyBaseHead(OfflinePlayer player) {
-        this.setItemStack(NBTManager.base64head(player));
+        this.setItemStack(NBTManager.base64head(this.itemStack, player));
     }
 
     public boolean checkId(String id) {
