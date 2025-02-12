@@ -59,7 +59,7 @@ public class Configuration extends IConfig {
     public ConfigurationSection createSection(String path, String name) {
         if (path == null)
             return this.config.createSection(name);
-        return this.getSection(path).createSection(name);
+        return this.config.createSection(String.format("%s.%s", path, name));
     }
 
     public void save() {
