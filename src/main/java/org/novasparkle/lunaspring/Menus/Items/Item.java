@@ -74,7 +74,7 @@ public class Item {
         this.displayName = ColorManager.color(displayName);
         lore.replaceAll(ColorManager::color);
 
-        this.setGlowing(section.getBoolean("enchanted"));
+
         this.lore = lore;
         this.slot = (byte) slot;
 
@@ -82,6 +82,8 @@ public class Item {
         if (this.amount == 0) this.amount++;
 
         this.itemStack = new ItemStack(this.material, this.amount);
+
+        this.setGlowing(section.getBoolean("enchanted"));
         this.update();
 
         String baseHeadValue = section.getString("baseHead");
@@ -101,7 +103,7 @@ public class Item {
         this.displayName = ColorManager.color(displayName);
         lore.replaceAll(ColorManager::color);
         this.lore = lore;
-        this.setGlowing(section.getBoolean("enchanted"));
+
 
         if (rowCol)
             this.slot = (byte) Utils.getIndex(section.getInt("slot.row"), section.getInt("slot.column"));
@@ -112,6 +114,8 @@ public class Item {
         if (this.amount == 0) this.amount++;
 
         this.itemStack = new ItemStack(this.material, this.amount);
+        this.setGlowing(section.getBoolean("enchanted"));
+
         this.update();
 
         String baseHeadValue = section.getString("baseHead");
