@@ -39,11 +39,12 @@ public class MenuHandler implements Listener {
             MenuManager.handleClick(e);
             return;
         }
-        if (this.cooldowns.get(e.getRawSlot()) >= System.currentTimeMillis()) {
-            e.setCancelled(true);
-        } else {
-            this.cooldowns.put(e.getRawSlot(), System.currentTimeMillis() + 500);
+        if (!this.cooldowns.containsKey(e.getRawSlot()) || this.cooldowns.get(e.getRawSlot()) < System.currentTimeMillis()) {
+
+            this.cooldowns.put(e.getRawSlot(), System.currentTimeMillis() + this.cooldown);
             MenuManager.handleClick(e);
+        } else {
+            e.setCancelled(true);
         }
     }
 }
