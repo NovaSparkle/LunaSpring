@@ -2,6 +2,12 @@ name: LunaSpring
 version: '${project.version}'
 main: org.novasparkle.lunaspring.LunaSpring
 api-version: '1.16'
+commands:
+  lunaspring:
+    permission: "lunaspring.reload"
+    aliases:
+      - lsp
+    permission-message: "&cУ вас нет прав на перезагрузку библиотеки"
 authors:
   - NovaSparkle
   - ProGiple
