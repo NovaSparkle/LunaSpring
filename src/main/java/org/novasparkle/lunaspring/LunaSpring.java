@@ -19,6 +19,7 @@ public final class LunaSpring extends JavaPlugin {
 
     public void onEnable() {
         INSTANCE = this;
+        this.saveDefaultConfig();
     }
 
     public static MenuHandler initialize(Plugin plugin) {

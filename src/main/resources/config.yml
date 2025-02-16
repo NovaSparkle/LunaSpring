@@ -4,3 +4,7 @@ startMessage:
   - '        &cEngined with &c&nLunaSpring v[LSVersion]'
   - '        &8Author: &bNova Sparkle'
   - ''
+
+preventDoubleClick:
+  enabled: true
+  cooldown: 500   #millis
