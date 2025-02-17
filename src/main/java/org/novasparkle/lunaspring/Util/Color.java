@@ -3,7 +3,7 @@ package org.novasparkle.lunaspring.Util;
 import lombok.Getter;
 
 @Getter
-public class Color {
+public final class Color {
 
     private final String abbr;
 

@@ -9,6 +9,7 @@ import org.novasparkle.lunaspring.Events.MenuHandler;
 import org.novasparkle.lunaspring.Util.Service.ServiceProvider;
 import org.novasparkle.lunaspring.Util.Utils;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -37,7 +38,13 @@ public final class LunaSpring extends JavaPlugin {
 
     public static MenuHandler initialize(Plugin plugin) {
         LunaSpring.plugin = plugin;
-        List<String> startMessage = INSTANCE.getConfig().getStringList("startMessage");
+        List<String> startMessage = Arrays.asList(
+                "",
+                "    &b&l[pluginName] &1v[pluginVersion]",
+                "        &cEngined with &c&nLunaSpring v[LSVersion]",
+                "        &8Author: &bNova Sparkle",
+                ""
+        );
         startMessage.replaceAll(m -> m.replace("[pluginName]", plugin.getName()).replace("[pluginVersion]", plugin.getDescription().getVersion()).replace("[LSVersion]", INSTANCE.getDescription().getVersion()));
         startMessage.forEach(Utils::info);
         return new MenuHandler();
