@@ -4,7 +4,6 @@ import de.tr7zw.nbtapi.NBT;
 import de.tr7zw.nbtapi.iface.ReadWriteItemNBT;
 import de.tr7zw.nbtapi.iface.ReadWriteNBT;
 import de.tr7zw.nbtapi.iface.ReadableNBT;
-import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -13,8 +12,7 @@ import java.util.UUID;
 import java.util.function.Consumer;
 
 public final class NBTService implements LunaService {
-    public ItemStack generatePlayerHead(OfflinePlayer player) {
-        ItemStack head = new ItemStack(Material.PLAYER_HEAD);
+    public ItemStack base64head(ItemStack head, OfflinePlayer player) {
         SkullMeta meta = (SkullMeta) head.getItemMeta();
         meta.setOwningPlayer(player);
         head.setItemMeta(meta);

@@ -1,5 +1,6 @@
 package org.novasparkle.lunaspring.Events;
 
+import lombok.Setter;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -14,12 +15,13 @@ import java.util.Map;
 
 public class MenuHandler implements Listener {
     private final Map<Integer, Long> cooldowns;
-    private int cooldown;
+    @Setter
+    private static int cooldown = 0;
     public MenuHandler() {
         this.cooldowns = new HashMap<>();
         FileConfiguration config = LunaSpring.getINSTANCE().getConfig();
         if (config.getBoolean("preventDoubleClick.enabled")) {
-            this.cooldown = config.getInt("preventDoubleClick.cooldown");
+            setCooldown(config.getInt("preventDoubleClick.cooldown"));
         }
     }
 

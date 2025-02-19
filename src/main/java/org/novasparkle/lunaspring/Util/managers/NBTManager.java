@@ -3,7 +3,6 @@ package org.novasparkle.lunaspring.Util.managers;
 import de.tr7zw.nbtapi.iface.ReadWriteItemNBT;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.SkullMeta;
 import org.novasparkle.lunaspring.LunaSpring;
 import org.novasparkle.lunaspring.Util.Service.LunaService;
 import org.novasparkle.lunaspring.Util.Service.NBTService;
@@ -19,18 +18,11 @@ public class NBTManager {
     }
 
     public static ItemStack base64head(ItemStack head, OfflinePlayer player) {
-        if (nbtService == null || (!LunaSpring.getServiceProvider().isRegistered(nbtService.getClass()))) {
-            throw new ServiceRegistrationException(NBTManager.class);
-        }
-        SkullMeta meta = (SkullMeta) head.getItemMeta();
-        meta.setOwningPlayer(player);
-        head.setItemMeta(meta);
-        return head;
+        if (nbtService == null || (!LunaSpring.getServiceProvider().isRegistered(nbtService.getClass()))) throw new ServiceRegistrationException(NBTManager.class);
+        return nbtService.base64head(head, player);
     }
     public static void base64head(ItemStack head, String value, UUID uuid) {
-        if (nbtService == null || (!LunaSpring.getServiceProvider().isRegistered(nbtService.getClass()))) {
-            throw new ServiceRegistrationException(NBTManager.class);
-        }
+        if (nbtService == null || (!LunaSpring.getServiceProvider().isRegistered(nbtService.getClass()))) throw new ServiceRegistrationException(NBTManager.class);
         nbtService.base64head(head, value, uuid);
     }
 
@@ -39,16 +31,12 @@ public class NBTManager {
     }
 
     public static boolean hasTag(ItemStack item, String tag) {
-        if (nbtService == null || (!LunaSpring.getServiceProvider().isRegistered(nbtService.getClass()))) {
-            throw new ServiceRegistrationException(NBTManager.class);
-        }
+        if (nbtService == null || (!LunaSpring.getServiceProvider().isRegistered(nbtService.getClass()))) throw new ServiceRegistrationException(NBTManager.class);
         return nbtService.hasTag(item, tag);
     }
 
     public static void set(ItemStack item, Consumer<ReadWriteItemNBT> consumer) {
-        if (nbtService == null || (!LunaSpring.getServiceProvider().isRegistered(nbtService.getClass()))) {
-            throw new ServiceRegistrationException(NBTManager.class);
-        }
+        if (nbtService == null || (!LunaSpring.getServiceProvider().isRegistered(nbtService.getClass()))) throw new ServiceRegistrationException(NBTManager.class);
         nbtService.set(item, consumer);
     }
 
@@ -85,6 +73,7 @@ public class NBTManager {
     }
 
     public static Object get(ItemStack item, String tag) {
+        if (nbtService == null || (!LunaSpring.getServiceProvider().isRegistered(nbtService.getClass()))) throw new ServiceRegistrationException(NBTManager.class);
         return nbtService.get(item, tag);
     }
 }

@@ -6,7 +6,6 @@ import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -238,7 +237,7 @@ public class Item {
         aMenu.getInventory().setItem(slot, this.itemStack);
     }
 
-    public void remove(Inventory inventory) {
-        inventory.setItem(this.slot, null);
+    public void remove(IMenu iMenu) {
+        iMenu.getInventory().setItem(this.slot, null);
     }
 }
