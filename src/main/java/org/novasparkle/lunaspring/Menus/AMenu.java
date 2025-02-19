@@ -51,6 +51,7 @@ public abstract class AMenu implements IMenu {
         this.player = player;
     }
 
+
     @SuppressWarnings("deprecation")
     public void initialize(ConfigurationSection section, boolean decorate) {
         String title = section.getString("title");
