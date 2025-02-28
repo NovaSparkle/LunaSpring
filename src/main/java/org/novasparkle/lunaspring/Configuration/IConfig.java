@@ -1,6 +1,8 @@
 package org.novasparkle.lunaspring.Configuration;
 
 import lombok.Getter;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -63,6 +65,14 @@ public class IConfig {
 
     public List<String> getStringList(String path) {
         return this.config.getStringList(path);
+    }
+    public Location getLocation(String path) {
+        return this.config.getLocation(path);
+    }
+    public Location getLocation(ConfigurationSection section) {
+        String world = section.getString("world");
+        assert world != null;
+        return new Location(Bukkit.getWorld(world), section.getInt("x"),section.getInt("y"),section.getInt("z"));
     }
 
     public int getInt(String path) {
