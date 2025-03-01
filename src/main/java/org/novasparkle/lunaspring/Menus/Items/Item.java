@@ -37,7 +37,8 @@ public class Item {
         this.material = material;
         this.slot = slot;
         this.displayName = ColorManager.color(displayName);
-        lore.replaceAll(ColorManager::color);
+        if (!lore.isEmpty())
+            lore.replaceAll(ColorManager::color);
 
         this.lore = lore;
         this.amount = amount;
@@ -64,14 +65,15 @@ public class Item {
 
     public Item(ConfigurationSection section, int slot) {
         String material = section.getString("material");
-        if (material == null) material = "AIR";
+        assert material != null;
         this.material = Material.getMaterial(material);
 
         List<String> lore = section.getStringList("lore");
         String displayName = section.getString("displayName");
 
         this.displayName = ColorManager.color(displayName);
-        lore.replaceAll(ColorManager::color);
+        if (!lore.isEmpty())
+            lore.replaceAll(ColorManager::color);
 
 
         this.lore = lore;
@@ -94,13 +96,14 @@ public class Item {
 
     public Item(ConfigurationSection section, boolean rowCol) {
         String material = section.getString("material");
-        if (material == null) material = "AIR";
+        assert material != null;
         this.material = Material.getMaterial(material);
         List<String> lore = section.getStringList("lore");
         String displayName = section.getString("displayName");
 
         this.displayName = ColorManager.color(displayName);
-        lore.replaceAll(ColorManager::color);
+        if (!lore.isEmpty())
+            lore.replaceAll(ColorManager::color);
         this.lore = lore;
 
 
