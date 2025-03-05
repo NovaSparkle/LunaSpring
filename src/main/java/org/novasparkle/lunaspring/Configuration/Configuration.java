@@ -53,6 +53,9 @@ public class Configuration extends IConfig {
     public void setItemStack(String path, ItemStack value) {
         this.config.set(path, value);
     }
+    public void setSection(String path, ConfigurationSection value) {
+        this.config.set(path, value);
+    }
     public ConfigurationSection createSection(ConfigurationSection section, String name) {
         return section.createSection(name);
     }
