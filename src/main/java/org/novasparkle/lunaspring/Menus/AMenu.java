@@ -93,6 +93,20 @@ public abstract class AMenu implements IMenu {
     public List<Item> findItems(Material material) {
         return this.itemList.stream().filter(i -> i.getItemStack().getType().equals(material)).collect(Collectors.toList());
     }
+    public Item findFirstItem(Class<?> clazz) {
+        return this.itemList.stream().filter(i -> i.getClass().equals(clazz)).findFirst().orElse(null);
+    }
+
+    public List<Item> findItems(Class<?> clazz) {
+        return this.itemList.stream().filter(i -> i.getClass().equals(clazz)).collect(Collectors.toList());
+    }
+    public Item findFirstItem(String displayName) {
+        return this.itemList.stream().filter(i -> i.getDisplayName().equals(displayName)).findFirst().orElse(null);
+    }
+
+    public List<Item> findItems(String displayName) {
+        return this.itemList.stream().filter(i -> i.getDisplayName().equals(displayName)).collect(Collectors.toList());
+    }
 
     public Item findFirstItem(Material material) {
         return this.itemList.stream().filter(i -> i.getMaterial().equals(material)).findFirst().orElse(null);
