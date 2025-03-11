@@ -219,7 +219,7 @@ public class Item {
     }
 
     public boolean checkId(ItemStack item) {
-        String id = (String) NBTManager.get(item, "lunaspring-item-id");
+        String id = NBTManager.getString(item, "lunaspring-item-id");
         return id != null && !id.isEmpty() && this.checkId(id);
     }
 

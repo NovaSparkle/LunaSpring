@@ -8,6 +8,8 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -37,7 +39,47 @@ public final class NBTService implements LunaService {
         NBT.modify(item, consumer);
     }
 
-    public Object get(ItemStack item, String tag) {
-        return NBT.get(item, nbt -> tag);
+    public String getString(ItemStack item, String tag) {
+        return NBT.get(item, nbt -> (String) nbt.getString(tag));
+    }
+
+    public int getInt(ItemStack item, String tag) {
+        return NBT.get(item, nbt -> (int) nbt.getInteger(tag));
+    }
+
+    public double getDouble(ItemStack item, String tag) {
+        return NBT.get(item, nbt -> (double) nbt.getDouble(tag));
+    }
+
+    public byte getByte(ItemStack item, String tag) {
+        return NBT.get(item, nbt -> (byte) nbt.getByte(tag));
+    }
+
+    public ItemStack getItemStack(ItemStack item, String tag) {
+        return NBT.get(item, nbt -> (ItemStack) nbt.getItemStack(tag));
+    }
+
+    public long getLong(ItemStack item, String tag) {
+        return NBT.get(item, nbt -> (long) nbt.getLong(tag));
+    }
+
+    public boolean getBoolean(ItemStack item, String tag) {
+        return NBT.get(item, nbt -> (boolean) nbt.getBoolean(tag));
+    }
+
+    public ItemStack[] getItemStacks(ItemStack item, String tag) {
+        return NBT.get(item, nbt -> (ItemStack[]) nbt.getItemStackArray(tag));
+    }
+
+    public float getFloat(ItemStack item, String tag) {
+        return NBT.get(item, nbt -> (float) nbt.getFloat(tag));
+    }
+
+    public Set<String> getKeys(ItemStack item) {
+        return NBT.get(item, nbt -> (Set<String>) nbt.getKeys());
+    }
+
+    public UUID getUUID(ItemStack item, String tag) {
+        return NBT.get(item, nbt -> (UUID) nbt.getUUID(tag));
     }
 }
