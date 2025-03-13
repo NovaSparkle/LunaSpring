@@ -1,8 +1,9 @@
-package org.novasparkle.lunaspring.Util.Service;
+package org.novasparkle.lunaspring.Util.Service.realized;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.novasparkle.lunaspring.Util.Color;
+import org.novasparkle.lunaspring.Util.Service.LunaService;
 import org.novasparkle.lunaspring.Util.Utils;
 
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ public final class ColorService implements LunaService {
         for (String key : section.getKeys(false)) {
             ConfigurationSection colorSection = section.getConfigurationSection(key);
             assert colorSection != null;
-            colorList.add(new Color(colorSection.getString("abbr"), colorSection.getString("variable")));
+            this.colorList.add(new Color(colorSection.getString("abbr"), colorSection.getString("variable")));
         }
     }
     public String color(String text) {

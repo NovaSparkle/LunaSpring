@@ -16,7 +16,7 @@ public class Decoration {
     @Override
     public String toString() {
         return "Decoration{" +
-                "decorationItems=" + decorationItems +
+                "decorationItems=" + this.decorationItems +
                 '}';
     }
 

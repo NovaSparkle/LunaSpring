@@ -7,7 +7,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
 import org.novasparkle.lunaspring.LunaSpring;
 import org.novasparkle.lunaspring.Util.Service.LunaService;
-import org.novasparkle.lunaspring.Util.Service.NBTService;
+import org.novasparkle.lunaspring.Util.Service.realized.NBTService;
 import org.novasparkle.lunaspring.Util.Service.ServiceRegistrationException;
 
 import java.util.Set;

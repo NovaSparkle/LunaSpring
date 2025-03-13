@@ -1,6 +1,6 @@
 package org.novasparkle.lunaspring.Events;
 
-import lombok.Setter;
+import lombok.Getter;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -10,18 +10,13 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.novasparkle.lunaspring.LunaSpring;
 import org.novasparkle.lunaspring.Menus.MenuManager;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class MenuHandler implements Listener {
-    private final Map<Integer, Long> cooldowns;
-    @Setter
-    private static int cooldown = 0;
+    @Getter private static CooldownPrevent<Integer> cooldown;
     public MenuHandler() {
-        this.cooldowns = new HashMap<>();
+        cooldown = new CooldownPrevent<>();
         FileConfiguration config = LunaSpring.getINSTANCE().getConfig();
         if (config.getBoolean("preventDoubleClick.enabled")) {
-            setCooldown(config.getInt("preventDoubleClick.cooldown"));
+            cooldown.setCooldownMS(config.getInt("preventDoubleClick.cooldown"));
         }
     }
 
@@ -37,16 +32,6 @@ public class MenuHandler implements Listener {
 
     @EventHandler
     private void onClick(InventoryClickEvent e) {
-        if (cooldown == 0) {
-            MenuManager.handleClick(e);
-            return;
-        }
-        if (!this.cooldowns.containsKey(e.getRawSlot()) || this.cooldowns.get(e.getRawSlot()) < System.currentTimeMillis()) {
-
-            this.cooldowns.put(e.getRawSlot(), System.currentTimeMillis() + this.cooldown);
-            MenuManager.handleClick(e);
-        } else {
-            e.setCancelled(true);
-        }
+        if (!cooldown.cancelEvent(e, e.getRawSlot())) MenuManager.handleClick(e);
     }
 }

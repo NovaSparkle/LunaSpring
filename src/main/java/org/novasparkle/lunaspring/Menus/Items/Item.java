@@ -187,9 +187,22 @@ public class Item {
         if (material == null) material = Material.AIR;
         this.setMaterial(material);
         this.setAmount(amount);
-        this.setLore(lore);
-        this.setDisplayName(displayName);
+        if (lore != null) this.setLore(lore);
+        if (displayName != null) this.setDisplayName(displayName);
         this.setGlowing(enchanted);
+    }
+
+    public void setAll(ConfigurationSection itemSection) {
+        if (itemSection == null) return;
+
+        String strMaterial = itemSection.getString("material");
+        Material newMaterial = strMaterial == null || strMaterial.isEmpty() ? null : Material.getMaterial(strMaterial);
+
+        int amount = itemSection.getInt("amount");
+        String displayName = itemSection.getString("displayName");
+        List<String> lore = new ArrayList<>(itemSection.getStringList("lore"));
+
+        this.setAll(newMaterial, amount <= 0 ? 1 : amount, displayName, lore, itemSection.getBoolean("enchanted"));
     }
 
     @SuppressWarnings("deprecation")
