@@ -87,57 +87,57 @@ public class NBTManager {
 
     public String getString(ItemStack item, String tag) {
         exceptionCheck();
-        return NBT.get(item, nbt -> (String) nbt.getString(tag));
+        return nbtService.getString(item, tag);
     }
 
     public int getInt(ItemStack item, String tag) {
         exceptionCheck();
-        return NBT.get(item, nbt -> (int) nbt.getInteger(tag));
+        return nbtService.getInt(item, tag);
     }
 
     public double getDouble(ItemStack item, String tag) {
         exceptionCheck();
-        return NBT.get(item, nbt -> (double) nbt.getDouble(tag));
+        return nbtService.getDouble(item, tag);
     }
 
     public byte getByte(ItemStack item, String tag) {
         exceptionCheck();
-        return NBT.get(item, nbt -> (byte) nbt.getByte(tag));
+        return nbtService.getByte(item, tag);
     }
 
     public ItemStack getItemStack(ItemStack item, String tag) {
         exceptionCheck();
-        return NBT.get(item, nbt -> (ItemStack) nbt.getItemStack(tag));
+        return nbtService.getItemStack(item, tag);
     }
 
     public long getLong(ItemStack item, String tag) {
         exceptionCheck();
-        return NBT.get(item, nbt -> (long) nbt.getLong(tag));
+        return nbtService.getLong(item, tag);
     }
 
     public boolean getBoolean(ItemStack item, String tag) {
         exceptionCheck();
-        return NBT.get(item, nbt -> (boolean) nbt.getBoolean(tag));
+        return nbtService.getBoolean(item, tag);
     }
 
     public ItemStack[] getItemStacks(ItemStack item, String tag) {
         exceptionCheck();
-        return NBT.get(item, nbt -> (ItemStack[]) nbt.getItemStackArray(tag));
+        return nbtService.getItemStacks(item, tag);
     }
 
     public float getFloat(ItemStack item, String tag) {
         exceptionCheck();
-        return NBT.get(item, nbt -> (float) nbt.getFloat(tag));
+        return nbtService.getFloat(item, tag);
     }
 
     public Set<String> getKeys(ItemStack item) {
         exceptionCheck();
-        return NBT.get(item, nbt -> (Set<String>) nbt.getKeys());
+        return nbtService.getKeys(item);
     }
 
     public static UUID getUUID(ItemStack item, String tag) {
         exceptionCheck();
-        return NBT.get(item, nbt -> (UUID) nbt.getUUID(tag));
+        return nbtService.getUUID(item, tag);
     }
 
     private static void exceptionCheck() {

@@ -20,6 +20,7 @@ public final class NBTService implements LunaService {
         head.setItemMeta(meta);
         return head;
     }
+
     public void base64head(ItemStack head, String value, UUID uuid) {
         NBT.modify(head, nbt -> {
             ReadWriteNBT skullOwnerCompound = nbt.getOrCreateCompound("SkullOwner");
@@ -30,6 +31,7 @@ public final class NBTService implements LunaService {
                     .setString("Value", value);
         });
     }
+
     public boolean hasTag(ItemStack item, String tag) {
         ReadableNBT readableNBT = NBT.readNbt(item);
         return readableNBT.hasTag(tag);
