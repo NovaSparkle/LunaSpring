@@ -109,8 +109,7 @@ public final class RegionService implements LunaService {
 
         BlockVector3 vector3 = isMinPoint ? region.getMinimumPoint() : region.getMaximumPoint();
         World world = this.getWorld(regionName);
-        return world == null ? null : new Location(
-                world, vector3.getBlockX(), vector3.getBlockY(), vector3.getBlockZ());
+        return world == null ? null : new Location(world, vector3.getBlockX(), vector3.getBlockY(), vector3.getBlockZ());
     }
 
     public boolean containsBlock(String regionName, int x, int y, int z) {
