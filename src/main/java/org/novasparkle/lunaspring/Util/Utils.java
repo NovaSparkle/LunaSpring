@@ -1,5 +1,6 @@
 package org.novasparkle.lunaspring.Util;
 
+import lombok.Getter;
 import lombok.experimental.UtilityClass;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -16,7 +17,8 @@ import java.util.logging.Logger;
 
 @UtilityClass
 public class Utils {
-    public final Random random = new Random();
+    @Getter
+    private final Random random = new Random();
 
     public int getIndex(int row, int col) {
         return (row - 1) * 9 + col - 1;

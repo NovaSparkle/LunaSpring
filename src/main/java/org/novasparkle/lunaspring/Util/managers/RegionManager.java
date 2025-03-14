@@ -111,9 +111,9 @@ public class RegionManager {
         return regionService.getCount(player);
     }
 
-    public boolean hasRegionsInside(Player player, Location location, int cuboidSize) {
+    public boolean hasRegionsInside(Location location, int cuboidSize) {
         exceptionCheck();
-        return regionService.hasRegionsInside(player, location, cuboidSize);
+        return regionService.hasRegionsInside(location, cuboidSize);
     }
 
     private static void exceptionCheck() {

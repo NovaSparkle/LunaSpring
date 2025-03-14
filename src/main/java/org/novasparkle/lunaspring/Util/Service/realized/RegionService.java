@@ -15,6 +15,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.novasparkle.lunaspring.Util.Service.LunaService;
+import org.novasparkle.lunaspring.Util.Utils;
 
 import java.util.Set;
 import java.util.UUID;
@@ -145,14 +146,14 @@ public final class RegionService implements LunaService {
         return amo;
     }
 
-    public boolean hasRegionsInside(Player player, Location location, int cuboidSize) {
+    public boolean hasRegionsInside(Location location, int cuboidSize) {
         RegionManager manager = this.getRegionManager(location.getWorld());
         BlockVector3 max = BlockVector3.at(
                 location.getX() + cuboidSize, location.getY() + cuboidSize, location.getZ() + cuboidSize);
         BlockVector3 min = BlockVector3.at(
                 location.getX() - cuboidSize, location.getY() - cuboidSize, location.getZ() - cuboidSize);
 
-        ProtectedRegion rg = new ProtectedCuboidRegion(player.getName(), min, max);
+        ProtectedRegion rg = new ProtectedCuboidRegion(Utils.getRKey((byte) 24), min, max);
         ApplicableRegionSet set = manager.getApplicableRegions(rg);
 
         return !set.getRegions().isEmpty();
