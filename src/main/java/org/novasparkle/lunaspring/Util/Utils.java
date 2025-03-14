@@ -56,35 +56,18 @@ public class Utils {
         return endValue.toString();
     }
 
-    public Location findRandomLocation(World world, int maxX, int maxY, int minY, int maxZ, List<String> invalidBlocks) {
+    public Location findRandomLocation(World world, int maxX, int maxZ) {
         if (world == null) return null;
 
         int x = random.nextInt(maxX * 2) - maxX;
         int z = random.nextInt(maxZ * 2) - maxZ;
-        int y = maxY;
+        int y = world.getHighestBlockYAt(x, z);
 
-        Location location = new Location(world, x, y, z);
-        while (!invalidBlocks.contains(location.getBlock().getType().name()) && y > minY) {
-            location.setY(--y);
-        }
-        location.setY(++y);
-        return location;
+        return new Location(world, x, y, z);
     }
 
-    public Location findRandomLocation(World world, int maxX, int maxY, int maxZ, List<String> invalidBlocks) {
-        return findRandomLocation(world, maxX, maxY, 0, maxZ, invalidBlocks);
-    }
-
-    public Location findRandomLocation(World world, int maxY, int minY, List<String> invalidBlocks) {
+    public Location findRandomLocation(World world) {
         int border = (int) (world.getWorldBorder().getSize() / 2);
-        return findRandomLocation(world, border, maxY, minY, border, invalidBlocks);
-    }
-
-    public Location findRandomLocation(World world, int maxY, List<String> invalidBlocks) {
-        return findRandomLocation(world, maxY, 0, invalidBlocks);
-    }
-
-    public Location findRandomLocation(World world, List<String> invalidBlocks) {
-        return findRandomLocation(world, 256, 0, invalidBlocks);
+        return findRandomLocation(world, border, border);
     }
 }

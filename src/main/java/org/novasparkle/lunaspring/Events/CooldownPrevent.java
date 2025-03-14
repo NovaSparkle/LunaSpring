@@ -15,7 +15,7 @@ public class CooldownPrevent<T> {
     public boolean cancelEvent(Cancellable e, T object) {
         if (this.cooldownMS <= 0) return false;
 
-        if (this.cooldownMap.containsKey(object) && this.cooldownMap.get(object) < System.currentTimeMillis()) {
+        if (this.cooldownMap.containsKey(object) && this.cooldownMap.get(object) >= System.currentTimeMillis()) {
             if (e != null) e.setCancelled(true);
             return true;
         } else {
