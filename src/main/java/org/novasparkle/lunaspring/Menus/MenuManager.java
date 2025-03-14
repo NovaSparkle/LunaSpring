@@ -36,7 +36,8 @@ public class MenuManager {
     public static void handleClick(InventoryClickEvent event) {
         IMenu menu = activeInventories.get(event.getInventory());
         if (menu != null) {
-            menu.onClick(event);
+            if (!menu.isCancelled(event, event.getRawSlot()))
+                menu.onClick(event);
         }
     }
 

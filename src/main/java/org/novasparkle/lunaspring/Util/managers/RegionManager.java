@@ -22,68 +22,68 @@ public class RegionManager {
     }
 
     public RegionContainer getRegionContainer() {
-        exceptionCheck();
+        regionService.exceptionCheck(regionService, RegionManager.class);
         return regionService.getRegionContainer();
     }
 
     public com.sk89q.worldguard.protection.managers.RegionManager getRegionManager(World world) {
-        exceptionCheck();
+        regionService.exceptionCheck(regionService, RegionManager.class);
         return regionService.getRegionManager(world);
     }
 
     public void createRegion(String name, Location minLoc, Location maxLoc) {
-        exceptionCheck();
+        regionService.exceptionCheck(regionService, RegionManager.class);
         regionService.createRegion(name, minLoc, maxLoc);
     }
 
     public void removeRegion(String name) {
-        exceptionCheck();
+        regionService.exceptionCheck(regionService, RegionManager.class);
         regionService.removeRegion(name);
     }
 
     @SuppressWarnings("all")
     public ProtectedRegion getRegion(String regionName) {
-        exceptionCheck();
+        regionService.exceptionCheck(regionService, RegionManager.class);
         return regionService.getRegion(regionName);
     }
 
     public void addMember(String regionName, Player player) {
-        exceptionCheck();
+        regionService.exceptionCheck(regionService, RegionManager.class);
         regionService.addMember(regionName, player);
     }
 
     public void addOwner(String regionName, Player player) {
-        exceptionCheck();
+        regionService.exceptionCheck(regionService, RegionManager.class);
         regionService.addOwner(regionName, player);
     }
 
     public void removeMember(String regionName, Player player) {
-        exceptionCheck();
+        regionService.exceptionCheck(regionService, RegionManager.class);
         regionService.removeMember(regionName, player);
     }
 
     public void removeOwner(String regionName, Player player) {
-        exceptionCheck();
+        regionService.exceptionCheck(regionService, RegionManager.class);
         regionService.removeOwner(regionName, player);
     }
 
     public boolean isOwner(String regionName, Player player) {
-        exceptionCheck();
+        regionService.exceptionCheck(regionService, RegionManager.class);
         return regionService.isOwner(regionName, player);
     }
 
     public World getWorld(String regionName) {
-        exceptionCheck();
+        regionService.exceptionCheck(regionService, RegionManager.class);
         return regionService.getWorld(regionName);
     }
 
     public Location getPoint(String regionName, boolean isMinPoint) {
-        exceptionCheck();
+        regionService.exceptionCheck(regionService, RegionManager.class);
         return regionService.getPoint(regionName, isMinPoint);
     }
 
     public boolean containsBlock(String regionName, int x, int y, int z) {
-        exceptionCheck();
+        regionService.exceptionCheck(regionService, RegionManager.class);
         return regionService.containsBlock(regionName, x, y, z);
     }
 
@@ -92,32 +92,27 @@ public class RegionManager {
     }
 
     public Set<UUID> getMembers(String regionName) {
-        exceptionCheck();
+        regionService.exceptionCheck(regionService, RegionManager.class);
         return regionService.getMembers(regionName);
     }
 
     public Set<UUID> getOwners(String regionName) {
-        exceptionCheck();
+        regionService.exceptionCheck(regionService, RegionManager.class);
         return regionService.getOwners(regionName);
     }
 
     public void setFlag(String regionName, StateFlag flag, StateFlag.State stateFlag) {
-        exceptionCheck();
+        regionService.exceptionCheck(regionService, RegionManager.class);
         regionService.setFlag(regionName, flag, stateFlag);
     }
 
     public int getCount(Player player) {
-        exceptionCheck();
+        regionService.exceptionCheck(regionService, RegionManager.class);
         return regionService.getCount(player);
     }
 
     public boolean hasRegionsInside(Location location, int cuboidSize) {
-        exceptionCheck();
+        regionService.exceptionCheck(regionService, RegionManager.class);
         return regionService.hasRegionsInside(location, cuboidSize);
-    }
-
-    private static void exceptionCheck() {
-        if (regionService == null || (!LunaSpring.getServiceProvider().isRegistered(regionService.getClass())))
-            throw new ServiceRegistrationException(RegionManager.class);
     }
 }

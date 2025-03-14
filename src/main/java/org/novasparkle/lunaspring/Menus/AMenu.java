@@ -6,8 +6,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.novasparkle.lunaspring.Events.CooldownPrevent;
 import org.novasparkle.lunaspring.Menus.Items.Decoration;
 import org.novasparkle.lunaspring.Menus.Items.Item;
 import org.novasparkle.lunaspring.Util.managers.ColorManager;
@@ -24,6 +26,7 @@ public abstract class AMenu implements IMenu {
     @Getter private String title;
     @Getter @Setter private Decoration decoration;
     @Getter private final Player player;
+    private final CooldownPrevent<Integer> cooldownPrevent = new CooldownPrevent<>();
     private final List<Item> itemList = new ArrayList<>();
 
     @SuppressWarnings("deprecation")
@@ -55,6 +58,14 @@ public abstract class AMenu implements IMenu {
         this.player = player;
     }
 
+    @Override
+    public boolean isCancelled(Cancellable event, int slot) {
+        return this.cooldownPrevent.isCancelled(event, slot);
+    }
+
+    public void setClickCooldown(int millis) {
+        this.cooldownPrevent.setCooldownMS(millis);
+    }
 
     @SuppressWarnings("deprecation")
     public void initialize(ConfigurationSection section, boolean decorate) {

@@ -32,6 +32,7 @@ public class MenuHandler implements Listener {
 
     @EventHandler
     private void onClick(InventoryClickEvent e) {
-        if (!cooldown.cancelEvent(e, e.getRawSlot())) MenuManager.handleClick(e);
+        if (!cooldown.isCancelled(e, e.getRawSlot()))
+            MenuManager.handleClick(e);
     }
 }

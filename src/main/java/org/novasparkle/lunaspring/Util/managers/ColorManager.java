@@ -5,7 +5,6 @@ import lombok.experimental.UtilityClass;
 import org.novasparkle.lunaspring.LunaSpring;
 import org.novasparkle.lunaspring.Util.Color;
 import org.novasparkle.lunaspring.Util.Service.realized.ColorService;
-import org.novasparkle.lunaspring.Util.Service.ServiceRegistrationException;
 import org.novasparkle.lunaspring.Util.Utils;
 
 @UtilityClass
@@ -22,9 +21,7 @@ public class ColorManager {
         return colorService.color(text);
     }
     public Color getColor(String abbr) {
-        if (colorService == null || (!LunaSpring.getServiceProvider().isRegistered(ColorManager.getColorService().getClass()))) {
-            throw new ServiceRegistrationException(ColorManager.class);
-        }
+        colorService.exceptionCheck(colorService, ColorManager.class);
         return colorService.getColor(abbr);
     }
 }

@@ -1,6 +1,5 @@
 package org.novasparkle.lunaspring.Util.managers;
 
-import de.tr7zw.nbtapi.NBT;
 import de.tr7zw.nbtapi.iface.ReadWriteItemNBT;
 import lombok.experimental.UtilityClass;
 import org.bukkit.OfflinePlayer;
@@ -22,12 +21,12 @@ public class NBTManager {
     }
 
     public ItemStack base64head(ItemStack head, OfflinePlayer player) {
-        exceptionCheck();
+        nbtService.exceptionCheck(nbtService, NBTManager.class);
         return nbtService.base64head(head, player);
     }
 
     public void base64head(ItemStack head, String value, UUID uuid) {
-        exceptionCheck();
+        nbtService.exceptionCheck(nbtService, NBTManager.class);
         nbtService.base64head(head, value, uuid);
     }
 
@@ -36,112 +35,107 @@ public class NBTManager {
     }
 
     public boolean hasTag(ItemStack item, String tag) {
-        exceptionCheck();
+        nbtService.exceptionCheck(nbtService, NBTManager.class);
         return nbtService.hasTag(item, tag);
     }
 
     public void set(ItemStack item, Consumer<ReadWriteItemNBT> consumer) {
-        exceptionCheck();
+        nbtService.exceptionCheck(nbtService, NBTManager.class);
         nbtService.set(item, consumer);
     }
 
     public void setString(ItemStack item, String tag, String value) {
-        exceptionCheck();
+        nbtService.exceptionCheck(nbtService, NBTManager.class);
         NBTManager.set(item, nbt -> nbt.setString(tag, value));
     }
 
     public void setInt(ItemStack item, String tag, int value) {
-        exceptionCheck();
+        nbtService.exceptionCheck(nbtService, NBTManager.class);
         NBTManager.set(item, nbt -> nbt.setInteger(tag, value));
     }
 
     public void setByte(ItemStack item, String tag, byte value) {
-        exceptionCheck();
+        nbtService.exceptionCheck(nbtService, NBTManager.class);
         NBTManager.set(item, nbt -> nbt.setByte(tag, value));
     }
 
     public void setLong(ItemStack item, String tag, long value) {
-        exceptionCheck();
+        nbtService.exceptionCheck(nbtService, NBTManager.class);
         NBTManager.set(item, nbt -> nbt.setLong(tag, value));
     }
 
     public void setDouble(ItemStack item, String tag, double value) {
-        exceptionCheck();
+        nbtService.exceptionCheck(nbtService, NBTManager.class);
         NBTManager.set(item, nbt -> nbt.setDouble(tag, value));
     }
 
     public void setBool(ItemStack item, String tag, boolean value) {
-        exceptionCheck();
+        nbtService.exceptionCheck(nbtService, NBTManager.class);
         NBTManager.set(item, nbt -> nbt.setBoolean(tag, value));
     }
 
     public void setUUID(ItemStack item, String tag, UUID value) {
-        exceptionCheck();
+        nbtService.exceptionCheck(nbtService, NBTManager.class);
         NBTManager.set(item, nbt -> nbt.setUUID(tag, value));
     }
 
     public void setItem(ItemStack item, String tag, ItemStack value) {
-        exceptionCheck();
+        nbtService.exceptionCheck(nbtService, NBTManager.class);
         NBTManager.set(item, nbt -> nbt.setItemStack(tag, value));
     }
 
     public String getString(ItemStack item, String tag) {
-        exceptionCheck();
+        nbtService.exceptionCheck(nbtService, NBTManager.class);
         return nbtService.getString(item, tag);
     }
 
     public int getInt(ItemStack item, String tag) {
-        exceptionCheck();
+        nbtService.exceptionCheck(nbtService, NBTManager.class);
         return nbtService.getInt(item, tag);
     }
 
     public double getDouble(ItemStack item, String tag) {
-        exceptionCheck();
+        nbtService.exceptionCheck(nbtService, NBTManager.class);
         return nbtService.getDouble(item, tag);
     }
 
     public byte getByte(ItemStack item, String tag) {
-        exceptionCheck();
+        nbtService.exceptionCheck(nbtService, NBTManager.class);
         return nbtService.getByte(item, tag);
     }
 
     public ItemStack getItemStack(ItemStack item, String tag) {
-        exceptionCheck();
+        nbtService.exceptionCheck(nbtService, NBTManager.class);
         return nbtService.getItemStack(item, tag);
     }
 
     public long getLong(ItemStack item, String tag) {
-        exceptionCheck();
+        nbtService.exceptionCheck(nbtService, NBTManager.class);
         return nbtService.getLong(item, tag);
     }
 
     public boolean getBoolean(ItemStack item, String tag) {
-        exceptionCheck();
+        nbtService.exceptionCheck(nbtService, NBTManager.class);
         return nbtService.getBoolean(item, tag);
     }
 
     public ItemStack[] getItemStacks(ItemStack item, String tag) {
-        exceptionCheck();
+        nbtService.exceptionCheck(nbtService, NBTManager.class);
         return nbtService.getItemStacks(item, tag);
     }
 
     public float getFloat(ItemStack item, String tag) {
-        exceptionCheck();
+        nbtService.exceptionCheck(nbtService, NBTManager.class);
         return nbtService.getFloat(item, tag);
     }
 
     public Set<String> getKeys(ItemStack item) {
-        exceptionCheck();
+        nbtService.exceptionCheck(nbtService, NBTManager.class);
         return nbtService.getKeys(item);
     }
 
     public static UUID getUUID(ItemStack item, String tag) {
-        exceptionCheck();
+        nbtService.exceptionCheck(nbtService, NBTManager.class);
         return nbtService.getUUID(item, tag);
-    }
-
-    private static void exceptionCheck() {
-        if (nbtService == null || (!LunaSpring.getServiceProvider().isRegistered(nbtService.getClass())))
-            throw new ServiceRegistrationException(NBTManager.class);
     }
 }
