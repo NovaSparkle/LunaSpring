@@ -69,6 +69,7 @@ public class IConfig {
     public Location getLocation(String path) {
         return this.config.getLocation(path);
     }
+
     public Location getLocation(ConfigurationSection section) {
         String world = section.getString("world");
         assert world != null;

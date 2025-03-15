@@ -1,5 +1,6 @@
 package org.novasparkle.lunaspring.Configuration;
 
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
@@ -55,6 +56,16 @@ public class Configuration extends IConfig {
     }
     public void setSection(String path, ConfigurationSection value) {
         this.config.set(path, value);
+    }
+    public void setLocation(String path, Location value, boolean asLocation) {
+        if (asLocation)
+            this.config.set(path, value);
+        else {
+            this.config.set(String.format("%s.world", path), value.getWorld().getName());
+            this.config.set(String.format("%s.x", path), value.getX());
+            this.config.set(String.format("%s.y", path), value.getY());
+            this.config.set(String.format("%s.z", path), value.getZ());
+        }
     }
     public ConfigurationSection createSection(ConfigurationSection section, String name) {
         return section.createSection(name);
