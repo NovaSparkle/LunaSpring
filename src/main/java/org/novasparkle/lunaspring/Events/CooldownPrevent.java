@@ -12,6 +12,12 @@ public class CooldownPrevent<T> {
     private final Map<T, Long> cooldownMap = new HashMap<>();
     @Setter private int cooldownMS = 0;
 
+    public CooldownPrevent() {}
+
+    public CooldownPrevent(int cooldownMS) {
+        this.cooldownMS = cooldownMS;
+    }
+
     public boolean isCancelled(Cancellable e, T object) {
         if (this.cooldownMS <= 0) return false;
 

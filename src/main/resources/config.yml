@@ -1,6 +1,2 @@
-preventDoubleClick:
-  enabled: false
-  cooldown: 50   #millis
-
 messages:
   reloaded: '&aБиблиотека перезагружена'

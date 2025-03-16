@@ -209,10 +209,12 @@ public class Item {
     private void update() {
         this.itemStack.setType(this.material);
         ItemMeta meta = this.itemStack.getItemMeta();
-        meta.setDisplayName(this.displayName);
-        meta.setLore(this.lore);
+        if (meta != null) {
+            if (this.displayName != null && !this.displayName.isEmpty()) meta.setDisplayName(this.displayName);
+            if (this.lore != null) meta.setLore(this.lore);
+            this.itemStack.setItemMeta(meta);
+        }
         this.itemStack.setAmount(this.amount);
-        this.itemStack.setItemMeta(meta);
 
         if (!NBTManager.hasTag(this.itemStack, "lunaspring-item-id")) {
             NBTManager.setString(this.itemStack, "lunaspring-item-id", this.id);

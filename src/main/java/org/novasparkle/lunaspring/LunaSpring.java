@@ -25,8 +25,6 @@ public final class LunaSpring extends JavaPlugin {
     public boolean onCommand(@NotNull CommandSender sender, org.bukkit.command.@NotNull Command command, @NotNull String s, @NotNull String[] args) {
         if (args.length == 1 && args[0].equalsIgnoreCase("reload") && sender.hasPermission("lunaspring.reload")) {
             this.reloadConfig();
-            if (MenuHandler.getCooldown() != null)
-                MenuHandler.getCooldown().setCooldownMS(this.getConfig().getInt("preventDoubleClick.cooldown"));
             sender.sendMessage(Objects.requireNonNull(this.getConfig().getString("messages.reloaded")));
             return true;
         }

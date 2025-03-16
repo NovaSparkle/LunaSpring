@@ -7,9 +7,13 @@ commands:
     permission: "lunaspring.reload"
     aliases:
       - lsp
+      - ls
+      - lunasp
     permission-message: "&cУ вас нет прав на перезагрузку библиотеки"
 authors:
   - NovaSparkle
   - ProGiple
 softdepend:
   - NBTAPI
+  - WorldEdit
+  - WorldGuard

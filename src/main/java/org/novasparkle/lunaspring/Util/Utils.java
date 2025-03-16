@@ -2,10 +2,9 @@ package org.novasparkle.lunaspring.Util;
 
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
+import org.bukkit.*;
+import org.bukkit.event.Listener;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.novasparkle.lunaspring.LunaSpring;
 import org.novasparkle.lunaspring.Util.Service.realized.RegionService;
 import org.novasparkle.lunaspring.Util.managers.ColorManager;
@@ -58,6 +57,7 @@ public class Utils {
 
     public Location findRandomLocation(World world, int maxX, int maxZ) {
         if (world == null) return null;
+        if (maxX == 0 || maxZ == 0) return findRandomLocation(world);
 
         int x = random.nextInt(maxX * 2) - maxX;
         int z = random.nextInt(maxZ * 2) - maxZ;
@@ -68,6 +68,20 @@ public class Utils {
 
     public Location findRandomLocation(World world) {
         int border = (int) (world.getWorldBorder().getSize() / 2);
+        if (border == 0) return null;
+
         return findRandomLocation(world, border, border);
+    }
+
+    public void registerListener(JavaPlugin plugin, Listener listener) {
+        plugin.getServer().getPluginManager().registerEvents(listener, plugin);
+    }
+
+    public void reg(JavaPlugin plugin, Listener listener) {
+        registerListener(plugin, listener);
+    }
+
+    public boolean hasPlugin(String name) {
+        return Bukkit.getPluginManager().getPlugin(name) != null;
     }
 }
