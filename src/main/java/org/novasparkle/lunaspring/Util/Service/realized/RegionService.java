@@ -96,6 +96,12 @@ public final class RegionService implements LunaService {
         return region != null && region.isOwner(player.getName());
     }
 
+    @SuppressWarnings("deprecation")
+    public boolean isMember(String regionName, Player player) {
+        ProtectedRegion region = this.getRegion(regionName);
+        return region != null && region.isMember(player.getName());
+    }
+
     public World getWorld(String regionName) {
         for (World world : Bukkit.getWorlds()) {
             RegionManager manager = this.getRegionManager(world);

@@ -7,8 +7,6 @@ import lombok.experimental.UtilityClass;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.novasparkle.lunaspring.LunaSpring;
-import org.novasparkle.lunaspring.Util.Service.ServiceRegistrationException;
 import org.novasparkle.lunaspring.Util.Service.realized.RegionService;
 
 import java.util.Set;
@@ -70,6 +68,11 @@ public class RegionManager {
     public boolean isOwner(String regionName, Player player) {
         regionService.exceptionCheck(regionService, RegionManager.class);
         return regionService.isOwner(regionName, player);
+    }
+
+    public boolean isMember(String regionName, Player player) {
+        regionService.exceptionCheck(regionService, RegionManager.class);
+        return regionService.isMember(regionName, player);
     }
 
     public World getWorld(String regionName) {
