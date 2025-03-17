@@ -19,7 +19,7 @@ public final class LunaSpring extends JavaPlugin {
     @Getter
     private static final ServiceProvider serviceProvider = new ServiceProvider();
     @Getter
-    private static Plugin plugin = null;
+    private static JavaPlugin plugin = null;
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, org.bukkit.command.@NotNull Command command, @NotNull String s, @NotNull String[] args) {
@@ -37,7 +37,7 @@ public final class LunaSpring extends JavaPlugin {
         Objects.requireNonNull(this.getCommand("lunaspring")).setExecutor(this);
     }
 
-    public static MenuHandler initialize(Plugin plugin) {
+    public static MenuHandler initialize(JavaPlugin plugin) {
         LunaSpring.plugin = plugin;
         List<String> startMessage = Arrays.asList(
                 "",

@@ -3,14 +3,21 @@ package org.novasparkle.lunaspring.Util;
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
 import org.bukkit.*;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.TabCompleter;
+import org.bukkit.command.TabExecutor;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.novasparkle.lunaspring.LunaSpring;
 import org.novasparkle.lunaspring.Util.Service.realized.RegionService;
 import org.novasparkle.lunaspring.Util.managers.ColorManager;
 import org.novasparkle.lunaspring.Util.managers.RegionManager;
+import org.stringtemplate.v4.ST;
 
+import java.time.LocalTime;
+import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 import java.util.logging.Logger;
 
@@ -83,5 +90,26 @@ public class Utils {
 
     public boolean hasPlugin(String name) {
         return Bukkit.getPluginManager().getPlugin(name) != null;
+    }
+
+    public LocalTime getNextTime(Collection<LocalTime> times) {
+        LocalTime currentTime = LocalTime.now();
+        for (LocalTime time : times) {
+            if (time.isAfter(currentTime)) return time;
+        }
+        return null;
+    }
+    public boolean isPluginEnabled(String name) {
+        return Bukkit.getPluginManager().isPluginEnabled(name);
+    }
+    public void registerCommand(CommandExecutor command, String stringCommand) {
+        Objects.requireNonNull(LunaSpring.getPlugin().getCommand(stringCommand)).setExecutor(command);
+    }
+    public void registerTabCompleter(TabCompleter tabCompleter, String stringCommand) {
+        Objects.requireNonNull(LunaSpring.getPlugin().getCommand(stringCommand)).setTabCompleter(tabCompleter);
+    }
+    public void registerTabExecutor(TabExecutor tabExecutor, String stringCommand) {
+        registerCommand(tabExecutor, stringCommand);
+        registerTabCompleter(tabExecutor, stringCommand);
     }
 }
