@@ -76,7 +76,12 @@ public class IConfig {
     public Location getLocation(ConfigurationSection section) {
         String world = section.getString("world");
         assert world != null;
-        return new Location(Bukkit.getWorld(world), section.getInt("x"),section.getInt("y"),section.getInt("z"));
+        return new Location(Bukkit.getWorld(world),
+                section.getDouble("x"),
+                section.getDouble("y"),
+                section.getDouble("z"),
+                (float) section.getDouble("yaw"),
+                (float) section.getDouble("pitch"));
     }
 
     public int getInt(String path) {

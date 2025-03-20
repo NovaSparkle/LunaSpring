@@ -57,14 +57,22 @@ public class Configuration extends IConfig {
     public void setSection(String path, ConfigurationSection value) {
         this.config.set(path, value);
     }
-    public void setLocation(String path, Location value, boolean asLocation) {
+    public void setLocation(String path, Location value, boolean asLocation, boolean asBlock) {
         if (asLocation)
             this.config.set(path, value);
         else {
             this.config.set(String.format("%s.world", path), value.getWorld().getName());
-            this.config.set(String.format("%s.x", path), value.getBlockX());
-            this.config.set(String.format("%s.y", path), value.getBlockY());
-            this.config.set(String.format("%s.z", path), value.getBlockZ());
+            if (asBlock) {
+                this.config.set(String.format("%s.x", path), value.getBlockX());
+                this.config.set(String.format("%s.y", path), value.getBlockY());
+                this.config.set(String.format("%s.z", path), value.getBlockZ());
+            } else {
+                this.config.set(String.format("%s.x", path), value.getX());
+                this.config.set(String.format("%s.y", path), value.getY());
+                this.config.set(String.format("%s.z", path), value.getZ());
+                this.config.set(String.format("%s.yaw", path), value.getYaw());
+                this.config.set(String.format("%s.pitch", path), value.getPitch());
+            }
         }
     }
     public ConfigurationSection createSection(ConfigurationSection section, String name) {
