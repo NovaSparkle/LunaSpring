@@ -12,6 +12,7 @@ import org.bukkit.inventory.ItemStack;
 import org.novasparkle.lunaspring.Events.CooldownPrevent;
 import org.novasparkle.lunaspring.Menus.Items.Decoration;
 import org.novasparkle.lunaspring.Menus.Items.Item;
+import org.novasparkle.lunaspring.Util.LunaMath;
 import org.novasparkle.lunaspring.Util.managers.ColorManager;
 import org.novasparkle.lunaspring.Util.Utils;
 
@@ -33,14 +34,15 @@ public abstract class AMenu implements IMenu {
     public AMenu(Player player, String title, byte size) {
         this.player = player;
         this.title = title;
-        this.inventory = Bukkit.createInventory(this.player, size, Utils.color(title));
+        this.inventory = Bukkit.createInventory(this.player, LunaMath.max(size, 54), Utils.color(title));
     }
 
     @SuppressWarnings("deprecation")
     public AMenu(Player player, ConfigurationSection menuSection) {
         this.player = player;
         this.title = menuSection.getString("title");
-        this.inventory = Bukkit.createInventory(this.player, menuSection.getInt("size"), ColorManager.color(this.title));
+        this.inventory = Bukkit.createInventory(this.player,
+                LunaMath.max(menuSection.getInt("size"), 54), ColorManager.color(this.title));
         this.decoration = new Decoration(Objects.requireNonNull(menuSection.getConfigurationSection("decoration")));
         this.decoration.insert(this);
     }
@@ -49,7 +51,7 @@ public abstract class AMenu implements IMenu {
     public AMenu(Player player, String title, byte size, ConfigurationSection decorSection) {
         this.player = player;
         this.title = title;
-        this.inventory = Bukkit.createInventory(this.player, size, ColorManager.color(title));
+        this.inventory = Bukkit.createInventory(this.player, LunaMath.max(size, 54), ColorManager.color(title));
         this.decoration = new Decoration(decorSection);
         this.decoration.insert(this);
     }
@@ -99,6 +101,7 @@ public abstract class AMenu implements IMenu {
     public void clear() {
         this.itemList.clear();
     }
+
     public List<Item> findItems(ItemStack itemStack) {
         return this.itemList.stream().filter(i -> i.getItemStack().equals(itemStack)).collect(Collectors.toList());
     }
@@ -140,6 +143,7 @@ public abstract class AMenu implements IMenu {
     public void addItems(List<Item> items) {
         this.itemList.addAll(items);
     }
+
     public void drawItems() {
         this.itemList.forEach(System.out::println);
     }

@@ -6,19 +6,19 @@ import org.bukkit.*;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.command.TabExecutor;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.novasparkle.lunaspring.LunaSpring;
+import org.novasparkle.lunaspring.Menus.Items.Item;
 import org.novasparkle.lunaspring.Util.Service.realized.RegionService;
 import org.novasparkle.lunaspring.Util.managers.ColorManager;
 import org.novasparkle.lunaspring.Util.managers.RegionManager;
+import org.novasparkle.lunaspring.other.NonMenuItem;
 import org.stringtemplate.v4.ST;
 
 import java.time.LocalTime;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
 import java.util.logging.Logger;
 
 @UtilityClass
@@ -99,17 +99,68 @@ public class Utils {
         }
         return null;
     }
+
     public boolean isPluginEnabled(String name) {
         return Bukkit.getPluginManager().isPluginEnabled(name);
     }
-    public void registerCommand(CommandExecutor command, String stringCommand) {
-        Objects.requireNonNull(LunaSpring.getPlugin().getCommand(stringCommand)).setExecutor(command);
+
+    public void registerCommand(CommandExecutor command, String stringCommand, JavaPlugin plugin) {
+        Objects.requireNonNull(plugin.getCommand(stringCommand)).setExecutor(command);
     }
-    public void registerTabCompleter(TabCompleter tabCompleter, String stringCommand) {
-        Objects.requireNonNull(LunaSpring.getPlugin().getCommand(stringCommand)).setTabCompleter(tabCompleter);
+
+    public void registerTabCompleter(TabCompleter tabCompleter, String stringCommand, JavaPlugin plugin) {
+        Objects.requireNonNull(plugin.getCommand(stringCommand)).setTabCompleter(tabCompleter);
     }
-    public void registerTabExecutor(TabExecutor tabExecutor, String stringCommand) {
-        registerCommand(tabExecutor, stringCommand);
-        registerTabCompleter(tabExecutor, stringCommand);
+
+    public void registerTabExecutor(TabExecutor tabExecutor, String stringCommand, JavaPlugin plugin) {
+        registerCommand(tabExecutor, stringCommand, plugin);
+        registerTabCompleter(tabExecutor, stringCommand, plugin);
+    }
+
+    public Set<Item> getItems(NonMenuItem example, Collection<String> slots) {
+        Material material = example.getMaterial();
+        String displayName = example.getDisplayName();
+        List<String> lore = new ArrayList<>(example.getLore());
+        int amount = example.getAmount();
+
+        Set<Item> list = new HashSet<>();
+        if (!slots.isEmpty()) {
+            slots.forEach(unsplitedSlots -> {
+                String[] splitedSlots = unsplitedSlots.split("-");
+                if (splitedSlots.length == 1) {
+                    Item item = new Item(material, displayName, lore, amount, Byte.parseByte(splitedSlots[0]));
+                    item.setGlowing(example.isGlowing());
+                    list.add(item);
+                }
+                else if (splitedSlots.length >= 2) {
+                    for (byte slot = Byte.parseByte(splitedSlots[0]); slot <= Byte.parseByte(splitedSlots[1]); slot++) {
+                        Item item = new Item(material, displayName, lore, amount, slot);
+                        item.setGlowing(example.isGlowing());
+                        list.add(item);
+                    }
+                }
+            });
+        }
+        return list;
+    }
+
+    public Set<Item> getItems(ConfigurationSection example, Collection<String> slots) {
+        Set<Item> list = new HashSet<>();
+        if (!slots.isEmpty()) {
+            slots.forEach(unsplitedSlots -> {
+                String[] splitedSlots = unsplitedSlots.split("-");
+                if (splitedSlots.length == 1) {
+                    Item item = new Item(example, Byte.parseByte(splitedSlots[0]));
+                    list.add(item);
+                }
+                else if (splitedSlots.length >= 2) {
+                    for (byte slot = Byte.parseByte(splitedSlots[0]); slot <= Byte.parseByte(splitedSlots[1]); slot++) {
+                        Item item = new Item(example, slot);
+                        list.add(item);
+                    }
+                }
+            });
+        }
+        return list;
     }
 }

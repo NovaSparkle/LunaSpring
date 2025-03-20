@@ -1,15 +1,19 @@
 package org.novasparkle.lunaspring.Menus.Items;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.novasparkle.lunaspring.Menus.IMenu;
+import org.novasparkle.lunaspring.Util.Utils;
+import org.novasparkle.lunaspring.other.NonMenuItem;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
-@Getter
+@Getter @Setter
 public class Decoration {
     private final List<Item> decorationItems = new ArrayList<>();
 
@@ -26,19 +30,7 @@ public class Decoration {
             assert itemSection != null;
 
             List<String> slots = itemSection.getStringList("slots");
-            if (!slots.isEmpty()) {
-                slots.forEach(unsplitedSlots -> {
-                    String[] splitedSlots = unsplitedSlots.split("-");
-                    if (splitedSlots.length == 1) {
-                        this.decorationItems.add(new Item(itemSection, Byte.parseByte(splitedSlots[0])));
-                    }
-                    else if (splitedSlots.length >= 2) {
-                        for (byte slot = Byte.parseByte(splitedSlots[0]); slot <= Byte.parseByte(splitedSlots[1]); slot++) {
-                            this.decorationItems.add(new Item(itemSection, slot));
-                        }
-                    }
-                });
-            }
+            this.decorationItems.addAll(Utils.getItems(itemSection, slots));
         }
     }
 

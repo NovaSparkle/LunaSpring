@@ -54,9 +54,11 @@ public class Configuration extends IConfig {
     public void setItemStack(String path, ItemStack value) {
         this.config.set(path, value);
     }
+
     public void setSection(String path, ConfigurationSection value) {
         this.config.set(path, value);
     }
+
     public void setLocation(String path, Location value, boolean asLocation, boolean asBlock) {
         if (asLocation)
             this.config.set(path, value);

@@ -10,9 +10,11 @@ import java.util.Map;
 @Getter
 public class CooldownPrevent<T> {
     private final Map<T, Long> cooldownMap = new HashMap<>();
-    @Setter private int cooldownMS = 0;
+    @Setter private int cooldownMS;
 
-    public CooldownPrevent() {}
+    public CooldownPrevent() {
+        this.cooldownMS = 0;
+    }
 
     public CooldownPrevent(int cooldownMS) {
         this.cooldownMS = cooldownMS;
