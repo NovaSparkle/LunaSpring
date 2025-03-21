@@ -44,6 +44,7 @@ public final class LunaSpring extends JavaPlugin {
                 "    &b&l[pluginName] &1v[pluginVersion]",
                 "        &cEngined with &c&nLunaSpring v[LSVersion]",
                 "        &8Author: &bNova Sparkle",
+                "        &8Dev-Helper: &dProGiple",
                 ""
         );
         startMessage.replaceAll(m -> m.replace("[pluginName]", plugin.getName()).replace("[pluginVersion]", plugin.getDescription().getVersion()).replace("[LSVersion]", INSTANCE.getDescription().getVersion()));

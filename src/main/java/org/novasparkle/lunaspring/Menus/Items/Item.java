@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.novasparkle.lunaspring.Menus.IMenu;
+import org.novasparkle.lunaspring.Util.LunaMath;
 import org.novasparkle.lunaspring.Util.Utils;
 import org.novasparkle.lunaspring.other.NonMenuItem;
 
@@ -36,7 +37,7 @@ public class Item extends NonMenuItem {
     public Item(ConfigurationSection section, boolean rowCol) {
         super(section);
         if (rowCol)
-            this.slot = (byte) Utils.getIndex(section.getInt("slot.row"), section.getInt("slot.column"));
+            this.slot = (byte) LunaMath.getIndex(section.getInt("slot.row"), section.getInt("slot.column"));
         else this.slot = (byte) section.getInt("slot");
     }
 
@@ -65,7 +66,7 @@ public class Item extends NonMenuItem {
 
     public void insert(IMenu aMenu, byte row, byte column) {
         this.menu = aMenu;
-        this.slot = (byte) Utils.getIndex(row, column);
+        this.slot = (byte) LunaMath.getIndex(row, column);
         aMenu.getInventory().setItem(slot, this.getItemStack());
     }
 
