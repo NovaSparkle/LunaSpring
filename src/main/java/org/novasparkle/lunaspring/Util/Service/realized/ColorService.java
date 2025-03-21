@@ -22,12 +22,12 @@ public final class ColorService implements LunaService {
     }
     public String color(String text) {
         for (Color color : this.colorList) {
-            text = text.replaceAll(color.getAbbr(), color.getVariable());
+            text = text.replaceAll(color.abbr(), color.variable());
         }
         return Utils.color(text);
     }
     public Color getColor(String abbr) {
-        return this.colorList.stream().filter(c -> c.getAbbr().equals(abbr)).findFirst().orElseThrow();
+        return this.colorList.stream().filter(c -> c.abbr().equals(abbr)).findFirst().orElseThrow();
     }
     @Override
     public String toString() {

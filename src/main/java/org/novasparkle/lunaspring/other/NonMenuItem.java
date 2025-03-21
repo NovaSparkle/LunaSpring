@@ -1,5 +1,6 @@
 package org.novasparkle.lunaspring.other;
 
+import de.tr7zw.nbtapi.NBT;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Material;
@@ -182,6 +183,7 @@ public class NonMenuItem {
 
     public void applyBaseHead(String value) {
         NBTManager.base64head(this.itemStack, value);
+        this.headValue = value;
     }
 
     public void applyBaseHead(OfflinePlayer player) {
@@ -195,5 +197,18 @@ public class NonMenuItem {
     public boolean checkId(ItemStack item) {
         String id = NBTManager.getString(item, "lunaspring-item-id");
         return id != null && !id.isEmpty() && this.checkId(id);
+    }
+
+    @SuppressWarnings("deprecation")
+    public ItemStack getDefaultStack() {
+        ItemStack item = new ItemStack(this.material, this.amount);
+
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(this.displayName);
+        meta.setLore(this.lore);
+        item.setItemMeta(meta);
+
+        if (this.headValue != null) NBTManager.base64head(item, this.headValue);
+        return itemStack;
     }
 }

@@ -3,18 +3,7 @@ package org.novasparkle.lunaspring.Util;
 import lombok.Getter;
 
 @Getter
-public final class Color {
-
-    private final String abbr;
-
-    @Getter
-    private final String variable;
-
-    public Color(String abbr, String variable) {
-        this.abbr = abbr;
-        this.variable = variable;
-    }
-
+public record Color(String abbr, @Getter String variable) {
     @Override
     public String toString() {
         return "Color{" +

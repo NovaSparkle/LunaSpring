@@ -23,19 +23,9 @@ import java.util.logging.Logger;
 
 @UtilityClass
 public class Utils {
-    @Getter
-    private final Random random = new Random();
-
-    public int getIndex(int row, int col) {
-        return (row - 1) * 9 + col - 1;
-    }
 
     public String color(String text) {
         return ChatColor.translateAlternateColorCodes('&', text);
-    }
-
-    public int toInt(String text) {
-        return Integer.parseInt(text);
     }
 
     public void info(String text) {
@@ -66,8 +56,8 @@ public class Utils {
         if (world == null) return null;
         if (maxX == 0 || maxZ == 0) return findRandomLocation(world);
 
-        int x = random.nextInt(maxX * 2) - maxX;
-        int z = random.nextInt(maxZ * 2) - maxZ;
+        int x = LunaMath.getRandom().nextInt(maxX * 2) - maxX;
+        int z = LunaMath.getRandom().nextInt(maxZ * 2) - maxZ;
         int y = world.getHighestBlockYAt(x, z);
 
         return new Location(world, x, y, z);
@@ -115,33 +105,6 @@ public class Utils {
     public void registerTabExecutor(TabExecutor tabExecutor, String stringCommand, JavaPlugin plugin) {
         registerCommand(tabExecutor, stringCommand, plugin);
         registerTabCompleter(tabExecutor, stringCommand, plugin);
-    }
-
-    public Set<Item> getItems(NonMenuItem example, Collection<String> slots) {
-        Material material = example.getMaterial();
-        String displayName = example.getDisplayName();
-        List<String> lore = new ArrayList<>(example.getLore());
-        int amount = example.getAmount();
-
-        Set<Item> list = new HashSet<>();
-        if (!slots.isEmpty()) {
-            slots.forEach(unsplitedSlots -> {
-                String[] splitedSlots = unsplitedSlots.split("-");
-                if (splitedSlots.length == 1) {
-                    Item item = new Item(material, displayName, lore, amount, Byte.parseByte(splitedSlots[0]));
-                    item.setGlowing(example.isGlowing());
-                    list.add(item);
-                }
-                else if (splitedSlots.length >= 2) {
-                    for (byte slot = Byte.parseByte(splitedSlots[0]); slot <= Byte.parseByte(splitedSlots[1]); slot++) {
-                        Item item = new Item(material, displayName, lore, amount, slot);
-                        item.setGlowing(example.isGlowing());
-                        list.add(item);
-                    }
-                }
-            });
-        }
-        return list;
     }
 
     public Set<Item> getItems(ConfigurationSection example, Collection<String> slots) {
