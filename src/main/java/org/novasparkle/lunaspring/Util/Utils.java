@@ -1,39 +1,17 @@
 package org.novasparkle.lunaspring.Util;
 
-import lombok.Getter;
 import lombok.experimental.UtilityClass;
 import org.bukkit.*;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.TabCompleter;
-import org.bukkit.command.TabExecutor;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.event.Listener;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.novasparkle.lunaspring.LunaSpring;
 import org.novasparkle.lunaspring.Menus.Items.Item;
-import org.novasparkle.lunaspring.Util.Service.realized.RegionService;
-import org.novasparkle.lunaspring.Util.managers.ColorManager;
-import org.novasparkle.lunaspring.Util.managers.RegionManager;
-import org.novasparkle.lunaspring.other.NonMenuItem;
-import org.stringtemplate.v4.ST;
 
 import java.time.LocalTime;
 import java.util.*;
-import java.util.logging.Logger;
 
 @UtilityClass
 public class Utils {
-
     public String color(String text) {
         return ChatColor.translateAlternateColorCodes('&', text);
-    }
-
-    public void info(String text) {
-        Logger logger = LunaSpring.getPlugin().getLogger();
-
-        if (LunaSpring.getServiceProvider().isRegistered(ColorManager.getColorService().getClass())) {
-            logger.info(ColorManager.color(text));
-        } else logger.info(Utils.color(text));
     }
 
     public String getRKey(byte size) {
@@ -70,14 +48,6 @@ public class Utils {
         return findRandomLocation(world, border, border);
     }
 
-    public void registerListener(JavaPlugin plugin, Listener listener) {
-        plugin.getServer().getPluginManager().registerEvents(listener, plugin);
-    }
-
-    public void reg(JavaPlugin plugin, Listener listener) {
-        registerListener(plugin, listener);
-    }
-
     public boolean hasPlugin(String name) {
         return Bukkit.getPluginManager().getPlugin(name) != null;
     }
@@ -90,21 +60,8 @@ public class Utils {
         return null;
     }
 
-    public boolean isPluginEnabled(String name) {
+    public static boolean isPluginEnabled(String name) {
         return Bukkit.getPluginManager().isPluginEnabled(name);
-    }
-
-    public void registerCommand(CommandExecutor command, String stringCommand, JavaPlugin plugin) {
-        Objects.requireNonNull(plugin.getCommand(stringCommand)).setExecutor(command);
-    }
-
-    public void registerTabCompleter(TabCompleter tabCompleter, String stringCommand, JavaPlugin plugin) {
-        Objects.requireNonNull(plugin.getCommand(stringCommand)).setTabCompleter(tabCompleter);
-    }
-
-    public void registerTabExecutor(TabExecutor tabExecutor, String stringCommand, JavaPlugin plugin) {
-        registerCommand(tabExecutor, stringCommand, plugin);
-        registerTabCompleter(tabExecutor, stringCommand, plugin);
     }
 
     public Set<Item> getItems(ConfigurationSection example, Collection<String> slots) {

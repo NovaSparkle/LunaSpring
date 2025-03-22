@@ -14,6 +14,10 @@ public class LunaMap<S, E, X> {
         this.map.put(key, element);
     }
 
+    public Map<S, Element<E, X>> toHashMap() {
+        return this.map;
+    }
+
     public int size() {
         return this.map.size();
     }

@@ -120,13 +120,13 @@ public class IConfig {
             }
 
             String newLine = Utils.color(line
-                    .replace("ACTION_BAR", "")
-                    .replace("TITLE", "")
-                    .replace("SOUND", ""));
+                    .replace("ACTION_BAR ", "")
+                    .replace("TITLE ", "")
+                    .replace("SOUND ", ""));
             if (sender instanceof Player player &&
-                    (line.startsWith("ACTION_BAR") || line.startsWith("SOUND") || line.startsWith("TITLE"))) {
-                if (line.startsWith("ACTION_BAR")) player.sendActionBar(newLine);
-                else if (line.startsWith("SOUND")) player.playSound(player.getLocation(), Sound.valueOf(newLine), 1, 1);
+                    (line.startsWith("ACTION_BAR ") || line.startsWith("SOUND") || line.startsWith("TITLE"))) {
+                if (line.startsWith("ACTION_BAR ")) player.sendActionBar(newLine);
+                else if (line.startsWith("SOUND ")) player.playSound(player.getLocation(), Sound.valueOf(newLine), 1, 1);
                 else {
                     String[] split = newLine.split("\\{S}");
                     if (split.length < 2) split = new String[]{split[0], ""};

@@ -6,7 +6,6 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.novasparkle.lunaspring.Menus.IMenu;
 import org.novasparkle.lunaspring.Util.LunaMath;
-import org.novasparkle.lunaspring.Util.Utils;
 import org.novasparkle.lunaspring.other.NonMenuItem;
 
 import java.util.List;

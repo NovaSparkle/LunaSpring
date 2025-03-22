@@ -13,7 +13,7 @@ public class CooldownPrevent<T> {
     @Setter private int cooldownMS;
 
     public CooldownPrevent() {
-        this.cooldownMS = 0;
+        this(0);
     }
 
     public CooldownPrevent(int cooldownMS) {
