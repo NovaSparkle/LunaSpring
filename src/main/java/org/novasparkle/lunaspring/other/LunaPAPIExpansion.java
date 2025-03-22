@@ -16,7 +16,7 @@ public class LunaPAPIExpansion extends PlaceholderExpansion {
 
     public LunaPAPIExpansion(LunaPlugin lunaPlugin, String identifier) {
         this.lunaPlugin = lunaPlugin;
-        this.identifier = identifier == null ? lunaPlugin.getName().toLowerCase() : identifier.toLowerCase();
+        this.identifier = (identifier == null ? lunaPlugin.getName() : identifier).toLowerCase();
     }
 
     public LunaPAPIExpansion(LunaPlugin lunaPlugin, Request request) {
@@ -51,11 +51,11 @@ public class LunaPAPIExpansion extends PlaceholderExpansion {
 
     @Override
     public String onRequest(OfflinePlayer offlinePlayer, @NotNull String params) {
-        return this.request == null ? "" : this.request.sendRequest(params);
+        return this.request == null ? "" : this.request.sendRequest(offlinePlayer, params);
     }
 
+    @FunctionalInterface
     public interface Request {
-        OfflinePlayer getOfflinePlayer();
-        String sendRequest(String params);
+        String sendRequest(OfflinePlayer offlinePlayer, String params);
     }
 }

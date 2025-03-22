@@ -86,12 +86,12 @@ public class LunaPlugin extends JavaPlugin {
         } else logger.warning(Utils.color(text));
     }
 
-    public void regPlaceholder(PlaceholderExpansion placeholderExpansion) {
-        if (Utils.hasPlugin("PlaceholderAPI")) placeholderExpansion.register();
+    public void registerPlaceholder(PlaceholderExpansion placeholderExpansion) {
+        if (Utils.isPluginEnabled("PlaceholderAPI")) placeholderExpansion.register();
     }
 
     public void createPlaceholder(String identifier, LunaPAPIExpansion.Request request) {
-        if (Utils.hasPlugin("PlaceholderAPI")) new LunaPAPIExpansion(this, identifier, request);
+        if (Utils.isPluginEnabled("PlaceholderAPI")) new LunaPAPIExpansion(this, identifier, request);
     }
 
     public void createPlaceholder(LunaPAPIExpansion.Request request) {

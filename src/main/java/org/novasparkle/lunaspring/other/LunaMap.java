@@ -87,6 +87,18 @@ public class LunaMap<S, E, X> {
         else this.put(key, firstValue, secondValue);
     }
 
+    public boolean replaceFirstValue(S key, E newValue) {
+        Element<E, X> element = this.getElement(key);
+        if (element != null) this.put(key, newValue, element.getSecond());
+        return element != null;
+    }
+
+    public boolean replaceSecondValue(S key, X newValue) {
+        Element<E, X> element = this.getElement(key);
+        if (element != null) this.put(key, element.getFirst(), newValue);
+        return element != null;
+    }
+
     public Element<E, X> getElement(S key) {
         return this.map.get(key);
     }

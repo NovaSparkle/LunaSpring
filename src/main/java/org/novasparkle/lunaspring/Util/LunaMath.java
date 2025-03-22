@@ -22,16 +22,8 @@ public class LunaMath {
         return (int) num;
     }
 
-    public int min(int value, int minValue) {
-        return Math.max(value, minValue);
-    }
-
-    public int max(int value, int maxValue) {
-        return Math.min(value, maxValue);
-    }
-
     public int getRandomInt(int minValue, int maxValue) {
-        return min(random.nextInt(maxValue - minValue) + minValue, minValue);
+        return random.nextInt(maxValue - minValue) + minValue;
     }
 
     public int getRandomInt(String numerical) {
@@ -41,7 +33,7 @@ public class LunaMath {
     }
 
     public double round(double notRoundedNum, int roundLength) {
-        String formater = "%." + roundLength + "f";
-        return Double.parseDouble(String.format(formater, notRoundedNum));
+        String pattern = "%." + roundLength + "f";
+        return Double.parseDouble(String.format(pattern, notRoundedNum));
     }
 }

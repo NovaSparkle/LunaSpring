@@ -34,7 +34,7 @@ public abstract class AMenu implements IMenu {
     public AMenu(Player player, String title, byte size) {
         this.player = player;
         this.title = title;
-        this.inventory = Bukkit.createInventory(this.player, LunaMath.max(size, 54), Utils.color(title));
+        this.inventory = Bukkit.createInventory(this.player, Math.min(size, 54), Utils.color(title));
     }
 
     @SuppressWarnings("deprecation")
@@ -42,7 +42,7 @@ public abstract class AMenu implements IMenu {
         this.player = player;
         this.title = menuSection.getString("title");
         this.inventory = Bukkit.createInventory(this.player,
-                LunaMath.max(menuSection.getInt("size"), 54), ColorManager.color(this.title));
+                Math.min(menuSection.getInt("size"), 54), ColorManager.color(this.title));
         this.decoration = new Decoration(Objects.requireNonNull(menuSection.getConfigurationSection("decoration")));
         this.decoration.insert(this);
     }
@@ -51,7 +51,7 @@ public abstract class AMenu implements IMenu {
     public AMenu(Player player, String title, byte size, ConfigurationSection decorSection) {
         this.player = player;
         this.title = title;
-        this.inventory = Bukkit.createInventory(this.player, LunaMath.max(size, 54), ColorManager.color(title));
+        this.inventory = Bukkit.createInventory(this.player, Math.min(size, 54), ColorManager.color(title));
         this.decoration = new Decoration(decorSection);
         this.decoration.insert(this);
     }
