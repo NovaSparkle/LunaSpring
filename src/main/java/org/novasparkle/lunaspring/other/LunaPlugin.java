@@ -9,6 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.novasparkle.lunaspring.Events.MenuHandler;
 import org.novasparkle.lunaspring.LunaSpring;
+import org.novasparkle.lunaspring.Util.LunaMath;
 import org.novasparkle.lunaspring.Util.Service.realized.ColorService;
 import org.novasparkle.lunaspring.Util.Utils;
 import org.novasparkle.lunaspring.Util.managers.ColorManager;
@@ -20,15 +21,21 @@ import java.util.logging.Logger;
 
 public class LunaPlugin extends JavaPlugin {
     public final void initialize() {
+        String textColorString = LunaSpring.getINSTANCE().getConfig().getString("on_load_plugin_text_colors");
+        char endedColor = textColorString == null || textColorString.isEmpty() ? 'b' :
+                textColorString.charAt(LunaMath.getRandomInt(0, textColorString.length()));
+        String formattedEndedColor = "&" + endedColor;
+
         List<String> startMessage = Arrays.asList(
                 "",
-                "        &b | &l[pluginName]&b v[pluginVersion]",
-                "        &b | &fEngined with &b&nLunaSpring&b v[LSVersion]",
-                "        &b | &fAuthors: &bNova Sparkle, ProGiple",
+                "        ^ | &l[pluginName]^ v[pluginVersion]",
+                "        ^ | &fEngined with ^&nLunaSpring^ v[LSVersion]",
+                "        ^ | &fAuthors: ^Nova Sparkle, ProGiple",
                 ""
         );
         startMessage.forEach(m -> {
             String line = m
+                    .replace("^", formattedEndedColor)
                     .replace("[pluginName]", this.getName())
                     .replace("[pluginVersion]", this.getVersion())
                     .replace("[LSVersion]", LunaSpring.getINSTANCE().getVersion());

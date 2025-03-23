@@ -1,2 +1,10 @@
+on_load_plugin_text_colors: "bcde"
 messages:
   reloaded: '&aБиблиотека перезагружена'
+  server-info:
+    - " "
+    - "&f Онлайн игроков: &b{online} / {players_max}"
+    - "&f Версии: &b{bukkit-version} | {mc-version}"
+    - "&f Порт: &b{port}"
+    - "&f Средний ТПС: &b{average_tps}"
+    - " "
