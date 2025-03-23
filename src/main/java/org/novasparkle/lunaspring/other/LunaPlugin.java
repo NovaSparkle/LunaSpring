@@ -9,6 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.novasparkle.lunaspring.Events.MenuHandler;
 import org.novasparkle.lunaspring.LunaSpring;
+import org.novasparkle.lunaspring.Util.Service.realized.ColorService;
 import org.novasparkle.lunaspring.Util.Utils;
 import org.novasparkle.lunaspring.Util.managers.ColorManager;
 
@@ -73,7 +74,8 @@ public class LunaPlugin extends JavaPlugin {
     public void info(String text) {
         Logger logger = this.getLogger();
 
-        if (LunaSpring.getServiceProvider().isRegistered(ColorManager.getColorService().getClass())) {
+        ColorService colorService = ColorManager.getColorService();
+        if (colorService != null && LunaSpring.getServiceProvider().isRegistered(colorService.getClass())) {
             logger.info(ColorManager.color(text));
         } else logger.info(Utils.color(text));
     }
@@ -81,7 +83,8 @@ public class LunaPlugin extends JavaPlugin {
     public void warning(String text) {
         Logger logger = this.getLogger();
 
-        if (LunaSpring.getServiceProvider().isRegistered(ColorManager.getColorService().getClass())) {
+        ColorService colorService = ColorManager.getColorService();
+        if (colorService != null && LunaSpring.getServiceProvider().isRegistered(colorService.getClass())) {
             logger.warning(ColorManager.color(text));
         } else logger.warning(Utils.color(text));
     }
