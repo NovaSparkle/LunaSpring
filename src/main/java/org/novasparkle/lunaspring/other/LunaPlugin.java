@@ -22,9 +22,9 @@ public class LunaPlugin extends JavaPlugin {
     public final void initialize() {
         List<String> startMessage = Arrays.asList(
                 "",
-                "    &b&l[pluginName] &1v[pluginVersion]",
-                "        &cEngined with &c&nLunaSpring v[LSVersion]",
-                "        &8Authors: &bNova Sparkle, ProGiple",
+                "        &b | &l[pluginName]&b v[pluginVersion]",
+                "        &b | &fEngined with &b&nLunaSpring&b v[LSVersion]",
+                "        &b | &fAuthors: &bNova Sparkle, ProGiple",
                 ""
         );
         startMessage.forEach(m -> {
@@ -94,7 +94,8 @@ public class LunaPlugin extends JavaPlugin {
     }
 
     public void createPlaceholder(String identifier, LunaPAPIExpansion.Request request) {
-        if (Utils.isPluginEnabled("PlaceholderAPI")) new LunaPAPIExpansion(this, identifier, request);
+        if (Utils.isPluginEnabled("PlaceholderAPI"))
+            new LunaPAPIExpansion(this, identifier, request).register();
     }
 
     public void createPlaceholder(LunaPAPIExpansion.Request request) {
