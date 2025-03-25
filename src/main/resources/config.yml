@@ -1,10 +1,31 @@
+colors:
+  PREFIX:
+    abbr: '\{P\}'
+    variable: "&x&D&5&B&3&F&D[&#DF49FFL&#D747FFu&#CE45FFn&#C644FFa&#BE42FFS&#B540FFp&#AD3EFFr&#A53DFFi&#9C3BFFn&#9439FFg]"
+  MAIN_COLOR:
+    abbr: '\{M\}'
+    variable: "&x&9&8&6&3&E&7"
+  SECONDARY_COLOR:
+    abbr: '\{S\}'
+    variable: "&x&D&5&B&3&F&D"
+  ERROR_COLOR:
+    abbr: '\{E\}'
+    variable: "&x&F&F&3&B&3&B"
+  PURPLE_COLOR:
+    abbr: '\{R\}'
+    variable: '&x&A&F&4&7&F&F'
+
 on_load_plugin_text_colors: "bcde"
 messages:
-  reloaded: '&aБиблиотека перезагружена'
+  reloaded: '{S}Библиотека перезагружена'
+  loadedSource: '{S}Загружен ресурс [file]'
+  serviceRegistered: '{S}Cервис [service] зарегистрирован'
+  listenerRegistered: '{S}Оcновной обработчик событий LunaSpring зарегистрирован'
+  placeholderRegistered: '{S}Плейсхолдер {M}[identifier] {S}зарегистрирован!'
   server-info:
     - " "
-    - "&f Онлайн игроков: &b{online} / {players_max}"
-    - "&f Версии: &b{bukkit-version} | {mc-version}"
-    - "&f Порт: &b{port}"
-    - "&f Средний ТПС: &b{average_tps}"
+    - "&f Онлайн игроков: {S}[online] &f/ {S}{players_max]"
+    - "&f Версии: {S}[bukkit-version] &f| {S}{mc-version]"
+    - "&f Порт: {S}[port]"
+    - "&f Средний ТПС: {S}[average_tps]"
     - " "

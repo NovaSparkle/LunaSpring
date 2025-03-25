@@ -7,12 +7,13 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.novasparkle.lunaspring.Events.MenuHandler;
-import org.novasparkle.lunaspring.Util.utilities.LunaMath;
-import org.novasparkle.lunaspring.Util.Service.realized.ColorService;
-import org.novasparkle.lunaspring.Util.utilities.Utils;
-import org.novasparkle.lunaspring.Util.managers.ColorManager;
-import org.novasparkle.lunaspring.Util.utilities.LunaPAPIExpansion;
+import org.novasparkle.lunaspring.API.Events.MenuHandler;
+import org.novasparkle.lunaspring.API.Util.utilities.LunaMath;
+import org.novasparkle.lunaspring.API.Util.Service.realized.ColorService;
+import org.novasparkle.lunaspring.API.Util.utilities.Utils;
+import org.novasparkle.lunaspring.API.Util.managers.ColorManager;
+import org.novasparkle.lunaspring.API.Util.utilities.LunaPAPIExpansion;
+import org.novasparkle.lunaspring.self.ConfigManager;
 
 import java.util.Arrays;
 import java.util.List;
@@ -21,19 +22,23 @@ import java.util.logging.Logger;
 
 public class LunaPlugin extends JavaPlugin {
     public final void initialize() {
-        String textColorString = LunaSpring.getINSTANCE().getConfig().getString("on_load_plugin_text_colors");
-        char endedColor = textColorString == null || textColorString.isEmpty() ? 'b' :
-                textColorString.charAt(LunaMath.getRandomInt(0, textColorString.length()));
-        String formattedEndedColor = "&" + endedColor;
-
-        List<String> startMessage = Arrays.asList(
+        this.startMessage(Arrays.asList(
                 "",
                 "        ^ | &l[pluginName]^ v[pluginVersion]",
                 "        ^ | &fEngined with ^&lLunaSpring^ v[LSVersion]",
                 "        ^ | &fAuthor: ^NovaSparkle",
                 "        ^ | &fDev-Helper: ^ProGiple",
                 ""
-        );
+        ));
+        this.registerListener(new MenuHandler());
+        this.info(ConfigManager.getMessage("listenerRegistered"));
+    }
+    private void startMessage(List<String> startMessage) {
+        String textColorString = ConfigManager.getString("on_load_plugin_text_colors");
+        char endedColor = textColorString == null || textColorString.isEmpty() ? 'b' :
+                textColorString.charAt(LunaMath.getRandomInt(0, textColorString.length()));
+        String formattedEndedColor = "&" + endedColor;
+
         startMessage.forEach(m -> {
             String line = m
                     .replace("^", formattedEndedColor)
@@ -42,9 +47,7 @@ public class LunaPlugin extends JavaPlugin {
                     .replace("[LSVersion]", LunaSpring.getINSTANCE().getVersion());
             this.info(line);
         });
-        this.registerListener(new MenuHandler());
     }
-
     public String getAuthors() {
         return String.join(", ", this.getDescription().getAuthors());
     }
@@ -55,6 +58,7 @@ public class LunaPlugin extends JavaPlugin {
 
     public void loadFile(String path) {
         this.saveResource(path, false);
+        this.info(ConfigManager.getMessage("loadedSource").replace("[file]", path));
     }
 
     public void loadFiles(boolean enabled, String... paths) {
@@ -102,8 +106,10 @@ public class LunaPlugin extends JavaPlugin {
     }
 
     public void createPlaceholder(String identifier, LunaPAPIExpansion.Request request) {
-        if (Utils.isPluginEnabled("PlaceholderAPI"))
+        if (Utils.isPluginEnabled("PlaceholderAPI")) {
             new LunaPAPIExpansion(this, identifier, request).register();
+            this.info(ConfigManager.getMessage("placeholderRegistered").replace("[identifier]", identifier));
+        }
     }
 
     public void createPlaceholder(LunaPAPIExpansion.Request request) {
@@ -112,6 +118,15 @@ public class LunaPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        this.startMessage(Arrays.asList(
+                "",
+                "        ^ | &n[pluginName]^ v[pluginVersion]",
+                "        ^ | &fDisabling with ^&lLunaSpring^ v[LSVersion]",
+                "        ^ | &fDeveloped by ^NovaSparkle",
+                "        ^ | &fDev-Helper: ^ProGiple",
+                "        ^ | ^GoodBye!",
+                ""
+        ));
         Bukkit.getScheduler().cancelTasks(this);
     }
 }
