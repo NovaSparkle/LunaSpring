@@ -1,5 +1,6 @@
 package org.novasparkle.lunaspring.Menus;
 
+import de.tr7zw.nbtapi.NBT;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
@@ -107,6 +108,9 @@ public abstract class AMenu implements IMenu {
 
     public Item findFirstItem(ItemStack itemStack) {
         return this.itemList.stream().filter(i -> i.getItemStack().equals(itemStack)).findFirst().orElse(null);
+    }
+    public Item findFirstItemById(String id) {
+        return this.itemList.stream().filter(i -> i.checkId(id)).findFirst().orElse(null);
     }
 
     public List<Item> findItems(Material material) {

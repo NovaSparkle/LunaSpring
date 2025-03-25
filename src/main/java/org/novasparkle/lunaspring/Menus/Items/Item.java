@@ -73,6 +73,5 @@ public class Item extends NonMenuItem {
     public void remove(IMenu iMenu) {
         iMenu.getInventory().setItem(this.slot, null);
     }
-    @ApiStatus.OverrideOnly
     public void onClick(InventoryClickEvent event) {}
 }
