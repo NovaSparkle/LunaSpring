@@ -5,6 +5,7 @@ import org.novasparkle.lunaspring.LunaSpring;
 import org.novasparkle.lunaspring.API.Util.utilities.Color;
 import org.novasparkle.lunaspring.API.Util.Service.realized.ColorService;
 import org.novasparkle.lunaspring.API.Util.utilities.Utils;
+import org.novasparkle.lunaspring.self.ConfigManager;
 
 
 public class ColorManager {
@@ -12,6 +13,8 @@ public class ColorManager {
     private static ColorService colorService;
     public static void init(ColorService service) {
         colorService = service;
+        LunaSpring.getINSTANCE().info(ConfigManager.getMessage("colorManager"));
+        LunaSpring.getServiceProvider().register(service);
     }
     public static String color(String text) {
         if (colorService == null || (!LunaSpring.getServiceProvider().isRegistered(ColorManager.getColorService().getClass()))) {

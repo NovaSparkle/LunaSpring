@@ -9,14 +9,17 @@ import lombok.experimental.UtilityClass;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.novasparkle.lunaspring.API.Util.Service.realized.WorldEditService;
+import org.novasparkle.lunaspring.LunaSpring;
 
 import java.io.File;
 
 @UtilityClass
 public class WorldEditManager {
     private WorldEditService weService;
-    public void init(WorldEditService worldEditService) {
-        weService = worldEditService;}
+    public void init() {
+        weService = new WorldEditService();
+        LunaSpring.getServiceProvider().register(weService);
+    }
 
     public EditSession getSession(World world) {
         weService.exceptionCheck(weService, WorldEditManager.class);

@@ -8,6 +8,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.novasparkle.lunaspring.API.Util.Service.realized.RegionService;
+import org.novasparkle.lunaspring.LunaSpring;
 
 import java.util.Set;
 import java.util.UUID;
@@ -15,8 +16,9 @@ import java.util.UUID;
 @UtilityClass
 public class RegionManager {
     private RegionService regionService;
-    public void init(RegionService service) {
-        regionService = service;
+    public void init() {
+        regionService = new RegionService();
+        LunaSpring.getServiceProvider().register(regionService);
     }
 
     public RegionContainer getRegionContainer() {

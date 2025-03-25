@@ -16,8 +16,9 @@ import java.util.function.Consumer;
 @UtilityClass
 public class NBTManager {
     private NBTService nbtService;
-    public void init(LunaService service) {
-        nbtService = (NBTService) service;
+    public void init() {
+        nbtService = new NBTService();
+        LunaSpring.getServiceProvider().register(nbtService);
     }
 
     public ItemStack base64head(ItemStack head, OfflinePlayer player) {

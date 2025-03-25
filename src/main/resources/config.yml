@@ -19,13 +19,14 @@ on_load_plugin_text_colors: "bcde"
 messages:
   reloaded: '{S}Библиотека перезагружена'
   loadedSource: '{S}Загружен ресурс [file]'
+  colorManager: '{S}Обработчик цветов зарегистрирован'
   serviceRegistered: '{S}Cервис [service] зарегистрирован'
   listenerRegistered: '{S}Оcновной обработчик событий LunaSpring зарегистрирован'
   placeholderRegistered: '{S}Плейсхолдер {M}[identifier] {S}зарегистрирован!'
   server-info:
-    - " "
+    - ""
     - "&f Онлайн игроков: {S}[online] &f/ {S}{players_max]"
     - "&f Версии: {S}[bukkit-version] &f| {S}{mc-version]"
     - "&f Порт: {S}[port]"
     - "&f Средний ТПС: {S}[average_tps]"
-    - " "
+    - ""
