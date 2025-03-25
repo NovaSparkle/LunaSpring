@@ -13,8 +13,8 @@ public class ColorManager {
     private static ColorService colorService;
     public static void init(ColorService service) {
         colorService = service;
-        LunaSpring.getINSTANCE().info(ConfigManager.getMessage("colorManager"));
         LunaSpring.getServiceProvider().register(service);
+        LunaSpring.getINSTANCE().info(ConfigManager.getMessage("colorManager"));
     }
     public static String color(String text) {
         if (colorService == null || (!LunaSpring.getServiceProvider().isRegistered(ColorManager.getColorService().getClass()))) {
