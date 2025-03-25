@@ -6,12 +6,10 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.novasparkle.lunaspring.Menus.IMenu;
-import org.novasparkle.lunaspring.Util.Utils;
-import org.novasparkle.lunaspring.other.NonMenuItem;
+import org.novasparkle.lunaspring.Util.utilities.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Getter @Setter
 public class Decoration {

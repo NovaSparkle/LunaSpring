@@ -2,7 +2,6 @@ package org.novasparkle.lunaspring;
 
 import lombok.Getter;
 import org.novasparkle.lunaspring.Util.Service.ServiceProvider;
-import org.novasparkle.lunaspring.other.LunaPlugin;
 
 public final class LunaSpring extends LunaPlugin {
     @Getter

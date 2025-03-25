@@ -12,7 +12,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
-import org.novasparkle.lunaspring.Util.Utils;
+import org.novasparkle.lunaspring.Util.utilities.Utils;
 
 import java.io.File;
 import java.util.ArrayList;

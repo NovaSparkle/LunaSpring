@@ -1,6 +1,5 @@
-package org.novasparkle.lunaspring.other;
+package org.novasparkle.lunaspring.Menus.Items;
 
-import de.tr7zw.nbtapi.NBT;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Material;
@@ -11,7 +10,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
-import org.novasparkle.lunaspring.Util.Utils;
+import org.novasparkle.lunaspring.Util.utilities.Utils;
 import org.novasparkle.lunaspring.Util.managers.ColorManager;
 import org.novasparkle.lunaspring.Util.managers.NBTManager;
 

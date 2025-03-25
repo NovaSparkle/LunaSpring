@@ -1,4 +1,4 @@
-package org.novasparkle.lunaspring.other;
+package org.novasparkle.lunaspring.Util.utilities;
 
 import java.util.*;
 import java.util.stream.Collectors;

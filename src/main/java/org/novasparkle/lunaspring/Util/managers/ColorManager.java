@@ -1,11 +1,10 @@
 package org.novasparkle.lunaspring.Util.managers;
 
 import lombok.Getter;
-import lombok.experimental.UtilityClass;
 import org.novasparkle.lunaspring.LunaSpring;
-import org.novasparkle.lunaspring.Util.Color;
+import org.novasparkle.lunaspring.Util.utilities.Color;
 import org.novasparkle.lunaspring.Util.Service.realized.ColorService;
-import org.novasparkle.lunaspring.Util.Utils;
+import org.novasparkle.lunaspring.Util.utilities.Utils;
 
 
 public class ColorManager {

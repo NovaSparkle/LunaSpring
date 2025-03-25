@@ -2,9 +2,9 @@ package org.novasparkle.lunaspring.Util.Service.realized;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.novasparkle.lunaspring.Util.Color;
+import org.novasparkle.lunaspring.Util.utilities.Color;
 import org.novasparkle.lunaspring.Util.Service.LunaService;
-import org.novasparkle.lunaspring.Util.Utils;
+import org.novasparkle.lunaspring.Util.utilities.Utils;
 
 import java.util.ArrayList;
 import java.util.List;

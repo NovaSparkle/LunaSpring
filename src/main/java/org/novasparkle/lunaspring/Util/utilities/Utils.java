@@ -1,4 +1,4 @@
-package org.novasparkle.lunaspring.Util;
+package org.novasparkle.lunaspring.Util.utilities;
 
 import lombok.experimental.UtilityClass;
 import org.bukkit.*;

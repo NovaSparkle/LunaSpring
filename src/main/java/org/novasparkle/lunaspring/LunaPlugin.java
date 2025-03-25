@@ -1,4 +1,4 @@
-package org.novasparkle.lunaspring.other;
+package org.novasparkle.lunaspring;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.Bukkit;
@@ -8,11 +8,11 @@ import org.bukkit.command.TabExecutor;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.novasparkle.lunaspring.Events.MenuHandler;
-import org.novasparkle.lunaspring.LunaSpring;
-import org.novasparkle.lunaspring.Util.LunaMath;
+import org.novasparkle.lunaspring.Util.utilities.LunaMath;
 import org.novasparkle.lunaspring.Util.Service.realized.ColorService;
-import org.novasparkle.lunaspring.Util.Utils;
+import org.novasparkle.lunaspring.Util.utilities.Utils;
 import org.novasparkle.lunaspring.Util.managers.ColorManager;
+import org.novasparkle.lunaspring.Util.utilities.LunaPAPIExpansion;
 
 import java.util.Arrays;
 import java.util.List;
@@ -29,8 +29,9 @@ public class LunaPlugin extends JavaPlugin {
         List<String> startMessage = Arrays.asList(
                 "",
                 "        ^ | &l[pluginName]^ v[pluginVersion]",
-                "        ^ | &fEngined with ^&nLunaSpring^ v[LSVersion]",
-                "        ^ | &fAuthors: ^Nova Sparkle, ProGiple",
+                "        ^ | &fEngined with ^&lLunaSpring^ v[LSVersion]",
+                "        ^ | &fAuthor: ^NovaSparkle",
+                "        ^ | &fDev-Helper: ^ProGiple",
                 ""
         );
         startMessage.forEach(m -> {

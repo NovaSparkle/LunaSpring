@@ -12,9 +12,8 @@ import org.bukkit.inventory.ItemStack;
 import org.novasparkle.lunaspring.Events.CooldownPrevent;
 import org.novasparkle.lunaspring.Menus.Items.Decoration;
 import org.novasparkle.lunaspring.Menus.Items.Item;
-import org.novasparkle.lunaspring.Util.LunaMath;
 import org.novasparkle.lunaspring.Util.managers.ColorManager;
-import org.novasparkle.lunaspring.Util.Utils;
+import org.novasparkle.lunaspring.Util.utilities.Utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;

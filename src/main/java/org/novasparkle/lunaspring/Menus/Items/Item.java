@@ -4,9 +4,10 @@ import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.jetbrains.annotations.ApiStatus;
 import org.novasparkle.lunaspring.Menus.IMenu;
-import org.novasparkle.lunaspring.Util.LunaMath;
-import org.novasparkle.lunaspring.other.NonMenuItem;
+import org.novasparkle.lunaspring.Util.utilities.LunaMath;
 
 import java.util.List;
 
@@ -72,4 +73,6 @@ public class Item extends NonMenuItem {
     public void remove(IMenu iMenu) {
         iMenu.getInventory().setItem(this.slot, null);
     }
+    @ApiStatus.OverrideOnly
+    public void onClick(InventoryClickEvent event) {}
 }

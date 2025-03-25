@@ -1,9 +1,10 @@
-package org.novasparkle.lunaspring.other;
+package org.novasparkle.lunaspring.Util.utilities;
 
 import lombok.Setter;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
+import org.novasparkle.lunaspring.LunaPlugin;
 
 public class LunaPAPIExpansion extends PlaceholderExpansion {
     @Setter private String identifier;

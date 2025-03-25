@@ -15,7 +15,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.novasparkle.lunaspring.Util.Service.LunaService;
-import org.novasparkle.lunaspring.Util.Utils;
+import org.novasparkle.lunaspring.Util.utilities.Utils;
 
 import java.util.Set;
 import java.util.UUID;
