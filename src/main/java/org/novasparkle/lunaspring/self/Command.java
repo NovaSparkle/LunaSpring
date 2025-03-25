@@ -23,8 +23,8 @@ public class Command implements TabExecutor {
                 ConfigManager.reload();
                 sender.sendMessage(ConfigManager.getMessage("reloaded"));
             }
-            else if (args[0].equalsIgnoreCase("server-info")) {
-                List<String> list = ConfigManager.getStringList("messages.server-info");
+            else if (args[0].equalsIgnoreCase("lunaspring.server-info")) {
+                List<String> list = ConfigManager.getStringList("server-info");
 
                 int tps = (int) (Arrays.stream(Bukkit.getServer().getTPS()).sum() / Bukkit.getServer().getTPS().length);
                 list.forEach(l -> {

@@ -4,17 +4,21 @@ main: org.novasparkle.lunaspring.LunaSpring
 api-version: '1.16'
 commands:
   lunaspring:
-    permission: "lunaspring.reload"
     aliases:
       - lsp
       - ls
-      - lunasp
-    permission-message: "&cУ вас нет прав на перезагрузку библиотеки"
 authors:
   - NovaSparkle
   - ProGiple
+
 softdepend:
   - NBTAPI
   - WorldEdit
   - WorldGuard
   - PlaceholderAPI
+
+permissions:
+  lunaspring.reload:
+    default: op
+  lunaspring.server-info:
+    default: op
