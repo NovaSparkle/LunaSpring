@@ -14,11 +14,13 @@ public final class LunaSpring extends LunaPlugin {
 
     public void onEnable() {
         INSTANCE = this;
+
         this.saveDefaultConfig();
         this.registerTabExecutor(new Command(), "lunaspring");
+
         ColorService service = new ColorService(this.getConfig());
         serviceProvider.register(service);
-        ConfigManager.init()
+        ConfigManager.init(service);
     }
 }
 
