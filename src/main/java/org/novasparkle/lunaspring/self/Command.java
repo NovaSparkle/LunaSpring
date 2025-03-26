@@ -39,7 +39,7 @@ public class Command implements TabExecutor {
                 });
 
             } else if (args[0].equalsIgnoreCase("hooked") && hasPermission(sender, "hooked")) {
-                String hooked = ConfigManager.getString("hooked");
+                String hooked = ConfigManager.getMessage("hooked");
                 LunaSpring.getINSTANCE().showHookedPlugins().forEach(pl -> sender.sendMessage(hooked.replace("[plugin]", pl.getName())));
             }
         }
