@@ -4,16 +4,25 @@ import de.tr7zw.nbtapi.NBT;
 import de.tr7zw.nbtapi.iface.ReadWriteItemNBT;
 import de.tr7zw.nbtapi.iface.ReadWriteNBT;
 import de.tr7zw.nbtapi.iface.ReadableNBT;
+import lombok.Getter;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.novasparkle.lunaspring.API.Util.Service.LunaService;
+import org.novasparkle.lunaspring.LunaPlugin;
 
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
 
+@Getter
 public final class NBTService implements LunaService {
+    private final LunaPlugin providingPlugin;
+    public NBTService(LunaPlugin plugin) {
+
+        this.providingPlugin = plugin;
+    }
     public ItemStack base64head(ItemStack head, OfflinePlayer player) {
         SkullMeta meta = (SkullMeta) head.getItemMeta();
         meta.setOwningPlayer(player);

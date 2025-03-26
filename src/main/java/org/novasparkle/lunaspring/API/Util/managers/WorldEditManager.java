@@ -16,9 +16,9 @@ import java.io.File;
 @UtilityClass
 public class WorldEditManager {
     private WorldEditService weService;
-    public void init() {
-        weService = new WorldEditService();
-        LunaSpring.getServiceProvider().register(weService);
+    public void init(WorldEditService service) {
+        weService = service;
+        weService.register();
     }
 
     public EditSession getSession(World world) {

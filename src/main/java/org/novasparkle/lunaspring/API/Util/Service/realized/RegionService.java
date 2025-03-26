@@ -10,18 +10,28 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.novasparkle.lunaspring.API.Util.Service.LunaService;
 import org.novasparkle.lunaspring.API.Util.utilities.Utils;
+import org.novasparkle.lunaspring.LunaPlugin;
+import org.novasparkle.lunaspring.LunaSpring;
 
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+@Getter
 public final class RegionService implements LunaService {
+    private final LunaPlugin providingPlugin;
+
+    public RegionService(LunaPlugin providingPlugin) {
+        this.providingPlugin = providingPlugin;
+    }
+
     public RegionContainer getRegionContainer() {
         return WorldGuard.getInstance().getPlatform().getRegionContainer();
     }

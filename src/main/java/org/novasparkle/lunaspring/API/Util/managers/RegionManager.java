@@ -16,9 +16,9 @@ import java.util.UUID;
 @UtilityClass
 public class RegionManager {
     private RegionService regionService;
-    public void init() {
-        regionService = new RegionService();
-        LunaSpring.getServiceProvider().register(regionService);
+    public void init(RegionService service) {
+        regionService = service;
+        regionService.register();
     }
 
     public RegionContainer getRegionContainer() {

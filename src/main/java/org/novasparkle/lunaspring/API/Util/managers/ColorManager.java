@@ -1,6 +1,7 @@
 package org.novasparkle.lunaspring.API.Util.managers;
 
 import lombok.Getter;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.novasparkle.lunaspring.LunaSpring;
 import org.novasparkle.lunaspring.API.Util.utilities.Color;
 import org.novasparkle.lunaspring.API.Util.Service.realized.ColorService;
@@ -13,7 +14,7 @@ public class ColorManager {
     private static ColorService colorService;
     public static void init(ColorService service) {
         colorService = service;
-        LunaSpring.getServiceProvider().register(service);
+        colorService.register();
     }
     public static String color(String text) {
         if (colorService == null || (!LunaSpring.getServiceProvider().isRegistered(ColorManager.getColorService().getClass()))) {

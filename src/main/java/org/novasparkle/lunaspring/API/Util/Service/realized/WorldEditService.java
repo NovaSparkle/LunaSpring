@@ -13,15 +13,23 @@ import com.sk89q.worldedit.function.operation.Operations;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.session.ClipboardHolder;
 import com.sk89q.worldedit.world.biome.BiomeType;
+import lombok.Getter;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.novasparkle.lunaspring.API.Util.Service.LunaService;
+import org.novasparkle.lunaspring.LunaPlugin;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-
+@Getter
 public final class WorldEditService implements LunaService {
+    private final LunaPlugin providingPlugin;
+
+    public WorldEditService(LunaPlugin providingPlugin) {
+        this.providingPlugin = providingPlugin;
+    }
+
     public EditSession getSession(World world) {
         return WorldEdit.getInstance().newEditSession(BukkitAdapter.adapt(world));
     }

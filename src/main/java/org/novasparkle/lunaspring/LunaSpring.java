@@ -19,7 +19,7 @@ public final class LunaSpring extends LunaPlugin {
         this.saveDefaultConfig();
         this.registerTabExecutor(new Command(), "lunaspring");
 
-        ColorService service = new ColorService(new IConfig(INSTANCE).self());
+        ColorService service = new ColorService(new IConfig(INSTANCE).self(), this);
         System.out.println(service);
         ConfigManager.init(service);
     }
