@@ -1,8 +1,7 @@
 package org.novasparkle.lunaspring.self;
 
-import org.novasparkle.lunaspring.API.Configuration.Configuration;
 import org.novasparkle.lunaspring.API.Configuration.IConfig;
-import org.novasparkle.lunaspring.API.Util.managers.ColorManager;
+import org.novasparkle.lunaspring.API.Util.Service.managers.ColorManager;
 import org.novasparkle.lunaspring.LunaSpring;
 
 import java.util.List;

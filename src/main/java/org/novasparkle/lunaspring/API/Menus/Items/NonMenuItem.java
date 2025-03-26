@@ -11,8 +11,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.novasparkle.lunaspring.API.Util.utilities.Utils;
-import org.novasparkle.lunaspring.API.Util.managers.ColorManager;
-import org.novasparkle.lunaspring.API.Util.managers.NBTManager;
+import org.novasparkle.lunaspring.API.Util.Service.managers.ColorManager;
+import org.novasparkle.lunaspring.API.Util.Service.managers.NBTManager;
 
 import java.util.ArrayList;
 import java.util.List;

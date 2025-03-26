@@ -1,4 +1,4 @@
-package org.novasparkle.lunaspring.API.Util.Service.realized;
+package org.novasparkle.lunaspring.API.Util.Service;
 
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEdit;
@@ -22,14 +22,8 @@ import org.novasparkle.lunaspring.LunaPlugin;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-@Getter
+
 public final class WorldEditService implements LunaService {
-    private final LunaPlugin providingPlugin;
-
-    public WorldEditService(LunaPlugin providingPlugin) {
-        this.providingPlugin = providingPlugin;
-    }
-
     public EditSession getSession(World world) {
         return WorldEdit.getInstance().newEditSession(BukkitAdapter.adapt(world));
     }

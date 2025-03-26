@@ -1,4 +1,4 @@
-package org.novasparkle.lunaspring.API.Util.Service.realized;
+package org.novasparkle.lunaspring.API.Util.Service;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
@@ -26,11 +26,6 @@ import java.util.stream.Collectors;
 
 @Getter
 public final class RegionService implements LunaService {
-    private final LunaPlugin providingPlugin;
-
-    public RegionService(LunaPlugin providingPlugin) {
-        this.providingPlugin = providingPlugin;
-    }
 
     public RegionContainer getRegionContainer() {
         return WorldGuard.getInstance().getPlatform().getRegionContainer();

@@ -17,12 +17,12 @@ colors:
 
 on_load_plugin_text_colors: "bcde"
 messages:
+  noPermission: "{E}Нет прав на выполнение команды!"
   reloaded: '{S}Библиотека перезагружена'
   loadedSource: '{S}Загружен ресурс [file]'
-  colorManager: '{S}Обработчик цветов зарегистрирован'
-  serviceRegistered: '{S}Cервис [service] зарегистрирован'
   listenerRegistered: '{S}Оcновной обработчик событий LunaSpring зарегистрирован'
   placeholderRegistered: '{S}Плейсхолдер {M}[identifier] {S}зарегистрирован!'
+  hooked: "&f | {S}[plugin] &f|"
   server-info:
     - ""
     - "&f Онлайн игроков: {S}[online] &f/ {S}[players_max]"

@@ -9,16 +9,14 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.novasparkle.lunaspring.API.Events.MenuHandler;
 import org.novasparkle.lunaspring.API.Util.utilities.LunaMath;
-import org.novasparkle.lunaspring.API.Util.Service.realized.ColorService;
 import org.novasparkle.lunaspring.API.Util.utilities.Utils;
-import org.novasparkle.lunaspring.API.Util.managers.ColorManager;
+import org.novasparkle.lunaspring.API.Util.Service.managers.ColorManager;
 import org.novasparkle.lunaspring.API.Util.utilities.LunaPAPIExpansion;
 import org.novasparkle.lunaspring.self.ConfigManager;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.logging.Logger;
 
 public class LunaPlugin extends JavaPlugin {
     public final void initialize() {
@@ -31,6 +29,7 @@ public class LunaPlugin extends JavaPlugin {
                 ""
         ));
         this.registerListener(new MenuHandler());
+        LunaSpring.getINSTANCE().hookPlugin(this);
         this.info(ConfigManager.getMessage("listenerRegistered"));
     }
     private void startMessage(List<String> startMessage) {
@@ -84,21 +83,11 @@ public class LunaPlugin extends JavaPlugin {
     }
 
     public void info(String text) {
-        Logger logger = this.getLogger();
-
-        ColorService colorService = ColorManager.getColorService();
-        if (colorService != null && LunaSpring.getServiceProvider().isRegistered(colorService.getClass())) {
-            logger.info(ColorManager.color(text));
-        } else logger.info(Utils.color(text));
+        this.getLogger().info(ColorManager.color(text));
     }
 
     public void warning(String text) {
-        Logger logger = this.getLogger();
-
-        ColorService colorService = ColorManager.getColorService();
-        if (colorService != null && LunaSpring.getServiceProvider().isRegistered(colorService.getClass())) {
-            logger.warning(ColorManager.color(text));
-        } else logger.warning(Utils.color(text));
+        this.getLogger().warning(ColorManager.color(text));
     }
 
     public void registerPlaceholder(PlaceholderExpansion placeholderExpansion) {

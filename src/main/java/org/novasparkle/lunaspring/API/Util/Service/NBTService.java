@@ -1,4 +1,4 @@
-package org.novasparkle.lunaspring.API.Util.Service.realized;
+package org.novasparkle.lunaspring.API.Util.Service;
 
 import de.tr7zw.nbtapi.NBT;
 import de.tr7zw.nbtapi.iface.ReadWriteItemNBT;
@@ -16,13 +16,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-@Getter
 public final class NBTService implements LunaService {
-    private final LunaPlugin providingPlugin;
-    public NBTService(LunaPlugin plugin) {
-
-        this.providingPlugin = plugin;
-    }
     public ItemStack base64head(ItemStack head, OfflinePlayer player) {
         SkullMeta meta = (SkullMeta) head.getItemMeta();
         meta.setOwningPlayer(player);
