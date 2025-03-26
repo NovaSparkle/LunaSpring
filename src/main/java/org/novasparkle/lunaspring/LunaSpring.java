@@ -1,6 +1,7 @@
 package org.novasparkle.lunaspring;
 
 import lombok.Getter;
+import org.novasparkle.lunaspring.API.Configuration.IConfig;
 import org.novasparkle.lunaspring.API.Util.Service.ServiceProvider;
 import org.novasparkle.lunaspring.API.Util.Service.realized.ColorService;
 import org.novasparkle.lunaspring.self.Command;
@@ -18,7 +19,8 @@ public final class LunaSpring extends LunaPlugin {
         this.saveDefaultConfig();
         this.registerTabExecutor(new Command(), "lunaspring");
 
-        ColorService service = new ColorService(this.getConfig());
+        ColorService service = new ColorService(new IConfig(INSTANCE).self());
+        System.out.println(service);
         ConfigManager.init(service);
     }
 
