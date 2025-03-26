@@ -21,6 +21,7 @@ public final class LunaSpring extends LunaPlugin {
 
         ColorService service = new ColorService(new IConfig(INSTANCE).self(), this);
         ConfigManager.init(service);
+        System.out.println(service);
     }
 
     @Override

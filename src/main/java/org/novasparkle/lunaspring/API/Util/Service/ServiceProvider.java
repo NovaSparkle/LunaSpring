@@ -14,7 +14,7 @@ public final class ServiceProvider {
     private final List<LunaService> services = new ArrayList<>();
     public void register(LunaService service) {
         this.services.add(service);
-        LunaSpring.getINSTANCE().info(ConfigManager.getMessage("serviceRegistered")
+        service.getProvidingPlugin().info(ConfigManager.getMessage("serviceRegistered")
                 .replace("[service]", service.getClass().getSimpleName())
                 .replace("[plugin]", service.getProvidingPlugin().getName()));
     }
