@@ -23,6 +23,11 @@ public final class LunaSpring extends LunaPlugin {
         serviceProvider.register(service);
 
     }
+
+    @Override
+    public void onDisable() {
+        this.getServer().getScheduler().cancelTasks(this);
+    }
 }
 
 
