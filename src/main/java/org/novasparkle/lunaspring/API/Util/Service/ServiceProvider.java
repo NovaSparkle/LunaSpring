@@ -4,12 +4,14 @@ import lombok.Getter;
 import org.novasparkle.lunaspring.LunaSpring;
 import org.novasparkle.lunaspring.self.ConfigManager;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
 public final class ServiceProvider {
-    private final Set<LunaService> services = new HashSet<>();
+    private final List<LunaService> services = new ArrayList<>();
     public void register(LunaService service) {
         this.services.add(service);
         LunaSpring.getINSTANCE().info(ConfigManager.getMessage("serviceRegistered")
