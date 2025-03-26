@@ -20,8 +20,6 @@ public final class LunaSpring extends LunaPlugin {
 
         ColorService service = new ColorService(this.getConfig());
         ConfigManager.init(service);
-        serviceProvider.register(service);
-
     }
 
     @Override
