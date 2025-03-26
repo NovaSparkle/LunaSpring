@@ -7,6 +7,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.novasparkle.lunaspring.API.Util.utilities.Color;
 import org.novasparkle.lunaspring.API.Util.Service.LunaService;
 import org.novasparkle.lunaspring.API.Util.utilities.Utils;
+import org.novasparkle.lunaspring.LunaPlugin;
 import org.novasparkle.lunaspring.LunaSpring;
 
 import java.util.ArrayList;
@@ -14,9 +15,9 @@ import java.util.List;
 
 public final class ColorService implements LunaService {
     @Getter
-    private final JavaPlugin providingPlugin;
+    private final LunaPlugin providingPlugin;
     private final List<Color> colorList = new ArrayList<>();
-    public ColorService(FileConfiguration configuration, JavaPlugin plugin) {
+    public ColorService(FileConfiguration configuration, LunaPlugin plugin) {
         this.providingPlugin = plugin;
         ConfigurationSection section = configuration.getConfigurationSection("colors");
         if (section == null) throw new RuntimeException("Секция с цветами не найдена, нужная секция: colors");
