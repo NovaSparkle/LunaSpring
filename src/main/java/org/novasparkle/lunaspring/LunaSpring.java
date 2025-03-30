@@ -2,11 +2,7 @@ package org.novasparkle.lunaspring;
 
 import lombok.Getter;
 import lombok.SneakyThrows;
-import org.bukkit.plugin.Plugin;
 import org.novasparkle.lunaspring.self.Command;
-import org.novasparkle.lunaspring.self.ConfigManager;
-
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,8 +16,6 @@ public final class LunaSpring extends LunaPlugin {
         INSTANCE = this;
         this.saveDefaultConfig();
         this.registerTabExecutor(new Command(), "lunaspring");
-
-
     }
 
 
@@ -35,6 +29,7 @@ public final class LunaSpring extends LunaPlugin {
             hookedPlugins.add(lunaPlugin);
         }
     }
+
     public Set<LunaPlugin> showHookedPlugins() {
         return this.hookedPlugins;
     }

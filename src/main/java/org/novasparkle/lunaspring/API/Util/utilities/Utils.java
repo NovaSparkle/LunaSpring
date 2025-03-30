@@ -15,17 +15,25 @@ public class Utils {
     }
 
     public String getRKey(byte size) {
-        String kit = "qwertyuiopasdfghjklzxcvbnm1234567890";
-        return Utils.getRKey(size, kit);
+        return Utils.getRKey(size, true);
     }
 
-    public String getRKey(byte size, String kit) {
+    public String getRKey(byte size, boolean hasDuplicates) {
+        String kit = "qwertyuiopasdfghjklzxcvbnm1234567890";
+        return Utils.getRKey(size, kit, hasDuplicates);
+    }
+
+    public String getRKey(byte size, String kit, boolean hasDuplicates) {
         StringBuilder endValue = new StringBuilder();
         byte kitSize = (byte) kit.toCharArray().length;
 
-        Random random = new Random();
-        for (byte i = 0; i < size; i++) {
-            endValue.append(kit.charAt(random.nextInt(kitSize)));
+        if (!hasDuplicates && size > kitSize) size = kitSize;
+        for (byte i = 0; i < size;) {
+            char c = kit.charAt(LunaMath.getRandom().nextInt(kitSize));
+            if (!hasDuplicates && endValue.toString().contains(String.valueOf(c))) continue;
+
+            endValue.append(c);
+            i++;
         }
         return endValue.toString();
     }

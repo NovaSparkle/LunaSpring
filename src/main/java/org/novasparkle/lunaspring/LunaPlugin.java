@@ -22,7 +22,7 @@ public class LunaPlugin extends JavaPlugin {
     public final void initialize() {
         this.startMessage(Arrays.asList(
                 "",
-                "        ^ | &l[pluginName]^ v[pluginVersion]",
+                "        ^ | &l[pluginName]^ v[pluginVersion] (by [pluginAuthors])",
                 "        ^ | &fEngined with ^&lLunaSpring^ v[LSVersion]",
                 "        ^ | &fAuthor: ^NovaSparkle",
                 "        ^ | &fDev-Helper: ^ProGiple",
@@ -43,6 +43,7 @@ public class LunaPlugin extends JavaPlugin {
                     .replace("^", formattedEndedColor)
                     .replace("[pluginName]", this.getName())
                     .replace("[pluginVersion]", this.getVersion())
+                    .replace("[pluginAuthors]", this.getAuthors())
                     .replace("[LSVersion]", LunaSpring.getINSTANCE().getVersion());
             this.info(line);
         });
@@ -82,6 +83,10 @@ public class LunaPlugin extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(listener, this);
     }
 
+    public void registerListeners(Listener... listeners) {
+        Arrays.stream(listeners).forEach(this::registerListener);
+    }
+
     public void info(String text) {
         this.getLogger().info(ColorManager.color(text));
     }
@@ -109,7 +114,7 @@ public class LunaPlugin extends JavaPlugin {
     public void onDisable() {
         this.startMessage(Arrays.asList(
                 "",
-                "        ^ | &n[pluginName]^ v[pluginVersion]",
+                "        ^ | &n[pluginName]^ v[pluginVersion] (by [pluginAuthors])",
                 "        ^ | &fDisabling with ^&lLunaSpring^ v[LSVersion]",
                 "        ^ | &fDeveloped by ^NovaSparkle",
                 "        ^ | &fDev-Helper: ^ProGiple",
