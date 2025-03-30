@@ -22,6 +22,9 @@ public class IConfig {
     protected FileConfiguration config;
     @Getter
     private File file;
+    /**
+     * Конструктор для config.yml
+     */
     public IConfig(Plugin plugin) {
         this.config = plugin.getConfig();
     }
@@ -45,10 +48,16 @@ public class IConfig {
                 '}';
     }
 
+    /**
+     * Перезагрузка кастомного конфига
+     */
     public void reload() {
         this.config = YamlConfiguration.loadConfiguration(this.file);
     }
 
+    /**
+     * Перезагрузка config.yml
+     */
     public void reload(Plugin plugin) {
         plugin.reloadConfig();
         this.config = plugin.getConfig();
@@ -73,6 +82,14 @@ public class IConfig {
         return this.config.getLocation(path);
     }
 
+    /**
+     * Получить инстанс Location из секции типа:<br>
+     * location:<br>
+     *   world: world<br>
+     *   x: 0<br>
+     *   y: 0<br>
+     *   z: 0<br>
+     */
     public Location getLocation(ConfigurationSection section) {
         String world = section.getString("world");
         assert world != null;
@@ -83,6 +100,10 @@ public class IConfig {
                 (float) section.getDouble("yaw"),
                 (float) section.getDouble("pitch"));
     }
+
+    /**
+     * Получение типов данных из конфигураций по указанному пути.
+     */
 
     public int getInt(String path) {
         return this.config.getInt(path);
@@ -108,6 +129,20 @@ public class IConfig {
         return this.config;
     }
 
+    /**
+    * Отправка сообщения для sender с айди сообщения id из секции конфигурации messages (данные сообщения указаны в формате списка (List<String>)),
+    * массив replacements нужен для указания локальных заменителей для сообщения, если указать сразу три заменителя (например никнейм игрока,
+    * префикс его привилегии и его индивидуальный код), то в конфиге сообщения надо будет указать индексы этих заменителей в фигурных скобках (например,
+    * {0} - ник игрока, {1} - префикс, а {2} - код). Если sender является игроком, то можно использовать отправку ACTION_BAR, TITLE и SOUND,
+    * указанные в строках сообщения.
+    * <h3><u>Пример:</u></h3>
+    * messages:<br>
+    *  example_message_id:<br>
+    *    - "message!"<br>
+    *    - "ACTION_BAR &bhello!"<br>
+    *    - "TITLE &bMESSAGES {S} &nexample" // {S} (split) - разделитель TITLE и SUBTITLE<br>
+    *    - "SOUND UI_BUTTON_CLICK"<br>
+     */
     @SuppressWarnings("deprecation")
     public void sendMessage(CommandSender sender, String id, String... replacements) {
         List<String> message = new ArrayList<>(config.getStringList(String.format("messages.%s", id)));

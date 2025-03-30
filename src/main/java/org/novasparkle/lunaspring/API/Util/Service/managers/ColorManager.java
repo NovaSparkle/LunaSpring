@@ -6,7 +6,9 @@ import org.novasparkle.lunaspring.LunaSpring;
 import org.novasparkle.lunaspring.API.Util.utilities.Color;
 import org.novasparkle.lunaspring.API.Util.Service.ColorService;
 
-
+/**
+ * Менеджер для управления кастомными цветами. Подробнее в <a href="https://github.com/NovaSparkle/LunaSpring/wiki/Глава-V.-Сервисы-и-Менеджеры#colorservice--colormanager">документации</a>.
+ */
 public class ColorManager {
     @Getter
     @NotNull
@@ -14,9 +16,17 @@ public class ColorManager {
     static {
         colorService = new ColorService(LunaSpring.getINSTANCE().getConfig());
     }
+
+    /**
+     * Поскраска текста.
+     */
     public static String color(String text) {
         return colorService.color(text);
     }
+
+    /**
+     * Получить цвет по аббревиатуре.
+     */
     public static Color getColor(String abbr) {
         return colorService.getColor(abbr);
     }

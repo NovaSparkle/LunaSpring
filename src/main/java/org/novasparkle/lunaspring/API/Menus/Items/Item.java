@@ -12,6 +12,7 @@ import java.util.List;
 
 @Getter
 public class Item extends NonMenuItem {
+
     private IMenu menu;
     @Setter private byte slot = 0;
 

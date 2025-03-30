@@ -19,12 +19,11 @@ import java.util.List;
 import java.util.Objects;
 
 public class LunaPlugin extends JavaPlugin {
-    public LunaPlugin() {
-        super();
-        this.initialize();
-    }
 
-    private void initialize() {
+    /**
+     * Обязательный метод для инициализации класса
+    */
+    public final void initialize() {
         this.startMessage(Arrays.asList(
                 "",
                 "        ^ | &l[pluginName]^ v[pluginVersion] (by [pluginAuthors])",
@@ -52,57 +51,94 @@ public class LunaPlugin extends JavaPlugin {
             this.info(line);
         });
     }
+
+    /**
+     * Получить список авторов плагина
+     */
     public String getAuthors() {
         return String.join(", ", this.getDescription().getAuthors());
     }
 
+    /**
+     * Получить версию плагина
+     */
     public String getVersion() {
         return this.getDescription().getVersion();
     }
 
+    /**
+     * Загрузить файл из resources
+     */
     public void loadFile(String path) {
         this.saveResource(path, false);
         this.info(ConfigManager.getMessage("loadedSource").replace("[file]", path));
     }
 
+    /**
+     * Загрузить все перечисленные файлы из resources
+     */
     public void loadFiles(boolean enabled, String... paths) {
         if (!enabled) return;
-        for (String path : paths) this.loadFile(path);
+        Arrays.stream(paths).forEach(this::loadFile);
     }
 
+    /**
+     * Зарегистрировать команду плагина
+     */
     public void registerCommand(CommandExecutor command, String stringCommand) {
         Objects.requireNonNull(this.getCommand(stringCommand)).setExecutor(command);
     }
 
+    /**
+     * Зарегистрировать TabCompleter плагина
+     */
     public void registerTabCompleter(TabCompleter tabCompleter, String stringCommand) {
         Objects.requireNonNull(this.getCommand(stringCommand)).setTabCompleter(tabCompleter);
     }
 
+    /**
+     * Зарегистрировать TabExecutor плагина
+     */
     public void registerTabExecutor(TabExecutor tabExecutor, String stringCommand) {
         registerCommand(tabExecutor, stringCommand);
         registerTabCompleter(tabExecutor, stringCommand);
     }
 
-    public void registerListener(Listener listener) {
-        this.getServer().getPluginManager().registerEvents(listener, this);
-    }
-
+    /**
+     * Зарегистрировать слушатель плагина
+     */
     public void registerListeners(Listener... listeners) {
-        Arrays.stream(listeners).forEach(this::registerListener);
+        Arrays.stream(listeners).forEach(listener -> this.getServer().getPluginManager().registerEvents(listener, this));
     }
 
+    /**
+     * Вывод информации в консоль
+     */
     public void info(String text) {
         this.getLogger().info(ColorManager.color(text));
     }
 
+    /**
+     * Вывод предупреждения в консоль
+     */
     public void warning(String text) {
         this.getLogger().warning(ColorManager.color(text));
     }
 
+    /**
+     * Регистрация плейсхолдера
+     */
     public void registerPlaceholder(PlaceholderExpansion placeholderExpansion) {
         if (Utils.isPluginEnabled("PlaceholderAPI")) placeholderExpansion.register();
     }
 
+    /**
+     * Создавние плейсхолдера.
+     * @param request функциональный интерфейс, который обрабатывает метод
+     * onRequest(OfflinePlayer player, String params)
+     * <p>
+     * Не требует зависимости PlaceholderAPI внутри pom.xml!
+     */
     public void createPlaceholder(String identifier, LunaPAPIExpansion.Request request) {
         if (Utils.isPluginEnabled("PlaceholderAPI")) {
             new LunaPAPIExpansion(this, identifier, request).register();
@@ -114,8 +150,12 @@ public class LunaPlugin extends JavaPlugin {
         this.createPlaceholder(null, request);
     }
 
+    /**
+     * Реализация логики выключения плагина по умолчанию
+     */
     @Override
     public void onDisable() {
+        if (this.equals(LunaSpring.getINSTANCE())) return;
         this.startMessage(Arrays.asList(
                 "",
                 "        ^ | &n[pluginName]^ v[pluginVersion] (by [pluginAuthors])",

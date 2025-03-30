@@ -1,5 +1,6 @@
 package org.novasparkle.lunaspring.API.Configuration;
 
+import lombok.SneakyThrows;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -8,6 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+
 
 public class Configuration extends IConfig {
 
@@ -23,6 +25,9 @@ public class Configuration extends IConfig {
         super(file);
     }
 
+    /**
+     * Установка произвольного значения по указанному пути.
+     */
     public void set(String path, Object value) {
         this.config.set(path, value);
     }
@@ -59,6 +64,12 @@ public class Configuration extends IConfig {
         this.config.set(path, value);
     }
 
+    /**
+     * Запись локации.
+     * @param asLocation если true, то локация запишется в одну строку, если false, то запишется в виде секции со всеми данными.
+     * @param asBlock отвечает за сами данные, если стоит true - будут записаны только мир и координаты формата integer, а если поставить на false, то
+     *      будут записаны мир, координаты в формате double и значения угла обзора (Yaw + Pitch).
+     */
     public void setLocation(String path, Location value, boolean asLocation, boolean asBlock) {
         if (asLocation)
             this.config.set(path, value);
@@ -77,20 +88,32 @@ public class Configuration extends IConfig {
             }
         }
     }
+
+    /**
+     * Создать новую секцию.
+     * @param section секция родитель.
+     * @param name название новой секции.
+     */
     public ConfigurationSection createSection(ConfigurationSection section, String name) {
         return section.createSection(name);
     }
+
+    /**
+     * Создать новую секцию.
+     * @param path путь до секции родителя.
+     * @param name название новой секции.
+     */
     public ConfigurationSection createSection(String path, String name) {
         if (path == null)
             return this.config.createSection(name);
         return this.config.createSection(String.format("%s.%s", path, name));
     }
 
+    /**
+     * Сохранить конфигурацию.
+     */
+    @SneakyThrows
     public void save() {
-        try {
-            this.config.save(this.getFile());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        this.config.save(this.getFile());
     }
 }
