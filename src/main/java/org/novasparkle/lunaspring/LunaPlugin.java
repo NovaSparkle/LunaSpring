@@ -19,7 +19,12 @@ import java.util.List;
 import java.util.Objects;
 
 public class LunaPlugin extends JavaPlugin {
-    public final void initialize() {
+    public LunaPlugin() {
+        super();
+        this.initialize();
+    }
+
+    private void initialize() {
         this.startMessage(Arrays.asList(
                 "",
                 "        ^ | &l[pluginName]^ v[pluginVersion] (by [pluginAuthors])",
@@ -28,7 +33,6 @@ public class LunaPlugin extends JavaPlugin {
                 "        ^ | &fDev-Helper: ^ProGiple",
                 ""
         ));
-        this.registerListener(new MenuHandler());
         LunaSpring.getINSTANCE().hookPlugin(this);
         this.info(ConfigManager.getMessage("listenerRegistered"));
     }

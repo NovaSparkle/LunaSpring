@@ -6,6 +6,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.novasparkle.lunaspring.API.Menus.Items.Item;
 
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @UtilityClass
@@ -60,14 +61,6 @@ public class Utils {
         return Bukkit.getPluginManager().getPlugin(name) != null;
     }
 
-    public LocalTime getNextTime(Collection<LocalTime> times) {
-        LocalTime currentTime = LocalTime.now();
-        for (LocalTime time : times) {
-            if (time.isAfter(currentTime)) return time;
-        }
-        return null;
-    }
-
     public static boolean isPluginEnabled(String name) {
         return Bukkit.getPluginManager().isPluginEnabled(name);
     }
@@ -90,5 +83,20 @@ public class Utils {
             });
         }
         return list;
+    }
+    public LocalTime getNextTime(Collection<LocalTime> times) {
+        return times.stream().filter(t -> t.isAfter(LocalTime.now())).findFirst().orElse(null);
+    }
+    private static String getTimeBetween(LocalTime nowTime, LocalTime nextTime) {
+        long chrono = nowTime.until(nextTime, ChronoUnit.MINUTES);
+
+        String string = String.format("%s:%s", (int) (chrono / 60), chrono % 60);
+        if (chrono < 0) {
+            int hours = (24 - nowTime.getHour()) + nextTime.getHour();
+            int minutes = (60 - nowTime.getMinute()) + nextTime.getMinute();
+            string = String.format("%s:%s", hours < 10 ? "0" + hours : hours,
+                    minutes < 10 ? "0" + minutes : minutes);
+        }
+        return string;
     }
 }

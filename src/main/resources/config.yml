@@ -1,7 +1,7 @@
 colors:
   PREFIX:
     abbr: '\{P\}'
-    variable: "&x&D&5&B&3&F&D[&#DF49FFL&#D747FFu&#CE45FFn&#C644FFa&#BE42FFS&#B540FFp&#AD3EFFr&#A53DFFi&#9C3BFFn&#9439FFg]"
+    variable: "&x&D&5&B&3&F&D[&x&D&F&4&9&F&FL&x&D&7&4&7&F&Fu&x&C&E&4&5&F&Fn&x&C&6&4&4&F&Fa&x&B&E&4&2&F&FS&x&B&5&4&0&F&Fp&x&A&D&3&E&F&Fr&x&A&5&3&D&F&Fi&x&9&C&3&B&F&Fn&x&9&4&3&9&F&Fg&x&D&5&B&3&F&D]"
   MAIN_COLOR:
     abbr: '\{M\}'
     variable: "&x&9&8&6&3&E&7"
@@ -18,11 +18,11 @@ colors:
 on_load_plugin_text_colors: "bcde"
 messages:
   noPermission: "{E}Нет прав на выполнение команды!"
-  reloaded: '{S}Библиотека перезагружена'
+  reloaded: '{P} {S}Библиотека перезагружена'
   loadedSource: '{S}Загружен ресурс [file]'
   listenerRegistered: '{S}Оcновной обработчик событий LunaSpring зарегистрирован'
   placeholderRegistered: '{S}Плейсхолдер {M}[identifier] {S}зарегистрирован!'
-  hooked: "&f | {S}[plugin] &f|"
+  hooked: "{P} &f| {S}[plugin] &f|"
   server-info:
     - ""
     - "&f Онлайн игроков: {S}[online] &f/ {S}[players_max]"
