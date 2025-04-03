@@ -6,6 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -13,9 +14,11 @@ import org.jetbrains.annotations.NotNull;
 import org.novasparkle.lunaspring.API.Util.utilities.Utils;
 import org.novasparkle.lunaspring.API.Util.Service.managers.ColorManager;
 import org.novasparkle.lunaspring.API.Util.Service.managers.NBTManager;
+import org.stringtemplate.v4.ST;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @Getter
@@ -26,8 +29,8 @@ public class NonMenuItem {
     private Material material;
     private String displayName;
     private List<String> lore = new ArrayList<>();
-    private int amount;
-    private boolean glowing;
+    private int amount = 1;
+    private boolean glowing = false;
     private String headValue;
 
     public NonMenuItem(Material material, String displayName, List<String> lore, int amount) {
@@ -38,14 +41,13 @@ public class NonMenuItem {
 
         this.lore = lore;
         this.amount = amount;
-        if (this.amount == 0) this.amount++;
+        if (this.amount < 1) this.amount = 1;
         this.itemStack = new ItemStack(this.material, this.amount);
         this.update();
     }
 
     public NonMenuItem(Material material) {
         this.material = material;
-        this.amount = 1;
         this.itemStack = new ItemStack(this.material, this.amount);
         this.update();
     }
@@ -53,11 +55,10 @@ public class NonMenuItem {
     public NonMenuItem(Material material, int amount) {
         this.material = material;
         this.amount = amount;
-        if (this.amount == 0) this.amount++;
+        if (this.amount < 1) this.amount = 1;
         this.itemStack = new ItemStack(this.material, this.amount);
         this.update();
     }
-
 
     public NonMenuItem(ConfigurationSection section) {
         String material = section.getString("material");
@@ -73,11 +74,20 @@ public class NonMenuItem {
         this.lore = lore;
 
         this.amount = section.getInt("amount");
-        if (this.amount == 0) this.amount++;
+        if (this.amount < 1) this.amount = 1;
 
         this.itemStack = new ItemStack(this.material, this.amount);
 
         this.setGlowing(section.getBoolean("enchanted"));
+        ConfigurationSection nbtSection = section.getConfigurationSection("nbtTags");
+        assert nbtSection != null;
+
+        nbtSection.getValues(false).forEach((key, value) -> {
+            if (!NBTManager.hasTag(this.itemStack, key)) {
+                if (!(value instanceof String strValue)) throw new IllegalArgumentException(String.format("Неверный NBT тег под ключом: %s", key));
+                NBTManager.setString(this.itemStack, key, strValue);
+            }
+        });
         this.update();
 
         String baseHeadValue = section.getString("baseHead");
@@ -110,9 +120,13 @@ public class NonMenuItem {
 
     public void setGlowing(boolean enchanted) {
         this.glowing = enchanted;
-        if (!enchanted) return;
-        this.itemStack.addUnsafeEnchantment(Enchantment.LUCK, 1);
-        this.itemStack.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        if (enchanted) {
+            this.itemStack.addUnsafeEnchantment(Enchantment.LUCK, 1);
+            this.itemStack.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        } else {
+            this.itemStack.removeEnchantment(Enchantment.LUCK);
+            this.itemStack.removeItemFlags(ItemFlag.HIDE_ENCHANTS);
+        }
     }
 
     @Override
@@ -126,20 +140,18 @@ public class NonMenuItem {
                 '}';
     }
 
-    public void serialize(@NotNull ConfigurationSection section) {
-        section.set("material", this.getMaterial().name());
-        section.set("amount", this.getAmount());
-        section.set("displayName", this.getDisplayName());
-        section.set("lore", this.getLore());
-        section.set("enchanted", this.glowing);
-        section.set("headValue", this.headValue);
-        section.set("id", this.id);
-    }
-
-    public void removeGlowing() {
-        this.glowing = false;
-        this.itemStack.removeEnchantment(Enchantment.LUCK);
-        this.itemStack.removeItemFlags(ItemFlag.HIDE_ENCHANTS);
+    public void serialize(@NotNull ConfigurationSection section, boolean asItemStack) {
+        if (asItemStack)
+            section.set("item", this.itemStack);
+        else {
+            section.set("material", this.getMaterial().name());
+            section.set("amount", this.getAmount());
+            section.set("displayName", this.getDisplayName());
+            section.set("lore", this.getLore());
+            section.set("enchanted", this.glowing);
+            section.set("headValue", this.headValue);
+            section.set("id", this.id);
+        }
     }
 
     public void setAll(Material material, int amount, String displayName, List<String> lore, boolean enchanted) {
@@ -175,9 +187,14 @@ public class NonMenuItem {
         }
         this.itemStack.setAmount(this.amount);
 
-        if (!NBTManager.hasTag(this.itemStack, "lunaspring-item-id")) {
-            NBTManager.setString(this.itemStack, "lunaspring-item-id", this.id);
+        if (!NBTManager.hasTag(this.itemStack, "lunaspring.itemId")) {
+            NBTManager.setString(this.itemStack, "lunaspring-itemId", this.id);
         }
+    }
+
+    public void applyNBT(Map<String, String> nbtTags) {
+        nbtTags.forEach((key, value) ->
+                NBTManager.setString(this.itemStack, key, value));
     }
 
     public void applyBaseHead(String value) {
@@ -209,5 +226,8 @@ public class NonMenuItem {
 
         if (this.headValue != null) NBTManager.base64head(item, this.headValue);
         return itemStack;
+    }
+    public void give(Player player) {
+        player.getInventory().addItem(this.itemStack);
     }
 }

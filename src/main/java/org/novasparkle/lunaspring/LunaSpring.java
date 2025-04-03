@@ -1,12 +1,10 @@
 package org.novasparkle.lunaspring;
 
 import lombok.Getter;
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.Plugin;
 import org.novasparkle.lunaspring.API.Events.MenuHandler;
-import org.novasparkle.lunaspring.self.Command;
+import org.novasparkle.lunaspring.self.LSCommand;
+import org.novasparkle.lunaspring.self.PluginsCommand;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,7 +18,8 @@ public final class LunaSpring extends LunaPlugin {
         INSTANCE = this;
         this.registerListeners(new MenuHandler());
         this.saveDefaultConfig();
-        this.registerTabExecutor(new Command(), "lunaspring");
+        this.registerTabExecutor(new LSCommand(), "lunaspring");
+        this.registerCommand(new PluginsCommand(), "plugins");
     }
 
     public void hookPlugin(LunaPlugin lunaPlugin) {

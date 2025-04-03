@@ -1,10 +1,13 @@
 package org.novasparkle.lunaspring.API.Util.Service;
 
+import com.destroystokyo.paper.profile.PlayerProfile;
+import com.destroystokyo.paper.profile.ProfileProperty;
 import de.tr7zw.nbtapi.NBT;
 import de.tr7zw.nbtapi.iface.ReadWriteItemNBT;
 import de.tr7zw.nbtapi.iface.ReadWriteNBT;
 import de.tr7zw.nbtapi.iface.ReadableNBT;
 import lombok.Getter;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -25,14 +28,11 @@ public final class NBTService implements LunaService {
     }
 
     public void base64head(ItemStack head, String value, UUID uuid) {
-        NBT.modify(head, nbt -> {
-            ReadWriteNBT skullOwnerCompound = nbt.getOrCreateCompound("SkullOwner");
-            skullOwnerCompound.setUUID("Id", uuid);
-            skullOwnerCompound.getOrCreateCompound("Properties")
-                    .getCompoundList("textures")
-                    .addCompound()
-                    .setString("Value", value);
-        });
+        SkullMeta meta = (SkullMeta) head.getItemMeta();
+        PlayerProfile playerProfile = Bukkit.createProfile(uuid);
+        playerProfile.setProperty(new ProfileProperty("textures", value));
+        meta.setPlayerProfile(playerProfile);
+        head.setItemMeta(meta);
     }
 
     public boolean hasTag(ItemStack item, String tag) {

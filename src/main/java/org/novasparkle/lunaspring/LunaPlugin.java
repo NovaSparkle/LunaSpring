@@ -7,12 +7,11 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.novasparkle.lunaspring.API.Events.MenuHandler;
 import org.novasparkle.lunaspring.API.Util.utilities.LunaMath;
 import org.novasparkle.lunaspring.API.Util.utilities.Utils;
 import org.novasparkle.lunaspring.API.Util.Service.managers.ColorManager;
 import org.novasparkle.lunaspring.API.Util.utilities.LunaPAPIExpansion;
-import org.novasparkle.lunaspring.self.ConfigManager;
+import org.novasparkle.lunaspring.self.LSConfig;
 
 import java.util.Arrays;
 import java.util.List;
@@ -33,10 +32,9 @@ public class LunaPlugin extends JavaPlugin {
                 ""
         ));
         LunaSpring.getINSTANCE().hookPlugin(this);
-        this.info(ConfigManager.getMessage("listenerRegistered"));
     }
     private void startMessage(List<String> startMessage) {
-        String textColorString = ConfigManager.getString("on_load_plugin_text_colors");
+        String textColorString = LSConfig.getString("on_load_plugin_text_colors");
         char endedColor = textColorString == null || textColorString.isEmpty() ? 'b' :
                 textColorString.charAt(LunaMath.getRandomInt(0, textColorString.length()));
         String formattedEndedColor = "&" + endedColor;
@@ -71,7 +69,7 @@ public class LunaPlugin extends JavaPlugin {
      */
     public void loadFile(String path) {
         this.saveResource(path, false);
-        this.info(ConfigManager.getMessage("loadedSource").replace("[file]", path));
+        this.info(LSConfig.getMessage("loadedSource").replace("[file]", path));
     }
 
     /**
@@ -142,7 +140,7 @@ public class LunaPlugin extends JavaPlugin {
     public void createPlaceholder(String identifier, LunaPAPIExpansion.Request request) {
         if (Utils.isPluginEnabled("PlaceholderAPI")) {
             new LunaPAPIExpansion(this, identifier, request).register();
-            this.info(ConfigManager.getMessage("placeholderRegistered").replace("[identifier]", identifier));
+            this.info(LSConfig.getMessage("placeholderRegistered").replace("[identifier]", identifier));
         }
     }
 

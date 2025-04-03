@@ -1,3 +1,4 @@
+# * Переменные цветов. Могут использоваться в любом плагине LunaSpring *
 colors:
   PREFIX:
     abbr: '\{P\}'
@@ -14,10 +15,23 @@ colors:
   PURPLE_COLOR:
     abbr: '\{R\}'
     variable: '&x&A&F&4&7&F&F'
+  LIME_COLOR:
+    abbr: '\{R\}'
+    variable: '&x&A&F&4&7&F&F'
 
+# * Цветовые коды для выделения сообщений в консоли *
 on_load_plugin_text_colors: "bcde"
+# * Использовать ли вместо стандартной команды /plugins (/pl) кастомную? *
+custom_pl_command:
+  enabled: false
+  enabledPlugin: '{S}Включен'
+  disabledPlugin: '{E}Отключен'
+#
+
+# * Сообщения *
 messages:
   noPermission: "{E}Нет прав на выполнение команды!"
+  undefinedCommand: '{E}Неизвестная команда!'
   reloaded: '{P} {S}Библиотека перезагружена'
   loadedSource: '{S}Загружен ресурс [file]'
   listenerRegistered: '{S}Оcновной обработчик событий LunaSpring зарегистрирован'
@@ -25,8 +39,14 @@ messages:
   hooked: "{P} &f| {S}[plugin] &f|"
   server-info:
     - ""
-    - "&f Онлайн игроков: {S}[online] &f/ {S}[players_max]"
-    - "&f Версии: {S}[bukkit-version] &f| {S}[mc-version]"
-    - "&f Порт: {S}[port]"
-    - "&f Средний ТПС: {S}[average_tps]"
+    - "&fОнлайн игроков: {S}[online] &f/ {S}[players_max]"
+    - "&fВерсии: {S}[bukkit-version] &f| {S}[mc-version]"
+    - "&fПорт: {S}[port]"
+    - "&fСредний ТПС: {S}[average_tps]"
     - ""
+  plugins:
+    - ''
+    - '{S}[pluginName] &fv{S}[pluginVersion]'
+    - '    {S}by [pluginAuthors]'
+    - '    {S}Состояние: ^[status]'
+    - ''

@@ -1,6 +1,7 @@
 package org.novasparkle.lunaspring.API.Util.utilities;
 
 import lombok.Getter;
+import org.novasparkle.lunaspring.self.LSCommand;
 
 @Getter
 public final class Color {
