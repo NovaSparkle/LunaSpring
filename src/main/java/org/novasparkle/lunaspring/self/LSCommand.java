@@ -39,6 +39,25 @@ public class LSCommand implements TabExecutor {
                         sender.sendMessage(ColorManager.color(line));
                     });
 
+                } case "pl", "plugins" -> {
+                    if (!LSConfig.getBoolean("custom_pl_command.enabled") || noPermission(sender, "plugins")) return true;
+                    String enabledPlugin = LSConfig.getString("custom_pl_command.enabledPlugin");
+                    String disabledPlugin = LSConfig.getString("custom_pl_command.disabledPlugin");
+
+                    List<String> list = LSConfig.getStringList("plugins");
+
+                    for (Plugin plugin : LunaSpring.getINSTANCE().getServer().getPluginManager().getPlugins()) {
+                        String status = plugin.isEnabled() ? enabledPlugin : disabledPlugin;
+                        list.forEach(l -> {
+                            String line = l
+                                    .replace("[plugin-name]", plugin.getName())
+                                    .replace("[plugin-version]", plugin.getDescription().getVersion())
+                                    .replace("[plugin-authors]", Bukkit.getBukkitVersion())
+                                    .replace("[status]", status);
+                            sender.sendMessage(ColorManager.color(line));
+                        });
+                    }
+
                 } case "hooked" -> {
                     String hooked = LSConfig.getMessage("hooked");
                     LunaSpring.getINSTANCE().getHookedPlugins().forEach(pl -> sender.sendMessage(hooked.replace("[plugin]", pl.getName())));
@@ -53,7 +72,7 @@ public class LSCommand implements TabExecutor {
     public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, org.bukkit.command.@NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         return strings.length == 1 ? List.of("reload", "server-info", "hooked", "pl") : Collections.emptyList();
     }
-    static boolean noPermission(CommandSender sender, String permission) {
+    private static boolean noPermission(CommandSender sender, String permission) {
         if (!sender.hasPermission(String.format("lunaspring.%s", permission)) &&
                 !sender.hasPermission("lunaspring.admin")) {
             sender.sendMessage(LSConfig.getMessage("noPermission"));
