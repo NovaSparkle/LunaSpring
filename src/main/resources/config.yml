@@ -46,7 +46,7 @@ messages:
     - ""
   plugins:
     - ''
-    - '{S}[pluginName] &fv{S}[pluginVersion]'
-    - '    {S}by [pluginAuthors]'
-    - '    {S}Состояние: ^[status]'
+    - '    {S}| {S}[plugin-name] &fby {S}[plugin-authors]'
+    - '    {S}| &fВерсия: {S}[plugin-version]'
+    - '    {S}| &fСостояние: {S}[status]'
     - ''

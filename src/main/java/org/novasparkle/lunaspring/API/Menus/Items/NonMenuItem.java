@@ -69,8 +69,8 @@ public class NonMenuItem {
         String displayName = section.getString("displayName");
 
         this.displayName = ColorManager.color(displayName);
-        if (!lore.isEmpty())
-            lore.replaceAll(ColorManager::color);
+
+        if (!lore.isEmpty()) lore.replaceAll(ColorManager::color);
         this.lore = lore;
 
         this.amount = section.getInt("amount");
@@ -80,14 +80,22 @@ public class NonMenuItem {
 
         this.setGlowing(section.getBoolean("enchanted"));
         ConfigurationSection nbtSection = section.getConfigurationSection("nbtTags");
-        assert nbtSection != null;
+        if (nbtSection != null) {
+            nbtSection.getValues(false).forEach((key, value) -> {
+                if (!NBTManager.hasTag(this.itemStack, key)) {
+                    if (value instanceof String strValue) NBTManager.setString(this.itemStack, key, strValue);
 
-        nbtSection.getValues(false).forEach((key, value) -> {
-            if (!NBTManager.hasTag(this.itemStack, key)) {
-                if (!(value instanceof String strValue)) throw new IllegalArgumentException(String.format("Неверный NBT тег под ключом: %s", key));
-                NBTManager.setString(this.itemStack, key, strValue);
-            }
-        });
+                    else if (value instanceof Integer intValue) NBTManager.setInt(this.itemStack, key, intValue);
+
+                    else if (value instanceof Boolean boolValue) NBTManager.setBool(this.itemStack, key, boolValue);
+
+                    else if (value instanceof Double dValue) NBTManager.setDouble(itemStack, key, dValue);
+
+                }
+            });
+        }
+
+
         this.update();
 
         String baseHeadValue = section.getString("baseHead");

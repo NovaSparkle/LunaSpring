@@ -1,8 +1,10 @@
 package org.novasparkle.lunaspring.API.Util.Service.managers;
 
+import de.tr7zw.nbtapi.NBTBlock;
 import de.tr7zw.nbtapi.iface.ReadWriteItemNBT;
 import lombok.experimental.UtilityClass;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
 import org.novasparkle.lunaspring.API.Util.Service.NBTService;
 
@@ -35,6 +37,42 @@ public class NBTManager {
 
     public void set(ItemStack item, Consumer<ReadWriteItemNBT> consumer) {
         nbtService.set(item, consumer);
+    }
+
+    public void setInt(Block block, String key, int value) {
+        new NBTBlock(block).getData().setInteger(key, value);
+    }
+
+    public void setLong(Block block, String key, long value) {
+        new NBTBlock(block).getData().setLong(key, value);
+    }
+
+    public void setDouble(Block block, String key, double value) {
+        new NBTBlock(block).getData().setDouble(key, value);
+    }
+
+    public void setByte(Block block, String key, byte value) {
+        new NBTBlock(block).getData().setByte(key, value);
+    }
+
+    public void setString(Block block, String key, String value) {
+        new NBTBlock(block).getData().setString(key, value);
+    }
+
+    public void setString(Block block, String key, boolean value) {
+        new NBTBlock(block).getData().setBoolean(key, value);
+    }
+
+    public void setUUID(Block block, String key, UUID value) {
+        new NBTBlock(block).getData().setUUID(key, value);
+    }
+
+    public void setFloat(Block block, String key, float value) {
+        new NBTBlock(block).getData().setFloat(key, value);
+    }
+
+    public void setItemStack(Block block, String key, ItemStack value) {
+        new NBTBlock(block).getData().setItemStack(key, value);
     }
 
     public void setString(ItemStack item, String tag, String value) {

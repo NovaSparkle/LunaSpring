@@ -49,10 +49,12 @@ public class LSCommand implements TabExecutor {
                     for (Plugin plugin : LunaSpring.getINSTANCE().getServer().getPluginManager().getPlugins()) {
                         String status = plugin.isEnabled() ? enabledPlugin : disabledPlugin;
                         list.forEach(l -> {
+                            String authors = String.join(", ", plugin.getDescription().getAuthors());
+                            authors = authors.isEmpty() ? "Не указано" : authors;
                             String line = l
                                     .replace("[plugin-name]", plugin.getName())
                                     .replace("[plugin-version]", plugin.getDescription().getVersion())
-                                    .replace("[plugin-authors]", Bukkit.getBukkitVersion())
+                                    .replace("[plugin-authors]", authors)
                                     .replace("[status]", status);
                             sender.sendMessage(ColorManager.color(line));
                         });
