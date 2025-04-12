@@ -3,6 +3,7 @@ package org.novasparkle.lunaspring.API.Menus.Items;
 import lombok.Getter;
 import lombok.Setter;
 import me.clip.placeholderapi.PlaceholderAPI;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Getter
 public class NonMenuItem {
@@ -35,51 +37,43 @@ public class NonMenuItem {
     private String headValue;
 
     public NonMenuItem(Material material, String displayName, List<String> lore, int amount) {
+        if (material == null) throw new IllegalArgumentException("Материал предмета не может быть null!");
         this.material = material;
-        this.displayName = ColorManager.color(displayName);
-        if (!lore.isEmpty())
-            lore.replaceAll(ColorManager::color);
-
+        this.displayName = displayName;
         this.lore = lore;
         this.amount = amount;
-        if (this.amount < 1) this.amount = 1;
         this.itemStack = new ItemStack(this.material, this.amount);
         this.update();
     }
 
     public NonMenuItem(Material material) {
+        if (material == null) throw new IllegalArgumentException("Материал предмета не может быть null!");
         this.material = material;
         this.itemStack = new ItemStack(this.material, this.amount);
         this.update();
     }
 
     public NonMenuItem(Material material, int amount) {
+        if (material == null) throw new IllegalArgumentException("Материал предмета не может быть null!");
         this.material = material;
         this.amount = amount;
-        if (this.amount < 1) this.amount = 1;
         this.itemStack = new ItemStack(this.material, this.amount);
         this.update();
     }
 
     public NonMenuItem(ConfigurationSection section) {
         String material = section.getString("material");
-        assert material != null;
+        if (material == null) throw new IllegalArgumentException("Материал предмета не может быть null!");
         this.material = Material.getMaterial(material);
 
-        List<String> lore = section.getStringList("lore");
-        String displayName = section.getString("displayName");
-
-        this.displayName = ColorManager.color(displayName);
-
-        if (!lore.isEmpty()) lore.replaceAll(ColorManager::color);
-        this.lore = lore;
+        this.displayName = section.getString("displayName");
+        this.lore = section.getStringList("lore");
 
         this.amount = section.getInt("amount");
-        if (this.amount < 1) this.amount = 1;
 
         this.itemStack = new ItemStack(this.material, this.amount);
-
         this.setGlowing(section.getBoolean("enchanted"));
+        // NBT
         ConfigurationSection nbtSection = section.getConfigurationSection("nbtTags");
         if (nbtSection != null) {
             nbtSection.getValues(false).forEach((key, value) -> {
@@ -95,7 +89,6 @@ public class NonMenuItem {
                 }
             });
         }
-
 
         this.update();
 
@@ -188,18 +181,19 @@ public class NonMenuItem {
         this.setAll(newMaterial, amount, displayName, lore, itemSection.getBoolean("enchanted"));
     }
 
-    @SuppressWarnings("deprecation")
     private void update() {
         this.itemStack.setType(this.material);
         ItemMeta meta = this.itemStack.getItemMeta();
         if (meta != null) {
+
             if (this.displayName != null && !this.displayName.isEmpty())
-                meta.setDisplayName(this.displayName);
+                meta.displayName(Component.text(ColorManager.color(this.displayName)));
             if (this.lore != null && !this.lore.isEmpty())
-                meta.setLore(this.lore);
+                meta.lore(this.lore.stream().map(lr -> Component.text(ColorManager.color(lr))).collect(Collectors.toList()));
+
             this.itemStack.setItemMeta(meta);
         }
-        this.itemStack.setAmount(this.amount);
+        this.itemStack.setAmount(this.amount <= 0 ? 1 : amount);
 
         if (!NBTManager.hasTag(this.itemStack, "lunaspring.itemId")) {
             NBTManager.setString(this.itemStack, "lunaspring-itemId", this.id);
