@@ -163,11 +163,14 @@ public class NonMenuItem {
     }
 
     public void setAll(Material material, int amount, String displayName, List<String> lore, boolean enchanted) {
-        if (material == null) material = Material.AIR;
-        this.setMaterial(material);
-        this.setAmount(amount);
-        if (lore != null) this.setLore(lore);
-        if (displayName != null) this.setDisplayName(displayName);
+        if (material != null)
+            this.setMaterial(material);
+        if (amount > 0)
+            this.setAmount(amount);
+        if (lore != null && !lore.isEmpty())
+            this.setLore(lore);
+        if (displayName != null && !displayName.isEmpty())
+            this.setDisplayName(displayName);
         this.setGlowing(enchanted);
     }
 
@@ -181,7 +184,7 @@ public class NonMenuItem {
         String displayName = itemSection.getString("displayName");
         List<String> lore = new ArrayList<>(itemSection.getStringList("lore"));
 
-        this.setAll(newMaterial, amount <= 0 ? 1 : amount, displayName, lore, itemSection.getBoolean("enchanted"));
+        this.setAll(newMaterial, amount, displayName, lore, itemSection.getBoolean("enchanted"));
     }
 
     @SuppressWarnings("deprecation")
@@ -189,8 +192,10 @@ public class NonMenuItem {
         this.itemStack.setType(this.material);
         ItemMeta meta = this.itemStack.getItemMeta();
         if (meta != null) {
-            if (this.displayName != null && !this.displayName.isEmpty()) meta.setDisplayName(this.displayName);
-            if (this.lore != null) meta.setLore(this.lore);
+            if (this.displayName != null && !this.displayName.isEmpty())
+                meta.setDisplayName(this.displayName);
+            if (this.lore != null && !this.lore.isEmpty())
+                meta.setLore(this.lore);
             this.itemStack.setItemMeta(meta);
         }
         this.itemStack.setAmount(this.amount);
