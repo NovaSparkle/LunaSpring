@@ -2,6 +2,7 @@ package org.novasparkle.lunaspring.API.Menus.Items;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
@@ -241,6 +242,7 @@ public class NonMenuItem {
         return itemStack;
     }
     public void give(Player player) {
+        this.lore.forEach(lr -> PlaceholderAPI.setPlaceholders(player, lr));
         player.getInventory().addItem(this.itemStack);
     }
 }

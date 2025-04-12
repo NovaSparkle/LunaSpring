@@ -2,6 +2,7 @@ package org.novasparkle.lunaspring.API.Menus.Items;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -55,17 +56,23 @@ public class Item extends NonMenuItem {
 
     public void insert(IMenu aMenu) {
         this.menu = aMenu;
+        this.getLore().forEach(lr -> PlaceholderAPI.setPlaceholders(aMenu.getPlayer(), lr));
+        this.setLore(this.getLore());
         aMenu.getInventory().setItem(this.slot, this.getItemStack());
     }
 
     public void insert(IMenu aMenu, byte slot) {
         this.menu = aMenu;
         this.slot = slot;
+        this.getLore().forEach(lr -> PlaceholderAPI.setPlaceholders(aMenu.getPlayer(), lr));
+        this.setLore(this.getLore());
         aMenu.getInventory().setItem(slot, this.getItemStack());
     }
 
     public void insert(IMenu aMenu, byte row, byte column) {
         this.menu = aMenu;
+        this.getLore().forEach(lr -> PlaceholderAPI.setPlaceholders(aMenu.getPlayer(), lr));
+        this.setLore(this.getLore());
         this.slot = (byte) LunaMath.getIndex(row, column);
         aMenu.getInventory().setItem(slot, this.getItemStack());
     }
