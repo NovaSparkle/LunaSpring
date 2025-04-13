@@ -25,10 +25,6 @@ import java.util.List;
 import java.util.Objects;
 
 public class LunaPlugin extends JavaPlugin {
-    public LunaPlugin() {
-        this.initialize();
-    }
-
     /**
      * Обязательный метод для инициализации класса
     */
