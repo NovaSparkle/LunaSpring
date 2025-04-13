@@ -2,7 +2,6 @@ package org.novasparkle.lunaspring;
 
 import lombok.SneakyThrows;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.TabCompleter;
@@ -16,6 +15,11 @@ import org.novasparkle.lunaspring.API.Util.utilities.LunaPAPIExpansion;
 import org.novasparkle.lunaspring.self.LSConfig;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -161,13 +165,23 @@ public class LunaPlugin extends JavaPlugin {
     /**
      * Создание нового и копирование содержимого файла из ресурсов (папки resources в вашем проекте Bukkit) в новый файл targetFile
      * <p>
-     * @param targetFile - файл, который будет создан сразу с содержимым из файла по пути copyResourcePath
+     * @param destinationPath - путь файла, который будет создан сразу с содержимым из файла по пути copyResourcePath
      * @param copyResourcePath - путь до файла, из которого будет браться код для копирования
      */
     @SneakyThrows
-    public void copyFile(File targetFile, String copyResourcePath) {
-        if (!targetFile.exists() && targetFile.getParentFile().mkdirs()) FileUtils.copyInputStreamToFile(
-                Objects.requireNonNull(this.getResource(copyResourcePath)), targetFile);
+    public void copyFile(String destinationPath, String copyResourcePath) {
+        Files.createDirectories(Paths.get(destinationPath).getParent());
+
+        InputStream inputStream = this.getResource(copyResourcePath);
+        try (OutputStream outputStream = new FileOutputStream(destinationPath)) {
+            byte[] buffer = new byte[1024];
+            int length;
+
+            if (inputStream == null) return;
+            while ((length = inputStream.read(buffer)) > 0) {
+                outputStream.write(buffer, 0, length);
+            }
+        }
     }
 
     /**
