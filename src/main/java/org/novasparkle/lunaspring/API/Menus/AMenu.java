@@ -25,6 +25,7 @@ public abstract class AMenu implements IMenu {
     private Inventory inventory;
     private String title;
     @Setter private Decoration decoration;
+
     private final Player player;
     private final CooldownPrevent<Integer> cooldownPrevent = new CooldownPrevent<>();
     private final List<Item> itemList = new ArrayList<>();

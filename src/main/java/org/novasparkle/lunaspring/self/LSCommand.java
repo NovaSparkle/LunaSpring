@@ -74,6 +74,7 @@ public class LSCommand implements TabExecutor {
     public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, org.bukkit.command.@NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         return strings.length == 1 ? List.of("reload", "server-info", "hooked", "pl") : Collections.emptyList();
     }
+
     private static boolean noPermission(CommandSender sender, String permission) {
         if (!sender.hasPermission(String.format("lunaspring.%s", permission)) &&
                 !sender.hasPermission("lunaspring.admin")) {

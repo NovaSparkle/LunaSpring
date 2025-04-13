@@ -1,6 +1,8 @@
 package org.novasparkle.lunaspring;
 
+import lombok.SneakyThrows;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.TabCompleter;
@@ -13,16 +15,22 @@ import org.novasparkle.lunaspring.API.Util.Service.managers.ColorManager;
 import org.novasparkle.lunaspring.API.Util.utilities.LunaPAPIExpansion;
 import org.novasparkle.lunaspring.self.LSConfig;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
 public class LunaPlugin extends JavaPlugin {
+    public LunaPlugin() {
+        this.initialize();
+    }
 
     /**
      * Обязательный метод для инициализации класса
     */
     public final void initialize() {
+        if (LunaSpring.getINSTANCE().getHookedPlugins().contains(this)) return;
+
         this.startMessage(Arrays.asList(
                 "",
                 "        ^ | &l[pluginName]^ v[pluginVersion] (by [pluginAuthors])",
@@ -33,6 +41,7 @@ public class LunaPlugin extends JavaPlugin {
         ));
         LunaSpring.getINSTANCE().hookPlugin(this);
     }
+
     private void startMessage(List<String> startMessage) {
         String textColorString = LSConfig.getString("on_load_plugin_text_colors");
         char endedColor = textColorString == null || textColorString.isEmpty() ? 'b' :
@@ -68,6 +77,7 @@ public class LunaPlugin extends JavaPlugin {
      * Загрузить файл из resources
      */
     public void loadFile(String path) {
+        if (new File(this.getDataFolder(), path).exists()) return;
         this.saveResource(path, false);
         this.info(LSConfig.getMessage("loadedSource").replace("[file]", path));
     }
@@ -146,6 +156,18 @@ public class LunaPlugin extends JavaPlugin {
 
     public void createPlaceholder(LunaPAPIExpansion.Request request) {
         this.createPlaceholder(null, request);
+    }
+
+    /**
+     * Создание нового и копирование содержимого файла из ресурсов (папки resources в вашем проекте Bukkit) в новый файл targetFile
+     * <p>
+     * @param targetFile - файл, который будет создан сразу с содержимым из файла по пути copyResourcePath
+     * @param copyResourcePath - путь до файла, из которого будет браться код для копирования
+     */
+    @SneakyThrows
+    public void copyFile(File targetFile, String copyResourcePath) {
+        if (!targetFile.exists() && targetFile.getParentFile().mkdirs()) FileUtils.copyInputStreamToFile(
+                Objects.requireNonNull(this.getResource(copyResourcePath)), targetFile);
     }
 
     /**

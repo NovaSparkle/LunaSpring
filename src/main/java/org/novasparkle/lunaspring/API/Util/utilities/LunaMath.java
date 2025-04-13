@@ -3,7 +3,10 @@ package org.novasparkle.lunaspring.API.Util.utilities;
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 @UtilityClass
 public class LunaMath {
@@ -15,7 +18,11 @@ public class LunaMath {
     }
 
     public int toInt(String text) {
-        return Integer.parseInt(text);
+        try {
+            return Integer.parseInt(text);
+        } catch (NumberFormatException e) {
+            return 0;
+        }
     }
 
     public int toInt(double num) {

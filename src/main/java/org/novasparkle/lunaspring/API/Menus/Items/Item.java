@@ -9,10 +9,13 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.novasparkle.lunaspring.API.Menus.IMenu;
 import org.novasparkle.lunaspring.API.Util.utilities.LunaMath;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 public class Item extends NonMenuItem {
+    private final List<String> defaultLore;
+    private final String defaultName;
 
     private IMenu menu;
     @Setter private byte slot = 0;
@@ -20,23 +23,34 @@ public class Item extends NonMenuItem {
     public Item(Material material, String displayName, List<String> lore, int amount, byte slot) {
         super(material, displayName, lore, amount);
         this.slot = slot;
-    }
-
-    public Item(Material material) {
-        super(material);
+        this.defaultLore = new ArrayList<>(this.getLore());
+        this.defaultName = this.getDisplayName();
     }
 
     public Item(Material material, int amount) {
         super(material, amount);
+        this.defaultLore = new ArrayList<>(this.getLore());
+        this.defaultName = this.getDisplayName();
+    }
+
+    public Item(Material material) {
+        this(material, 1);
+    }
+
+    public Item(Material material, byte slot) {
+        this(material);
+        this.slot = slot;
     }
 
     public Item(ConfigurationSection section, int slot) {
         super(section);
         this.slot = (byte) slot;
+        this.defaultLore = new ArrayList<>(this.getLore());
+        this.defaultName = this.getDisplayName();
     }
 
     public Item(ConfigurationSection section, boolean rowCol) {
-        super(section);
+        this(section, 0);
         if (rowCol)
             this.slot = (byte) LunaMath.getIndex(section.getInt("slot.row"), section.getInt("slot.column"));
         else this.slot = (byte) section.getInt("slot");
@@ -54,31 +68,41 @@ public class Item extends NonMenuItem {
                 '}';
     }
 
-    public void insert(IMenu aMenu) {
-        this.menu = aMenu;
-        this.getLore().forEach(lr -> PlaceholderAPI.setPlaceholders(aMenu.getPlayer(), lr));
-        this.setLore(this.getLore());
-        aMenu.getInventory().setItem(this.slot, this.getItemStack());
+    public void insert() {
+        this.insert(this.slot);
+    }
+
+    public void insert(byte slot) {
+        if (this.menu != null) this.insert(this.menu, slot);
     }
 
     public void insert(IMenu aMenu, byte slot) {
         this.menu = aMenu;
         this.slot = slot;
-        this.getLore().forEach(lr -> PlaceholderAPI.setPlaceholders(aMenu.getPlayer(), lr));
-        this.setLore(this.getLore());
+
+        this.updateDescription();
         aMenu.getInventory().setItem(slot, this.getItemStack());
     }
 
+    public void insert(IMenu aMenu) {
+        this.insert(aMenu, this.slot);
+    }
+
     public void insert(IMenu aMenu, byte row, byte column) {
-        this.menu = aMenu;
-        this.getLore().forEach(lr -> PlaceholderAPI.setPlaceholders(aMenu.getPlayer(), lr));
-        this.setLore(this.getLore());
-        this.slot = (byte) LunaMath.getIndex(row, column);
-        aMenu.getInventory().setItem(slot, this.getItemStack());
+        this.insert(aMenu, (byte) LunaMath.getIndex(row, column));
+    }
+
+    public void updateDescription() {
+        if (this.menu == null) return;
+
+        List<String> lore = new ArrayList<>(this.defaultLore);
+        lore.forEach(lr -> PlaceholderAPI.setPlaceholders(this.menu.getPlayer(), lr));
+        this.setLore(lore);
     }
 
     public void remove(IMenu iMenu) {
         iMenu.getInventory().setItem(this.slot, null);
     }
+
     public void onClick(InventoryClickEvent event) {}
 }

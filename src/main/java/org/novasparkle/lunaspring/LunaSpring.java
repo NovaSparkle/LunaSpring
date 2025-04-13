@@ -12,6 +12,7 @@ public final class LunaSpring extends LunaPlugin {
     private static LunaSpring INSTANCE;
     @Getter
     private final Set<LunaPlugin> hookedPlugins = new HashSet<>();
+
     @Override
     public void onEnable() {
         INSTANCE = this;

@@ -233,8 +233,9 @@ public class NonMenuItem {
         item.setItemMeta(meta);
 
         if (this.headValue != null) NBTManager.base64head(item, this.headValue);
-        return itemStack;
+        return item;
     }
+
     public void give(Player player) {
         this.lore.forEach(lr -> PlaceholderAPI.setPlaceholders(player, lr));
         player.getInventory().addItem(this.itemStack);
