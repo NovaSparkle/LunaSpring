@@ -94,10 +94,11 @@ public class Item extends NonMenuItem {
         this.insert(aMenu, (byte) LunaMath.getIndex(row, column));
     }
 
-    public void replaceLore(UnaryOperator<String> operator) {
+    public Item replaceLore(UnaryOperator<String> operator) {
         List<String> newLore = new ArrayList<>(this.getLore());
         newLore.replaceAll(operator);
         this.setLore(newLore);
+        return this;
     }
 
     public void updateDescription() {
