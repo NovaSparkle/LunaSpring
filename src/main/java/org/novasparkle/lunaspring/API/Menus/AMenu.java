@@ -43,8 +43,8 @@ public abstract class AMenu implements IMenu {
         this.title = menuSection.getString("title");
         this.inventory = Bukkit.createInventory(this.player,
                 Math.min(menuSection.getInt("size"), 54), ColorManager.color(this.title));
-        this.decoration = new Decoration(Objects.requireNonNull(menuSection.getConfigurationSection("decoration")));
-        this.decoration.insert(this);
+        this.decoration = new Decoration(Objects.requireNonNull(menuSection.getConfigurationSection("decoration")), this);
+        this.decoration.insert();
     }
 
     @SuppressWarnings("deprecation")
@@ -52,8 +52,8 @@ public abstract class AMenu implements IMenu {
         this.player = player;
         this.title = title;
         this.inventory = Bukkit.createInventory(this.player, Math.min(size, 54), ColorManager.color(title));
-        this.decoration = new Decoration(decorSection);
-        this.decoration.insert(this);
+        this.decoration = new Decoration(decorSection, this);
+        this.decoration.insert();
     }
 
     public AMenu(Player player) {
@@ -75,8 +75,8 @@ public abstract class AMenu implements IMenu {
         assert this.title != null;
         this.inventory = Bukkit.createInventory(this.player, section.getInt("size"), ColorManager.color(this.title));
         if (decorate) {
-            this.decoration = new Decoration(Objects.requireNonNull(section.getConfigurationSection("decoration")));
-            this.decoration.insert(this);
+            this.decoration = new Decoration(Objects.requireNonNull(section.getConfigurationSection("decoration")), this);
+            this.decoration.insert();
         }
     }
 
@@ -94,8 +94,8 @@ public abstract class AMenu implements IMenu {
         this.inventory = Bukkit.createInventory(this.player, size, ColorManager.color(title));
         this.title = title;
         if (decorate) {
-            this.decoration = new Decoration(decorSection);
-            this.decoration.insert(this);
+            this.decoration = new Decoration(decorSection, this);
+            this.decoration.insert();
         }
     }
     public void clear() {

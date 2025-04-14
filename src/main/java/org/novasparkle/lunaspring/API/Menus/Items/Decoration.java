@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.novasparkle.lunaspring.API.Menus.IMenu;
 import org.novasparkle.lunaspring.API.Util.utilities.Utils;
@@ -13,7 +14,33 @@ import java.util.List;
 
 @Getter @Setter
 public class Decoration {
-    private final List<Item> decorationItems = new ArrayList<>();
+    private final List<Item> decorationItems;
+    private final IMenu iMenu;
+
+
+    public Decoration(ConfigurationSection decorationSection, IMenu iMenu) {
+        this.iMenu = iMenu;
+        this.decorationItems = new ArrayList<>();
+        boolean fillType = decorationSection.getBoolean("fillType.enabled");
+
+        if (fillType) {
+            ConfigurationSection section = decorationSection.getConfigurationSection("fillType.item");
+            Inventory inventory = this.iMenu.getInventory();
+            for (int i = 0; i < inventory.getSize(); i++) {
+                if (inventory.getItem(i) == null) {
+                    this.decorationItems.add(new Item(section, i));
+                }
+            }
+        } else {
+            for (String key : decorationSection.getKeys(false)) {
+                ConfigurationSection itemSection = decorationSection.getConfigurationSection(key);
+                assert itemSection != null;
+
+                List<String> slots = itemSection.getStringList("slots");
+                this.decorationItems.addAll(Utils.getItems(itemSection, slots));
+            }
+        }
+    }
 
     @Override
     public String toString() {
@@ -21,19 +48,8 @@ public class Decoration {
                 "decorationItems=" + this.decorationItems +
                 '}';
     }
-
-    public Decoration(ConfigurationSection decorationSection) {
-        for (String key : decorationSection.getKeys(false)) {
-            ConfigurationSection itemSection = decorationSection.getConfigurationSection(key);
-            assert itemSection != null;
-
-            List<String> slots = itemSection.getStringList("slots");
-            this.decorationItems.addAll(Utils.getItems(itemSection, slots));
-        }
-    }
-
-    public void insert(IMenu imenu) {
-        this.decorationItems.forEach(i -> i.insert(imenu));
+    public void insert() {
+        this.decorationItems.forEach(i -> i.insert(this.iMenu));
     }
 
     public int getDecorationsAmount() {
