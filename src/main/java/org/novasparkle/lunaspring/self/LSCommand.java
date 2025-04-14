@@ -40,9 +40,9 @@ public class LSCommand implements TabExecutor {
                     });
 
                 } case "pl", "plugins" -> {
-                    if (!LSConfig.getBoolean("custom_pl_command.enabled") || noPermission(sender, "plugins")) return true;
-                    String enabledPlugin = LSConfig.getString("custom_pl_command.enabledPlugin");
-                    String disabledPlugin = LSConfig.getString("custom_pl_command.disabledPlugin");
+                    if (noPermission(sender, "plugins")) return true;
+                    String enabledPlugin = LSConfig.getString("pl_command.enabledPlugin");
+                    String disabledPlugin = LSConfig.getString("pl_command.disabledPlugin");
 
                     List<String> list = LSConfig.getStringList("plugins");
 

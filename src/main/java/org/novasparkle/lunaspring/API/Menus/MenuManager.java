@@ -6,6 +6,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
+import org.novasparkle.lunaspring.API.Events.CooldownPrevent;
 
 import java.util.HashMap;
 import java.util.Set;
@@ -14,7 +15,6 @@ import java.util.stream.Collectors;
 public class MenuManager {
     @Getter
     private static final HashMap<Inventory, IMenu> activeInventories = new HashMap<>();
-
     public static void openInventory(Player player, IMenu menu) {
         register(menu.getInventory(), menu);
         player.openInventory(menu.getInventory());

@@ -22,18 +22,18 @@ colors:
 # * Цветовые коды для выделения сообщений в консоли *
 on_load_plugin_text_colors: "bcde"
 # * Использовать ли вместо стандартной команды /plugins (/pl) кастомную? *
-custom_pl_command:
-  enabled: false
+pl_command:
   enabledPlugin: '{S}Включен'
   disabledPlugin: '{E}Отключен'
-#
+
 
 # * Сообщения *
 messages:
   noPermission: "{E}Нет прав на выполнение команды!"
   undefinedCommand: '{E}Неизвестная команда!'
   reloaded: '{P} {S}Библиотека перезагружена'
-  loadedSource: '{S}Загружен ресурс [file]'
+  savedSource: '{S}Ресурс [file] сохранен'
+  loadedSource: '{S}Ресурс [file] загружен'
   listenerRegistered: '{S}Оcновной обработчик событий LunaSpring зарегистрирован'
   placeholderRegistered: '{S}Плейсхолдер {M}[identifier] {S}зарегистрирован!'
   hooked: "{P} &f| {S}[plugin] &f|"

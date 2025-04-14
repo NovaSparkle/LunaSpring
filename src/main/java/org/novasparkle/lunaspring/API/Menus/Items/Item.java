@@ -1,5 +1,6 @@
 package org.novasparkle.lunaspring.API.Menus.Items;
 
+import com.ibm.icu.impl.PVecToTrieCompactHandler;
 import lombok.Getter;
 import lombok.Setter;
 import me.clip.placeholderapi.PlaceholderAPI;
@@ -11,6 +12,7 @@ import org.novasparkle.lunaspring.API.Util.utilities.LunaMath;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.UnaryOperator;
 
 @Getter
 public class Item extends NonMenuItem {
@@ -90,6 +92,12 @@ public class Item extends NonMenuItem {
 
     public void insert(IMenu aMenu, byte row, byte column) {
         this.insert(aMenu, (byte) LunaMath.getIndex(row, column));
+    }
+
+    public void replaceLore(UnaryOperator<String> operator) {
+        List<String> newLore = new ArrayList<>(this.getLore());
+        newLore.replaceAll(operator);
+        this.setLore(newLore);
     }
 
     public void updateDescription() {

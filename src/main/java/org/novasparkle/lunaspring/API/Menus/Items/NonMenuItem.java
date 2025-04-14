@@ -181,15 +181,16 @@ public class NonMenuItem {
         this.setAll(newMaterial, amount, displayName, lore, itemSection.getBoolean("enchanted"));
     }
 
+    @SuppressWarnings("deprecation")
     private void update() {
         this.itemStack.setType(this.material);
         ItemMeta meta = this.itemStack.getItemMeta();
         if (meta != null) {
 
             if (this.displayName != null && !this.displayName.isEmpty())
-                meta.displayName(Component.text(ColorManager.color(this.displayName)));
+                meta.setDisplayName(ColorManager.color(this.displayName));
             if (this.lore != null && !this.lore.isEmpty())
-                meta.lore(this.lore.stream().map(lr -> Component.text(ColorManager.color(lr))).collect(Collectors.toList()));
+                meta.setLore(this.lore.stream().map(ColorManager::color).collect(Collectors.toList()));
 
             this.itemStack.setItemMeta(meta);
         }
