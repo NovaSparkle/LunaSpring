@@ -76,6 +76,8 @@ public class NonMenuItem {
         this.setGlowing(section.getBoolean("enchanted"));
         // NBT
         ConfigurationSection nbtSection = section.getConfigurationSection("nbtTags");
+        this.update();
+
         if (nbtSection != null) {
             nbtSection.getValues(false).forEach((key, value) -> {
                 if (!NBTManager.hasTag(this.itemStack, key)) {
@@ -90,8 +92,6 @@ public class NonMenuItem {
                 }
             });
         }
-
-        this.update();
 
         String baseHeadValue = section.getString("baseHead");
         if (baseHeadValue != null && !baseHeadValue.isEmpty()) {
