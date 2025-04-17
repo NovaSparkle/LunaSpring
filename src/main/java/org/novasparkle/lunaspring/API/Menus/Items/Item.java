@@ -12,6 +12,7 @@ import org.novasparkle.lunaspring.API.Util.utilities.LunaMath;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.UnaryOperator;
 
 @Getter
@@ -33,6 +34,10 @@ public class Item extends NonMenuItem {
         super(material, amount);
         this.defaultLore = new ArrayList<>(this.getLore());
         this.defaultName = this.getDisplayName();
+    }
+
+    public Item(NonMenuItem nonMenuItem, byte slot) {
+        this(nonMenuItem.getMaterial(), nonMenuItem.getDisplayName(), nonMenuItem.getLore(), nonMenuItem.getAmount(), slot);
     }
 
     public Item(Material material) {
@@ -113,5 +118,16 @@ public class Item extends NonMenuItem {
         iMenu.getInventory().setItem(this.slot, null);
     }
 
-    public void onClick(InventoryClickEvent event) {}
+    @Override
+    public boolean equals(Object item) {
+        if (this == item) return true;
+        if (item == null || getClass() != item.getClass()) return false;
+        if (!super.equals(item)) return false;
+        Item thatItem = (Item) item;
+        return Objects.equals(getMenu(), thatItem.getMenu());
+    }
+
+    public void onClick(InventoryClickEvent event) {
+        event.setCancelled(true);
+    }
 }

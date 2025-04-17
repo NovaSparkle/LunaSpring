@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
@@ -237,8 +238,43 @@ public class NonMenuItem {
         return item;
     }
 
+    public void dropNaturally(Location location) {
+        location.getWorld().dropItemNaturally(location, this.getItemStack());
+    }
+
     public void give(Player player) {
         this.lore.forEach(lr -> PlaceholderAPI.setPlaceholders(player, lr));
         player.getInventory().addItem(this.itemStack);
+    }
+    @SuppressWarnings("deprecation")
+    public static NonMenuItem fromItemStack(ItemStack stack) {
+        NonMenuItem nonMenuItem = new NonMenuItem(stack.getType(), stack.getAmount());
+        ItemMeta meta = nonMenuItem.itemStack.getItemMeta();
+        if (meta != null) {
+
+            nonMenuItem.displayName = meta.getDisplayName();
+            List<String> lore = meta.getLore();
+            if (lore != null && !lore.isEmpty())
+                nonMenuItem.lore = lore;
+            if (meta.hasEnchants()) nonMenuItem.glowing = true;
+
+        }
+        nonMenuItem.itemStack = stack;
+        return nonMenuItem;
+    }
+
+
+
+    @Override
+    public boolean equals(Object item) {
+        if (this == item) return true;
+        if (item == null || this.getClass() != item.getClass()) return false;
+        NonMenuItem that = (NonMenuItem) item;
+        return that.getItemStack().isSimilar(this.itemStack);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getItemStack(), getId(), getMaterial(), getDisplayName(), getLore(), getAmount(), isGlowing(), getHeadValue());
     }
 }
