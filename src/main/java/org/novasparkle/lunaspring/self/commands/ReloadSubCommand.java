@@ -1,15 +1,13 @@
 package org.novasparkle.lunaspring.self.commands;
 
 import org.bukkit.command.CommandSender;
+import org.novasparkle.lunaspring.API.Commands.LunaCommand;
 import org.novasparkle.lunaspring.API.Commands.LunaSpringSubCommand;
 import org.novasparkle.lunaspring.LunaSpring;
 import org.novasparkle.lunaspring.self.LSConfig;
 
+@LunaCommand(maxArgs = 1, noConsole = false, commandIdentifiers = {"reload"})
 public class ReloadSubCommand extends LunaSpringSubCommand {
-    public ReloadSubCommand(String[] args, CommandSender sender) {
-        super(args, 1, sender, false, "reload");
-    }
-
     @Override
     public boolean invoke() {
         if (noPermission()) return true;
