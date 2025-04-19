@@ -41,7 +41,7 @@ messages:
   hooked: "{P} &f| {S}[plugin] &f|"
   server-info:
     - ""
-    - "&fОнлайн игроков: {S}[online] &f/ {S}[players_max]"
+    - "&fОнлайн игроков: {S}[online] &f/ {S}[max-players]"
     - "&fВерсии: {S}[bukkit-version] &f| {S}[mc-version]"
     - "&fПорт: {S}[port]"
     - "&fСредний ТПС: {S}[average_tps]"

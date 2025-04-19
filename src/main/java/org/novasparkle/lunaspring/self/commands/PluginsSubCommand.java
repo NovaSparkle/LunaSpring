@@ -14,8 +14,12 @@ import java.util.List;
 @LunaCommand(maxArgs = 1, noConsole = false, commandIdentifiers = {"pl", "plugins"})
 public class PluginsSubCommand extends LunaSpringSubCommand {
 
+    public PluginsSubCommand(LunaPlugin plugin, String[] args, int maxArgs, CommandSender sender, boolean noConsole, String[] commandIdentifiers) {
+        super(plugin, args, maxArgs, sender, noConsole, commandIdentifiers);
+    }
+
     @Override
-    public boolean invoke() {
+    public void invoke() {
         String enabledPlugin = LSConfig.getString("pl_command.enabledPlugin");
         String disabledPlugin = LSConfig.getString("pl_command.disabledPlugin");
 
@@ -33,6 +37,5 @@ public class PluginsSubCommand extends LunaSpringSubCommand {
                 this.sender.sendMessage(ColorManager.color(line));
             });
         }
-        return true;
     }
 }

@@ -7,16 +7,18 @@ import org.novasparkle.lunaspring.LunaPlugin;
 import org.novasparkle.lunaspring.LunaSpring;
 import org.novasparkle.lunaspring.self.LSConfig;
 
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @LunaCommand(maxArgs = 1, noConsole = false, commandIdentifiers = {"hooked"})
  public class HookedSubCommand extends LunaSpringSubCommand {
 
+    public HookedSubCommand(LunaPlugin plugin, String[] args, int maxArgs, CommandSender sender, boolean noConsole, String[] commandIdentifiers) {
+        super(plugin, args, maxArgs, sender, noConsole, commandIdentifiers);
+    }
+
     @Override
-    public boolean invoke() {
+    public void invoke() {
         String hooked = LSConfig.getMessage("hooked");
         List<String> pluginNames = LunaSpring.getINSTANCE().getHookedPlugins().stream()
                 .map(LunaPlugin::getName)
@@ -29,6 +31,5 @@ import java.util.stream.Collectors;
             String formatted = " ".repeat(spaces) + plName + " ".repeat(spaces);
             this.sender.sendMessage(hooked.replace("[plugin]", formatted));
         }
-        return true;
     }
 }

@@ -1,7 +1,6 @@
 package org.novasparkle.lunaspring.API.Commands;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.bukkit.command.CommandSender;
 import org.novasparkle.lunaspring.LunaPlugin;
 import org.novasparkle.lunaspring.self.LSConfig;
@@ -9,7 +8,6 @@ import org.novasparkle.lunaspring.self.LSConfig;
 import java.util.List;
 
 @Getter
-@NoArgsConstructor(force = true)
 public abstract class LunaSpringSubCommand {
     private final LunaPlugin plugin;
     private final String[] args;
@@ -39,7 +37,7 @@ public abstract class LunaSpringSubCommand {
         return this.commandIdentifiers.contains(inputIdentifier);
     }
 
-    public abstract boolean invoke();
+    public abstract void invoke();
     public boolean noPermission() {
         return !hasPermission(sender, this.getClass().getSimpleName().toLowerCase());
     }

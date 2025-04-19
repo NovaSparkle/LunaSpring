@@ -8,24 +8,38 @@ import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.SimplePluginManager;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.novasparkle.lunaspring.API.Commands.LunaCommand;
 import org.novasparkle.lunaspring.API.Commands.LunaSpringSubCommand;
+import org.novasparkle.lunaspring.API.Util.utilities.Utils;
+import org.novasparkle.lunaspring.LunaPlugin;
 import org.novasparkle.lunaspring.LunaSpring;
 
+import java.io.File;
 import java.lang.reflect.Field;
-import java.util.Iterator;
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 
 @LunaCommand(maxArgs = 2, noConsole = false, commandIdentifiers = {"pluginreload", "plr"})
 public class ReloadPluginSubCommand extends LunaSpringSubCommand {
+    private final PluginManager pluginManager;
+    public ReloadPluginSubCommand(LunaPlugin plugin, String[] args, int maxArgs, CommandSender sender, boolean noConsole, String[] commandIdentifiers) {
+        super(plugin, args, maxArgs, sender, noConsole, commandIdentifiers);
+        this.pluginManager = LunaSpring.getINSTANCE().getServer().getPluginManager();
+    }
 
     @Override
+    public void invoke() {
+        this.unloadPlugin();
+        this.loadPlugin();
+    }
+
     @SneakyThrows
     @SuppressWarnings("unchecked")
-    public boolean invoke() {
-        String pluginName = this.getArgs()[2];
-        SimplePluginManager spmanager = (SimplePluginManager) LunaSpring.getINSTANCE().getServer().getPluginManager();;
+    private void unloadPlugin() {
+        String pluginName = this.getArgs()[1];
+        SimplePluginManager spmanager = (SimplePluginManager) this.pluginManager;
 
         // Список нативных команд
         Field pluginsField = spmanager.getClass().getDeclaredField("plugins");
@@ -45,9 +59,7 @@ public class ReloadPluginSubCommand extends LunaSpringSubCommand {
 
         Map<String, Command> knownCommands = null;
         if (commandMap != null) {
-            Field knownCommandsField = commandMap.getClass().getDeclaredField("knownCommands");
-            knownCommandsField.setAccessible(true);
-            knownCommands = (Map<String, Command>) knownCommandsField.get(commandMap);
+            knownCommands = commandMap.getKnownCommands();
         }
 
         Plugin[] pluginsList = spmanager.getPlugins();
@@ -66,6 +78,22 @@ public class ReloadPluginSubCommand extends LunaSpringSubCommand {
                 }
             }
         }
-        return false;
+    }
+
+    @SneakyThrows
+    private void loadPlugin() {
+        String pluginName = this.getArgs()[1];
+        if (Utils.hasPlugin(pluginName)) {
+            Plugin plugin = this.pluginManager.getPlugin(pluginName);
+            Method getFileMethod = JavaPlugin.class.getDeclaredMethod("getFile");
+            getFileMethod.setAccessible(true);
+            File file = (File) getFileMethod.invoke(plugin);
+            Plugin loadedPlugin = this.pluginManager.loadPlugin(file);
+            assert loadedPlugin != null;
+            loadedPlugin.onLoad();
+            pluginManager.enablePlugin(loadedPlugin);
+
+        }
+
     }
 }

@@ -36,13 +36,13 @@ public final class LunaSpringCommandProcessor implements TabExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         for (Class<?> clazz : subCommandsClasses) {
             LunaCommand annotation = clazz.getAnnotation(LunaCommand.class);
-            if (Arrays.stream(annotation.commandIdentifiers()).noneMatch(i -> i.equals(args[1]))) continue;
-            Constructor<?> constructor = clazz.getConstructor(
+            if (Arrays.stream(annotation.commandIdentifiers()).noneMatch(i -> i.equals(args[0]))) continue;
+            Constructor<?> constructor = clazz.getDeclaredConstructor(
                     LunaPlugin.class,
                     String[].class,
-                    Integer.class,
+                    int.class,
                     CommandSender.class,
-                    Boolean.class,
+                    boolean.class,
                     String[].class
             );
 
@@ -51,6 +51,7 @@ public final class LunaSpringCommandProcessor implements TabExecutor {
                     sender, annotation.noConsole(), annotation.commandIdentifiers()
             );
             subCommand.invoke();
+            break;
         }
 
         return true;
