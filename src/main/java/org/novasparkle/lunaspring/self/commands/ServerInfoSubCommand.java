@@ -2,6 +2,7 @@ package org.novasparkle.lunaspring.self.commands;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.novasparkle.lunaspring.API.Commands.LunaCommand;
 import org.novasparkle.lunaspring.API.Commands.LunaSpringSubCommand;
 import org.novasparkle.lunaspring.API.Util.Service.managers.ColorManager;
 import org.novasparkle.lunaspring.self.LSConfig;
@@ -9,11 +10,8 @@ import org.novasparkle.lunaspring.self.LSConfig;
 import java.util.Arrays;
 import java.util.List;
 
+@LunaCommand(maxArgs = 1, noConsole = false, commandIdentifiers = {"server-info"})
 public class ServerInfoSubCommand extends LunaSpringSubCommand {
-    public ServerInfoSubCommand(String[] args, CommandSender sender) {
-        super(args, 1, sender, false, "server-info");
-    }
-
     @Override
     public boolean invoke() {
         if (noPermission()) return true;
