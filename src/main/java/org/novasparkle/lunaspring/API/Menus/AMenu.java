@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.Range;
 import org.novasparkle.lunaspring.API.Events.CooldownPrevent;
 import org.novasparkle.lunaspring.API.Menus.Items.Decoration;
 import org.novasparkle.lunaspring.API.Menus.Items.Item;
@@ -31,10 +32,10 @@ public abstract class AMenu implements IMenu {
     private final List<Item> itemList = new ArrayList<>();
 
     @SuppressWarnings("deprecation")
-    public AMenu(Player player, String title, byte size) {
+    public AMenu(Player player, String title, @Range(from = 9L, to=54) byte size) {
         this.player = player;
         this.title = title;
-        this.inventory = Bukkit.createInventory(this.player, Math.min(size, 54), Utils.color(title));
+        this.inventory = Bukkit.createInventory(this.player, size, Utils.color(title));
     }
 
     @SuppressWarnings("deprecation")
@@ -48,10 +49,10 @@ public abstract class AMenu implements IMenu {
     }
 
     @SuppressWarnings("deprecation")
-    public AMenu(Player player, String title, byte size, ConfigurationSection decorSection) {
+    public AMenu(Player player, String title, @Range(from = 9L, to=54) byte size, ConfigurationSection decorSection) {
         this.player = player;
         this.title = title;
-        this.inventory = Bukkit.createInventory(this.player, Math.min(size, 54), ColorManager.color(title));
+        this.inventory = Bukkit.createInventory(this.player, size, ColorManager.color(title));
         this.decoration = new Decoration(decorSection, this);
         this.decoration.insert();
     }

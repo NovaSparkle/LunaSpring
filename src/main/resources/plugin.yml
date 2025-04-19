@@ -27,3 +27,7 @@ permissions:
     default: op
   lunaspring.hooked:
     default: op
+  lunaspring.plugins:
+    default: op
+  lunaspring.pluginReload:
+    default: op

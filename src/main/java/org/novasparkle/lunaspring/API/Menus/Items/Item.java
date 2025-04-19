@@ -7,6 +7,7 @@ import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.jetbrains.annotations.Range;
 import org.novasparkle.lunaspring.API.Menus.IMenu;
 import org.novasparkle.lunaspring.API.Util.utilities.LunaMath;
 
@@ -23,7 +24,7 @@ public class Item extends NonMenuItem {
     private IMenu menu;
     @Setter private byte slot = 0;
 
-    public Item(Material material, String displayName, List<String> lore, int amount, byte slot) {
+    public Item(Material material, String displayName, List<String> lore, int amount, @Range(from = 0, to = 54) byte slot) {
         super(material, displayName, lore, amount);
         this.slot = slot;
         this.defaultLore = new ArrayList<>(this.getLore());
@@ -36,7 +37,7 @@ public class Item extends NonMenuItem {
         this.defaultName = this.getDisplayName();
     }
 
-    public Item(NonMenuItem nonMenuItem, byte slot) {
+    public Item(NonMenuItem nonMenuItem, @Range(from = 0, to = 54) byte slot) {
         this(nonMenuItem.getMaterial(), nonMenuItem.getDisplayName(), nonMenuItem.getLore(), nonMenuItem.getAmount(), slot);
     }
 
@@ -44,12 +45,12 @@ public class Item extends NonMenuItem {
         this(material, 1);
     }
 
-    public Item(Material material, byte slot) {
+    public Item(Material material, @Range(from = 0, to = 54) byte slot) {
         this(material);
         this.slot = slot;
     }
 
-    public Item(ConfigurationSection section, int slot) {
+    public Item(ConfigurationSection section, @Range(from = 0, to = 54) int slot) {
         super(section);
         this.slot = (byte) slot;
         this.defaultLore = new ArrayList<>(this.getLore());
@@ -79,11 +80,11 @@ public class Item extends NonMenuItem {
         this.insert(this.slot);
     }
 
-    public void insert(byte slot) {
+    public void insert(@Range(from = 0, to = 54) byte slot) {
         if (this.menu != null) this.insert(this.menu, slot);
     }
 
-    public void insert(IMenu aMenu, byte slot) {
+    public void insert(IMenu aMenu, @Range(from = 0, to = 54) byte slot) {
         this.menu = aMenu;
         this.slot = slot;
 
@@ -95,7 +96,7 @@ public class Item extends NonMenuItem {
         this.insert(aMenu, this.slot);
     }
 
-    public void insert(IMenu aMenu, byte row, byte column) {
+    public void insert(IMenu aMenu, @Range(from = 0, to = 6) byte row, @Range(from = 0, to = 9) byte column) {
         this.insert(aMenu, (byte) LunaMath.getIndex(row, column));
     }
 

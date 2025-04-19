@@ -242,7 +242,7 @@ public class NonMenuItem {
         location.getWorld().dropItemNaturally(location, this.getItemStack());
     }
 
-    public void give(Player player) {
+    public void give(@NotNull Player player) {
         this.lore.forEach(lr -> PlaceholderAPI.setPlaceholders(player, lr));
         player.getInventory().addItem(this.itemStack);
     }

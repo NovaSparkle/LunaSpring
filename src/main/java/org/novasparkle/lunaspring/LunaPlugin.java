@@ -25,9 +25,12 @@ import java.util.List;
 import java.util.Objects;
 
 public class LunaPlugin extends JavaPlugin {
+
     /**
      * Обязательный метод для инициализации класса
     */
+
+
     public final void initialize() {
         if (LunaSpring.getINSTANCE().getHookedPlugins().contains(this)) return;
 
@@ -179,7 +182,6 @@ public class LunaPlugin extends JavaPlugin {
             }
         }
     }
-
     /**
      * Реализация логики выключения плагина по умолчанию
      */

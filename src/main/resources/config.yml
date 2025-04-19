@@ -30,6 +30,8 @@ pl_command:
 # * Сообщения *
 messages:
   noPermission: "{E}Нет прав на выполнение команды!"
+  noConsole: '{E}Эту команду нельзя использовать от имени консоли!'
+  wrongArguments: '{E}Максимальное кол-во аргументов для команды: [maxArgs]'
   undefinedCommand: '{E}Неизвестная команда!'
   reloaded: '{P} {S}Библиотека перезагружена'
   savedSource: '{S}Ресурс [file] сохранен'
