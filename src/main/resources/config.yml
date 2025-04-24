@@ -52,3 +52,4 @@ messages:
     - '    {S}| &fВерсия: {S}[plugin-version]'
     - '    {S}| &fСостояние: {S}[status]'
     - ''
+  subCommandClasses: 'Отсканировано [amount] подкоманд: [commands]'
