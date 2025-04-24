@@ -8,12 +8,13 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.novasparkle.lunaspring.API.Util.utilities.LunaMath;
-import org.novasparkle.lunaspring.API.Util.utilities.Utils;
-import org.novasparkle.lunaspring.API.Util.Service.managers.ColorManager;
-import org.novasparkle.lunaspring.API.Util.utilities.LunaPAPIExpansion;
+import org.novasparkle.lunaspring.API.util.utilities.LunaMath;
+import org.novasparkle.lunaspring.API.util.utilities.Utils;
+import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
+import org.novasparkle.lunaspring.API.util.utilities.LunaPAPIExpansion;
 import org.novasparkle.lunaspring.self.LSConfig;
 
+import javax.annotation.OverridingMethodsMustInvokeSuper;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -165,22 +166,26 @@ public abstract class LunaPlugin extends JavaPlugin {
         inputStream.close();
     }
 
-    /**
-     * Реализация выключения плагина
-     */
-
-    public void disablingPlugin() {
-
-    }
-
-    /**
-     * Реализация включения плагина
-     */
-
-    public abstract void enablingPlugin();
 
     @Override
-    public final void onDisable() {
+    @OverridingMethodsMustInvokeSuper
+    public void onEnable() {
+        if (LunaSpring.getINSTANCE().getHookedPlugins().contains(this) || this.equals(LunaSpring.getINSTANCE())) return;
+
+        this.startMessage(Arrays.asList(
+                "",
+                "        ^ | &l[pluginName]^ v[pluginVersion] (by [pluginAuthors])",
+                "        ^ | &fEngined with ^&lLunaSpring^ v[LSVersion]",
+                "        ^ | &fAuthor: ^NovaSparkle",
+                "        ^ | &fDev-Helper: ^ProGiple",
+                ""
+        ));
+        LunaSpring.getINSTANCE().hookPlugin(this);
+    }
+
+    @Override
+    @OverridingMethodsMustInvokeSuper
+    public void onDisable() {
         Bukkit.getScheduler().cancelTasks(this);
         if (this.equals(LunaSpring.getINSTANCE())) return;
 
@@ -193,22 +198,5 @@ public abstract class LunaPlugin extends JavaPlugin {
                 "        ^ | ^GoodBye!",
                 ""
         ));
-        this.disablingPlugin();
-    }
-
-    @Override
-    public final void onEnable() {
-        this.enablingPlugin();
-        if (LunaSpring.getINSTANCE().getHookedPlugins().contains(this) || this.equals(LunaSpring.getINSTANCE())) return;
-
-        this.startMessage(Arrays.asList(
-                "",
-                "        ^ | &l[pluginName]^ v[pluginVersion] (by [pluginAuthors])",
-                "        ^ | &fEngined with ^&lLunaSpring^ v[LSVersion]",
-                "        ^ | &fAuthor: ^NovaSparkle",
-                "        ^ | &fDev-Helper: ^ProGiple",
-                ""
-        ));
-        LunaSpring.getINSTANCE().hookPlugin(this);
     }
 }

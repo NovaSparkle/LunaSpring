@@ -9,9 +9,9 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.SimplePluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.novasparkle.lunaspring.API.Commands.LunaCommand;
-import org.novasparkle.lunaspring.API.Commands.LunaSpringSubCommand;
-import org.novasparkle.lunaspring.API.Util.utilities.Utils;
+import org.novasparkle.lunaspring.API.commands.LunaCommand;
+import org.novasparkle.lunaspring.API.commands.LunaSpringSubCommand;
+import org.novasparkle.lunaspring.API.util.utilities.Utils;
 import org.novasparkle.lunaspring.LunaPlugin;
 import org.novasparkle.lunaspring.LunaSpring;
 
@@ -21,24 +21,25 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 
-@LunaCommand(maxArgs = 2, noConsole = false, commandIdentifiers = {"pluginreload", "plr"})
+@LunaCommand(maxArgs = 2, commandIdentifiers = {"pluginreload", "plr"}, flags = {})
 public class ReloadPluginSubCommand extends LunaSpringSubCommand {
     private final PluginManager pluginManager;
-    public ReloadPluginSubCommand(LunaPlugin plugin, String[] args, int maxArgs, CommandSender sender, boolean noConsole, String[] commandIdentifiers) {
-        super(plugin, args, maxArgs, sender, noConsole, commandIdentifiers);
+
+    public ReloadPluginSubCommand(LunaPlugin plugin, int maxArgs, String[] commandIdentifiers, AccessFlag[] flags) {
+        super(plugin, maxArgs, commandIdentifiers, flags);
         this.pluginManager = LunaSpring.getINSTANCE().getServer().getPluginManager();
     }
 
     @Override
-    public void invoke() {
-        this.unloadPlugin();
-        this.loadPlugin();
+    public void invoke(CommandSender sender, String[] args) {
+        if (checkCommand(sender, args)) return;
+        this.unloadPlugin(args[1]);
+        this.loadPlugin(args[1]);
     }
 
     @SneakyThrows
     @SuppressWarnings("unchecked")
-    private void unloadPlugin() {
-        String pluginName = this.getArgs()[1];
+    private void unloadPlugin(String pluginName) {
         SimplePluginManager spmanager = (SimplePluginManager) this.pluginManager;
 
         // Список нативных команд
@@ -81,8 +82,7 @@ public class ReloadPluginSubCommand extends LunaSpringSubCommand {
     }
 
     @SneakyThrows
-    private void loadPlugin() {
-        String pluginName = this.getArgs()[1];
+    private void loadPlugin(String pluginName) {
         if (Utils.hasPlugin(pluginName)) {
             Plugin plugin = this.pluginManager.getPlugin(pluginName);
             Method getFileMethod = JavaPlugin.class.getDeclaredMethod("getFile");

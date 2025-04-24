@@ -1,23 +1,24 @@
 package org.novasparkle.lunaspring.self.commands;
 
 import org.bukkit.command.CommandSender;
-import org.novasparkle.lunaspring.API.Commands.LunaCommand;
-import org.novasparkle.lunaspring.API.Commands.LunaSpringSubCommand;
+import org.novasparkle.lunaspring.API.commands.LunaCommand;
+import org.novasparkle.lunaspring.API.commands.LunaSpringSubCommand;
 import org.novasparkle.lunaspring.LunaPlugin;
 import org.novasparkle.lunaspring.LunaSpring;
 import org.novasparkle.lunaspring.self.LSConfig;
 
-@LunaCommand(maxArgs = 1, noConsole = false, commandIdentifiers = {"reload"})
+@LunaCommand(maxArgs = 1, commandIdentifiers = {"reload"}, flags = {})
 public class ReloadSubCommand extends LunaSpringSubCommand {
-    public ReloadSubCommand(LunaPlugin plugin, String[] args, int maxArgs, CommandSender sender, boolean noConsole, String[] commandIdentifiers) {
-        super(plugin, args, maxArgs, sender, noConsole, commandIdentifiers);
+
+    public ReloadSubCommand(LunaPlugin plugin, int maxArgs, String[] commandIdentifiers, AccessFlag[] flags) {
+        super(plugin, maxArgs, commandIdentifiers, flags);
     }
 
     @Override
-    public void invoke() {
-        if (noPermission()) return;
+    public void invoke(CommandSender sender, String[] args) {
+        if (checkCommand(sender, args)) return;
         LunaSpring.getINSTANCE().reloadConfig();
         LSConfig.reload();
-        this.sender.sendMessage(LSConfig.getMessage("reloaded"));
+        sender.sendMessage(LSConfig.getMessage("reloaded"));
     }
 }

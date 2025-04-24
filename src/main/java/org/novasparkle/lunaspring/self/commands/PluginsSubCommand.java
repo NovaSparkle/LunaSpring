@@ -2,24 +2,26 @@ package org.novasparkle.lunaspring.self.commands;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
-import org.novasparkle.lunaspring.API.Commands.LunaCommand;
-import org.novasparkle.lunaspring.API.Commands.LunaSpringSubCommand;
-import org.novasparkle.lunaspring.API.Util.Service.managers.ColorManager;
+import org.novasparkle.lunaspring.API.commands.LunaCommand;
+import org.novasparkle.lunaspring.API.commands.LunaSpringSubCommand;
+import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
 import org.novasparkle.lunaspring.LunaPlugin;
 import org.novasparkle.lunaspring.LunaSpring;
 import org.novasparkle.lunaspring.self.LSConfig;
 
 import java.util.List;
 
-@LunaCommand(maxArgs = 1, noConsole = false, commandIdentifiers = {"pl", "plugins"})
+@LunaCommand(maxArgs = 1, commandIdentifiers = {"pl", "plugins"}, flags = {})
 public class PluginsSubCommand extends LunaSpringSubCommand {
 
-    public PluginsSubCommand(LunaPlugin plugin, String[] args, int maxArgs, CommandSender sender, boolean noConsole, String[] commandIdentifiers) {
-        super(plugin, args, maxArgs, sender, noConsole, commandIdentifiers);
+
+    public PluginsSubCommand(LunaPlugin plugin, int maxArgs, String[] commandIdentifiers, AccessFlag[] flags) {
+        super(plugin, maxArgs, commandIdentifiers, flags);
     }
 
     @Override
-    public void invoke() {
+    public void invoke(CommandSender sender, String[] args) {
+        if (checkCommand(sender, args)) return;
         String enabledPlugin = LSConfig.getString("pl_command.enabledPlugin");
         String disabledPlugin = LSConfig.getString("pl_command.disabledPlugin");
 
@@ -34,7 +36,7 @@ public class PluginsSubCommand extends LunaSpringSubCommand {
                         .replace("[plugin-version]", plugin.getDescription().getVersion())
                         .replace("[plugin-authors]", authors)
                         .replace("[status]", status);
-                this.sender.sendMessage(ColorManager.color(line));
+                sender.sendMessage(ColorManager.color(line));
             });
         }
     }

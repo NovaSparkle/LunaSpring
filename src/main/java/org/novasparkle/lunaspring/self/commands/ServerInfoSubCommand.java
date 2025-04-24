@@ -2,24 +2,26 @@ package org.novasparkle.lunaspring.self.commands;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
-import org.novasparkle.lunaspring.API.Commands.LunaCommand;
-import org.novasparkle.lunaspring.API.Commands.LunaSpringSubCommand;
-import org.novasparkle.lunaspring.API.Util.Service.managers.ColorManager;
+import org.novasparkle.lunaspring.API.commands.LunaCommand;
+import org.novasparkle.lunaspring.API.commands.LunaSpringSubCommand;
+import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
 import org.novasparkle.lunaspring.LunaPlugin;
 import org.novasparkle.lunaspring.self.LSConfig;
 
 import java.util.Arrays;
 import java.util.List;
 
-@LunaCommand(maxArgs = 1, noConsole = false, commandIdentifiers = {"server-info"})
+@LunaCommand(maxArgs = 1, commandIdentifiers = {"server-info"}, flags = {})
 public class ServerInfoSubCommand extends LunaSpringSubCommand {
-    public ServerInfoSubCommand(LunaPlugin plugin, String[] args, int maxArgs, CommandSender sender, boolean noConsole, String[] commandIdentifiers) {
-        super(plugin, args, maxArgs, sender, noConsole, commandIdentifiers);
+
+
+    public ServerInfoSubCommand(LunaPlugin plugin, int maxArgs, String[] commandIdentifiers, AccessFlag[] flags) {
+        super(plugin, maxArgs, commandIdentifiers, flags);
     }
 
     @Override
-    public void invoke() {
-        if (noPermission()) return;
+    public void invoke(CommandSender sender, String[] args) {
+        if (checkCommand(sender, args)) return;
         List<String> list = LSConfig.getStringList("server-info");
 
         int tps = (int) (Arrays.stream(Bukkit.getServer().getTPS()).sum() / Bukkit.getServer().getTPS().length);
@@ -32,7 +34,7 @@ public class ServerInfoSubCommand extends LunaSpringSubCommand {
                     .replace("[port]", String.valueOf(Bukkit.getPort()))
                     .replace("[average_tps]", String.valueOf(tps));
 
-            this.sender.sendMessage(ColorManager.color(line));
+            sender.sendMessage(ColorManager.color(line));
         });
     }
 }

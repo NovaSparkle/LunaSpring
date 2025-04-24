@@ -1,8 +1,8 @@
 package org.novasparkle.lunaspring;
 
 import lombok.Getter;
-import org.novasparkle.lunaspring.API.Commands.LunaSpringCommandProcessor;
-import org.novasparkle.lunaspring.API.Events.MenuHandler;
+import org.novasparkle.lunaspring.API.commands.LunaSpringCommandProcessor;
+import org.novasparkle.lunaspring.API.events.MenuHandler;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -14,7 +14,8 @@ public final class LunaSpring extends LunaPlugin {
     private final Set<LunaPlugin> hookedPlugins = new HashSet<>();
 
     @Override
-    public void enablingPlugin() {
+    public void onEnable() {
+        super.onEnable();
         INSTANCE = this;
         this.saveDefaultConfig();
 

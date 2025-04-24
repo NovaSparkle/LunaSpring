@@ -1,8 +1,8 @@
 package org.novasparkle.lunaspring.self.commands;
 
 import org.bukkit.command.CommandSender;
-import org.novasparkle.lunaspring.API.Commands.LunaCommand;
-import org.novasparkle.lunaspring.API.Commands.LunaSpringSubCommand;
+import org.novasparkle.lunaspring.API.commands.LunaCommand;
+import org.novasparkle.lunaspring.API.commands.LunaSpringSubCommand;
 import org.novasparkle.lunaspring.LunaPlugin;
 import org.novasparkle.lunaspring.LunaSpring;
 import org.novasparkle.lunaspring.self.LSConfig;
@@ -10,15 +10,17 @@ import org.novasparkle.lunaspring.self.LSConfig;
 import java.util.Comparator;
 import java.util.List;
 
-@LunaCommand(maxArgs = 1, noConsole = false, commandIdentifiers = {"hooked"})
+@LunaCommand(maxArgs = 1, commandIdentifiers = {"hooked"}, flags = {})
  public class HookedSubCommand extends LunaSpringSubCommand {
 
-    public HookedSubCommand(LunaPlugin plugin, String[] args, int maxArgs, CommandSender sender, boolean noConsole, String[] commandIdentifiers) {
-        super(plugin, args, maxArgs, sender, noConsole, commandIdentifiers);
+    public HookedSubCommand(LunaPlugin plugin, int maxArgs, String[] commandIdentifiers, AccessFlag[] flags) {
+        super(plugin, maxArgs, commandIdentifiers, flags);
     }
 
     @Override
-    public void invoke() {
+    public void invoke(CommandSender sender, String[] args) {
+        if (checkCommand(sender, args)) return;
+
         String hooked = LSConfig.getMessage("hooked");
         List<String> pluginNames = LunaSpring.getINSTANCE().getHookedPlugins().stream()
                 .map(LunaPlugin::getName)
@@ -29,7 +31,7 @@ import java.util.List;
         for (String plName : pluginNames) {
             int spaces = (maxLength - plName.length()) / 2;
             String formatted = " ".repeat(spaces) + plName + " ".repeat(spaces);
-            this.sender.sendMessage(hooked.replace("[plugin]", formatted));
+            sender.sendMessage(hooked.replace("[plugin]", formatted));
         }
     }
 }
