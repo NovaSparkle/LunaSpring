@@ -15,7 +15,9 @@ public final class LunaSpring extends LunaPlugin {
 
     @Override
     public void onEnable() {
-        super.onEnable();
+        if (INSTANCE != null)
+            super.onEnable();
+
         INSTANCE = this;
         this.saveDefaultConfig();
 
