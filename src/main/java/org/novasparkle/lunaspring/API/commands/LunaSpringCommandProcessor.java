@@ -41,7 +41,9 @@ public final class LunaSpringCommandProcessor implements TabExecutor {
         Reflections reflections = new Reflections(commadsPackage.getName());
         Set<Class<?>> subCommandsClasses = reflections.getTypesAnnotatedWith(SubCommand.class);
         String joined = subCommandsClasses.stream().map(Class::getSimpleName).collect(Collectors.joining(", "));
-        this.mainPluginClass.info(LSConfig.getMessage("subCommandClasses").replace("[amount]", String.valueOf(subCommandsClasses.size())).replace("[commands]", joined));
+        this.mainPluginClass.info(LSConfig.getMessage("subCommandClasses")
+                .replace("[amount]", String.valueOf(subCommandsClasses.size()))
+                .replace("[commands]", joined).replace("[package]", commadsPackage.getName()));
         for (Class<?> clazz : subCommandsClasses) {
             AppliedCommand command = clazz.getAnnotation(AppliedCommand.class);
             if (!command.value().equals(this.appliedCommand)) continue;
