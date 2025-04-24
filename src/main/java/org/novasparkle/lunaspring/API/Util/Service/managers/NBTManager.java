@@ -10,6 +10,8 @@ import org.bukkit.inventory.ItemStack;
 import org.novasparkle.lunaspring.API.Util.Service.NBTService;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -115,6 +117,18 @@ public class NBTManager {
 
     public void setItem(ItemStack item, String tag, ItemStack value) {
         NBTManager.set(item, nbt -> nbt.setItemStack(tag, value));
+    }
+
+    public void setList(ItemStack item, String tag, List<String> stringList) {
+        setString(item, tag, String.join(" <]- ", stringList));
+    }
+
+    public List<String> getList(ItemStack item, String tag) {
+        String value = getString(item, tag);
+
+        List<String> list = new ArrayList<>();
+        if (value != null && !value.isEmpty()) list.addAll(List.of(value.split(" <]- ")));
+        return list;
     }
 
     public String getString(ItemStack item, String tag) {

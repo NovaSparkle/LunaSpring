@@ -14,10 +14,11 @@ public final class LunaSpring extends LunaPlugin {
     private final Set<LunaPlugin> hookedPlugins = new HashSet<>();
 
     @Override
-    public void onEnable() {
+    public void enablingPlugin() {
         INSTANCE = this;
-        this.registerListeners(new MenuHandler());
         this.saveDefaultConfig();
+
+        this.registerListeners(new MenuHandler());
         this.registerTabExecutor(new LunaSpringCommandProcessor(this), "lunaspring");
     }
 
@@ -26,6 +27,7 @@ public final class LunaSpring extends LunaPlugin {
             hookedPlugins.add(lunaPlugin);
         }
     }
+
     public LunaPlugin getLunaPlugin(String name) {
         return this.hookedPlugins.stream().filter(pl -> pl.getName().equals(name)).findFirst().orElse(null);
     }

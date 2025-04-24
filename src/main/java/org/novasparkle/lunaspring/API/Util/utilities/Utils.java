@@ -17,6 +17,7 @@ import java.lang.reflect.Field;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 @UtilityClass
@@ -175,4 +176,15 @@ public class Utils {
                 .toList();
     }
 
+    public <T> void objectAction(T object, Consumer<T> consumer) {
+        if (object != null) consumer.accept(object);
+    }
+
+    public void playersAction(Consumer<Player> playerConsumer) {
+        Bukkit.getOnlinePlayers().forEach(playerConsumer);
+    }
+
+    public void broadcast(String message) {
+        playersAction(p -> p.sendMessage(message));
+    }
 }

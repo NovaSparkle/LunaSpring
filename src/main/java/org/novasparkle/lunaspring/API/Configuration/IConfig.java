@@ -12,6 +12,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
+import org.novasparkle.lunaspring.API.Util.Service.managers.ColorManager;
 import org.novasparkle.lunaspring.API.Util.utilities.Utils;
 
 import java.io.File;
@@ -150,23 +151,39 @@ public class IConfig {
         for (String line : message) {
             byte index = 0;
             for (String replacement : replacements) {
+                if (replacement.contains("-%-")) {
+                    String[] mass = replacement.split("-%-");
+
+                    line = line.replace("{" + mass[0] + "}", mass[1]);
+                    continue;
+                }
+
                 line = line.replace("{" + index + "}", replacement);
                 index++;
             }
 
-            String newLine = Utils.color(line
+            String newLine = ColorManager.color(line
                     .replace("ACTION_BAR ", "")
+                    .replace("BROADCAST ", "")
                     .replace("TITLE ", "")
                     .replace("SOUND ", ""));
-            if (sender instanceof Player player &&
-                    (line.startsWith("ACTION_BAR") || line.startsWith("SOUND") || line.startsWith("TITLE"))) {
-                if (line.startsWith("ACTION_BAR")) player.sendActionBar(newLine);
-                else if (line.startsWith("SOUND")) player.playSound(player.getLocation(), Sound.valueOf(newLine), 1, 1);
-                else {
-                    String[] split = newLine.split("\\{S}");
-                    if (split.length < 2) split = new String[]{split[0], ""};
-                    player.sendTitle(split[0], split[1], 15, 20, 15);
-                }
+            if (line.startsWith("ACTION_BAR")) {
+                if (!(sender instanceof Player player)) continue;
+                player.sendActionBar(newLine);
+            }
+            else if (line.startsWith("SOUND")) {
+                if (!(sender instanceof Player player)) continue;
+                player.playSound(player.getLocation(), Sound.valueOf(newLine), 1, 1);
+            }
+            else if (line.startsWith("TITLE")) {
+                if (!(sender instanceof Player player)) continue;
+
+                String[] split = newLine.split("\\{S}");
+                if (split.length < 2) split = new String[]{split[0], ""};
+                player.sendTitle(split[0], split[1], 15, 20, 15);
+            }
+            else if (line.startsWith("BROADCAST")) {
+                Utils.playersAction(p -> p.sendMessage(newLine));
             }
             else sender.sendMessage(newLine);
         }

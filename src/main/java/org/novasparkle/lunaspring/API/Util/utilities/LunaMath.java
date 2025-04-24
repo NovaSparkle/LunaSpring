@@ -29,6 +29,10 @@ public class LunaMath {
         return (int) num;
     }
 
+    public boolean isEven(int num) {
+        return num % 2 == 0;
+    }
+
     public int getRandomInt(int minValue, int maxValue) {
         return random.nextInt(maxValue - minValue) + minValue;
     }

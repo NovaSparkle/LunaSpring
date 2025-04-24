@@ -24,39 +24,20 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public class LunaPlugin extends JavaPlugin {
-
-    /**
-     * Обязательный метод для инициализации класса
-    */
-
-
-    public final void initialize() {
-        if (LunaSpring.getINSTANCE().getHookedPlugins().contains(this)) return;
-
-        this.startMessage(Arrays.asList(
-                "",
-                "        ^ | &l[pluginName]^ v[pluginVersion] (by [pluginAuthors])",
-                "        ^ | &fEngined with ^&lLunaSpring^ v[LSVersion]",
-                "        ^ | &fAuthor: ^NovaSparkle",
-                "        ^ | &fDev-Helper: ^ProGiple",
-                ""
-        ));
-        LunaSpring.getINSTANCE().hookPlugin(this);
-    }
-
+public abstract class LunaPlugin extends JavaPlugin {
     private void startMessage(List<String> startMessage) {
         String textColorString = LSConfig.getString("on_load_plugin_text_colors");
         char endedColor = textColorString == null || textColorString.isEmpty() ? 'b' :
                 textColorString.charAt(LunaMath.getRandomInt(0, textColorString.length()));
         String formattedEndedColor = "&" + endedColor;
 
+        String authors = this.getAuthors();
         startMessage.forEach(m -> {
             String line = m
                     .replace("^", formattedEndedColor)
                     .replace("[pluginName]", this.getName())
                     .replace("[pluginVersion]", this.getVersion())
-                    .replace("[pluginAuthors]", this.getAuthors())
+                    .replace("[pluginAuthors]", authors == null || authors.isEmpty() ? "NoData" : authors)
                     .replace("[LSVersion]", LunaSpring.getINSTANCE().getVersion());
             this.info(line);
         });
@@ -181,13 +162,28 @@ public class LunaPlugin extends JavaPlugin {
                 outputStream.write(buffer, 0, length);
             }
         }
+        inputStream.close();
     }
+
     /**
-     * Реализация логики выключения плагина по умолчанию
+     * Реализация выключения плагина
      */
+
+    public void disablingPlugin() {
+
+    }
+
+    /**
+     * Реализация включения плагина
+     */
+
+    public abstract void enablingPlugin();
+
     @Override
-    public void onDisable() {
+    public final void onDisable() {
+        Bukkit.getScheduler().cancelTasks(this);
         if (this.equals(LunaSpring.getINSTANCE())) return;
+
         this.startMessage(Arrays.asList(
                 "",
                 "        ^ | &n[pluginName]^ v[pluginVersion] (by [pluginAuthors])",
@@ -197,6 +193,22 @@ public class LunaPlugin extends JavaPlugin {
                 "        ^ | ^GoodBye!",
                 ""
         ));
-        Bukkit.getScheduler().cancelTasks(this);
+        this.disablingPlugin();
+    }
+
+    @Override
+    public final void onEnable() {
+        this.enablingPlugin();
+        if (LunaSpring.getINSTANCE().getHookedPlugins().contains(this) || this.equals(LunaSpring.getINSTANCE())) return;
+
+        this.startMessage(Arrays.asList(
+                "",
+                "        ^ | &l[pluginName]^ v[pluginVersion] (by [pluginAuthors])",
+                "        ^ | &fEngined with ^&lLunaSpring^ v[LSVersion]",
+                "        ^ | &fAuthor: ^NovaSparkle",
+                "        ^ | &fDev-Helper: ^ProGiple",
+                ""
+        ));
+        LunaSpring.getINSTANCE().hookPlugin(this);
     }
 }
