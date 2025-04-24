@@ -61,18 +61,18 @@ public abstract class LunaPlugin extends JavaPlugin {
     /**
      * Загрузить файл из resources
      */
-    public void loadFile(String path) {
-        if (new File(this.getDataFolder(), path).exists()) return;
+    public boolean loadFile(String path) {
+        if (new File(this.getDataFolder(), path).exists()) return false;
         this.saveResource(path, false);
         this.info(LSConfig.getMessage("loadedSource").replace("[file]", path));
+        return true;
     }
 
     /**
      * Загрузить все перечисленные файлы из resources
      */
-    public void loadFiles(boolean enabled, String... paths) {
-        if (!enabled) return;
-        Arrays.stream(paths).forEach(this::loadFile);
+    public boolean loadFiles(String... paths) {
+        return Arrays.stream(paths).allMatch(this::loadFile);
     }
 
     /**

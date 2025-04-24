@@ -44,7 +44,7 @@ public abstract class LunaSpringSubCommand {
     }
 
     public boolean checkCommand(CommandSender sender, String[] args) {
-        return this.commandIdentifiers.stream().anyMatch(ci -> hasPermission(sender, ci)) && !invalidArgsAmount(args) && invokeFlags(sender);
+        return this.commandIdentifiers.stream().anyMatch(ci -> hasPermission(sender, ci)) && !invalidArgsAmount(sender, args) && invokeFlags(sender);
     }
 
     private static boolean hasPermission(CommandSender sender, String permission) {
