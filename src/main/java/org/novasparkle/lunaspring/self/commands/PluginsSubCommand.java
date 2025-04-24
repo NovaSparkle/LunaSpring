@@ -2,7 +2,8 @@ package org.novasparkle.lunaspring.self.commands;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
-import org.novasparkle.lunaspring.API.commands.LunaCommand;
+import org.novasparkle.lunaspring.API.commands.annotations.AppliedCommand;
+import org.novasparkle.lunaspring.API.commands.annotations.SubCommand;
 import org.novasparkle.lunaspring.API.commands.LunaSpringSubCommand;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
 import org.novasparkle.lunaspring.LunaPlugin;
@@ -11,7 +12,8 @@ import org.novasparkle.lunaspring.self.LSConfig;
 
 import java.util.List;
 
-@LunaCommand(maxArgs = 1, commandIdentifiers = {"pl", "plugins"}, flags = {})
+@SubCommand(maxArgs = 1, commandIdentifiers = {"pl", "plugins"}, flags = {})
+@AppliedCommand("lunaspring")
 public class PluginsSubCommand extends LunaSpringSubCommand {
 
 

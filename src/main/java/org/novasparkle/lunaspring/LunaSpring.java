@@ -20,7 +20,7 @@ public final class LunaSpring extends LunaPlugin {
         this.saveDefaultConfig();
 
         this.registerListeners(new MenuHandler());
-        this.registerTabExecutor(new LunaSpringCommandProcessor(this), "lunaspring");
+        this.registerCommandProcessor(new LunaSpringCommandProcessor(this, "lunaspring"));
     }
 
     public void hookPlugin(LunaPlugin lunaPlugin) {

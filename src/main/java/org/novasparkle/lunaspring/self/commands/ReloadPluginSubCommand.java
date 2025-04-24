@@ -9,7 +9,8 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.SimplePluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.novasparkle.lunaspring.API.commands.LunaCommand;
+import org.novasparkle.lunaspring.API.commands.annotations.AppliedCommand;
+import org.novasparkle.lunaspring.API.commands.annotations.SubCommand;
 import org.novasparkle.lunaspring.API.commands.LunaSpringSubCommand;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 import org.novasparkle.lunaspring.LunaPlugin;
@@ -21,7 +22,8 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 
-@LunaCommand(maxArgs = 2, commandIdentifiers = {"pluginreload", "plr"}, flags = {})
+@SubCommand(maxArgs = 2, commandIdentifiers = {"pluginreload", "plr"}, flags = {})
+@AppliedCommand("lunaspring")
 public class ReloadPluginSubCommand extends LunaSpringSubCommand {
     private final PluginManager pluginManager;
 

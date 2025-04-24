@@ -1,11 +1,15 @@
 package org.novasparkle.lunaspring.API.commands;
 
+import lombok.Getter;
 import lombok.SneakyThrows;
+import lombok.experimental.Accessors;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.novasparkle.lunaspring.API.commands.annotations.AppliedCommand;
+import org.novasparkle.lunaspring.API.commands.annotations.SubCommand;
 import org.novasparkle.lunaspring.LunaPlugin;
 import org.reflections.Reflections;
 
@@ -16,27 +20,36 @@ public final class LunaSpringCommandProcessor implements TabExecutor {
     private final List<LunaSpringSubCommand> subCommands;
     private final List<String> commandIdentifiers;
     private final LunaPlugin mainPluginClass;
-    public LunaSpringCommandProcessor(LunaPlugin mainPluginClass) {
-        this(mainPluginClass, mainPluginClass.getClass().getPackage());
+    @Accessors(fluent = true)
+    @Getter
+    private final String appliedCommand;
+
+
+    public LunaSpringCommandProcessor(LunaPlugin mainPluginClass, String appliedCommand) {
+        this(mainPluginClass, mainPluginClass.getClass().getPackage(), appliedCommand);
     }
+
     @SneakyThrows
-    public LunaSpringCommandProcessor(LunaPlugin mainPluginClass, Package commadsPackage) {
+    public LunaSpringCommandProcessor(LunaPlugin mainPluginClass, Package commadsPackage, String appliedCommand) {
         this.mainPluginClass = mainPluginClass;
         this.subCommands = new ArrayList<>();
         this.commandIdentifiers = new ArrayList<>();
+        this.appliedCommand = appliedCommand;
         
         Reflections reflections = new Reflections(commadsPackage.getName());
-        Set<Class<?>> subCommandsClasses = reflections.getTypesAnnotatedWith(LunaCommand.class);
+        Set<Class<?>> subCommandsClasses = reflections.getTypesAnnotatedWith(SubCommand.class);
         for (Class<?> clazz : subCommandsClasses) {
-            LunaCommand annotation = clazz.getAnnotation(LunaCommand.class);
+            AppliedCommand command = clazz.getAnnotation(AppliedCommand.class);
+            if (!command.value().equals(this.appliedCommand)) continue;
+            SubCommand scAnnotation = clazz.getAnnotation(SubCommand.class);
             Constructor<?> constructor = clazz.getDeclaredConstructor(
-                    LunaPlugin.class,                         // LunaPlugin
-                    int.class,                               // maxArgs
-                    String[].class,                         // commandIdentifiers
+                    LunaPlugin.class,                           // LunaPlugin
+                    int.class,                                 // maxArgs
+                    String[].class,                           // commandIdentifiers
                     LunaSpringSubCommand.AccessFlag[].class  // AccessFlags
             );
             LunaSpringSubCommand subCommand = (LunaSpringSubCommand) constructor.newInstance(
-                    this.mainPluginClass, annotation.maxArgs(), annotation.commandIdentifiers(), annotation.flags()
+                    this.mainPluginClass, scAnnotation.maxArgs(), scAnnotation.commandIdentifiers(), scAnnotation.flags()
             );
             this.subCommands.add(subCommand);
             this.commandIdentifiers.addAll(subCommand.getCommandIdentifiers());

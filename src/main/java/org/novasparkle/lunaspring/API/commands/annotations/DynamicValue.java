@@ -1,4 +1,4 @@
-package org.novasparkle.lunaspring.API.commands;
+package org.novasparkle.lunaspring.API.commands.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
