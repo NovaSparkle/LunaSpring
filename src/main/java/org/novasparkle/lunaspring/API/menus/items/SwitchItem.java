@@ -48,8 +48,9 @@ public class SwitchItem extends Item {
         this.toMenu = toMenu;
     }
     @Override
-    public void onClick(InventoryClickEvent event) {
+    public SwitchItem onClick(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
         MenuManager.openInventory(player, this.toMenu);
+        return this;
     }
 }
