@@ -25,7 +25,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Getter
-@Accessors(chain = true)
+@Accessors(chain = true, fluent = false)
 public class NonMenuItem {
     @Setter
     private ItemStack itemStack;
@@ -100,28 +100,32 @@ public class NonMenuItem {
         }
     }
 
-    public void setMaterial(Material material) {
+    public NonMenuItem setMaterial(Material material) {
         this.material = material;
         this.update();
+        return this;
     }
 
-    public void setAmount(int amount) {
+    public NonMenuItem setAmount(int amount) {
         this.amount = amount;
         this.update();
+        return this;
     }
 
-    public void setDisplayName(String displayName) {
+    public NonMenuItem setDisplayName(String displayName) {
         this.displayName = ColorManager.color(displayName);
         this.update();
+        return this;
     }
 
-    public void setLore(List<String> lore) {
+    public NonMenuItem setLore(List<String> lore) {
         lore.replaceAll(ColorManager::color);
         this.lore = lore;
         this.update();
+        return this;
     }
 
-    public void setGlowing(boolean enchanted) {
+    public NonMenuItem setGlowing(boolean enchanted) {
         this.glowing = enchanted;
         if (enchanted) {
             this.itemStack.addUnsafeEnchantment(Enchantment.LUCK, 1);
@@ -130,6 +134,7 @@ public class NonMenuItem {
             this.itemStack.removeEnchantment(Enchantment.LUCK);
             this.itemStack.removeItemFlags(ItemFlag.HIDE_ENCHANTS);
         }
+        return this;
     }
 
     @Override
@@ -143,7 +148,7 @@ public class NonMenuItem {
                 '}';
     }
 
-    public void serialize(@NotNull ConfigurationSection section, boolean asItemStack) {
+    public NonMenuItem serialize(@NotNull ConfigurationSection section, boolean asItemStack) {
         if (asItemStack)
             section.set("item", this.itemStack);
         else {
@@ -155,9 +160,10 @@ public class NonMenuItem {
             section.set("headValue", this.headValue);
             section.set("id", this.id);
         }
+        return this;
     }
 
-    public void setAll(Material material, int amount, String displayName, List<String> lore, boolean enchanted) {
+    public NonMenuItem setAll(Material material, int amount, String displayName, List<String> lore, boolean enchanted) {
         if (material != null)
             this.setMaterial(material);
         if (amount > 0)
@@ -167,10 +173,11 @@ public class NonMenuItem {
         if (displayName != null && !displayName.isEmpty())
             this.setDisplayName(displayName);
         this.setGlowing(enchanted);
+        return this;
     }
 
-    public void setAll(ConfigurationSection itemSection) {
-        if (itemSection == null) return;
+    public NonMenuItem setAll(ConfigurationSection itemSection) {
+        if (itemSection == null) return this;
 
         String strMaterial = itemSection.getString("material");
         Material newMaterial = strMaterial == null || strMaterial.isEmpty() ? null : Material.getMaterial(strMaterial);
@@ -180,6 +187,7 @@ public class NonMenuItem {
         List<String> lore = new ArrayList<>(itemSection.getStringList("lore"));
 
         this.setAll(newMaterial, amount, displayName, lore, itemSection.getBoolean("enchanted"));
+        return this;
     }
 
     @SuppressWarnings("deprecation")
@@ -202,18 +210,21 @@ public class NonMenuItem {
         }
     }
 
-    public void applyNBT(Map<String, String> nbtTags) {
+    public NonMenuItem applyNBT(Map<String, String> nbtTags) {
         nbtTags.forEach((key, value) ->
                 NBTManager.setString(this.itemStack, key, value));
+        return this;
     }
 
-    public void applyBaseHead(String value) {
+    public NonMenuItem applyBaseHead(String value) {
         NBTManager.base64head(this.itemStack, value);
         this.headValue = value;
+        return this;
     }
 
-    public void applyBaseHead(OfflinePlayer player) {
+    public NonMenuItem applyBaseHead(OfflinePlayer player) {
         this.setItemStack(NBTManager.base64head(this.itemStack, player));
+        return this;
     }
 
     public boolean checkId(String id) {

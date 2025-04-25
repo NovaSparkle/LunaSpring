@@ -17,7 +17,7 @@ import java.util.Objects;
 import java.util.function.UnaryOperator;
 
 @Getter
-@Accessors(chain = true)
+@Accessors(chain = true, fluent = false)
 public class Item extends NonMenuItem {
     private final List<String> defaultLore;
     private final String defaultName;
@@ -77,47 +77,54 @@ public class Item extends NonMenuItem {
                 '}';
     }
 
-    public void insert() {
+    public Item insert() {
         this.insert(this.slot);
+        return this;
     }
 
-    public void insert(@Range(from = 0, to = 54) byte slot) {
+    public Item insert(@Range(from = 0, to = 54) byte slot) {
         if (this.menu != null) this.insert(this.menu, slot);
+        return this;
     }
 
-    public void insert(IMenu aMenu, @Range(from = 0, to = 54) byte slot) {
+    public Item insert(IMenu aMenu, @Range(from = 0, to = 54) byte slot) {
         this.menu = aMenu;
         this.slot = slot;
 
         this.updateDescription();
         aMenu.getInventory().setItem(slot, this.getItemStack());
-    }
-
-    public void insert(IMenu aMenu) {
-        this.insert(aMenu, this.slot);
-    }
-
-    public void insert(IMenu aMenu, @Range(from = 0, to = 6) byte row, @Range(from = 0, to = 9) byte column) {
-        this.insert(aMenu, (byte) LunaMath.getIndex(row, column));
-    }
-
-    public Item replaceLore(UnaryOperator<String> operator) {
-        List<String> newLore = new ArrayList<>(this.defaultLore);
-        newLore.replaceAll(operator);
-        this.setLore(newLore);
         return this;
     }
 
-    public void updateDescription() {
-        if (this.menu == null) return;
+    public Item insert(IMenu aMenu) {
+        this.insert(aMenu, this.slot);
+        return this;
+    }
+
+    public Item insert(IMenu aMenu, @Range(from = 0, to = 6) byte row, @Range(from = 0, to = 9) byte column) {
+        this.insert(aMenu, (byte) LunaMath.getIndex(row, column));
+        return this;
+    }
+
+    public Item replaceLore(UnaryOperator<String> operator) {
+        List<String> lore = this.getLore();
+        lore.replaceAll(operator);
+        this.setLore(lore);
+        return this;
+    }
+
+    public Item updateDescription() {
+        if (this.menu == null) return this;
 
         List<String> lore = new ArrayList<>(this.defaultLore);
         lore.forEach(lr -> PlaceholderAPI.setPlaceholders(this.menu.getPlayer(), lr));
         this.setLore(lore);
+        return this;
     }
 
-    public void remove(IMenu iMenu) {
+    public Item remove(IMenu iMenu) {
         iMenu.getInventory().setItem(this.slot, null);
+        return this;
     }
 
     @Override
@@ -129,7 +136,8 @@ public class Item extends NonMenuItem {
         return Objects.equals(getMenu(), thatItem.getMenu());
     }
 
-    public void onClick(InventoryClickEvent event) {
+    public Item onClick(InventoryClickEvent event) {
         event.setCancelled(true);
+        return this;
     }
 }
