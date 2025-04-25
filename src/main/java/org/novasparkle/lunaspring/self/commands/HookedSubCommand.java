@@ -14,7 +14,7 @@ import java.util.List;
 
 @SubCommand(maxArgs = 1, commandIdentifiers = {"hooked"}, flags = {})
 @AppliedCommand("lunaspring")
- public class HookedSubCommand extends LunaSpringSubCommand {
+public class HookedSubCommand extends LunaSpringSubCommand {
 
     public HookedSubCommand(LunaPlugin plugin, int maxArgs, String[] commandIdentifiers, AccessFlag[] flags) {
         super(plugin, maxArgs, commandIdentifiers, flags);

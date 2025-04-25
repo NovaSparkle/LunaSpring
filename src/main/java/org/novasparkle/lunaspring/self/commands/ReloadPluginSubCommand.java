@@ -94,8 +94,7 @@ public class ReloadPluginSubCommand extends LunaSpringSubCommand {
             assert loadedPlugin != null;
             loadedPlugin.onLoad();
             pluginManager.enablePlugin(loadedPlugin);
-
+            loadedPlugin.onEnable();
         }
-
     }
 }
