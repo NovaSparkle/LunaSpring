@@ -22,7 +22,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 
-@SubCommand(maxArgs = 2, commandIdentifiers = {"pluginreload", "plr"}, flags = {})
+//@SubCommand(maxArgs = 2, commandIdentifiers = {"pluginreload", "plr"}, flags = {})
 @AppliedCommand("lunaspring")
 public class ReloadPluginSubCommand extends LunaSpringSubCommand {
     private final PluginManager pluginManager;
