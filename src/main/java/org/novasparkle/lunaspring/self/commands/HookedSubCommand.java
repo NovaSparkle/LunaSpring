@@ -22,7 +22,7 @@ public class HookedSubCommand extends LunaSpringSubCommand {
 
     @Override
     public void invoke(CommandSender sender, String[] args) {
-        if (checkCommand(sender, args)) return;
+        if (checkCommand(sender, args, "lunaspring.hooked")) return;
 
         String hooked = LSConfig.getMessage("hooked");
         List<String> pluginNames = LunaSpring.getINSTANCE().getHookedPlugins().stream()

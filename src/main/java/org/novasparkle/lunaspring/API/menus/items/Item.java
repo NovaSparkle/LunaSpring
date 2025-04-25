@@ -2,6 +2,7 @@ package org.novasparkle.lunaspring.API.menus.items;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -16,6 +17,7 @@ import java.util.Objects;
 import java.util.function.UnaryOperator;
 
 @Getter
+@Accessors(chain = true)
 public class Item extends NonMenuItem {
     private final List<String> defaultLore;
     private final String defaultName;

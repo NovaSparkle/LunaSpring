@@ -18,7 +18,7 @@ public class ReloadSubCommand extends LunaSpringSubCommand {
 
     @Override
     public void invoke(CommandSender sender, String[] args) {
-        if (checkCommand(sender, args)) return;
+        if (checkCommand(sender, args, "lunaspring.reload")) return;
         LunaSpring.getINSTANCE().reloadConfig();
         LSConfig.reload();
         sender.sendMessage(LSConfig.getMessage("reloaded"));

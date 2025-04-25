@@ -23,7 +23,7 @@ public class PluginsSubCommand extends LunaSpringSubCommand {
 
     @Override
     public void invoke(CommandSender sender, String[] args) {
-        if (checkCommand(sender, args)) return;
+        if (checkCommand(sender, args, "lunaspring.plugins")) return;
         String enabledPlugin = LSConfig.getString("pl_command.enabledPlugin");
         String disabledPlugin = LSConfig.getString("pl_command.disabledPlugin");
 

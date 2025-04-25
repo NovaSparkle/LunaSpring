@@ -4,9 +4,9 @@ import lombok.Getter;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
-import org.novasparkle.lunaspring.API.commands.annotations.DynamicValue;
 import org.novasparkle.lunaspring.LunaPlugin;
 import org.novasparkle.lunaspring.self.LSConfig;
+import org.stringtemplate.v4.ST;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ public abstract class LunaSpringSubCommand {
     private final List<String> commandIdentifiers;
     private final List<AccessFlag> flags;
 
-    public LunaSpringSubCommand(LunaPlugin plugin, @DynamicValue int maxArgs, String[] commandIdentifiers, AccessFlag[] flags) {
+    public LunaSpringSubCommand(LunaPlugin plugin, int maxArgs, String[] commandIdentifiers, AccessFlag[] flags) {
         this.plugin = plugin;
         this.maxArgs = maxArgs;
         this.commandIdentifiers = List.of(commandIdentifiers);
@@ -44,13 +44,13 @@ public abstract class LunaSpringSubCommand {
         return true;
     }
 
-    public boolean checkCommand(CommandSender sender, String[] args) {
-        return this.commandIdentifiers.stream().anyMatch(ci -> hasPermission(sender, ci)) && !invalidArgsAmount(sender, args) && invokeFlags(sender);
+    public boolean checkCommand(CommandSender sender, String[] args, String permission) {
+        return hasPermission(sender, permission) && !invalidArgsAmount(sender, args) && invokeFlags(sender);
     }
 
     private static boolean hasPermission(CommandSender sender, String permission) {
-        if (!sender.hasPermission(String.format("lunaspring.%s", permission)) &&
-                !sender.hasPermission("lunaspring.admin")) {
+        if (!sender.hasPermission(String.format("%s", permission)) &&
+                !sender.hasPermission("admin")) {
             sender.sendMessage(LSConfig.getMessage("noPermission"));
             return false;
         }

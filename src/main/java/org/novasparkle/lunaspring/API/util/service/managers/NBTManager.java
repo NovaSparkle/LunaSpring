@@ -28,7 +28,8 @@ public class NBTManager {
     }
 
     public void base64head(ItemStack head, String value, UUID uuid) {
-        nbtService.base64head(head, value, uuid);
+        if (value != null && !value.isEmpty())
+            nbtService.base64head(head, value, uuid);
     }
 
     public void base64head(ItemStack head, String value) {

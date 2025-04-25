@@ -2,6 +2,7 @@ package org.novasparkle.lunaspring.API.menus.items;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -24,6 +25,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Getter
+@Accessors(chain = true)
 public class NonMenuItem {
     @Setter
     private ItemStack itemStack;

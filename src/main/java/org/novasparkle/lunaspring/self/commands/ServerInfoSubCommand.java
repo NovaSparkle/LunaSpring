@@ -23,7 +23,7 @@ public class ServerInfoSubCommand extends LunaSpringSubCommand {
 
     @Override
     public void invoke(CommandSender sender, String[] args) {
-        if (checkCommand(sender, args)) return;
+        if (checkCommand(sender, args, "lunaspring.server-info")) return;
         List<String> list = LSConfig.getStringList("server-info");
 
         int tps = (int) (Arrays.stream(Bukkit.getServer().getTPS()).sum() / Bukkit.getServer().getTPS().length);

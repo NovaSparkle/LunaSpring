@@ -34,7 +34,7 @@ public class ReloadPluginSubCommand extends LunaSpringSubCommand {
 
     @Override
     public void invoke(CommandSender sender, String[] args) {
-        if (checkCommand(sender, args)) return;
+        if (checkCommand(sender, args, "lunaspring.reloadplugin")) return;
         this.unloadPlugin(args[1]);
         this.loadPlugin(args[1]);
     }
