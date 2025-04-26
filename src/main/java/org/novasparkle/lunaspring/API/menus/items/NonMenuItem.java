@@ -293,29 +293,34 @@ public class NonMenuItem {
     }
 
 
-    public void addAttributes(ConfigurationSection section) {
-        ItemMeta meta = this.itemStack.getItemMeta();
-        if (meta == null) throw new IllegalArgumentException("У ItemStack отсутствует ItemMeta!");
+    public NonMenuItem addAttributes(ConfigurationSection section) {
+        ConfigurationSection aSection = section.getConfigurationSection("attributes");
+        if (aSection != null) {
+            ItemMeta meta = this.itemStack.getItemMeta();
+            if (meta == null) throw new IllegalArgumentException("У ItemStack отсутствует ItemMeta!");
 
-        for (String key : section.getKeys(false)) {
-            Attribute attribute = Attribute.valueOf(key);
-            String amount = section.getString(key);
-            if (amount == null || amount.isEmpty()) continue;
+            for (String key : section.getKeys(false)) {
+                Attribute attribute = Attribute.valueOf(key);
+                String amount = section.getString(key);
+                if (amount == null || amount.isEmpty()) continue;
 
-            double endedValue = Double.parseDouble(amount.replace("%", "")) / (amount.contains("%") ? 100 : 1);
-            AttributeModifier modifier = new AttributeModifier(attribute.name(), endedValue,
-                    amount.contains("%") ? AttributeModifier.Operation.ADD_SCALAR : AttributeModifier.Operation.ADD_NUMBER);
-            meta.addAttributeModifier(attribute, modifier);
+                double endedValue = Double.parseDouble(amount.replace("%", "")) / (amount.contains("%") ? 100 : 1);
+                AttributeModifier modifier = new AttributeModifier(attribute.name(), endedValue,
+                        amount.contains("%") ? AttributeModifier.Operation.ADD_SCALAR : AttributeModifier.Operation.ADD_NUMBER);
+                meta.addAttributeModifier(attribute, modifier);
+            }
+            this.itemStack.setItemMeta(meta);
         }
-        this.itemStack.setItemMeta(meta);
+        return this;
     }
 
-    public void addAttribute(@NonNull Attribute attribute, @NonNull AttributeModifier modifier) {
+    public NonMenuItem addAttribute(@NonNull Attribute attribute, @NonNull AttributeModifier modifier) {
         ItemMeta meta = this.itemStack.getItemMeta();
         if (meta == null) throw new IllegalArgumentException("У ItemStack отсутствует ItemMeta!");
         meta.addAttributeModifier(attribute, modifier);
 
         this.itemStack.setItemMeta(meta);
+        return this;
     }
 
 
