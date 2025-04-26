@@ -4,7 +4,6 @@ import lombok.Getter;
 
 @Getter
 public enum MaterialAttribute {
-
     NETHERITE_AXE(10, 1),
     DIAMOND_AXE(9, 1),
     IRON_AXE(9, 0.9),
@@ -12,6 +11,28 @@ public enum MaterialAttribute {
     STONE_AXE(9, 0.8),
     WOODEN_AXE(8, 0.8),
 
+    NETHERITE_PICKAXE(6, 1.2),
+    DIAMOND_PICKAXE(5, 1.2),
+    IRON_PICKAXE(4, 1.2),
+    GOLDEN_PICKAXE(2, 1.2),
+    STONE_PICKAXE(3, 1.2),
+    WOODEN_PICKAXE(2, 1.2),
+
+    NETHERITE_HOE(1, 4),
+    DIAMOND_HOE(1, 4),
+    IRON_HOE(1, 3),
+    GOLDEN_HOE(1, 1),
+    STONE_HOE(1, 2),
+    WOODEN_HOE(1, 1),
+
+    NETHERITE_SHOVEL(6.5, 1),
+    DIAMOND_SHOVEL(5.5, 1),
+    IRON_SHOVEL(4.5, 1),
+    GOLDEN_SHOVEL(2.5, 1),
+    STONE_SHOVEL(3.5, 1),
+    WOODEN_SHOVEL(2.5, 1),
+
+    TRIDENT(9, 1.1),
     NETHERITE_SWORD(8, 1.6),
     DIAMOND_SWORD(7, 1.6),
     IRON_SWORD(6, 1.6),
@@ -19,6 +40,7 @@ public enum MaterialAttribute {
     STONE_SWORD(5, 1.6),
     WOODEN_SWORD(4, 1.6),
 
+    TURTLE_HELMET(2, 0, 0),
     NETHERITE_HELMET(3, 3, 1),
     DIAMOND_HELMET(3, 2, 0),
     IRON_HELMET(2, 0, 0),

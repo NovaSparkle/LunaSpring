@@ -137,7 +137,7 @@ public class Utils {
     /**
      * Преобразование списка слотов формата ["1", "2-6", "7, 8, 10", "9"] в Set чисел формата [1, 2, 3, 4, 5, 6, ...]
      * @param slotList - начальный список слотов первого формата
-     * @return Set<Integer> set
+     * @return List<Integer> list
      */
     public List<Integer> getSlotList(Collection<String> slotList) {
         List<Integer> set = Lists.newArrayList();

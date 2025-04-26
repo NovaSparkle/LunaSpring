@@ -26,6 +26,14 @@ public class LunaMath {
         return (int) num;
     }
 
+    public double toDouble(String text) {
+        try {
+            return Double.parseDouble(text);
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+
     public boolean isEven(int num) {
         return num % 2 == 0;
     }

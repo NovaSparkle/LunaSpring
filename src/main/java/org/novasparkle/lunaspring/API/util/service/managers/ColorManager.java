@@ -31,4 +31,15 @@ public class ColorManager {
     public static Color getColor(@NonNull String abbr) {
         return colorService.getColor(abbr);
     }
+
+    /**
+     * Определяет, содержит ли строка только цвета, или нет
+     * @param description - строка
+     * @param color - цветовой символ, например &
+     * @return true - если содержит только цвета
+     */
+    public boolean containsOnlyColor(String description, char color) {
+        String regex = "^(?:" + color + "[0-9a-fk-orA-FK-OR])+?$";
+        return description.matches(regex);
+    }
 }

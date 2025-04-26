@@ -18,6 +18,7 @@ public class MenuHandler implements Listener {
     private void onClose(InventoryCloseEvent e) {
         MenuManager.handleClose(e);
     }
+
     @EventHandler
     private void onDrag(InventoryDragEvent e) {
         MenuManager.handleDrag(e);
