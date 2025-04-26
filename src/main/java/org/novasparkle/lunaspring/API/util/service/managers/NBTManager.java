@@ -1,13 +1,18 @@
 package org.novasparkle.lunaspring.API.util.service.managers;
 
+import com.destroystokyo.paper.profile.PlayerProfile;
+import com.destroystokyo.paper.profile.ProfileProperty;
+import de.tr7zw.nbtapi.NBT;
 import de.tr7zw.nbtapi.NBTBlock;
 import de.tr7zw.nbtapi.NBTCompound;
 import de.tr7zw.nbtapi.iface.ReadWriteItemNBT;
+import de.tr7zw.nbtapi.iface.ReadableNBT;
 import lombok.experimental.UtilityClass;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
-import org.novasparkle.lunaspring.API.util.service.NBTService;
+import org.bukkit.inventory.meta.SkullMeta;
 
 
 import java.util.ArrayList;
@@ -18,30 +23,37 @@ import java.util.function.Consumer;
 
 @UtilityClass
 public class NBTManager {
-    private final NBTService nbtService;
-    static {
-        nbtService = new NBTService();
-    }
 
     public ItemStack base64head(ItemStack head, OfflinePlayer player) {
-        return nbtService.base64head(head, player);
+        SkullMeta meta = (SkullMeta) head.getItemMeta();
+        meta.setOwningPlayer(player);
+        head.setItemMeta(meta);
+        return head;
     }
 
     public void base64head(ItemStack head, String value, UUID uuid) {
-        if (value != null && !value.isEmpty())
-            nbtService.base64head(head, value, uuid);
+        if (value != null && !value.isEmpty()) {
+            SkullMeta meta = (SkullMeta) head.getItemMeta();
+            PlayerProfile playerProfile = Bukkit.createProfile(uuid);
+            playerProfile.setProperty(new ProfileProperty("textures", value));
+            meta.setPlayerProfile(playerProfile);
+            head.setItemMeta(meta);
+        }
     }
 
     public void base64head(ItemStack head, String value) {
         NBTManager.base64head(head, value, UUID.randomUUID());
     }
 
+    public ReadableNBT getRoot(ItemStack item) {
+        return NBT.readNbt(item);
+    }
     public boolean hasTag(ItemStack item, String tag) {
-        return nbtService.hasTag(item, tag);
+        return getRoot(item).hasTag(tag);
     }
 
     public void set(ItemStack item, Consumer<ReadWriteItemNBT> consumer) {
-        nbtService.set(item, consumer);
+        NBT.modify(item, consumer);
     }
     
     public NBTCompound getBlockData(Block block) {
@@ -133,46 +145,49 @@ public class NBTManager {
     }
 
     public String getString(ItemStack item, String tag) {
-        return nbtService.getString(item, tag);
+        return getRoot(item).getString(tag);
     }
 
     public int getInt(ItemStack item, String tag) {
-        return nbtService.getInt(item, tag);
+        return getRoot(item).getInteger(tag);
     }
 
     public double getDouble(ItemStack item, String tag) {
-        return nbtService.getDouble(item, tag);
+        return getRoot(item).getDouble(tag);
     }
 
     public byte getByte(ItemStack item, String tag) {
-        return nbtService.getByte(item, tag);
+        return getRoot(item).getByte(tag);
     }
 
     public ItemStack getItemStack(ItemStack item, String tag) {
-        return nbtService.getItemStack(item, tag);
+        return getRoot(item).getItemStack(tag);
     }
 
     public long getLong(ItemStack item, String tag) {
-        return nbtService.getLong(item, tag);
+        return getRoot(item).getLong(tag);
     }
 
     public boolean getBoolean(ItemStack item, String tag) {
-        return nbtService.getBoolean(item, tag);
+        return getRoot(item).getBoolean(tag);
     }
 
     public ItemStack[] getItemStacks(ItemStack item, String tag) {
-        return nbtService.getItemStacks(item, tag);
+        return getRoot(item).getItemStackArray(tag);
     }
 
     public float getFloat(ItemStack item, String tag) {
-        return nbtService.getFloat(item, tag);
+        return getRoot(item).getFloat(tag);
     }
 
     public Set<String> getKeys(ItemStack item) {
-        return nbtService.getKeys(item);
+        return getRoot(item).getKeys();
     }
 
     public static UUID getUUID(ItemStack item, String tag) {
-        return nbtService.getUUID(item, tag);
+        return getRoot(item).getUUID(tag);
+    }
+    public static boolean isSimilar(ItemStack item1, ItemStack item2) {
+        return getRoot(item1).equals(getRoot(item2));
     }
 }

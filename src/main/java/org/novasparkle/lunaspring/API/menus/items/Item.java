@@ -107,7 +107,7 @@ public class Item extends NonMenuItem {
     }
 
     public Item replaceLore(UnaryOperator<String> operator) {
-        List<String> lore = this.getLore();
+        List<String> lore = new ArrayList<>(this.defaultLore);
         lore.replaceAll(operator);
         this.setLore(lore);
         return this;

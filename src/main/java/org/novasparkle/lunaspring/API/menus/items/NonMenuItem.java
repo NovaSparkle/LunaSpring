@@ -14,6 +14,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Range;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
 import org.novasparkle.lunaspring.API.util.service.managers.NBTManager;
@@ -25,6 +26,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Getter
+@SuppressWarnings("unused")
 @Accessors(chain = true, fluent = false)
 public class NonMenuItem {
     @Setter
@@ -33,6 +35,7 @@ public class NonMenuItem {
     private Material material;
     private String displayName;
     private List<String> lore = new ArrayList<>();
+    @Range(from = 1, to = Integer.MAX_VALUE)
     private int amount = 1;
     private boolean glowing = false;
     private String headValue;
@@ -203,7 +206,7 @@ public class NonMenuItem {
 
             this.itemStack.setItemMeta(meta);
         }
-        this.itemStack.setAmount(this.amount <= 0 ? 1 : amount);
+        this.itemStack.setAmount(amount);
 
         if (!NBTManager.hasTag(this.itemStack, "lunaspring.itemId")) {
             NBTManager.setString(this.itemStack, "lunaspring-itemId", this.id);
@@ -274,7 +277,15 @@ public class NonMenuItem {
         return nonMenuItem;
     }
 
-
+    @SuppressWarnings("deprecation")
+    public boolean isSimilar(ItemStack itemStack) {
+        ItemMeta meta = itemStack.getItemMeta();
+        if (meta == null) return false;
+        return this.getMaterial().equals(itemStack.getType()) &&
+                this.getLore().equals(meta.getLore()) &&
+                this.getDisplayName().equals(meta.getDisplayName()) &&
+                NBTManager.isSimilar(this.itemStack, itemStack);
+    }
 
     @Override
     public boolean equals(Object item) {
