@@ -6,7 +6,7 @@
 
   <groupId>org.novasparkle.lunaspring</groupId>
   <artifactId>LunaSpring</artifactId>
-  <version>3.0.6</version>
+  <version>3.1</version>
   <packaging>jar</packaging>
 
   <name>LunaSpring</name>
@@ -119,11 +119,6 @@
           <artifactId>placeholderapi</artifactId>
           <version>2.11.6</version>
           <scope>provided</scope>
-      </dependency>
-      <dependency>
-          <groupId>org.reflections</groupId>
-          <artifactId>reflections</artifactId>
-          <version>0.9.11</version>
       </dependency>
   </dependencies>
 </project>

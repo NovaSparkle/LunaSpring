@@ -3,6 +3,7 @@ package org.novasparkle.lunaspring.API.util.utilities;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("unused")
 public class LunaMap<S, E, X> {
     private final Map<S, Element<E, X>> map = new HashMap<>();
 

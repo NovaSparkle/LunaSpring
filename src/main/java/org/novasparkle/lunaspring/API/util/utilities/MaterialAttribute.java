@@ -1,6 +1,10 @@
 package org.novasparkle.lunaspring.API.util.utilities;
 
+import lombok.Getter;
+
+@Getter
 public enum MaterialAttribute {
+
     NETHERITE_AXE(10, 1),
     DIAMOND_AXE(9, 1),
     IRON_AXE(9, 0.9),

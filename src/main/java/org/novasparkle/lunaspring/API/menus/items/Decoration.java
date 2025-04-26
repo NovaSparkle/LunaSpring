@@ -12,7 +12,7 @@ import org.novasparkle.lunaspring.API.util.utilities.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter @Setter
+@Getter @Setter @SuppressWarnings("unused")
 public class Decoration {
     private final List<Item> decorationItems;
     private final IMenu iMenu;

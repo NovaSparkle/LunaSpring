@@ -1,6 +1,7 @@
 package org.novasparkle.lunaspring.API.util.service.managers;
 
 import lombok.Getter;
+import lombok.NonNull;
 import org.jetbrains.annotations.NotNull;
 import org.novasparkle.lunaspring.LunaSpring;
 import org.novasparkle.lunaspring.API.util.utilities.Color;
@@ -20,14 +21,14 @@ public class ColorManager {
     /**
      * Поскраска текста.
      */
-    public static String color(String text) {
+    public static String color(@NonNull String text) {
         return colorService.color(text);
     }
 
     /**
      * Получить цвет по аббревиатуре.
      */
-    public static Color getColor(String abbr) {
+    public static Color getColor(@NonNull String abbr) {
         return colorService.getColor(abbr);
     }
 }

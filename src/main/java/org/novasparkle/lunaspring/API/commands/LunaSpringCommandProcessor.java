@@ -10,9 +10,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.novasparkle.lunaspring.API.commands.annotations.AppliedCommand;
 import org.novasparkle.lunaspring.API.commands.annotations.SubCommand;
+import org.novasparkle.lunaspring.API.util.utilities.reflection.AnnotationScanner;
 import org.novasparkle.lunaspring.LunaPlugin;
 import org.novasparkle.lunaspring.self.LSConfig;
-import org.reflections.Reflections;
 
 import java.lang.reflect.Constructor;
 import java.util.*;
@@ -38,8 +38,8 @@ public final class LunaSpringCommandProcessor implements TabExecutor {
         this.commandIdentifiers = new ArrayList<>();
         this.appliedCommand = appliedCommand;
         
-        Reflections reflections = new Reflections(commadsPackage.getName());
-        Set<Class<?>> subCommandsClasses = reflections.getTypesAnnotatedWith(SubCommand.class);
+        AnnotationScanner scanner = new AnnotationScanner(commadsPackage);
+        List<Class<?>> subCommandsClasses = scanner.getAnnotatedClasses(SubCommand.class);
         String joined = subCommandsClasses.stream().map(Class::getSimpleName).collect(Collectors.joining(", "));
         this.mainPluginClass.info(LSConfig.getMessage("subCommandClasses")
                 .replace("[amount]", String.valueOf(subCommandsClasses.size()))

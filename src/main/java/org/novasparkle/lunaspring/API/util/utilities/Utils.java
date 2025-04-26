@@ -1,5 +1,6 @@
 package org.novasparkle.lunaspring.API.util.utilities;
 
+import com.google.common.collect.Lists;
 import lombok.experimental.UtilityClass;
 import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
@@ -19,7 +20,9 @@ public class Utils {
      * Покраска текста
      */
     public String color(String text) {
-        return ChatColor.translateAlternateColorCodes('&', text);
+        if (text != null && !text.isEmpty())
+            return ChatColor.translateAlternateColorCodes('&', text);
+        return null;
     }
 
     /**
@@ -136,8 +139,8 @@ public class Utils {
      * @param slotList - начальный список слотов первого формата
      * @return Set<Integer> set
      */
-    public Set<Integer> getSlotList(Collection<String> slotList) {
-        Set<Integer> set = new HashSet<>();
+    public List<Integer> getSlotList(Collection<String> slotList) {
+        List<Integer> set = Lists.newArrayList();
         for (String line : slotList) {
             if (line.contains("-")) {
                 String[] split = line.split("-");
@@ -161,16 +164,19 @@ public class Utils {
      * @return List<String> list
      */
     public List<String> getPlayerNicks(String tabCompleterValueFilter) {
-        return Bukkit.getOnlinePlayers()
+        return tabCompleterFiltering(Bukkit.getOnlinePlayers()
                 .stream()
-                .map(Player::getName)
+                .map(Player::getName).toList(),
+                tabCompleterValueFilter);
+    }
+
+    public List<String> tabCompleterFiltering(Collection<String> collection, String tabCompleterValueFilter) {
+        return collection
+                .stream()
                 .filter(n -> n.toUpperCase().startsWith(tabCompleterValueFilter.toUpperCase()))
                 .toList();
     }
 
-    public <T> void objectAction(T object, Consumer<T> consumer) {
-        if (object != null) consumer.accept(object);
-    }
 
     public void playersAction(Consumer<Player> playerConsumer) {
         Bukkit.getOnlinePlayers().forEach(playerConsumer);

@@ -1,6 +1,7 @@
 package org.novasparkle.lunaspring.API.menus.items;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import me.clip.placeholderapi.PlaceholderAPI;
@@ -18,6 +19,7 @@ import java.util.function.UnaryOperator;
 
 @Getter
 @Accessors(chain = true, fluent = false)
+@SuppressWarnings({"unused"})
 public class Item extends NonMenuItem {
     private final List<String> defaultLore;
     private final String defaultName;
@@ -51,14 +53,14 @@ public class Item extends NonMenuItem {
         this.slot = slot;
     }
 
-    public Item(ConfigurationSection section, @Range(from = 0, to = 54) int slot) {
+    public Item(@NonNull ConfigurationSection section, @Range(from = 0, to = 54) int slot) {
         super(section);
         this.slot = (byte) slot;
         this.defaultLore = new ArrayList<>(this.getLore());
         this.defaultName = this.getDisplayName();
     }
 
-    public Item(ConfigurationSection section, boolean rowCol) {
+    public Item(@NonNull ConfigurationSection section, boolean rowCol) {
         this(section, 0);
         if (rowCol)
             this.slot = (byte) LunaMath.getIndex(section.getInt("slot.row"), section.getInt("slot.column"));
@@ -87,7 +89,7 @@ public class Item extends NonMenuItem {
         return this;
     }
 
-    public Item insert(IMenu aMenu, @Range(from = 0, to = 54) byte slot) {
+    public Item insert(@NonNull IMenu aMenu, @Range(from = 0, to = 54) byte slot) {
         this.menu = aMenu;
         this.slot = slot;
 
@@ -96,12 +98,12 @@ public class Item extends NonMenuItem {
         return this;
     }
 
-    public Item insert(IMenu aMenu) {
+    public Item insert(@NonNull IMenu aMenu) {
         this.insert(aMenu, this.slot);
         return this;
     }
 
-    public Item insert(IMenu aMenu, @Range(from = 0, to = 6) byte row, @Range(from = 0, to = 9) byte column) {
+    public Item insert(@NonNull IMenu aMenu, @Range(from = 0, to = 6) byte row, @Range(from = 0, to = 9) byte column) {
         this.insert(aMenu, (byte) LunaMath.getIndex(row, column));
         return this;
     }
@@ -122,7 +124,7 @@ public class Item extends NonMenuItem {
         return this;
     }
 
-    public Item remove(IMenu iMenu) {
+    public Item remove(@NonNull IMenu iMenu) {
         iMenu.getInventory().setItem(this.slot, null);
         return this;
     }

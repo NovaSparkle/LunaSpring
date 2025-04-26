@@ -4,6 +4,7 @@ import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
 
@@ -29,17 +30,18 @@ public class MenuManager {
 
     public static void handleOpen(InventoryOpenEvent event) {
         IMenu menu = activeInventories.get(event.getInventory());
-        if (menu != null) {
-            menu.onOpen(event);
-        }
+        if (menu != null) menu.onOpen(event);
     }
 
     public static void handleClick(InventoryClickEvent event) {
         IMenu menu = activeInventories.get(event.getInventory());
-        if (menu != null) {
-            if (!menu.isCancelled(event, event.getRawSlot()))
-                menu.onClick(event);
-        }
+        if (menu != null && !menu.isCancelled(event, event.getRawSlot())) menu.onClick(event);
+    }
+
+    public static void handleDrag(InventoryDragEvent event) {
+        IMenu menu = activeInventories.get(event.getInventory());
+        if (menu != null) menu.onDrag(event);
+
     }
 
     public static void handleClose(InventoryCloseEvent event) {
@@ -50,6 +52,7 @@ public class MenuManager {
             unregister(inventory);
         }
     }
+
     public static Set<Player> getActiveViewers(Inventory inventory) {
         return activeInventories.entrySet().stream().filter(entry -> entry.getKey().equals(inventory)).map(e -> e.getValue().getPlayer()).collect(Collectors.toSet());
     }

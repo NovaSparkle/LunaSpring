@@ -1,44 +1,49 @@
 package org.novasparkle.lunaspring.API.menus.items;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.enchantments.EnchantmentWrapper;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
-import org.novasparkle.lunaspring.API.util.utilities.Utils;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
 import org.novasparkle.lunaspring.API.util.service.managers.NBTManager;
+import org.novasparkle.lunaspring.API.util.utilities.Utils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Getter
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "deprecation"})
 @Accessors(chain = true, fluent = false)
 public class NonMenuItem {
     @Setter
     private ItemStack itemStack;
     private final String id = Utils.getRKey((byte) 14);
     private Material material;
-    private String displayName;
-    private List<String> lore = new ArrayList<>();
+    private String displayName = "";
+    private List<String> lore = Lists.newArrayList();
     @Range(from = 1, to = Integer.MAX_VALUE)
     private int amount = 1;
     private boolean glowing = false;
     private String headValue;
+    private final Map<Enchantment, Integer> enchantments = Maps.newHashMap();
+    private final List<ItemFlag> itemFlags = Lists.newArrayList();
+
 
     public NonMenuItem(Material material, String displayName, List<String> lore, int amount) {
         if (material == null) throw new IllegalArgumentException("Материал предмета не может быть null!");
@@ -65,7 +70,7 @@ public class NonMenuItem {
         this.update();
     }
 
-    public NonMenuItem(ConfigurationSection section) {
+    public NonMenuItem(@NonNull ConfigurationSection section) {
         String material = section.getString("material");
         if (material == null) throw new IllegalArgumentException("Материал предмета не может быть null!");
         this.material = Material.getMaterial(material);
@@ -77,31 +82,27 @@ public class NonMenuItem {
 
         this.itemStack = new ItemStack(this.material, this.amount);
         this.setGlowing(section.getBoolean("enchanted"));
-        // NBT
-        ConfigurationSection nbtSection = section.getConfigurationSection("nbtTags");
         this.update();
 
-        if (nbtSection != null) {
-            nbtSection.getValues(false).forEach((key, value) -> {
-                if (!NBTManager.hasTag(this.itemStack, key)) {
-                    if (value instanceof String strValue) NBTManager.setString(this.itemStack, key, strValue);
 
-                    else if (value instanceof Integer intValue) NBTManager.setInt(this.itemStack, key, intValue);
+        // Enchantments
+        this.applyEnchantments(section);
 
-                    else if (value instanceof Boolean boolValue) NBTManager.setBool(this.itemStack, key, boolValue);
+        // Attributes
+        this.addAttributes(section);
 
-                    else if (value instanceof Double dValue) NBTManager.setDouble(itemStack, key, dValue);
+        // ItemFlags
+        this.applyItemFlags(section);
 
-                }
-            });
-        }
+        // NBT
+        ConfigurationSection nbtSection = section.getConfigurationSection("nbtTags");
+        this.applyNBT(nbtSection);
 
-        String baseHeadValue = section.getString("baseHead");
-        if (baseHeadValue != null && !baseHeadValue.isEmpty()) {
-            this.headValue = baseHeadValue;
-            this.applyBaseHead(baseHeadValue);
-        }
+        // Head
+        this.applyBaseHead(section);
     }
+
+    // SETTERS
 
     public NonMenuItem setMaterial(Material material) {
         this.material = material;
@@ -140,18 +141,248 @@ public class NonMenuItem {
         return this;
     }
 
+    public NonMenuItem setAll(Material material, int amount, String displayName, List<String> lore, boolean enchanted) {
+        if (material != null)
+            this.setMaterial(material);
+        if (amount > 0)
+            this.setAmount(amount);
+        if (lore != null && !lore.isEmpty())
+            this.setLore(lore);
+        if (displayName != null && !displayName.isEmpty())
+            this.setDisplayName(displayName);
+        this.setGlowing(enchanted);
+        return this;
+    }
+
+    public NonMenuItem setAll(@NonNull ConfigurationSection itemSection) {
+        String strMaterial = itemSection.getString("material");
+        Material newMaterial = strMaterial == null || strMaterial.isEmpty() ? null : Material.getMaterial(strMaterial);
+
+        int amount = itemSection.getInt("amount");
+        String displayName = itemSection.getString("displayName");
+        List<String> lore = new ArrayList<>(itemSection.getStringList("lore"));
+
+        this.setAll(newMaterial, amount, displayName, lore, itemSection.getBoolean("enchanted"));
+        return this;
+    }
+
+    private void update() {
+        this.itemStack.setType(this.material);
+        ItemMeta meta = this.itemStack.getItemMeta();
+        if (meta == null)
+            throw new IllegalArgumentException("У ItemStack отсутствует ItemMeta!");
+
+        else {
+            if (this.displayName != null && !this.displayName.isEmpty())
+                meta.setDisplayName(ColorManager.color(this.displayName));
+            if (this.lore != null && !this.lore.isEmpty())
+                meta.setLore(this.lore.stream().map(ColorManager::color).collect(Collectors.toList()));
+        }
+
+        this.itemStack.setItemMeta(meta);
+        this.itemStack.setAmount(this.amount);
+
+        if (!NBTManager.hasTag(this.itemStack, "lunaspring.itemId")) {
+            NBTManager.setString(this.itemStack, "lunaspring-itemId", this.id);
+        }
+    }
+
+    public ItemStack getDefaultStack() {
+        ItemStack item = new ItemStack(this.material, this.amount);
+
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(this.displayName);
+        meta.setLore(this.lore);
+        item.setItemMeta(meta);
+
+        if (this.headValue != null) NBTManager.base64head(item, this.headValue);
+        return item;
+    }
+
+
+
+
+    // APPLIERS - NBT, ItemFlags, Attributes, Enchantments, BaseHeads
+
+    public NonMenuItem applyNBT(@NonNull Map<String, String> nbtTags) {
+        nbtTags.forEach((key, value) ->
+                NBTManager.setString(this.itemStack, key, value));
+        return this;
+    }
+
+    public NonMenuItem applyNBT(ConfigurationSection nbtSection) {
+        if (nbtSection != null) {
+            nbtSection.getValues(false).forEach((key, value) -> {
+                if (!NBTManager.hasTag(this.itemStack, key)) {
+                    if (value instanceof String strValue) NBTManager.setString(this.itemStack, key, strValue);
+
+                    else if (value instanceof Integer intValue) NBTManager.setInt(this.itemStack, key, intValue);
+
+                    else if (value instanceof Boolean boolValue) NBTManager.setBool(this.itemStack, key, boolValue);
+
+                    else if (value instanceof Double dValue) NBTManager.setDouble(itemStack, key, dValue);
+
+                }
+            });
+        }
+        return this;
+    }
+
+
+    public NonMenuItem applyItemFlags(@NonNull ConfigurationSection section) {
+        ItemMeta meta = this.itemStack.getItemMeta();
+        if (meta == null) throw new IllegalArgumentException("У ItemStack отсутствует ItemMeta!");
+
+        section.getStringList("itemflags").forEach(flag -> {
+            ItemFlag itemFlag = ItemFlag.valueOf(flag);
+            this.itemFlags.add(itemFlag);
+            meta.addItemFlags(itemFlag);
+        });
+        this.itemStack.setItemMeta(meta);
+        return this;
+    }
+
+    public NonMenuItem applyItemFlags(@NonNull List<ItemFlag> itemFlags) {
+        ItemMeta meta = this.itemStack.getItemMeta();
+        if (meta == null) throw new IllegalArgumentException("У ItemStack отсутствует ItemMeta!");
+
+        this.itemFlags.addAll(itemFlags);
+        meta.addItemFlags(itemFlags.toArray(new ItemFlag[0]));
+        return this;
+    }
+
+
+    public NonMenuItem applyBaseHead(@NonNull ConfigurationSection section) {
+        String baseHeadValue = section.getString("baseHead");
+        if (baseHeadValue != null && !baseHeadValue.isEmpty()) {
+            this.headValue = baseHeadValue;
+            NBTManager.base64head(this.itemStack, baseHeadValue);
+        }
+        return this;
+    }
+
+    public NonMenuItem applyBaseHead(@NonNull OfflinePlayer player) {
+        this.setItemStack(NBTManager.base64head(this.itemStack, player));
+        return this;
+    }
+
+
+    public NonMenuItem applyEnchantments(@NonNull Map<Enchantment, Integer> enchants) {
+        this.itemStack.addUnsafeEnchantments(enchants);
+        return this;
+    }
+    public NonMenuItem applyEnchantments(@NonNull ConfigurationSection section) {
+        Objects.requireNonNull(section.getConfigurationSection("enchants"))
+                .getValues(false)
+                .forEach((enchant, level) -> {
+                    Enchantment enchantment = new EnchantmentWrapper(enchant);
+                    this.enchantments.put(enchantment, (Integer) level);
+                    this.itemStack.addUnsafeEnchantment(enchantment, (Integer) level);
+                });
+        return this;
+    }
+
+
+    public void addAttributes(@NonNull ConfigurationSection section) {
+        ItemMeta meta = this.itemStack.getItemMeta();
+        if (meta == null) throw new IllegalArgumentException("У ItemStack отсутствует ItemMeta!");
+
+        for (String key : section.getKeys(false)) {
+            Attribute attribute = Attribute.valueOf(key);
+            String amount = section.getString(key);
+            if (amount == null || amount.isEmpty()) continue;
+
+            double endedValue = Double.parseDouble(amount.replace("%", "")) / (amount.contains("%") ? 100 : 1);
+            AttributeModifier modifier = new AttributeModifier(attribute.name(), endedValue,
+                    amount.contains("%") ? AttributeModifier.Operation.ADD_SCALAR : AttributeModifier.Operation.ADD_NUMBER);
+            meta.addAttributeModifier(attribute, modifier);
+        }
+        this.itemStack.setItemMeta(meta);
+    }
+
+    public void addAttribute(@NonNull Attribute attribute, @NonNull AttributeModifier modifier) {
+        ItemMeta meta = this.itemStack.getItemMeta();
+        if (meta == null) throw new IllegalArgumentException("У ItemStack отсутствует ItemMeta!");
+        meta.addAttributeModifier(attribute, modifier);
+
+        this.itemStack.setItemMeta(meta);
+    }
+
+
+
+    // CHECKS
+
+    public boolean checkId(String id) {
+        return Objects.equals(id, this.id);
+    }
+
+    public boolean checkId(ItemStack item) {
+        String id = NBTManager.getString(item, "lunaspring-item-id");
+        return id != null && !id.isEmpty() && this.checkId(id);
+    }
+
+
+    /**
+     * Cравнение с без учета кол-ва предмета
+     *
+     */
+    public boolean isSimilar(ItemStack itemStack) {
+        if (itemStack == this.itemStack) return true;
+        ItemMeta meta = itemStack.getItemMeta();
+        if (meta == null) return false;
+        return this.getMaterial().equals(itemStack.getType()) &&
+                this.getLore().equals(meta.getLore()) &&
+                this.getDisplayName().equals(meta.getDisplayName()) &&
+                NBTManager.isSimilar(this.itemStack, itemStack);
+    }
+
+    /**
+     * Cравнение с учетом кол-ва предмета
+     *
+     */
+    @Override
+    public boolean equals(Object item) {
+        if (this == item) return true;
+        if (item == null || this.getClass() != item.getClass()) return false;
+        NonMenuItem that = (NonMenuItem) item;
+        return this.isSimilar(that.itemStack) && that.getAmount() == this.getAmount();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getItemStack(), getId(), getMaterial(), getDisplayName(), getLore(), getAmount(), isGlowing(), getHeadValue());
+    }
+
     @Override
     public String toString() {
         return "NonMenuItem{" +
-                "id='" + id + '\'' +
+                "itemStack=" + itemStack +
+                ", id='" + id + '\'' +
                 ", material=" + material +
                 ", displayName='" + displayName + '\'' +
                 ", lore=" + lore +
                 ", amount=" + amount +
+                ", glowing=" + glowing +
+                ", headValue='" + headValue + '\'' +
+                ", enchantments=" + enchantments +
+                ", itemFlags=" + itemFlags +
                 '}';
     }
 
-    public NonMenuItem serialize(@NotNull ConfigurationSection section, boolean asItemStack) {
+
+
+    // ACTIONS
+
+    public void dropNaturally(Location location) {
+        location.getWorld().dropItemNaturally(location, this.getItemStack());
+    }
+
+    public void give(@NonNull Player player) {
+        this.lore.forEach(lr -> PlaceholderAPI.setPlaceholders(player, lr));
+        player.getInventory().addItem(this.itemStack);
+    }
+
+    public NonMenuItem serialize(@NonNull ConfigurationSection section, boolean asItemStack) {
         if (asItemStack)
             section.set("item", this.itemStack);
         else {
@@ -166,101 +397,6 @@ public class NonMenuItem {
         return this;
     }
 
-    public NonMenuItem setAll(Material material, int amount, String displayName, List<String> lore, boolean enchanted) {
-        if (material != null)
-            this.setMaterial(material);
-        if (amount > 0)
-            this.setAmount(amount);
-        if (lore != null && !lore.isEmpty())
-            this.setLore(lore);
-        if (displayName != null && !displayName.isEmpty())
-            this.setDisplayName(displayName);
-        this.setGlowing(enchanted);
-        return this;
-    }
-
-    public NonMenuItem setAll(ConfigurationSection itemSection) {
-        if (itemSection == null) return this;
-
-        String strMaterial = itemSection.getString("material");
-        Material newMaterial = strMaterial == null || strMaterial.isEmpty() ? null : Material.getMaterial(strMaterial);
-
-        int amount = itemSection.getInt("amount");
-        String displayName = itemSection.getString("displayName");
-        List<String> lore = new ArrayList<>(itemSection.getStringList("lore"));
-
-        this.setAll(newMaterial, amount, displayName, lore, itemSection.getBoolean("enchanted"));
-        return this;
-    }
-
-    @SuppressWarnings("deprecation")
-    private void update() {
-        this.itemStack.setType(this.material);
-        ItemMeta meta = this.itemStack.getItemMeta();
-        if (meta != null) {
-
-            if (this.displayName != null && !this.displayName.isEmpty())
-                meta.setDisplayName(ColorManager.color(this.displayName));
-            if (this.lore != null && !this.lore.isEmpty())
-                meta.setLore(this.lore.stream().map(ColorManager::color).collect(Collectors.toList()));
-
-            this.itemStack.setItemMeta(meta);
-        }
-        this.itemStack.setAmount(amount);
-
-        if (!NBTManager.hasTag(this.itemStack, "lunaspring.itemId")) {
-            NBTManager.setString(this.itemStack, "lunaspring-itemId", this.id);
-        }
-    }
-
-    public NonMenuItem applyNBT(Map<String, String> nbtTags) {
-        nbtTags.forEach((key, value) ->
-                NBTManager.setString(this.itemStack, key, value));
-        return this;
-    }
-
-    public NonMenuItem applyBaseHead(String value) {
-        NBTManager.base64head(this.itemStack, value);
-        this.headValue = value;
-        return this;
-    }
-
-    public NonMenuItem applyBaseHead(OfflinePlayer player) {
-        this.setItemStack(NBTManager.base64head(this.itemStack, player));
-        return this;
-    }
-
-    public boolean checkId(String id) {
-        return Objects.equals(id, this.id);
-    }
-
-    public boolean checkId(ItemStack item) {
-        String id = NBTManager.getString(item, "lunaspring-item-id");
-        return id != null && !id.isEmpty() && this.checkId(id);
-    }
-
-    @SuppressWarnings("deprecation")
-    public ItemStack getDefaultStack() {
-        ItemStack item = new ItemStack(this.material, this.amount);
-
-        ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(this.displayName);
-        meta.setLore(this.lore);
-        item.setItemMeta(meta);
-
-        if (this.headValue != null) NBTManager.base64head(item, this.headValue);
-        return item;
-    }
-
-    public void dropNaturally(Location location) {
-        location.getWorld().dropItemNaturally(location, this.getItemStack());
-    }
-
-    public void give(@NotNull Player player) {
-        this.lore.forEach(lr -> PlaceholderAPI.setPlaceholders(player, lr));
-        player.getInventory().addItem(this.itemStack);
-    }
-    @SuppressWarnings("deprecation")
     public static NonMenuItem fromItemStack(ItemStack stack) {
         NonMenuItem nonMenuItem = new NonMenuItem(stack.getType(), stack.getAmount());
         ItemMeta meta = nonMenuItem.itemStack.getItemMeta();
@@ -275,28 +411,5 @@ public class NonMenuItem {
         }
         nonMenuItem.itemStack = stack;
         return nonMenuItem;
-    }
-
-    @SuppressWarnings("deprecation")
-    public boolean isSimilar(ItemStack itemStack) {
-        ItemMeta meta = itemStack.getItemMeta();
-        if (meta == null) return false;
-        return this.getMaterial().equals(itemStack.getType()) &&
-                this.getLore().equals(meta.getLore()) &&
-                this.getDisplayName().equals(meta.getDisplayName()) &&
-                NBTManager.isSimilar(this.itemStack, itemStack);
-    }
-
-    @Override
-    public boolean equals(Object item) {
-        if (this == item) return true;
-        if (item == null || this.getClass() != item.getClass()) return false;
-        NonMenuItem that = (NonMenuItem) item;
-        return that.getItemStack().isSimilar(this.itemStack);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getItemStack(), getId(), getMaterial(), getDisplayName(), getLore(), getAmount(), isGlowing(), getHeadValue());
     }
 }

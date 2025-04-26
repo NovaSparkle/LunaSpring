@@ -1,14 +1,17 @@
 package org.novasparkle.lunaspring.API.menus;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 import org.novasparkle.lunaspring.API.events.CooldownPrevent;
 import org.novasparkle.lunaspring.API.menus.items.Decoration;
@@ -22,6 +25,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 @Getter
+@SuppressWarnings({"deprecation", "unused"})
 public abstract class AMenu implements IMenu {
     private Inventory inventory;
     private String title;
@@ -31,15 +35,13 @@ public abstract class AMenu implements IMenu {
     private final CooldownPrevent<Integer> cooldownPrevent = new CooldownPrevent<>();
     private final List<Item> itemList = new ArrayList<>();
 
-    @SuppressWarnings("deprecation")
-    public AMenu(Player player, String title, @Range(from = 9L, to=54) byte size) {
+    public AMenu(@NonNull Player player, String title, @Range(from = 9L, to=54) byte size) {
         this.player = player;
         this.title = title;
         this.inventory = Bukkit.createInventory(this.player, size, Utils.color(title));
     }
 
-    @SuppressWarnings("deprecation")
-    public AMenu(Player player, ConfigurationSection menuSection) {
+    public AMenu(@NonNull Player player, ConfigurationSection menuSection) {
         this.player = player;
         this.title = menuSection.getString("title");
         this.inventory = Bukkit.createInventory(this.player,
@@ -48,8 +50,7 @@ public abstract class AMenu implements IMenu {
         this.decoration.insert();
     }
 
-    @SuppressWarnings("deprecation")
-    public AMenu(Player player, String title, @Range(from = 9L, to=54) byte size, ConfigurationSection decorSection) {
+    public AMenu(@NonNull Player player, String title, @Range(from = 9L, to=54) byte size, ConfigurationSection decorSection) {
         this.player = player;
         this.title = title;
         this.inventory = Bukkit.createInventory(this.player, size, ColorManager.color(title));
@@ -57,12 +58,12 @@ public abstract class AMenu implements IMenu {
         this.decoration.insert();
     }
 
-    public AMenu(Player player) {
+    public AMenu(@NonNull Player player) {
         this.player = player;
     }
 
     @Override
-    public boolean isCancelled(Cancellable event, int slot) {
+    public boolean isCancelled(@Nullable Cancellable event, int slot) {
         return this.cooldownPrevent.isCancelled(event, slot);
     }
 
@@ -70,27 +71,10 @@ public abstract class AMenu implements IMenu {
         this.cooldownPrevent.setCooldownMS(millis);
     }
 
-    @SuppressWarnings("deprecation")
     public void initialize(ConfigurationSection section, boolean decorate) {
-        this.title = section.getString("title");
-        assert this.title != null;
-        this.inventory = Bukkit.createInventory(this.player, section.getInt("size"), ColorManager.color(this.title));
-        if (decorate) {
-            this.decoration = new Decoration(Objects.requireNonNull(section.getConfigurationSection("decoration")), this);
-            this.decoration.insert();
-        }
+        this.initialize(section.getString("title"), (byte) section.getInt("size"), section.getConfigurationSection("decoration"), decorate);
     }
 
-    @Override
-    public String toString() {
-        return "AMenu{" +
-                "player=" + this.player +
-                ", title=" + this.title +
-                ", itemList=" + this.itemList +
-                '}';
-    }
-
-    @SuppressWarnings("deprecation")
     public void initialize(String title, byte size, ConfigurationSection decorSection, boolean decorate) {
         this.inventory = Bukkit.createInventory(this.player, size, ColorManager.color(title));
         this.title = title;
@@ -98,6 +82,14 @@ public abstract class AMenu implements IMenu {
             this.decoration = new Decoration(decorSection, this);
             this.decoration.insert();
         }
+    }
+    @Override
+    public String toString() {
+        return "AMenu{" +
+                "player=" + this.player +
+                ", title=" + this.title +
+                ", itemList=" + this.itemList +
+                '}';
     }
     public void clear() {
         this.itemList.clear();
@@ -134,6 +126,39 @@ public abstract class AMenu implements IMenu {
 
     public Item findFirstItem(Material material) {
         return this.itemList.stream().filter(i -> i.getMaterial().equals(material)).findFirst().orElse(null);
+    }
+
+    public boolean itemClick(@NonNull Material material, InventoryClickEvent event) {
+        Item item = this.findFirstItem(material);
+        if (item != null) {
+            item.onClick(event);
+            return true;
+        }
+        return false;
+    }
+    public boolean itemClick(@NonNull String displayName, InventoryClickEvent event) {
+        Item item = this.findFirstItem(displayName);
+        if (item != null) {
+            item.onClick(event);
+            return true;
+        }
+        return false;
+    }
+    public boolean itemClick(@NonNull Class<?> clazz, InventoryClickEvent event) {
+        Item item = this.findFirstItem(clazz);
+        if (item != null) {
+            item.onClick(event);
+            return true;
+        }
+        return false;
+    }
+    public boolean itemClickId(@NonNull String id, InventoryClickEvent event) {
+        Item item = this.findFirstItemById(id);
+        if (item != null) {
+            item.onClick(event);
+            return true;
+        }
+        return false;
     }
 
     public void insertAllItems() {

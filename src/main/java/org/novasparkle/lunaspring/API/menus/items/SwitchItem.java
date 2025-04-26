@@ -10,7 +10,7 @@ import org.novasparkle.lunaspring.API.menus.MenuManager;
 
 import java.util.List;
 
-@Getter
+@Getter @SuppressWarnings("unused")
 public class SwitchItem extends Item {
     private final IMenu toMenu;
     public SwitchItem(Material material,
