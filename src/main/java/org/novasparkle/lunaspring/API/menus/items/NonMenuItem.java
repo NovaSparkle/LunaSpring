@@ -299,7 +299,7 @@ public class NonMenuItem {
             ItemMeta meta = this.itemStack.getItemMeta();
             if (meta == null) throw new IllegalArgumentException("У ItemStack отсутствует ItemMeta!");
 
-            for (String key : section.getKeys(false)) {
+            for (String key : aSection.getKeys(false)) {
                 Attribute attribute = Attribute.valueOf(key);
                 String amount = section.getString(key);
                 if (amount == null || amount.isEmpty()) continue;
