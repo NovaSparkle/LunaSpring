@@ -162,6 +162,12 @@ public class NonMenuItem {
         String displayName = itemSection.getString("displayName");
         List<String> lore = new ArrayList<>(itemSection.getStringList("lore"));
 
+        this.itemFlags.clear();
+        this.enchantments.clear();
+        this.applyBaseHead(itemSection);
+        this.applyEnchantments(itemSection);
+        this.applyItemFlags(itemSection);
+
         this.setAll(newMaterial, amount, displayName, lore, itemSection.getBoolean("enchanted"));
         return this;
     }
@@ -204,7 +210,7 @@ public class NonMenuItem {
 
     // APPLIERS - NBT, ItemFlags, Attributes, Enchantments, BaseHeads
 
-    public NonMenuItem applyNBT(@NonNull Map<String, String> nbtTags) {
+    public NonMenuItem applyNBT(Map<String, String> nbtTags) {
         nbtTags.forEach((key, value) ->
                 NBTManager.setString(this.itemStack, key, value));
         return this;
@@ -229,7 +235,7 @@ public class NonMenuItem {
     }
 
 
-    public NonMenuItem applyItemFlags(@NonNull ConfigurationSection section) {
+    public NonMenuItem applyItemFlags(ConfigurationSection section) {
         ItemMeta meta = this.itemStack.getItemMeta();
         if (meta == null) throw new IllegalArgumentException("У ItemStack отсутствует ItemMeta!");
 
@@ -239,20 +245,22 @@ public class NonMenuItem {
             meta.addItemFlags(itemFlag);
         });
         this.itemStack.setItemMeta(meta);
+
         return this;
     }
 
-    public NonMenuItem applyItemFlags(@NonNull List<ItemFlag> itemFlags) {
+    public NonMenuItem applyItemFlags(List<ItemFlag> itemFlags) {
         ItemMeta meta = this.itemStack.getItemMeta();
         if (meta == null) throw new IllegalArgumentException("У ItemStack отсутствует ItemMeta!");
-
-        this.itemFlags.addAll(itemFlags);
-        meta.addItemFlags(itemFlags.toArray(new ItemFlag[0]));
+        if (itemFlags != null) {
+            this.itemFlags.addAll(itemFlags);
+            meta.addItemFlags(itemFlags.toArray(new ItemFlag[0]));
+        }
         return this;
     }
 
 
-    public NonMenuItem applyBaseHead(@NonNull ConfigurationSection section) {
+    public NonMenuItem applyBaseHead(ConfigurationSection section) {
         String baseHeadValue = section.getString("baseHead");
         if (baseHeadValue != null && !baseHeadValue.isEmpty()) {
             this.headValue = baseHeadValue;
@@ -267,23 +275,25 @@ public class NonMenuItem {
     }
 
 
-    public NonMenuItem applyEnchantments(@NonNull Map<Enchantment, Integer> enchants) {
-        this.itemStack.addUnsafeEnchantments(enchants);
+    public NonMenuItem applyEnchantments(Map<Enchantment, Integer> enchants) {
+        if (enchants != null)
+            this.itemStack.addUnsafeEnchantments(enchants);
         return this;
     }
-    public NonMenuItem applyEnchantments(@NonNull ConfigurationSection section) {
-        Objects.requireNonNull(section.getConfigurationSection("enchants"))
-                .getValues(false)
-                .forEach((enchant, level) -> {
-                    Enchantment enchantment = new EnchantmentWrapper(enchant);
-                    this.enchantments.put(enchantment, (Integer) level);
-                    this.itemStack.addUnsafeEnchantment(enchantment, (Integer) level);
-                });
+    public NonMenuItem applyEnchantments(ConfigurationSection section) {
+        ConfigurationSection eSection = section.getConfigurationSection("enchants");
+        if (eSection != null)
+            eSection.getValues(false).forEach((enchant, level) -> {
+                        Enchantment enchantment = new EnchantmentWrapper(enchant);
+                        this.enchantments.put(enchantment, (Integer) level);
+                        this.itemStack.addUnsafeEnchantment(enchantment, (Integer) level);
+                    });
+
         return this;
     }
 
 
-    public void addAttributes(@NonNull ConfigurationSection section) {
+    public void addAttributes(ConfigurationSection section) {
         ItemMeta meta = this.itemStack.getItemMeta();
         if (meta == null) throw new IllegalArgumentException("У ItemStack отсутствует ItemMeta!");
 

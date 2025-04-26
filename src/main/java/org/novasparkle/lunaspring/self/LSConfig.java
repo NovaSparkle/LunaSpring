@@ -7,7 +7,7 @@ import org.novasparkle.lunaspring.LunaSpring;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public final class LSConfig extends ColorManager {
+public final class LSConfig {
     private final static IConfig config;
     static {
         config = new IConfig(LunaSpring.getINSTANCE());
@@ -24,7 +24,7 @@ public final class LSConfig extends ColorManager {
     }
 
     public static String getString(String path) {
-        return color(config.getString(path));
+        return ColorManager.color(config.getString(path));
     }
 
     public static boolean getBoolean(String path) {
