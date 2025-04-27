@@ -146,21 +146,18 @@ public class IConfig {
      */
     @SuppressWarnings("deprecation")
     public void sendMessage(CommandSender sender, String id, String... replacements) {
-        List<String> message = new ArrayList<>(config.getStringList(String.format("messages.%s", id)));
+        String path = String.format("messages.%s", id);
+
+        String stringMessage = config.getString(path);
+        if (stringMessage != null && !stringMessage.isEmpty()) {
+            sender.sendMessage(ColorManager.color(Utils.applyReplacements(stringMessage)));
+            return;
+        }
+
+        List<String> message = new ArrayList<>(config.getStringList(path));
         if (message.isEmpty()) return;
         for (String line : message) {
-            byte index = 0;
-            for (String replacement : replacements) {
-                if (replacement.contains("-%-")) {
-                    String[] mass = replacement.split("-%-");
-
-                    line = line.replace("{" + mass[0] + "}", mass[1]);
-                    continue;
-                }
-
-                line = line.replace("{" + index + "}", replacement);
-                index++;
-            }
+            line = Utils.applyReplacements(line, replacements);
 
             String newLine = ColorManager.color(line
                     .replace("ACTION_BAR ", "")

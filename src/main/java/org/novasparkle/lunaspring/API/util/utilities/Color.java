@@ -2,8 +2,7 @@ package org.novasparkle.lunaspring.API.util.utilities;
 
 import lombok.Getter;
 
-
-
+@SuppressWarnings("all")
 public record Color(@Getter String abbr, @Getter String variable) {
 
     @Override

@@ -185,4 +185,20 @@ public class Utils {
     public void broadcast(String message) {
         playersAction(p -> p.sendMessage(message));
     }
+
+    public String applyReplacements(String line, String... replacements) {
+        byte index = 0;
+        for (String replacement : replacements) {
+            if (replacement.contains("-%-")) {
+                String[] mass = replacement.split("-%-");
+
+                line = line.replace("{" + mass[0] + "}", mass[1]);
+                continue;
+            }
+
+            line = line.replace("{" + index + "}", replacement);
+            index++;
+        }
+        return line;
+    }
 }

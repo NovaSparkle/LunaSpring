@@ -15,6 +15,7 @@ import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentWrapper;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -22,6 +23,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Range;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
 import org.novasparkle.lunaspring.API.util.service.managers.NBTManager;
+import org.novasparkle.lunaspring.API.util.utilities.MaterialAttribute;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 
 import java.util.*;
@@ -31,14 +33,12 @@ import java.util.stream.Collectors;
 @SuppressWarnings({"unused", "deprecation"})
 @Accessors(chain = true, fluent = false)
 public class NonMenuItem {
-    @Setter
-    private ItemStack itemStack;
+    @Setter private ItemStack itemStack;
     private final String id = Utils.getRKey((byte) 14);
     private Material material;
     private String displayName = "";
-    private List<String> lore = Lists.newArrayList();
-    @Range(from = 1, to = Integer.MAX_VALUE)
-    private int amount = 1;
+    private List<String> lore;
+    @Range(from = 1, to = 64) private int amount;
     private boolean glowing = false;
     private String headValue;
     private final Map<Enchantment, Integer> enchantments = Maps.newHashMap();
@@ -48,42 +48,29 @@ public class NonMenuItem {
     public NonMenuItem(Material material, String displayName, List<String> lore, int amount) {
         if (material == null) throw new IllegalArgumentException("Материал предмета не может быть null!");
         this.material = material;
-        this.displayName = displayName;
-        this.lore = lore;
-        this.amount = amount;
+        if (displayName != null && !displayName.isEmpty()) this.displayName = displayName;
+        this.lore = lore == null ? new ArrayList<>() : lore;
+        this.amount = Math.min(Math.max(amount, 1), 64);
         this.itemStack = new ItemStack(this.material, this.amount);
         this.update();
     }
 
     public NonMenuItem(Material material) {
-        if (material == null) throw new IllegalArgumentException("Материал предмета не может быть null!");
-        this.material = material;
-        this.itemStack = new ItemStack(this.material, this.amount);
-        this.update();
+        this(material, null, null, 1);
     }
 
     public NonMenuItem(Material material, int amount) {
-        if (material == null) throw new IllegalArgumentException("Материал предмета не может быть null!");
-        this.material = material;
-        this.amount = amount;
-        this.itemStack = new ItemStack(this.material, this.amount);
-        this.update();
+        this(material, null, null, amount);
     }
 
     public NonMenuItem(@NonNull ConfigurationSection section) {
-        String material = section.getString("material");
-        if (material == null) throw new IllegalArgumentException("Материал предмета не может быть null!");
-        this.material = Material.getMaterial(material);
+        this(Material.getMaterial(Objects.requireNonNull(section.getString("material"))),
+                section.getString("displayName"),
+                section.getStringList("lore"),
+                section.getInt("amount"));
 
-        this.displayName = section.getString("displayName");
-        this.lore = section.getStringList("lore");
-
-        this.amount = section.getInt("amount");
-
-        this.itemStack = new ItemStack(this.material, this.amount);
         this.setGlowing(section.getBoolean("enchanted"));
         this.update();
-
 
         // Enchantments
         this.applyEnchantments(section);
@@ -205,9 +192,6 @@ public class NonMenuItem {
         return item;
     }
 
-
-
-
     // APPLIERS - NBT, ItemFlags, Attributes, Enchantments, BaseHeads
 
     public NonMenuItem applyNBT(Map<String, String> nbtTags) {
@@ -280,6 +264,7 @@ public class NonMenuItem {
             this.itemStack.addUnsafeEnchantments(enchants);
         return this;
     }
+    
     public NonMenuItem applyEnchantments(ConfigurationSection section) {
         ConfigurationSection eSection = section.getConfigurationSection("enchants");
         if (eSection != null)
@@ -304,6 +289,24 @@ public class NonMenuItem {
                 String amount = section.getString(key);
                 if (amount == null || amount.isEmpty()) continue;
 
+                Collection<AttributeModifier> collection = meta.getAttributeModifiers(attribute);
+                if (collection == null || collection.isEmpty()) {
+                    MaterialAttribute materialAttribute = MaterialAttribute.valueOf(this.material.name());
+
+                    double defaultAmount = switch (attribute) {
+                        case GENERIC_ARMOR -> materialAttribute.getArmor_protection();
+                        case GENERIC_ARMOR_TOUGHNESS -> materialAttribute.getArmor_weight();
+                        case GENERIC_KNOCKBACK_RESISTANCE -> materialAttribute.getArmor_akb();
+                        case GENERIC_ATTACK_DAMAGE -> materialAttribute.getDamage();
+                        case GENERIC_ATTACK_SPEED -> materialAttribute.getSpeed();
+                        default -> 0;
+                    };
+                    if (defaultAmount > 0) {
+                        AttributeModifier modifier = new AttributeModifier(Utils.getRKey((byte) 12), defaultAmount, AttributeModifier.Operation.ADD_NUMBER);
+                        meta.addAttributeModifier(attribute, modifier);
+                    }
+                }
+
                 double endedValue = Double.parseDouble(amount.replace("%", "")) / (amount.contains("%") ? 100 : 1);
                 AttributeModifier modifier = new AttributeModifier(attribute.name(), endedValue,
                         amount.contains("%") ? AttributeModifier.Operation.ADD_SCALAR : AttributeModifier.Operation.ADD_NUMBER);
@@ -323,7 +326,21 @@ public class NonMenuItem {
         return this;
     }
 
+    public void removeAttribute(Attribute attribute, AttributeModifier.Operation operation, double checkedAmount, boolean removeAll) {
+        ItemMeta meta = this.itemStack.getItemMeta();
+        if (meta == null) throw new IllegalArgumentException("У ItemStack отсутствует ItemMeta!");
 
+        Collection<AttributeModifier> modifierMap = meta.getAttributeModifiers(attribute);
+        if (modifierMap == null || modifierMap.isEmpty()) return;
+
+        for (AttributeModifier modifier : modifierMap) {
+            if (modifier.getOperation() != operation || modifier.getAmount() != checkedAmount) continue;
+
+            meta.removeAttributeModifier(attribute, modifier);
+            if (!removeAll) break;
+        }
+        this.itemStack.setItemMeta(meta);
+    }
 
     // CHECKS
 
@@ -336,10 +353,8 @@ public class NonMenuItem {
         return id != null && !id.isEmpty() && this.checkId(id);
     }
 
-
     /**
      * Cравнение с без учета кол-ва предмета
-     *
      */
     public boolean isSimilar(ItemStack itemStack) {
         if (itemStack == this.itemStack) return true;
@@ -388,13 +403,18 @@ public class NonMenuItem {
 
     // ACTIONS
 
-    public void dropNaturally(Location location) {
-        location.getWorld().dropItemNaturally(location, this.getItemStack());
+    public Item dropNaturally(Location location) {
+        return location.getWorld().dropItemNaturally(location, this.getItemStack());
     }
 
     public void give(@NonNull Player player) {
         this.lore.forEach(lr -> PlaceholderAPI.setPlaceholders(player, lr));
         player.getInventory().addItem(this.itemStack);
+    }
+
+    public void giveDefault(Player player) {
+        this.lore.forEach(lr -> PlaceholderAPI.setPlaceholders(player, lr));
+        player.getInventory().addItem(this.getDefaultStack());
     }
 
     public NonMenuItem serialize(@NonNull ConfigurationSection section, boolean asItemStack) {
