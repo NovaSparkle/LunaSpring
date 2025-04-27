@@ -14,9 +14,7 @@ import org.novasparkle.lunaspring.API.util.service.ColorService;
 
 @UtilityClass
 public class ColorManager {
-    @Getter
-    @NotNull
-    private final ColorService colorService;
+    @Getter @NotNull private final ColorService colorService;
     static {
         colorService = new ColorService(LunaSpring.getINSTANCE().getConfig());
     }
@@ -42,7 +40,16 @@ public class ColorManager {
      * @return true - если содержит только цвета
      */
     public boolean containsOnlyColor(String description, char color) {
-        String regex = "^(?:" + color + "[0-9a-fk-orA-FK-OR])+?$";
-        return description.matches(regex);
+        String regex = "^(§[0-9a-fk-orA-FK-OR])+?$";
+        return description.replace(color, '§').matches(regex);
+    }
+
+    /**
+     * Добавляет новый цвет color в список значений для использования, если color уже загружен через конфиг LunaSpring, то тот обновлён не будет
+     * @param color - значение цвета
+     * @return true - если новый color успешно добавлен
+     */
+    public boolean addColor(Color color) {
+        return colorService.addColor(color);
     }
 }

@@ -12,9 +12,11 @@ public final class LSConfig {
     static {
         config = new IConfig(LunaSpring.getINSTANCE());
     }
+
     public static void reload() {
         config.reload(LunaSpring.getINSTANCE());
     }
+
     public static String getMessage(String path) {
         return getString(String.format("messages.%s", path));
     }

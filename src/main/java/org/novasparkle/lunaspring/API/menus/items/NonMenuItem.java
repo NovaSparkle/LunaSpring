@@ -264,7 +264,7 @@ public class NonMenuItem {
             this.itemStack.addUnsafeEnchantments(enchants);
         return this;
     }
-    
+
     public NonMenuItem applyEnchantments(ConfigurationSection section) {
         ConfigurationSection eSection = section.getConfigurationSection("enchants");
         if (eSection != null)
@@ -284,28 +284,35 @@ public class NonMenuItem {
             ItemMeta meta = this.itemStack.getItemMeta();
             if (meta == null) throw new IllegalArgumentException("У ItemStack отсутствует ItemMeta!");
 
+            for (Attribute attribute : List.of(
+                    Attribute.GENERIC_ATTACK_DAMAGE,
+                    Attribute.GENERIC_ARMOR,
+                    Attribute.GENERIC_KNOCKBACK_RESISTANCE,
+                    Attribute.GENERIC_ARMOR_TOUGHNESS,
+                    Attribute.GENERIC_ATTACK_SPEED)) {
+                Collection<AttributeModifier> collection = meta.getAttributeModifiers(attribute);
+                if (collection != null && !collection.isEmpty()) continue;
+
+                MaterialAttribute materialAttribute = MaterialAttribute.valueOf(this.material.name());
+                double defaultAmount = switch (attribute) {
+                    case GENERIC_ARMOR -> materialAttribute.getArmor_protection();
+                    case GENERIC_ARMOR_TOUGHNESS -> materialAttribute.getArmor_weight();
+                    case GENERIC_KNOCKBACK_RESISTANCE -> materialAttribute.getArmor_akb();
+                    case GENERIC_ATTACK_DAMAGE -> materialAttribute.getDamage();
+                    case GENERIC_ATTACK_SPEED -> materialAttribute.getSpeed();
+                    default -> 0;
+                };
+
+                if (defaultAmount > 0) {
+                    AttributeModifier modifier = new AttributeModifier(Utils.getRKey((byte) 12), defaultAmount, AttributeModifier.Operation.ADD_NUMBER);
+                    meta.addAttributeModifier(attribute, modifier);
+                }
+            }
+
             for (String key : aSection.getKeys(false)) {
                 Attribute attribute = Attribute.valueOf(key);
                 String amount = section.getString(key);
                 if (amount == null || amount.isEmpty()) continue;
-
-                Collection<AttributeModifier> collection = meta.getAttributeModifiers(attribute);
-                if (collection == null || collection.isEmpty()) {
-                    MaterialAttribute materialAttribute = MaterialAttribute.valueOf(this.material.name());
-
-                    double defaultAmount = switch (attribute) {
-                        case GENERIC_ARMOR -> materialAttribute.getArmor_protection();
-                        case GENERIC_ARMOR_TOUGHNESS -> materialAttribute.getArmor_weight();
-                        case GENERIC_KNOCKBACK_RESISTANCE -> materialAttribute.getArmor_akb();
-                        case GENERIC_ATTACK_DAMAGE -> materialAttribute.getDamage();
-                        case GENERIC_ATTACK_SPEED -> materialAttribute.getSpeed();
-                        default -> 0;
-                    };
-                    if (defaultAmount > 0) {
-                        AttributeModifier modifier = new AttributeModifier(Utils.getRKey((byte) 12), defaultAmount, AttributeModifier.Operation.ADD_NUMBER);
-                        meta.addAttributeModifier(attribute, modifier);
-                    }
-                }
 
                 double endedValue = Double.parseDouble(amount.replace("%", "")) / (amount.contains("%") ? 100 : 1);
                 AttributeModifier modifier = new AttributeModifier(attribute.name(), endedValue,
