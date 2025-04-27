@@ -5,6 +5,7 @@ import lombok.experimental.UtilityClass;
 import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.EquipmentSlot;
 import org.novasparkle.lunaspring.API.menus.items.Item;
 
 import java.time.LocalTime;
@@ -200,5 +201,15 @@ public class Utils {
             index++;
         }
         return line;
+    }
+
+    public EquipmentSlot getEquipmentSlot(Material material) {
+        String name = material.name();
+        if (name.endsWith("_HELMET")) return EquipmentSlot.HEAD;
+        if (name.endsWith("_CHESTPLATE")) return EquipmentSlot.CHEST;
+        if (name.endsWith("_LEGGINGS")) return EquipmentSlot.LEGS;
+        if (name.endsWith("_BOOTS")) return EquipmentSlot.FEET;
+
+        return EquipmentSlot.HAND;
     }
 }

@@ -17,6 +17,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentWrapper;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -192,6 +193,10 @@ public class NonMenuItem {
         return item;
     }
 
+    public EquipmentSlot getEquipmentSlot() {
+        return Utils.getEquipmentSlot(this.material);
+    }
+
     // APPLIERS - NBT, ItemFlags, Attributes, Enchantments, BaseHeads
 
     public NonMenuItem applyNBT(Map<String, String> nbtTags) {
@@ -304,7 +309,12 @@ public class NonMenuItem {
                 };
 
                 if (defaultAmount != 0) {
-                    AttributeModifier modifier = new AttributeModifier(Utils.getRKey((byte) 12), defaultAmount, AttributeModifier.Operation.ADD_NUMBER);
+                    AttributeModifier modifier = new AttributeModifier(
+                            UUID.randomUUID(),
+                            Utils.getRKey((byte) 12),
+                            defaultAmount,
+                            AttributeModifier.Operation.ADD_NUMBER,
+                            this.getEquipmentSlot());
                     meta.addAttributeModifier(attribute, modifier);
                 }
             }
@@ -315,8 +325,12 @@ public class NonMenuItem {
                 if (amount == null || amount.isEmpty()) continue;
 
                 double endedValue = Double.parseDouble(amount.replace("%", "")) / (amount.contains("%") ? 100 : 1);
-                AttributeModifier modifier = new AttributeModifier(attribute.name(), endedValue,
-                        amount.contains("%") ? AttributeModifier.Operation.ADD_SCALAR : AttributeModifier.Operation.ADD_NUMBER);
+                AttributeModifier modifier = new AttributeModifier(
+                        UUID.randomUUID(),
+                        attribute.name(),
+                        endedValue,
+                        amount.contains("%") ? AttributeModifier.Operation.ADD_SCALAR : AttributeModifier.Operation.ADD_NUMBER,
+                        this.getEquipmentSlot());
                 meta.addAttributeModifier(attribute, modifier);
             }
             this.itemStack.setItemMeta(meta);
