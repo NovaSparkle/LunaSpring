@@ -288,8 +288,7 @@ public class NonMenuItem {
                     Attribute.GENERIC_ATTACK_DAMAGE,
                     Attribute.GENERIC_ARMOR,
                     Attribute.GENERIC_KNOCKBACK_RESISTANCE,
-                    Attribute.GENERIC_ARMOR_TOUGHNESS,
-                    Attribute.GENERIC_ATTACK_SPEED)) {
+                    Attribute.GENERIC_ARMOR_TOUGHNESS)) {
                 Collection<AttributeModifier> collection = meta.getAttributeModifiers(attribute);
                 if (collection != null && !collection.isEmpty()) continue;
 
@@ -299,7 +298,6 @@ public class NonMenuItem {
                     case GENERIC_ARMOR_TOUGHNESS -> materialAttribute.getArmor_weight();
                     case GENERIC_KNOCKBACK_RESISTANCE -> materialAttribute.getArmor_akb();
                     case GENERIC_ATTACK_DAMAGE -> materialAttribute.getDamage();
-                    case GENERIC_ATTACK_SPEED -> materialAttribute.getSpeed();
                     default -> 0;
                 };
 
