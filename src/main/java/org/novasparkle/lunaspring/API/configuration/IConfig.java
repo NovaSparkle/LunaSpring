@@ -148,12 +148,6 @@ public class IConfig {
     public void sendMessage(CommandSender sender, String id, String... replacements) {
         String path = String.format("messages.%s", id);
 
-        String stringMessage = config.getString(path);
-        if (stringMessage != null && !stringMessage.isEmpty() && !stringMessage.equalsIgnoreCase("[]")) {
-            sender.sendMessage(ColorManager.color(Utils.applyReplacements(stringMessage)));
-            return;
-        }
-
         List<String> message = new ArrayList<>(config.getStringList(path));
         if (message.isEmpty()) return;
         for (String line : message) {
