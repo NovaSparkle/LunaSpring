@@ -60,6 +60,12 @@ public abstract class LunaPlugin extends JavaPlugin {
     }
 
     /**
+     * Получить Jar файл плагина
+     */
+    public File getJar() {
+        return this.getFile();
+    }
+    /**
      * Загрузить файл из resources
      */
     public boolean loadFile(String path) {
