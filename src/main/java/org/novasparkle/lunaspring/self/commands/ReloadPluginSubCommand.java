@@ -9,9 +9,8 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.SimplePluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.novasparkle.lunaspring.API.commands.annotations.AppliedCommand;
-import org.novasparkle.lunaspring.API.commands.annotations.SubCommand;
 import org.novasparkle.lunaspring.API.commands.LunaSpringSubCommand;
+import org.novasparkle.lunaspring.API.commands.annotations.AppliedCommand;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 import org.novasparkle.lunaspring.LunaPlugin;
 import org.novasparkle.lunaspring.LunaSpring;
@@ -34,7 +33,7 @@ public class ReloadPluginSubCommand extends LunaSpringSubCommand {
 
     @Override
     public void invoke(CommandSender sender, String[] args) {
-        if (checkCommand(sender, args, "lunaspring.reloadplugin")) return;
+        if (checkCommand(sender, args, "rlp")) return;
         this.unloadPlugin(args[1]);
         this.loadPlugin(args[1]);
     }

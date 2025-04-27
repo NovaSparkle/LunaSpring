@@ -9,11 +9,11 @@ import de.tr7zw.nbtapi.iface.ReadWriteItemNBT;
 import de.tr7zw.nbtapi.iface.ReadableNBT;
 import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +33,7 @@ public class NBTManager {
 
     public void base64head(ItemStack head, String value, UUID uuid) {
         if (value != null && !value.isEmpty()) {
+            if (!head.getType().equals(Material.PLAYER_HEAD)) throw new IllegalArgumentException("ItemStack должен иметь материал PLAYER_HEAD!, текущий: " + head.getType().name());
             SkullMeta meta = (SkullMeta) head.getItemMeta();
             PlayerProfile playerProfile = Bukkit.createProfile(uuid);
             playerProfile.setProperty(new ProfileProperty("textures", value));
@@ -103,7 +104,6 @@ public class NBTManager {
     public void setString(ItemStack item, String tag, String value) {
         NBTManager.set(item, nbt -> nbt.setString(tag, value));
     }
-
     public void setInt(ItemStack item, String tag, int value) {
         NBTManager.set(item, nbt -> nbt.setInteger(tag, value));
     }
@@ -188,6 +188,9 @@ public class NBTManager {
         return getRoot(item).getUUID(tag);
     }
     public static boolean isSimilar(ItemStack item1, ItemStack item2) {
+        return getRoot(item1).equals(getRoot(item2));
+    }
+    public static boolean isSimilarNoTag(ItemStack item1, ItemStack item2) {
         return getRoot(item1).equals(getRoot(item2));
     }
 }

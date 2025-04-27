@@ -24,7 +24,10 @@ import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
 import org.novasparkle.lunaspring.API.util.service.managers.NBTManager;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Getter
@@ -48,10 +51,11 @@ public class NonMenuItem {
     public NonMenuItem(Material material, String displayName, List<String> lore, int amount) {
         if (material == null) throw new IllegalArgumentException("Материал предмета не может быть null!");
         this.material = material;
+        this.itemStack = new ItemStack(this.material, this.amount);
         this.displayName = displayName;
         this.lore = lore;
         this.amount = amount;
-        this.itemStack = new ItemStack(this.material, this.amount);
+
         this.update();
     }
 
@@ -179,18 +183,16 @@ public class NonMenuItem {
             throw new IllegalArgumentException("У ItemStack отсутствует ItemMeta!");
 
         else {
-            if (this.displayName != null && !this.displayName.isEmpty())
-                meta.setDisplayName(ColorManager.color(this.displayName));
+            if (this.displayName == null || this.displayName.isEmpty()) {
+                this.displayName = meta.getDisplayName();
+            } else meta.setDisplayName(ColorManager.color(this.displayName));
+
             if (this.lore != null && !this.lore.isEmpty())
                 meta.setLore(this.lore.stream().map(ColorManager::color).collect(Collectors.toList()));
         }
 
         this.itemStack.setItemMeta(meta);
-        this.itemStack.setAmount(this.amount);
-
-        if (!NBTManager.hasTag(this.itemStack, "lunaspring.itemId")) {
-            NBTManager.setString(this.itemStack, "lunaspring-itemId", this.id);
-        }
+        this.itemStack.setAmount(this.amount < 1 ? 1 : amount);
     }
 
     public ItemStack getDefaultStack() {
@@ -264,7 +266,10 @@ public class NonMenuItem {
         String baseHeadValue = section.getString("baseHead");
         if (baseHeadValue != null && !baseHeadValue.isEmpty()) {
             this.headValue = baseHeadValue;
-            NBTManager.base64head(this.itemStack, baseHeadValue);
+            if (!this.material.equals(Material.PLAYER_HEAD)) {
+                this.setMaterial(Material.PLAYER_HEAD);
+                NBTManager.base64head(this.itemStack, baseHeadValue);
+            }
         }
         return this;
     }
@@ -343,12 +348,8 @@ public class NonMenuItem {
      */
     public boolean isSimilar(ItemStack itemStack) {
         if (itemStack == this.itemStack) return true;
-        ItemMeta meta = itemStack.getItemMeta();
-        if (meta == null) return false;
-        return this.getMaterial().equals(itemStack.getType()) &&
-                this.getLore().equals(meta.getLore()) &&
-                this.getDisplayName().equals(meta.getDisplayName()) &&
-                NBTManager.isSimilar(this.itemStack, itemStack);
+        return (this.itemStack.isSimilar(itemStack) &&
+                NBTManager.isSimilar(itemStack, this.itemStack));
     }
 
     /**

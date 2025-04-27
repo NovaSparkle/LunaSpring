@@ -171,7 +171,9 @@ public abstract class LunaPlugin extends JavaPlugin {
         inputStream.close();
     }
 
-
+    public File getJar() {
+        return this.getFile();
+    }
     @Override
     @OverridingMethodsMustInvokeSuper
     public void onEnable() {

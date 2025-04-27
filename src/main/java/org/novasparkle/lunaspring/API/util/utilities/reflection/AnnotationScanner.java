@@ -2,12 +2,14 @@ package org.novasparkle.lunaspring.API.util.utilities.reflection;
 
 import lombok.NonNull;
 import lombok.SneakyThrows;
+import org.novasparkle.lunaspring.LunaSpring;
 
-import java.io.File;
 import java.lang.annotation.Annotation;
-import java.net.URL;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 public class AnnotationScanner {
     private final Package pack;
@@ -17,35 +19,20 @@ public class AnnotationScanner {
         this.annotatedClasses = new ArrayList<>();
     }
     @SneakyThrows
-    public List<Class<?>> getAnnotatedClasses(@NonNull Class<? extends Annotation> annotation) {
-        String path = this.pack.getName().replace('.', '/');
-
-        URL resource = Thread.currentThread().getContextClassLoader().getResource(path);
-        if (resource != null) {
-            File directory = new File(resource.toURI());
-            if (directory.exists()) {
-                scanDirectory(directory, this.pack.getName(), annotation);
-            }
-        }
-
-        return this.annotatedClasses;
-    }
-
-    @SneakyThrows
-    private void scanDirectory(File directory, String packageName, Class<? extends Annotation> annotation) {
-        File[] files = directory.listFiles();
-        if (files != null) {
-            for (File file : files) {
-                if (file.isDirectory()) {
-                    String subPackageName = String.format("%s.%s", this.pack.getName(), file.getName());
-                    scanDirectory(file, subPackageName, annotation);
-
-                } else if (file.isFile() && file.getName().endsWith(".class")) {
-                    String className = packageName + '.' + file.getName().replace(".class", "");
+    public List<Class<?>> getAnnotatedClasses(Class<? extends Annotation> annotationClass) {
+        try (JarFile jar = new JarFile(LunaSpring.getINSTANCE().getJar())) {
+            Enumeration<JarEntry> e = jar.entries();
+            while (e.hasMoreElements()) {
+                JarEntry jarEntry = e.nextElement();
+                if (jarEntry.getName().endsWith(".class")) {
+                    String className = jarEntry.getName().replace("/", ".").replace(".class", "");
                     Class<?> clazz = Class.forName(className);
-                    if (clazz.isAnnotationPresent(annotation)) this.annotatedClasses.add(clazz);
+                    if (clazz.isAnnotationPresent(annotationClass)) {
+                        this.annotatedClasses.add(clazz);
+                    }
                 }
             }
         }
+        return this.annotatedClasses;
     }
 }
