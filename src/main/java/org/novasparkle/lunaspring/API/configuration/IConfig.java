@@ -149,7 +149,7 @@ public class IConfig {
         String path = String.format("messages.%s", id);
 
         String stringMessage = config.getString(path);
-        if (stringMessage != null && !stringMessage.isEmpty()) {
+        if (stringMessage != null && !stringMessage.isEmpty() && !stringMessage.equalsIgnoreCase("[]")) {
             sender.sendMessage(ColorManager.color(Utils.applyReplacements(stringMessage)));
             return;
         }
