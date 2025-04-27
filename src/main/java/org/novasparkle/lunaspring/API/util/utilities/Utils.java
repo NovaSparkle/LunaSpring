@@ -5,6 +5,7 @@ import lombok.experimental.UtilityClass;
 import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.EquipmentSlot;
 import org.novasparkle.lunaspring.API.menus.items.Item;
 
 import java.time.LocalTime;
@@ -184,5 +185,31 @@ public class Utils {
 
     public void broadcast(String message) {
         playersAction(p -> p.sendMessage(message));
+    }
+
+    public String applyReplacements(String line, String... replacements) {
+        byte index = 0;
+        for (String replacement : replacements) {
+            if (replacement.contains("-%-")) {
+                String[] mass = replacement.split("-%-");
+
+                line = line.replace("{" + mass[0] + "}", mass[1]);
+                continue;
+            }
+
+            line = line.replace("{" + index + "}", replacement);
+            index++;
+        }
+        return line;
+    }
+
+    public EquipmentSlot getEquipmentSlot(Material material) {
+        String name = material.name();
+        if (name.endsWith("_HELMET")) return EquipmentSlot.HEAD;
+        if (name.endsWith("_CHESTPLATE")) return EquipmentSlot.CHEST;
+        if (name.endsWith("_LEGGINGS")) return EquipmentSlot.LEGS;
+        if (name.endsWith("_BOOTS")) return EquipmentSlot.FEET;
+
+        return EquipmentSlot.HAND;
     }
 }

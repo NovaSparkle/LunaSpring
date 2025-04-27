@@ -130,6 +130,10 @@ public class IConfig {
         return this.config;
     }
 
+    public String getMessage(String id, String... replacements) {
+        return ColorManager.color(Utils.applyReplacements(this.getString(String.format("messages.%s", id)), replacements));
+    }
+
     /**
     * Отправка сообщения для sender с айди сообщения id из секции конфигурации messages (данные сообщения указаны в формате списка (List<String>)),
     * массив replacements нужен для указания локальных заменителей для сообщения, если указать сразу три заменителя (например никнейм игрока,
@@ -140,49 +144,40 @@ public class IConfig {
     * messages:<br>
     *  example_message_id:<br>
     *    - "message!"<br>
-    *    - "ACTION_BAR &bhello!"<br>
-    *    - "TITLE &bMESSAGES {S} &nexample" // {S} (split) - разделитель TITLE и SUBTITLE<br>
-    *    - "SOUND UI_BUTTON_CLICK"<br>
+    *    - "[ACTION_BAR] &bhello!"<br>
+    *    - "[TITLE] &bMESSAGES {S} &nexample" // {S} (split) - разделитель TITLE и SUBTITLE<br>
+    *    - "[SOUND] UI_BUTTON_CLICK"<br>
      */
     @SuppressWarnings("deprecation")
     public void sendMessage(CommandSender sender, String id, String... replacements) {
-        List<String> message = new ArrayList<>(config.getStringList(String.format("messages.%s", id)));
+        String path = String.format("messages.%s", id);
+
+        List<String> message = new ArrayList<>(config.getStringList(path));
         if (message.isEmpty()) return;
         for (String line : message) {
-            byte index = 0;
-            for (String replacement : replacements) {
-                if (replacement.contains("-%-")) {
-                    String[] mass = replacement.split("-%-");
-
-                    line = line.replace("{" + mass[0] + "}", mass[1]);
-                    continue;
-                }
-
-                line = line.replace("{" + index + "}", replacement);
-                index++;
-            }
+            line = Utils.applyReplacements(line, replacements);
 
             String newLine = ColorManager.color(line
-                    .replace("ACTION_BAR ", "")
-                    .replace("BROADCAST ", "")
-                    .replace("TITLE ", "")
-                    .replace("SOUND ", ""));
-            if (line.startsWith("ACTION_BAR")) {
+                    .replace("[ACTION_BAR] ", "")
+                    .replace("[BROADCAST] ", "")
+                    .replace("[TITLE] ", "")
+                    .replace("[SOUND] ", ""));
+            if (line.startsWith("[ACTION_BAR]")) {
                 if (!(sender instanceof Player player)) continue;
                 player.sendActionBar(newLine);
             }
-            else if (line.startsWith("SOUND")) {
+            else if (line.startsWith("[SOUND]")) {
                 if (!(sender instanceof Player player)) continue;
                 player.playSound(player.getLocation(), Sound.valueOf(newLine), 1, 1);
             }
-            else if (line.startsWith("TITLE")) {
+            else if (line.startsWith("[TITLE]")) {
                 if (!(sender instanceof Player player)) continue;
 
-                String[] split = newLine.split("\\{S}");
+                String[] split = newLine.split(" *S} ");
                 if (split.length < 2) split = new String[]{split[0], ""};
                 player.sendTitle(split[0], split[1], 15, 20, 15);
             }
-            else if (line.startsWith("BROADCAST")) {
+            else if (line.startsWith("[BROADCAST]")) {
                 Utils.playersAction(p -> p.sendMessage(newLine));
             }
             else sender.sendMessage(newLine);

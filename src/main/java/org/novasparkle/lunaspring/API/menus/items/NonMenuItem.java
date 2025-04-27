@@ -15,33 +15,31 @@ import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentWrapper;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Range;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
 import org.novasparkle.lunaspring.API.util.service.managers.NBTManager;
+import org.novasparkle.lunaspring.API.util.utilities.MaterialAttribute;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Getter
 @SuppressWarnings({"unused", "deprecation"})
 @Accessors(chain = true, fluent = false)
 public class NonMenuItem {
-    @Setter
-    private ItemStack itemStack;
+    @Setter private ItemStack itemStack;
     private final String id = Utils.getRKey((byte) 14);
     private Material material;
     private String displayName = "";
-    private List<String> lore = Lists.newArrayList();
-    @Range(from = 1, to = Integer.MAX_VALUE)
-    private int amount = 1;
+    private List<String> lore;
+    @Range(from = 1, to = 64) private int amount;
     private boolean glowing = false;
     private String headValue;
     private final Map<Enchantment, Integer> enchantments = Maps.newHashMap();
@@ -51,43 +49,29 @@ public class NonMenuItem {
     public NonMenuItem(Material material, String displayName, List<String> lore, int amount) {
         if (material == null) throw new IllegalArgumentException("Материал предмета не может быть null!");
         this.material = material;
+        if (displayName != null && !displayName.isEmpty()) this.displayName = displayName;
+        this.lore = lore == null ? new ArrayList<>() : lore;
+        this.amount = Math.min(Math.max(amount, 1), 64);
         this.itemStack = new ItemStack(this.material, this.amount);
-        this.displayName = displayName;
-        this.lore = lore;
-        this.amount = amount;
-
         this.update();
     }
 
     public NonMenuItem(Material material) {
-        if (material == null) throw new IllegalArgumentException("Материал предмета не может быть null!");
-        this.material = material;
-        this.itemStack = new ItemStack(this.material, this.amount);
-        this.update();
+        this(material, null, null, 1);
     }
 
     public NonMenuItem(Material material, int amount) {
-        if (material == null) throw new IllegalArgumentException("Материал предмета не может быть null!");
-        this.material = material;
-        this.amount = amount;
-        this.itemStack = new ItemStack(this.material, this.amount);
-        this.update();
+        this(material, null, null, amount);
     }
 
     public NonMenuItem(@NonNull ConfigurationSection section) {
-        String material = section.getString("material");
-        if (material == null) throw new IllegalArgumentException("Материал предмета не может быть null!");
-        this.material = Material.getMaterial(material);
+        this(Material.getMaterial(Objects.requireNonNull(section.getString("material"))),
+                section.getString("displayName"),
+                section.getStringList("lore"),
+                section.getInt("amount"));
 
-        this.displayName = section.getString("displayName");
-        this.lore = section.getStringList("lore");
-
-        this.amount = section.getInt("amount");
-
-        this.itemStack = new ItemStack(this.material, this.amount);
         this.setGlowing(section.getBoolean("enchanted"));
         this.update();
-
 
         // Enchantments
         this.applyEnchantments(section);
@@ -183,32 +167,35 @@ public class NonMenuItem {
             throw new IllegalArgumentException("У ItemStack отсутствует ItemMeta!");
 
         else {
-            if (this.displayName == null || this.displayName.isEmpty()) {
-                this.displayName = meta.getDisplayName();
-            } else meta.setDisplayName(ColorManager.color(this.displayName));
-
+            if (this.displayName != null && !this.displayName.isEmpty())
+                meta.setDisplayName(ColorManager.color(this.displayName));
             if (this.lore != null && !this.lore.isEmpty())
                 meta.setLore(this.lore.stream().map(ColorManager::color).collect(Collectors.toList()));
         }
 
         this.itemStack.setItemMeta(meta);
-        this.itemStack.setAmount(this.amount < 1 ? 1 : amount);
+        this.itemStack.setAmount(this.amount);
+
+        if (!NBTManager.hasTag(this.itemStack, "lunaspring.itemId")) {
+            NBTManager.setString(this.itemStack, "lunaspring-itemId", this.id);
+        }
     }
 
     public ItemStack getDefaultStack() {
         ItemStack item = new ItemStack(this.material, this.amount);
 
         ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(this.displayName);
-        meta.setLore(this.lore);
+        meta.setDisplayName(ColorManager.color(this.displayName));
+        meta.setLore(this.lore.stream().map(ColorManager::color).collect(Collectors.toList()));
         item.setItemMeta(meta);
 
         if (this.headValue != null) NBTManager.base64head(item, this.headValue);
         return item;
     }
 
-
-
+    public EquipmentSlot getEquipmentSlot() {
+        return Utils.getEquipmentSlot(this.material);
+    }
 
     // APPLIERS - NBT, ItemFlags, Attributes, Enchantments, BaseHeads
 
@@ -266,10 +253,7 @@ public class NonMenuItem {
         String baseHeadValue = section.getString("baseHead");
         if (baseHeadValue != null && !baseHeadValue.isEmpty()) {
             this.headValue = baseHeadValue;
-            if (!this.material.equals(Material.PLAYER_HEAD)) {
-                this.setMaterial(Material.PLAYER_HEAD);
-                NBTManager.base64head(this.itemStack, baseHeadValue);
-            }
+            NBTManager.base64head(this.itemStack, baseHeadValue);
         }
         return this;
     }
@@ -285,6 +269,7 @@ public class NonMenuItem {
             this.itemStack.addUnsafeEnchantments(enchants);
         return this;
     }
+
     public NonMenuItem applyEnchantments(ConfigurationSection section) {
         ConfigurationSection eSection = section.getConfigurationSection("enchants");
         if (eSection != null)
@@ -304,14 +289,48 @@ public class NonMenuItem {
             ItemMeta meta = this.itemStack.getItemMeta();
             if (meta == null) throw new IllegalArgumentException("У ItemStack отсутствует ItemMeta!");
 
+            for (Attribute attribute : List.of(
+                    Attribute.GENERIC_ATTACK_DAMAGE,
+                    Attribute.GENERIC_ARMOR,
+                    Attribute.GENERIC_KNOCKBACK_RESISTANCE,
+                    Attribute.GENERIC_ARMOR_TOUGHNESS,
+                    Attribute.GENERIC_ATTACK_SPEED)) {
+                Collection<AttributeModifier> collection = meta.getAttributeModifiers(attribute);
+                if (collection != null && !collection.isEmpty()) continue;
+
+                MaterialAttribute materialAttribute = MaterialAttribute.valueOf(this.material.name());
+                double defaultAmount = switch (attribute) {
+                    case GENERIC_ARMOR -> materialAttribute.getArmor_protection();
+                    case GENERIC_ARMOR_TOUGHNESS -> materialAttribute.getArmor_weight();
+                    case GENERIC_KNOCKBACK_RESISTANCE -> materialAttribute.getArmor_akb();
+                    case GENERIC_ATTACK_DAMAGE -> materialAttribute.getDamage();
+                    case GENERIC_ATTACK_SPEED -> materialAttribute.getSpeed() - 4;
+                    default -> 0;
+                };
+
+                if (defaultAmount != 0) {
+                    AttributeModifier modifier = new AttributeModifier(
+                            UUID.randomUUID(),
+                            Utils.getRKey((byte) 12),
+                            defaultAmount,
+                            AttributeModifier.Operation.ADD_NUMBER,
+                            this.getEquipmentSlot());
+                    meta.addAttributeModifier(attribute, modifier);
+                }
+            }
+
             for (String key : aSection.getKeys(false)) {
                 Attribute attribute = Attribute.valueOf(key);
                 String amount = section.getString(key);
                 if (amount == null || amount.isEmpty()) continue;
 
                 double endedValue = Double.parseDouble(amount.replace("%", "")) / (amount.contains("%") ? 100 : 1);
-                AttributeModifier modifier = new AttributeModifier(attribute.name(), endedValue,
-                        amount.contains("%") ? AttributeModifier.Operation.ADD_SCALAR : AttributeModifier.Operation.ADD_NUMBER);
+                AttributeModifier modifier = new AttributeModifier(
+                        UUID.randomUUID(),
+                        attribute.name(),
+                        endedValue,
+                        amount.contains("%") ? AttributeModifier.Operation.ADD_SCALAR : AttributeModifier.Operation.ADD_NUMBER,
+                        this.getEquipmentSlot());
                 meta.addAttributeModifier(attribute, modifier);
             }
             this.itemStack.setItemMeta(meta);
@@ -328,7 +347,21 @@ public class NonMenuItem {
         return this;
     }
 
+    public void removeAttribute(Attribute attribute, AttributeModifier.Operation operation, double checkedAmount, boolean removeAll) {
+        ItemMeta meta = this.itemStack.getItemMeta();
+        if (meta == null) throw new IllegalArgumentException("У ItemStack отсутствует ItemMeta!");
 
+        Collection<AttributeModifier> modifierMap = meta.getAttributeModifiers(attribute);
+        if (modifierMap == null || modifierMap.isEmpty()) return;
+
+        for (AttributeModifier modifier : modifierMap) {
+            if (modifier.getOperation() != operation || modifier.getAmount() != checkedAmount) continue;
+
+            meta.removeAttributeModifier(attribute, modifier);
+            if (!removeAll) break;
+        }
+        this.itemStack.setItemMeta(meta);
+    }
 
     // CHECKS
 
@@ -341,15 +374,17 @@ public class NonMenuItem {
         return id != null && !id.isEmpty() && this.checkId(id);
     }
 
-
     /**
      * Cравнение с без учета кол-ва предмета
-     *
      */
     public boolean isSimilar(ItemStack itemStack) {
         if (itemStack == this.itemStack) return true;
-        return (this.itemStack.isSimilar(itemStack) &&
-                NBTManager.isSimilar(itemStack, this.itemStack));
+        ItemMeta meta = itemStack.getItemMeta();
+        if (meta == null) return false;
+        return this.getMaterial().equals(itemStack.getType()) &&
+                this.getLore().equals(meta.getLore()) &&
+                this.getDisplayName().equals(meta.getDisplayName()) &&
+                NBTManager.isSimilar(this.itemStack, itemStack);
     }
 
     /**
@@ -389,13 +424,18 @@ public class NonMenuItem {
 
     // ACTIONS
 
-    public void dropNaturally(Location location) {
-        location.getWorld().dropItemNaturally(location, this.getItemStack());
+    public Item dropNaturally(Location location) {
+        return location.getWorld().dropItemNaturally(location, this.getItemStack());
     }
 
     public void give(@NonNull Player player) {
         this.lore.forEach(lr -> PlaceholderAPI.setPlaceholders(player, lr));
         player.getInventory().addItem(this.itemStack);
+    }
+
+    public void giveDefault(Player player) {
+        this.lore.forEach(lr -> PlaceholderAPI.setPlaceholders(player, lr));
+        player.getInventory().addItem(this.getDefaultStack());
     }
 
     public NonMenuItem serialize(@NonNull ConfigurationSection section, boolean asItemStack) {

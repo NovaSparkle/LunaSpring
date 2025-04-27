@@ -17,7 +17,6 @@ public class Decoration {
     private final List<Item> decorationItems;
     private final IMenu iMenu;
 
-
     public Decoration(ConfigurationSection decorationSection, IMenu iMenu) {
         this.iMenu = iMenu;
         this.decorationItems = new ArrayList<>();
@@ -25,11 +24,11 @@ public class Decoration {
 
         if (fillType) {
             ConfigurationSection section = decorationSection.getConfigurationSection("fillType.item");
+            assert section != null;
+
             Inventory inventory = this.iMenu.getInventory();
             for (int i = 0; i < inventory.getSize(); i++) {
-                if (inventory.getItem(i) == null) {
-                    this.decorationItems.add(new Item(section, i));
-                }
+                if (inventory.getItem(i) == null) this.decorationItems.add(new Item(section, i));
             }
         } else {
             for (String key : decorationSection.getKeys(false)) {

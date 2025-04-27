@@ -19,6 +19,7 @@ public final class ColorService implements LunaService {
             this.colorList.add(new Color(colorSection.getString("abbr"), colorSection.getString("variable")));
         }
     }
+
     public String color(String text) {
         if (text == null || text.isEmpty()) return "";
         for (Color color : this.colorList) {
@@ -26,9 +27,16 @@ public final class ColorService implements LunaService {
         }
         return Utils.color(text);
     }
+
     public Color getColor(String abbr) {
         return this.colorList.stream().filter(c -> c.abbr().equals(abbr)).findFirst().orElseThrow();
     }
+
+    public boolean addColor(Color color) {
+        if (this.getColor(color.getAbbr()) == null) return this.colorList.add(color);
+        return false;
+    }
+
     @Override
     public String toString() {
         return "ColorService{" +

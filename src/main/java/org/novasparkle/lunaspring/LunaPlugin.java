@@ -126,8 +126,9 @@ public abstract class LunaPlugin extends JavaPlugin {
     /**
      * Регистрация плейсхолдера
      */
-    public void registerPlaceholder(PlaceholderExpansion placeholderExpansion) {
-        if (Utils.isPluginEnabled("PlaceholderAPI")) placeholderExpansion.register();
+    public boolean registerPlaceholder(PlaceholderExpansion placeholderExpansion) {
+        if (Utils.isPluginEnabled("PlaceholderAPI")) return placeholderExpansion.register();
+        return false;
     }
 
     /**
@@ -137,15 +138,17 @@ public abstract class LunaPlugin extends JavaPlugin {
      * <p>
      * Не требует зависимости PlaceholderAPI внутри pom.xml!
      */
-    public void createPlaceholder(String identifier, LunaPAPIExpansion.Request request) {
+    public boolean createPlaceholder(String identifier, LunaPAPIExpansion.Request request) {
         if (Utils.isPluginEnabled("PlaceholderAPI")) {
-            new LunaPAPIExpansion(this, identifier, request).register();
-            this.info(LSConfig.getMessage("placeholderRegistered").replace("[identifier]", identifier));
+            boolean registered = new LunaPAPIExpansion(this, identifier, request).register();
+            if (registered) this.info(LSConfig.getMessage("placeholderRegistered").replace("[identifier]", identifier));
+            return registered;
         }
+        return false;
     }
 
-    public void createPlaceholder(LunaPAPIExpansion.Request request) {
-        this.createPlaceholder(null, request);
+    public boolean createPlaceholder(LunaPAPIExpansion.Request request) {
+        return this.createPlaceholder(null, request);
     }
 
     /**
@@ -171,9 +174,6 @@ public abstract class LunaPlugin extends JavaPlugin {
         inputStream.close();
     }
 
-    public File getJar() {
-        return this.getFile();
-    }
     @Override
     @OverridingMethodsMustInvokeSuper
     public void onEnable() {
