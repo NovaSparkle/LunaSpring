@@ -184,8 +184,8 @@ public class NonMenuItem {
         ItemStack item = new ItemStack(this.material, this.amount);
 
         ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(this.displayName);
-        meta.setLore(this.lore);
+        meta.setDisplayName(ColorManager.color(this.displayName));
+        meta.setLore(this.lore.stream().map(ColorManager::color).collect(Collectors.toList()));
         item.setItemMeta(meta);
 
         if (this.headValue != null) NBTManager.base64head(item, this.headValue);
