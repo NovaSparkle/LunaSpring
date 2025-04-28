@@ -37,16 +37,17 @@ public class NonMenuItem {
     @Setter private ItemStack itemStack;
     private final String id = Utils.getRKey((byte) 14);
     private Material material;
-    private String displayName = "";
+    private String displayName;
     private List<String> lore;
-    @Range(from = 1, to = 64) private int amount;
+    @Range(from = 1, to = 64)
+    private int amount;
     private boolean glowing = false;
     private String headValue;
     private final Map<Enchantment, Integer> enchantments = Maps.newHashMap();
     private final List<ItemFlag> itemFlags = Lists.newArrayList();
 
 
-    public NonMenuItem(Material material, String displayName, @NonNull List<String> lore, int amount) {
+    public NonMenuItem(Material material, String displayName, List<String> lore, int amount) {
         if (material == null) throw new IllegalArgumentException("Материал предмета не может быть null!");
         this.material = material;
         this.displayName = displayName;
@@ -71,7 +72,6 @@ public class NonMenuItem {
                 section.getInt("amount"));
 
         this.setGlowing(section.getBoolean("enchanted"));
-        this.update();
 
         // Enchantments
         this.applyEnchantments(section);
@@ -92,14 +92,14 @@ public class NonMenuItem {
 
     // SETTERS
 
-    public NonMenuItem setMaterial(Material material) {
+    public NonMenuItem setMaterial(@NonNull Material material) {
         this.material = material;
         this.update();
         return this;
     }
 
     public NonMenuItem setAmount(int amount) {
-        this.amount = amount;
+        this.amount = Math.max(amount, 1);
         this.update();
         return this;
     }
@@ -138,13 +138,14 @@ public class NonMenuItem {
             this.setLore(lore);
         if (displayName != null && !displayName.isEmpty())
             this.setDisplayName(displayName);
+
         this.setGlowing(enchanted);
         return this;
     }
 
     public NonMenuItem setAll(@NonNull ConfigurationSection itemSection) {
         String strMaterial = itemSection.getString("material");
-        Material newMaterial = strMaterial == null || strMaterial.isEmpty() ? null : Material.getMaterial(strMaterial);
+        Material newMaterial = strMaterial == null || strMaterial.isEmpty() ? null : Material.valueOf(strMaterial);
 
         int amount = itemSection.getInt("amount");
         String displayName = itemSection.getString("displayName");
@@ -166,17 +167,15 @@ public class NonMenuItem {
         if (meta == null)
             throw new IllegalArgumentException("У ItemStack отсутствует ItemMeta!");
 
-        if (this.displayName == null || this.displayName.isEmpty()) {
-            this.displayName = meta.getDisplayName();
-
-        } else meta.setDisplayName(ColorManager.color(this.displayName));
+        if (this.displayName != null && !this.displayName.isEmpty())
+            meta.setDisplayName(ColorManager.color(this.displayName));
 
         if (this.lore != null && !this.lore.isEmpty())
             meta.setLore(this.lore.stream().map(ColorManager::color).collect(Collectors.toList()));
 
 
         this.itemStack.setItemMeta(meta);
-        this.itemStack.setAmount(this.amount < 1 ? 1 : amount);
+        this.itemStack.setAmount(this.amount);
     }
 
     public ItemStack getDefaultStack() {
