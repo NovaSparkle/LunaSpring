@@ -46,22 +46,22 @@ public class NonMenuItem {
     private final List<ItemFlag> itemFlags = Lists.newArrayList();
 
 
-    public NonMenuItem(Material material, String displayName, List<String> lore, int amount) {
+    public NonMenuItem(Material material, String displayName, @NonNull List<String> lore, int amount) {
         if (material == null) throw new IllegalArgumentException("Материал предмета не может быть null!");
         this.material = material;
-        if (displayName != null && !displayName.isEmpty()) this.displayName = displayName;
-        this.lore = lore == null ? new ArrayList<>() : lore;
-        this.amount = Math.min(Math.max(amount, 1), 64);
+        this.displayName = displayName;
+        this.lore = lore;
+        this.amount = Math.max(amount, 1);
         this.itemStack = new ItemStack(this.material, this.amount);
         this.update();
     }
 
     public NonMenuItem(Material material) {
-        this(material, null, null, 1);
+        this(material, null, Lists.newArrayList(), 1);
     }
 
     public NonMenuItem(Material material, int amount) {
-        this(material, null, null, amount);
+        this(material, null, Lists.newArrayList(), amount);
     }
 
     public NonMenuItem(@NonNull ConfigurationSection section) {
@@ -166,19 +166,17 @@ public class NonMenuItem {
         if (meta == null)
             throw new IllegalArgumentException("У ItemStack отсутствует ItemMeta!");
 
-        else {
-            if (this.displayName != null && !this.displayName.isEmpty())
-                meta.setDisplayName(ColorManager.color(this.displayName));
-            if (this.lore != null && !this.lore.isEmpty())
-                meta.setLore(this.lore.stream().map(ColorManager::color).collect(Collectors.toList()));
-        }
+        if (this.displayName == null || this.displayName.isEmpty()) {
+            this.displayName = meta.getDisplayName();
+
+        } else meta.setDisplayName(ColorManager.color(this.displayName));
+
+        if (this.lore != null && !this.lore.isEmpty())
+            meta.setLore(this.lore.stream().map(ColorManager::color).collect(Collectors.toList()));
+
 
         this.itemStack.setItemMeta(meta);
-        this.itemStack.setAmount(this.amount);
-
-        if (!NBTManager.hasTag(this.itemStack, "lunaspring.itemId")) {
-            NBTManager.setString(this.itemStack, "lunaspring-itemId", this.id);
-        }
+        this.itemStack.setAmount(this.amount < 1 ? 1 : amount);
     }
 
     public ItemStack getDefaultStack() {
