@@ -1,8 +1,10 @@
 package org.novasparkle.lunaspring.API.commands;
 
 import lombok.Getter;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.novasparkle.lunaspring.LunaPlugin;
 import org.novasparkle.lunaspring.self.LSConfig;
@@ -70,8 +72,8 @@ public abstract class LunaSpringSubCommand {
         }
 
         public boolean invoke(CommandSender sender) {
-            if (!sender.getClass().isInstance(this.senderClass)) {
-                sender.sendMessage(LSConfig.getMessage("invalidSender").replace("[sender]", sender.getClass().getName()));
+            if (!sender.getClass().isAssignableFrom(this.senderClass)) {
+                sender.sendMessage(LSConfig.getMessage("invalidSender").replace("[sender]", sender.getClass().getSimpleName()));
                 return false;
             }
             return true;

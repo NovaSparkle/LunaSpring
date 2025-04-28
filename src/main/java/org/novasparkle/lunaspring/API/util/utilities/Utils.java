@@ -120,11 +120,11 @@ public class Utils {
     public LocalTime getNextTime(Collection<LocalTime> times) {
         LocalTime now = LocalTime.now();
         return times.stream()
-                .min(Comparator.comparing(time -> {
-                    long diffInSeconds = Math.abs(time.toSecondOfDay() - now.toSecondOfDay());
-                    return Math.min(diffInSeconds, 24 * 60 * 60 - diffInSeconds);
-                }))
-                .orElse(null);
+                .filter(time -> time.isAfter(now))
+                .min(LocalTime::compareTo)
+                .orElseGet(() -> times.stream()
+                        .min(LocalTime::compareTo)
+                        .orElse(null));
     }
 
     public LocalTime getNextTime(List<String> times) {
@@ -224,20 +224,20 @@ public class Utils {
         playersAction(p -> p.sendMessage(message));
     }
 
-    public String applyReplacements(String line, String... replacements) {
+    public String applyReplacements(String starterLine, String... replacements) {
         byte index = 0;
+
+        String line = starterLine;
         for (String replacement : replacements) {
             if (replacement.contains("-%-")) {
                 String[] mass = replacement.split("-%-");
                 if (mass.length >= 2) {
-                    line = line.replace("{" + mass[0] + "}", mass[1]);
-                    line = line.replace("[" + mass[0] + "]", mass[1]);
+                    line = line.replace("{" + mass[0] + "}", mass[1]).replace("[" + mass[0] + "]", mass[1]);
                     continue;
                 }
             }
 
-            line = line.replace("{" + index + "}", replacement);
-            line = line.replace("[" + index + "]", replacement);
+            line = line.replace("{" + index + "}", replacement).replace("[" + index + "]", replacement);
             index++;
         }
         return line;
