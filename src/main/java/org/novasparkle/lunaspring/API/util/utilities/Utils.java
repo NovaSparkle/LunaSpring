@@ -7,7 +7,9 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 import org.novasparkle.lunaspring.API.menus.items.Item;
+import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
 
+import java.time.Duration;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -115,7 +117,43 @@ public class Utils {
      * Получить следующую дату от текущей в коллекции.
      */
     public LocalTime getNextTime(Collection<LocalTime> times) {
-        return times.stream().filter(t -> t.isAfter(LocalTime.now())).findFirst().orElse(null);
+        LocalTime now = LocalTime.now();
+        return times.stream()
+                .min((time1, time2) -> {
+                    long diff1 = Math.min(
+                            Math.abs(now.toSecondOfDay() - time1.toSecondOfDay()),
+                            24 * 60 * 60 - Math.abs(now.toSecondOfDay() - time1.toSecondOfDay())
+                    );
+                    long diff2 = Math.min(
+                            Math.abs(now.toSecondOfDay() - time2.toSecondOfDay()),
+                            24 * 60 * 60 - Math.abs(now.toSecondOfDay() - time2.toSecondOfDay())
+                    );
+                    return Long.compare(diff1, diff2);
+                }).orElse(null);
+    }
+
+    public LocalTime getNextTime(List<String> times) {
+        return getNextTime(times.stream().map(LocalTime::parse).collect(Collectors.toSet()));
+    }
+
+    /**
+     * Получить время оставшееся до указанного времени
+     */
+    public LocalTime getTimeBetween(LocalTime now, LocalTime targetTime) {
+        if (now.equals(targetTime)) return now;
+        if (targetTime.isBefore(now)) targetTime = targetTime.plusHours(24);
+
+        Duration duration = Duration.between(now, targetTime);
+        long totalSeconds = duration.getSeconds();
+
+        return parseTime(totalSeconds);
+    }
+
+    public LocalTime parseTime(long totalSeconds) {
+        long minutes = (totalSeconds % 3600) / 60;
+        long hours = totalSeconds / 3600;
+        long seconds = Math.max(totalSeconds - (minutes * 60 + hours * 3600), 0);
+        return LocalTime.of((int) hours, (int) minutes, (int) seconds);
     }
 
     /**

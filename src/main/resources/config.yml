@@ -13,10 +13,10 @@ colors:
     abbr: '\{E\}'
     variable: "&x&F&F&3&B&3&B"
   PURPLE_COLOR:
-    abbr: '\{R\}'
+    abbr: '\{P\}'
     variable: '&x&A&F&4&7&F&F'
   LIME_COLOR:
-    abbr: '\{R\}'
+    abbr: '\{L\}'
     variable: '&x&A&F&4&7&F&F'
 
 # * Цветовые коды для выделения сообщений в консоли *
@@ -26,9 +26,9 @@ pl_command:
   enabledPlugin: '{S}Включен'
   disabledPlugin: '{E}Отключен'
 
-
 # * Сообщения *
 messages:
+  dropNotActive: "Не активен!"
   noPermission: "{E}Нет прав на выполнение команды!"
   invalidSender: '{E}Эту команду нельзя использовать от имени: [sender]!'
   wrongArguments: '{E}Максимальное кол-во аргументов для команды: [maxArgs]'

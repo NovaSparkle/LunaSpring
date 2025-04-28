@@ -7,6 +7,7 @@ import lombok.experimental.UtilityClass;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.novasparkle.lunaspring.API.drops.SFlag;
 import org.novasparkle.lunaspring.API.util.service.RegionService;
 
 import java.util.Set;
@@ -87,8 +88,12 @@ public class RegionManager {
         return regionService.getOwners(regionName);
     }
 
-    public void setFlag(String regionName, StateFlag flag, StateFlag.State stateFlag) {
-        regionService.setFlag(regionName, flag, stateFlag);
+    public void setFlag(String regionName, StateFlag flag, StateFlag.State state) {
+        regionService.setFlag(regionName, flag, state);
+    }
+
+    public void setFlag(String regionName, SFlag sFlag, StateFlag.State state) {
+        regionService.setFlag(regionName, sFlag, state);
     }
 
     public int getCount(Player player) {

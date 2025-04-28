@@ -15,6 +15,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.novasparkle.lunaspring.API.drops.SFlag;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 
 import java.util.Set;
@@ -165,5 +166,9 @@ public final class RegionService implements LunaService {
         ApplicableRegionSet set = manager.getApplicableRegions(rg);
 
         return !set.getRegions().isEmpty();
+    }
+
+    public void setFlag(String regionName, SFlag sFlag, StateFlag.State state) {
+        this.setFlag(regionName, sFlag.getStateFlag(), state);
     }
 }

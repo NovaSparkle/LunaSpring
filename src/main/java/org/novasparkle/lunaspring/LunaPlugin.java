@@ -146,7 +146,9 @@ public abstract class LunaPlugin extends JavaPlugin {
      */
     public boolean createPlaceholder(String identifier, LunaPAPIExpansion.Request request) {
         if (Utils.isPluginEnabled("PlaceholderAPI")) {
+            if (identifier == null) identifier = this.getName().toLowerCase();
             boolean registered = new LunaPAPIExpansion(this, identifier, request).register();
+
             if (registered) this.info(LSConfig.getMessage("placeholderRegistered").replace("[identifier]", identifier));
             return registered;
         }
