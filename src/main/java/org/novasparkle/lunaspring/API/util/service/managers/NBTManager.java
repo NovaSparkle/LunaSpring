@@ -25,6 +25,7 @@ import java.util.function.Consumer;
 public class NBTManager {
 
     public ItemStack base64head(ItemStack head, OfflinePlayer player) {
+        if (!head.getType().equals(Material.PLAYER_HEAD)) throw new IllegalArgumentException("ItemStack должен иметь материал PLAYER_HEAD! Текущий: " + head.getType().name());
         SkullMeta meta = (SkullMeta) head.getItemMeta();
         meta.setOwningPlayer(player);
         head.setItemMeta(meta);
@@ -33,7 +34,7 @@ public class NBTManager {
 
     public void base64head(ItemStack head, String value, UUID uuid) {
         if (value != null && !value.isEmpty()) {
-            if (!head.getType().equals(Material.PLAYER_HEAD)) throw new IllegalArgumentException("ItemStack должен иметь материал PLAYER_HEAD!, текущий: " + head.getType().name());
+            if (!head.getType().equals(Material.PLAYER_HEAD)) throw new IllegalArgumentException("ItemStack должен иметь материал PLAYER_HEAD! Текущий: " + head.getType().name());
             SkullMeta meta = (SkullMeta) head.getItemMeta();
             PlayerProfile playerProfile = Bukkit.createProfile(uuid);
             playerProfile.setProperty(new ProfileProperty("textures", value));

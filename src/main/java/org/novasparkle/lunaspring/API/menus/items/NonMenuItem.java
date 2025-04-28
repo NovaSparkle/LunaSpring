@@ -252,6 +252,9 @@ public class NonMenuItem {
     public NonMenuItem applyBaseHead(ConfigurationSection section) {
         String baseHeadValue = section.getString("baseHead");
         if (baseHeadValue != null && !baseHeadValue.isEmpty()) {
+            if (!this.material.equals(Material.PLAYER_HEAD)) {
+                this.setMaterial(Material.PLAYER_HEAD);
+            }
             this.headValue = baseHeadValue;
             NBTManager.base64head(this.itemStack, baseHeadValue);
         }
@@ -259,7 +262,7 @@ public class NonMenuItem {
     }
 
     public NonMenuItem applyBaseHead(@NonNull OfflinePlayer player) {
-        this.setItemStack(NBTManager.base64head(this.itemStack, player));
+        NBTManager.base64head(this.itemStack, player);
         return this;
     }
 
