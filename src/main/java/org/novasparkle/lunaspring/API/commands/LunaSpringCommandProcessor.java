@@ -26,27 +26,24 @@ public final class LunaSpringCommandProcessor implements TabExecutor {
     @Getter
     private final String appliedCommand;
 
-
-    public LunaSpringCommandProcessor(LunaPlugin mainPluginClass, String appliedCommand) {
-        this(mainPluginClass, mainPluginClass.getClass().getPackage(), appliedCommand);
-    }
-
     @SneakyThrows
-    public LunaSpringCommandProcessor(LunaPlugin mainPluginClass, Package commadsPackage, String appliedCommand) {
+    public LunaSpringCommandProcessor(LunaPlugin mainPluginClass, String appliedCommand) {
         this.mainPluginClass = mainPluginClass;
         this.subCommands = new ArrayList<>();
         this.commandIdentifiers = new ArrayList<>();
         this.appliedCommand = appliedCommand;
         
-        AnnotationScanner scanner = new AnnotationScanner(commadsPackage);
-        List<Class<?>> subCommandsClasses = scanner.getAnnotatedClasses(SubCommand.class);
+        AnnotationScanner scanner = new AnnotationScanner();
+        List<Class<?>> subCommandsClasses = scanner.getAnnotatedClasses(mainPluginClass, SubCommand.class);
         String joined = subCommandsClasses.stream().map(Class::getSimpleName).collect(Collectors.joining(", "));
         this.mainPluginClass.info(LSConfig.getMessage("subCommandClasses")
                 .replace("[amount]", String.valueOf(subCommandsClasses.size()))
-                .replace("[commands]", joined).replace("[package]", commadsPackage.getName()));
+                .replace("[commands]", joined).replace("[package]", mainPluginClass.getClass().getPackage().getName()));
+
         for (Class<?> clazz : subCommandsClasses) {
             AppliedCommand command = clazz.getAnnotation(AppliedCommand.class);
             if (!command.value().equals(this.appliedCommand)) continue;
+
             SubCommand scAnnotation = clazz.getAnnotation(SubCommand.class);
             Constructor<?> constructor = clazz.getDeclaredConstructor(
                     LunaPlugin.class,                           // LunaPlugin
@@ -54,6 +51,7 @@ public final class LunaSpringCommandProcessor implements TabExecutor {
                     String[].class,                           // commandIdentifiers
                     LunaSpringSubCommand.AccessFlag[].class  // AccessFlags
             );
+
             LunaSpringSubCommand subCommand = (LunaSpringSubCommand) constructor.newInstance(
                     this.mainPluginClass, scAnnotation.maxArgs(), scAnnotation.commandIdentifiers(), scAnnotation.flags()
             );
