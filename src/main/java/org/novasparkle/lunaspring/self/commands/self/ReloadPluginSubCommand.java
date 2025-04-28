@@ -1,4 +1,4 @@
-package org.novasparkle.lunaspring.self.commands;
+package org.novasparkle.lunaspring.self.commands.self;
 
 import lombok.SneakyThrows;
 import org.bukkit.command.Command;

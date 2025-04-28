@@ -1,6 +1,7 @@
 package org.novasparkle.lunaspring.self;
 
 import lombok.experimental.UtilityClass;
+import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.novasparkle.lunaspring.API.configuration.IConfig;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
@@ -34,5 +35,9 @@ public final class LSConfig {
 
     public boolean getBoolean(String path) {
         return config.getBoolean(path);
+    }
+
+    public void sendMessage(CommandSender sender, String id, String... rpl) {
+        config.sendMessage(sender, id, rpl);
     }
 }

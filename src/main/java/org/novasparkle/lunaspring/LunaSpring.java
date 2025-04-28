@@ -1,8 +1,10 @@
 package org.novasparkle.lunaspring;
 
 import lombok.Getter;
+import org.bukkit.Location;
 import org.novasparkle.lunaspring.API.commands.LunaSpringCommandProcessor;
 import org.novasparkle.lunaspring.API.drops.LunaEvent;
+import org.novasparkle.lunaspring.API.drops.managers.EventManager;
 import org.novasparkle.lunaspring.API.drops.managers.LunaEventManager;
 import org.novasparkle.lunaspring.API.events.DropHandler;
 import org.novasparkle.lunaspring.API.events.MenuHandler;
@@ -10,6 +12,7 @@ import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 import org.novasparkle.lunaspring.self.LSConfig;
 
+import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -27,32 +30,79 @@ public final class LunaSpring extends LunaPlugin {
 
         this.registerListeners(new MenuHandler(), new DropHandler());
         this.registerCommandProcessor(new LunaSpringCommandProcessor(this, "lunaspring"));
+        this.registerCommandProcessor(new LunaSpringCommandProcessor(this, "event"));
 
+        this.registerLunaPlaceholder();
+    }
+
+    private void registerLunaPlaceholder() {
         this.createPlaceholder(((offlinePlayer, params) -> {
-            if (params.equalsIgnoreCase("drops_next_time")) {
-                return LunaEventManager.getNextTime().toString(); // Время след. ивента
+            if (params.equalsIgnoreCase("hooked")) {
+                return String.join(", ", this.hookedPlugins.stream().map(LunaPlugin::getName).toList()); // Список луна плагинов
             }
-            else if (params.equalsIgnoreCase("drops_next_name")) {
-                return ColorManager.color(LunaEventManager.getNext().getName()); // Имя след. ивента
+            return null;
+        }));
+
+        this.createPlaceholder("event", ((offlinePlayer, params) -> {
+            if (params.equalsIgnoreCase("next_time")) {
+                LocalTime localTime = LunaEventManager.getNextTime();
+                return localTime == null ? "no" : localTime.toString(); // Время след. ивента
             }
-            else if (params.equalsIgnoreCase("drops_next_left_time")) {
-                return LunaEventManager.getLeftTime(LunaEventManager.getNext()).toString(); // Время до след. ивента
+
+            if (params.equalsIgnoreCase("next_name")) {
+                EventManager eventManager = LunaEventManager.getNext();
+                return eventManager == null ? "no" : ColorManager.color(eventManager.getName()); // Имя след. ивента
             }
-            else if (params.equalsIgnoreCase("drops_active")) {
+
+            if (params.equalsIgnoreCase("next_id")) {
+                EventManager eventManager = LunaEventManager.getNext();
+                return eventManager == null ? "no" : eventManager.getLunaPlugin().getName(); // Айди плагина след. ивента
+            }
+
+            if (params.equalsIgnoreCase("next_left_time")) {
+                LocalTime localTime = LunaEventManager.getLeftTime(LunaEventManager.getNext());
+                return localTime == null ? "no" : localTime.toString(); // Время до след. ивента
+            }
+
+            if (params.equalsIgnoreCase("active")) {
                 return LunaEventManager.getActiveEvents().isEmpty() ? "no" : "yes"; // Активен ли сейчас любой ивент
             }
-            else if (params.equalsIgnoreCase("drops_now")) {
-                LunaEvent lunaEvent = LunaEventManager.getActiveEvent();
+
+            LunaEvent lunaEvent = LunaEventManager.getActiveEvent();
+            if (params.equalsIgnoreCase("now_name")) {
                 return lunaEvent == null ? LSConfig.getMessage("dropNotActive") :
                         ColorManager.color(LunaEventManager.getDropManager(lunaEvent.getLunaPlugin()).getName()); // Имя активного ивента
             }
-            else if (params.equalsIgnoreCase("drops_left_time")) {
-                LunaEvent lunaEvent = LunaEventManager.getActiveEvent();
+
+            if (params.equalsIgnoreCase("now_id")) {
+                return lunaEvent == null ? LSConfig.getMessage("dropNotActive") : lunaEvent.getLunaPlugin().getName();
+            }
+
+            if (params.equalsIgnoreCase("left_time")) {
                 return lunaEvent == null ? LSConfig.getMessage("dropNotActive") : Utils.parseTime(lunaEvent.getDelay().getLeftSeconds()).toString();
                 // Время, которое осталось до окончания ивента
             }
-            else if (params.equalsIgnoreCase("hooked")) {
-                return String.join(", ", this.hookedPlugins.stream().map(LunaPlugin::getName).toList()); // Список луна плагинов
+
+            if (params.endsWith("[a]")) {
+                return lunaEvent == null ? Utils.setPlaceholders(offlinePlayer, "%event_" + params.replace("[a]", "") + "%") :
+                        LSConfig.getMessage("dropIsActive"); // Проверка на активность ивента
+            }
+
+            Location location = lunaEvent == null ? null : lunaEvent.getLocation();
+            if (params.equalsIgnoreCase("x")) {
+                return location == null ? "no" : String.valueOf(location.getBlockX());
+            }
+
+            if (params.equalsIgnoreCase("y")) {
+                return location == null ? "no" : String.valueOf(location.getBlockY());
+            }
+
+            if (params.equalsIgnoreCase("z")) {
+                return location == null ? "no" : String.valueOf(location.getBlockZ());
+            }
+
+            if (params.equalsIgnoreCase("world")) {
+                return location == null ? "no" : location.getWorld().getName();
             }
             return null;
         }));

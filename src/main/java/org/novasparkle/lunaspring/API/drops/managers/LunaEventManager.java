@@ -8,6 +8,7 @@ import org.novasparkle.lunaspring.API.util.utilities.Utils;
 import org.novasparkle.lunaspring.LunaPlugin;
 
 import java.time.LocalTime;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -69,30 +70,24 @@ public class LunaEventManager {
     }
 
     public LocalTime getNextTime() {
-        return getNextTime(getNext());
+        EventManager eventManager = getNext();
+        return eventManager == null ? null : getNextTime(eventManager);
     }
 
     public EventManager getNext() {
         LocalTime now = LocalTime.now();
-        return managers.stream().filter(m -> !m.isActive())
-                .min((manager1, manager2) -> {
-                    LocalTime nextTime1 = Utils.getNextTime(manager1.getTimes());
-                    LocalTime nextTime2 = Utils.getNextTime(manager2.getTimes());
+        return managers.stream()
+                .min(Comparator.comparing(manager -> {
+                    LocalTime nearestTime = Utils.getNextTime(manager.getTimes());
 
-                    long diff1 = Math.min(
-                            Math.abs(now.toSecondOfDay() - nextTime1.toSecondOfDay()),
-                            24 * 60 * 60 - Math.abs(now.toSecondOfDay() - nextTime1.toSecondOfDay()));
-                    long diff2 = Math.min(
-                            Math.abs(now.toSecondOfDay() - nextTime2.toSecondOfDay()),
-                            24 * 60 * 60 - Math.abs(now.toSecondOfDay() - nextTime2.toSecondOfDay()));
-
-                    return Long.compare(diff1, diff2);
-                })
+                    long diffInSeconds = Math.abs(nearestTime.toSecondOfDay() - now.toSecondOfDay());
+                    return Math.min(diffInSeconds, 24 * 60 * 60 - diffInSeconds);
+                }))
                 .orElse(null);
     }
 
     public LocalTime getLeftTime(EventManager eventManager) {
-        return Utils.getTimeBetween(LocalTime.now(), getNextTime(eventManager));
+        return eventManager == null ? null : Utils.getTimeBetween(LocalTime.now(), getNextTime(eventManager));
     }
 
     public Set<LunaEvent> getActiveEvents() {

@@ -1,6 +1,7 @@
 package org.novasparkle.lunaspring.API.configuration;
 
 import lombok.Getter;
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -145,7 +146,7 @@ public class IConfig {
     *  example_message_id:<br>
     *    - "message!"<br>
     *    - "[ACTION_BAR] &bhello!"<br>
-    *    - "[TITLE] &bMESSAGES {S} &nexample" // {S} (split) - разделитель TITLE и SUBTITLE<br>
+    *    - "[TITLE] &bMESSAGES <S> &nexample" // <S> (split) - разделитель TITLE и SUBTITLE<br>
     *    - "[SOUND] UI_BUTTON_CLICK"<br>
      */
     @SuppressWarnings("deprecation")
@@ -157,23 +158,26 @@ public class IConfig {
         for (String line : message) {
             line = Utils.applyReplacements(line, replacements);
 
+            Player player = sender instanceof Player p ? p : null;
+            if (player != null) line = Utils.setPlaceholders(player, line);
+
             String newLine = ColorManager.color(line
                     .replace("[ACTION_BAR] ", "")
                     .replace("[BROADCAST] ", "")
                     .replace("[TITLE] ", "")
                     .replace("[SOUND] ", ""));
             if (line.startsWith("[ACTION_BAR]")) {
-                if (!(sender instanceof Player player)) continue;
+                if (player == null) continue;
                 player.sendActionBar(newLine);
             }
             else if (line.startsWith("[SOUND]")) {
-                if (!(sender instanceof Player player)) continue;
+                if (player == null) continue;
                 player.playSound(player.getLocation(), Sound.valueOf(newLine), 1, 1);
             }
             else if (line.startsWith("[TITLE]")) {
-                if (!(sender instanceof Player player)) continue;
+                if (player == null) continue;
 
-                String[] split = newLine.split(" *S} ");
+                String[] split = newLine.split(" <S> ");
                 if (split.length < 2) split = new String[]{split[0], ""};
                 player.sendTitle(split[0], split[1], 15, 20, 15);
             }

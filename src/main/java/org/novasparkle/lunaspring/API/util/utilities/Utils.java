@@ -2,6 +2,7 @@ package org.novasparkle.lunaspring.API.util.utilities;
 
 import com.google.common.collect.Lists;
 import lombok.experimental.UtilityClass;
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -232,10 +233,12 @@ public class Utils {
                 String[] mass = replacement.split("-%-");
 
                 line = line.replace("{" + mass[0] + "}", mass[1]);
+                line = line.replace("[" + mass[0] + "]", mass[1]);
                 continue;
             }
 
             line = line.replace("{" + index + "}", replacement);
+            line = line.replace("[" + index + "]", replacement);
             index++;
         }
         return line;
@@ -249,5 +252,9 @@ public class Utils {
         if (name.endsWith("_BOOTS")) return EquipmentSlot.FEET;
 
         return EquipmentSlot.HAND;
+    }
+
+    public String setPlaceholders(OfflinePlayer offlinePlayer, String line) {
+        return isPluginEnabled("PlaceholderAPI") ? PlaceholderAPI.setPlaceholders(offlinePlayer, line) : line;
     }
 }

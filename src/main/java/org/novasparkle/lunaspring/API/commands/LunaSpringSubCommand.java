@@ -44,11 +44,15 @@ public abstract class LunaSpringSubCommand {
     }
 
     public boolean checkCommand(CommandSender sender, String[] args, String permission) {
-        return hasPermission(sender, permission) && !invalidArgsAmount(sender, args) && invokeFlags(sender);
+        return hasPermission(sender, permission) && checkCommand(sender, args);
+    }
+
+    public boolean checkCommand(CommandSender sender, String[] args) {
+        return !invalidArgsAmount(sender, args) && invokeFlags(sender);
     }
 
     private static boolean hasPermission(CommandSender sender, String permission) {
-        if (!sender.hasPermission(permission)) {
+        if (!sender.hasPermission(permission) && !sender.hasPermission("lunaspring.*")) {
             sender.sendMessage(LSConfig.getMessage("noPermission"));
             return false;
         }
