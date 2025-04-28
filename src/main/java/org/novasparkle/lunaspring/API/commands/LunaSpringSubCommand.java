@@ -26,9 +26,9 @@ public abstract class LunaSpringSubCommand {
     public boolean invalidArgsAmount(CommandSender sender, String[] args) {
         if (args.length > this.maxArgs) {
             sender.sendMessage(LSConfig.getMessage("wrongArguments").replace("[maxArgs]", String.valueOf(this.maxArgs)));
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
     public boolean hasIdentifier(String inputIdentifier) {
         return this.commandIdentifiers.contains(inputIdentifier);
@@ -63,15 +63,15 @@ public abstract class LunaSpringSubCommand {
     public enum AccessFlag {
         PLAYER_ONLY(Player.class),
         CONSOLE_ONLY(ConsoleCommandSender.class);
-        private final Class<?> senderClass;
 
+        private final Class<?> senderClass;
         AccessFlag(Class<?> senderClass) {
             this.senderClass = senderClass;
         }
 
         public boolean invoke(CommandSender sender) {
             if (!sender.getClass().isInstance(this.senderClass)) {
-                sender.sendMessage(LSConfig.getMessage("invalidSender").replace("[sender]", sender.getClass().getSimpleName()));
+                sender.sendMessage(LSConfig.getMessage("invalidSender").replace("[sender]", sender.getClass().getName()));
                 return false;
             }
             return true;

@@ -120,17 +120,11 @@ public class Utils {
     public LocalTime getNextTime(Collection<LocalTime> times) {
         LocalTime now = LocalTime.now();
         return times.stream()
-                .min((time1, time2) -> {
-                    long diff1 = Math.min(
-                            Math.abs(now.toSecondOfDay() - time1.toSecondOfDay()),
-                            24 * 60 * 60 - Math.abs(now.toSecondOfDay() - time1.toSecondOfDay())
-                    );
-                    long diff2 = Math.min(
-                            Math.abs(now.toSecondOfDay() - time2.toSecondOfDay()),
-                            24 * 60 * 60 - Math.abs(now.toSecondOfDay() - time2.toSecondOfDay())
-                    );
-                    return Long.compare(diff1, diff2);
-                }).orElse(null);
+                .min(Comparator.comparing(time -> {
+                    long diffInSeconds = Math.abs(time.toSecondOfDay() - now.toSecondOfDay());
+                    return Math.min(diffInSeconds, 24 * 60 * 60 - diffInSeconds);
+                }))
+                .orElse(null);
     }
 
     public LocalTime getNextTime(List<String> times) {
@@ -141,13 +135,17 @@ public class Utils {
      * Получить время оставшееся до указанного времени
      */
     public LocalTime getTimeBetween(LocalTime now, LocalTime targetTime) {
-        if (now.equals(targetTime)) return now;
-        if (targetTime.isBefore(now)) targetTime = targetTime.plusHours(24);
+        int startInSeconds = now.toSecondOfDay();
+        int endInSeconds = targetTime.toSecondOfDay();
 
-        Duration duration = Duration.between(now, targetTime);
-        long totalSeconds = duration.getSeconds();
+        int differenceInSeconds;
+        if (endInSeconds < startInSeconds) {
+            differenceInSeconds = (24 * 60 * 60 - startInSeconds) + endInSeconds;
+        } else {
+            differenceInSeconds = endInSeconds - startInSeconds;
+        }
 
-        return parseTime(totalSeconds);
+        return parseTime(differenceInSeconds);
     }
 
     public LocalTime parseTime(long totalSeconds) {
@@ -231,10 +229,11 @@ public class Utils {
         for (String replacement : replacements) {
             if (replacement.contains("-%-")) {
                 String[] mass = replacement.split("-%-");
-
-                line = line.replace("{" + mass[0] + "}", mass[1]);
-                line = line.replace("[" + mass[0] + "]", mass[1]);
-                continue;
+                if (mass.length >= 2) {
+                    line = line.replace("{" + mass[0] + "}", mass[1]);
+                    line = line.replace("[" + mass[0] + "]", mass[1]);
+                    continue;
+                }
             }
 
             line = line.replace("{" + index + "}", replacement);
