@@ -23,20 +23,21 @@ public class ServerInfoSubCommand extends LunaSpringSubCommand {
 
     @Override
     public void invoke(CommandSender sender, String[] args) {
-        if (checkCommand(sender, args, "lunaspring.server-info")) return;
-        List<String> list = LSConfig.getStringList("server-info");
+        if (checkCommand(sender, args, "lunaspring.server-info")) {
+            List<String> list = LSConfig.getStringList("server-info");
 
-        int tps = (int) (Arrays.stream(Bukkit.getServer().getTPS()).sum() / Bukkit.getServer().getTPS().length);
-        list.forEach(l -> {
-            String line = l
-                    .replace("[online]", String.valueOf(Bukkit.getOnlinePlayers().size()))
-                    .replace("[max-players]", String.valueOf(Bukkit.getMaxPlayers()))
-                    .replace("[bukkit-version]", Bukkit.getBukkitVersion())
-                    .replace("[mc-version]", Bukkit.getMinecraftVersion())
-                    .replace("[port]", String.valueOf(Bukkit.getPort()))
-                    .replace("[average_tps]", String.valueOf(tps));
+            int tps = (int) (Arrays.stream(Bukkit.getServer().getTPS()).sum() / Bukkit.getServer().getTPS().length);
+            list.forEach(l -> {
+                String line = l
+                        .replace("[online]", String.valueOf(Bukkit.getOnlinePlayers().size()))
+                        .replace("[max-players]", String.valueOf(Bukkit.getMaxPlayers()))
+                        .replace("[bukkit-version]", Bukkit.getBukkitVersion())
+                        .replace("[mc-version]", Bukkit.getMinecraftVersion())
+                        .replace("[port]", String.valueOf(Bukkit.getPort()))
+                        .replace("[average_tps]", String.valueOf(tps));
 
-            sender.sendMessage(ColorManager.color(line));
-        });
+                sender.sendMessage(ColorManager.color(line));
+            });
+        }
     }
 }

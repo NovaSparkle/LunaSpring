@@ -6,7 +6,6 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.novasparkle.lunaspring.LunaPlugin;
 import org.novasparkle.lunaspring.self.LSConfig;
-import org.stringtemplate.v4.ST;
 
 import java.util.List;
 
@@ -49,8 +48,7 @@ public abstract class LunaSpringSubCommand {
     }
 
     private static boolean hasPermission(CommandSender sender, String permission) {
-        if (!sender.hasPermission(String.format("%s", permission)) &&
-                !sender.hasPermission("admin")) {
+        if (!sender.hasPermission(permission)) {
             sender.sendMessage(LSConfig.getMessage("noPermission"));
             return false;
         }

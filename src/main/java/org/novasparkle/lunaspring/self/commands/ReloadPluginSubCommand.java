@@ -33,7 +33,7 @@ public class ReloadPluginSubCommand extends LunaSpringSubCommand {
 
     @Override
     public void invoke(CommandSender sender, String[] args) {
-        if (checkCommand(sender, args, "rlp")) return;
+        if (!checkCommand(sender, args, "rlp")) return;
         this.unloadPlugin(args[1]);
         this.loadPlugin(args[1]);
     }
