@@ -4,6 +4,7 @@ import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.SneakyThrows;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -22,16 +23,15 @@ import java.util.List;
 @Getter
 public abstract class DropEvent {
     private final LunaPlugin lunaPlugin;
-    private final DropContainer dropContainer;
     private final Delay delay;
 
+    @Setter private DropContainer dropContainer;
     private Location location;
     private EditSession editSession;
     private String regionId;
     private boolean isStarted = false;
-    public DropEvent(LunaPlugin lunaPlugin, DropContainer dropContainer, int secondsToRemove) {
+    public DropEvent(LunaPlugin lunaPlugin, int secondsToRemove) {
         this.lunaPlugin = lunaPlugin;
-        this.dropContainer = dropContainer;
         this.delay = new Delay(this, secondsToRemove);
     }
 
@@ -99,6 +99,7 @@ public abstract class DropEvent {
 
         this.isStarted = true;
         this.delay.runTaskAsynchronously(this.lunaPlugin);
+        if (this.dropContainer != null) this.dropContainer.place();
         return true;
     }
 
@@ -107,7 +108,7 @@ public abstract class DropEvent {
         Location minLoc = this.location.clone().add(-regionSize, -regionSize, -regionSize);
         Location maxLoc = this.location.clone().add(regionSize, regionSize, regionSize);
 
-        this.regionId = "drop-" + Utils.getRKey((byte) 8) + "-" + this.dropContainer.getId();
+        this.regionId = "drop-" + Utils.getRKey((byte) 8) + "-" + this.lunaPlugin.getName();
         Bukkit.getScheduler().runTask(this.lunaPlugin, () -> {
             RegionManager.createRegion(this.regionId, minLoc, maxLoc);
 
@@ -134,7 +135,7 @@ public abstract class DropEvent {
 
         this.delay.cancel();
         this.isStarted = false;
-        this.dropContainer.delete();
+        if (this.dropContainer != null) this.dropContainer.delete();
     }
 
     @Getter

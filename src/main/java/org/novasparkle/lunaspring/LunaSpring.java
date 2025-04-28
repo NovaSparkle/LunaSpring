@@ -4,6 +4,7 @@ import lombok.Getter;
 import org.novasparkle.lunaspring.API.commands.LunaSpringCommandProcessor;
 import org.novasparkle.lunaspring.API.drops.DropEvent;
 import org.novasparkle.lunaspring.API.drops.managers.LunaDropManager;
+import org.novasparkle.lunaspring.API.events.DropHandler;
 import org.novasparkle.lunaspring.API.events.MenuHandler;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
@@ -24,7 +25,7 @@ public final class LunaSpring extends LunaPlugin {
         INSTANCE = this;
         this.saveDefaultConfig();
 
-        this.registerListeners(new MenuHandler());
+        this.registerListeners(new MenuHandler(), new DropHandler());
         this.registerCommandProcessor(new LunaSpringCommandProcessor(this, "lunaspring"));
 
         this.createPlaceholder(((offlinePlayer, params) -> {
