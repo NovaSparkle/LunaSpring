@@ -5,13 +5,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.novasparkle.lunaspring.API.drops.managers.LunaDropManager;
+import org.novasparkle.lunaspring.API.drops.managers.LunaEventManager;
 
 public class DropHandler implements Listener {
     @EventHandler
     public void onBreak(BlockBreakEvent e) {
         Block block = e.getBlock();
-        if (LunaDropManager.getActiveEvents().stream().anyMatch(ev -> ev.getDropContainer().getBlock().equals(block))) e.setCancelled(true);
+        if (LunaEventManager.getActiveEvents().stream().anyMatch(ev -> ev.getEventBlock().getBlock().equals(block))) e.setCancelled(true);
     }
 
     @EventHandler
@@ -19,8 +19,8 @@ public class DropHandler implements Listener {
         Block block = e.getClickedBlock();
         if (block == null || block.getType().isAir()) return;
 
-        LunaDropManager.getActiveEvents().forEach(ev -> {
-            if (ev.getDropContainer().getBlock().equals(block)) ev.getDropContainer().onInteract(e);
+        LunaEventManager.getActiveEvents().forEach(ev -> {
+            if (ev.getEventBlock().getBlock().equals(block)) ev.getEventBlock().onInteract(e);
         });
     }
 }

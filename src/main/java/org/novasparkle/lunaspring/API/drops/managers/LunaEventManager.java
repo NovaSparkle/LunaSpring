@@ -2,7 +2,7 @@ package org.novasparkle.lunaspring.API.drops.managers;
 
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
-import org.novasparkle.lunaspring.API.drops.DropEvent;
+import org.novasparkle.lunaspring.API.drops.LunaEvent;
 import org.novasparkle.lunaspring.API.util.utilities.LunaMath;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 import org.novasparkle.lunaspring.LunaPlugin;
@@ -14,65 +14,65 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @UtilityClass
-public class LunaDropManager {
-    @Getter private final Set<DropManager> managers = new HashSet<>();
+public class LunaEventManager {
+    @Getter private final Set<EventManager> managers = new HashSet<>();
 
-    public boolean register(DropManager dropManager) {
-        if (getDropManager(dropManager.getLunaPlugin()) == null) return managers.add(dropManager);
+    public boolean register(EventManager eventManager) {
+        if (getDropManager(eventManager.getLunaPlugin()) == null) return managers.add(eventManager);
         return false;
     }
 
-    public void unregister(DropManager dropManager) {
-        managers.remove(dropManager);
+    public void unregister(EventManager eventManager) {
+        managers.remove(eventManager);
     }
 
     public void unregister(LunaPlugin lunaPlugin) {
-        DropManager dropManager = getDropManager(lunaPlugin);
-        if (dropManager != null) unregister(dropManager);
+        EventManager eventManager = getDropManager(lunaPlugin);
+        if (eventManager != null) unregister(eventManager);
     }
 
-    public DropManager getDropManager(LunaPlugin lunaPlugin) {
+    public EventManager getDropManager(LunaPlugin lunaPlugin) {
         return managers.stream().filter(m -> m.getLunaPlugin().equals(lunaPlugin)).findFirst().orElse(null);
     }
 
-    public boolean spawn(DropManager dropManager) {
-        if (dropManager != null) return dropManager.run();
+    public boolean spawn(EventManager eventManager) {
+        if (eventManager != null) return eventManager.run();
         return false;
     }
 
-    public boolean spawn(DropManager dropManager, DropEvent dropEvent) {
-        if (dropManager != null && dropEvent != null && dropEvent.getLunaPlugin().equals(dropManager.getLunaPlugin())) return dropManager.run(dropEvent);
+    public boolean spawn(EventManager eventManager, LunaEvent lunaEvent) {
+        if (eventManager != null && lunaEvent != null && lunaEvent.getLunaPlugin().equals(eventManager.getLunaPlugin())) return eventManager.run(lunaEvent);
         return false;
     }
 
     public boolean spawn() {
-        List<DropManager> dropManagers = managers.stream().filter(d -> !d.isActive()).toList();
-        if (dropManagers.isEmpty()) return false;
+        List<EventManager> eventManagers = managers.stream().filter(d -> !d.isActive()).toList();
+        if (eventManagers.isEmpty()) return false;
 
-        DropManager dropManager = dropManagers.get(LunaMath.getRandomInt(0, dropManagers.size() - 1));
-        return spawn(dropManager);
+        EventManager eventManager = eventManagers.get(LunaMath.getRandomInt(0, eventManagers.size() - 1));
+        return spawn(eventManager);
     }
 
-    public boolean isTime(DropManager dropManager) {
-        LocalTime localTime = Utils.getNextTime(dropManager.getTimes());
+    public boolean isTime(EventManager eventManager) {
+        LocalTime localTime = Utils.getNextTime(eventManager.getTimes());
 
         LocalTime now = LocalTime.now();
         return localTime.getMinute() == now.getMinute() && localTime.getHour() == now.getHour();
     }
 
-    public DropManager isTime() {
+    public EventManager isTime() {
         return managers.stream().filter(m -> !m.isActive() && isTime(m)).findFirst().orElse(null);
     }
 
-    public LocalTime getNextTime(DropManager dropManager) {
-        return Utils.getNextTime(dropManager.getTimes());
+    public LocalTime getNextTime(EventManager eventManager) {
+        return Utils.getNextTime(eventManager.getTimes());
     }
 
     public LocalTime getNextTime() {
         return getNextTime(getNext());
     }
 
-    public DropManager getNext() {
+    public EventManager getNext() {
         LocalTime now = LocalTime.now();
         return managers.stream().filter(m -> !m.isActive())
                 .min((manager1, manager2) -> {
@@ -91,15 +91,15 @@ public class LunaDropManager {
                 .orElse(null);
     }
 
-    public LocalTime getLeftTime(DropManager dropManager) {
-        return Utils.getTimeBetween(LocalTime.now(), getNextTime(dropManager));
+    public LocalTime getLeftTime(EventManager eventManager) {
+        return Utils.getTimeBetween(LocalTime.now(), getNextTime(eventManager));
     }
 
-    public Set<DropEvent> getActiveEvents() {
-        return managers.stream().filter(DropManager::isActive).map(DropManager::getRunning).collect(Collectors.toSet());
+    public Set<LunaEvent> getActiveEvents() {
+        return managers.stream().filter(EventManager::isActive).map(EventManager::getRunning).collect(Collectors.toSet());
     }
 
-    public DropEvent getActiveEvent() {
+    public LunaEvent getActiveEvent() {
         return getActiveEvents().stream().findFirst().orElse(null);
     }
 }

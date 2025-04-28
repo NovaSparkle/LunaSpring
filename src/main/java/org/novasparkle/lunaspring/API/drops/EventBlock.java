@@ -6,7 +6,7 @@ import org.bukkit.block.Block;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 @RequiredArgsConstructor @Getter
-public abstract class DropContainer {
+public abstract class EventBlock {
     private final Block block;
     private final String id;
     private final String name;

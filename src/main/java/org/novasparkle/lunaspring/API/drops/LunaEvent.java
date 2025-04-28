@@ -21,18 +21,18 @@ import java.io.File;
 import java.util.List;
 
 @Getter
-public abstract class DropEvent {
+public abstract class LunaEvent {
     private final LunaPlugin lunaPlugin;
     private final Delay delay;
 
-    @Setter private DropContainer dropContainer;
+    @Setter private EventBlock eventBlock;
     private Location location;
     private EditSession editSession;
     private String regionId;
     private boolean isStarted = false;
-    public DropEvent(LunaPlugin lunaPlugin, int secondsToRemove) {
+    public LunaEvent(LunaPlugin lunaPlugin, int secondsToRemove) {
         this.lunaPlugin = lunaPlugin;
-        this.delay = new Delay(this, secondsToRemove);
+        this.delay = new Delay(secondsToRemove);
     }
 
     public void initLocation(World world, int regionSize, ConfigurationSection spawnSettings) {
@@ -70,11 +70,11 @@ public abstract class DropEvent {
     }
 
     public boolean checkBiome(Location location, List<String> biomes) {
-        return biomes.contains(location.getBlock().getBiome().name());
+        return biomes != null && biomes.contains(location.getBlock().getBiome().name());
     }
 
     public boolean checkBlacklist(Location location, List<String> blacklist) {
-        return blacklist.contains(location.getBlock().getType().name());
+        return blacklist != null && blacklist.contains(location.getBlock().getType().name());
     }
 
     public void insertSchematic(ConfigurationSection schemSection, File schemDir) {
@@ -99,7 +99,7 @@ public abstract class DropEvent {
 
         this.isStarted = true;
         this.delay.runTaskAsynchronously(this.lunaPlugin);
-        if (this.dropContainer != null) this.dropContainer.place();
+        if (this.eventBlock != null) this.eventBlock.place();
         return true;
     }
 
@@ -113,7 +113,7 @@ public abstract class DropEvent {
             RegionManager.createRegion(this.regionId, minLoc, maxLoc);
 
             ProtectedRegion region = RegionManager.getRegion(this.regionId);
-            flagList.forEach(f -> {
+            if (flagList != null) flagList.forEach(f -> {
                 String[] split = f.split(" <> ");
                 if (split.length >= 2) region.setFlag(SFlag.valueOf(split[0]).getStateFlag(), StateFlag.State.valueOf(split[1]));
             });
@@ -135,30 +135,27 @@ public abstract class DropEvent {
 
         this.delay.cancel();
         this.isStarted = false;
-        if (this.dropContainer != null) this.dropContainer.delete();
+        if (this.eventBlock != null) this.eventBlock.delete();
     }
 
     @Getter
-    public static class Delay extends LunaTask {
+    public class Delay extends LunaTask {
         private int leftSeconds;
-        private final DropEvent dropEvent;
-        public Delay(DropEvent dropEvent, int seconds) {
+        public Delay(int seconds) {
             super(0);
-            this.dropEvent = dropEvent;
             this.leftSeconds = seconds;
         }
 
         @Override @SneakyThrows @SuppressWarnings("all")
         public void start() {
-            int seconds = 0;
-            while (seconds < this.leftSeconds) {
+            while (this.leftSeconds > 0) {
                 if (!this.isActive()) return;
 
                 this.leftSeconds--;
                 Thread.sleep(1000L);
             }
 
-            this.dropEvent.stop();
+            LunaEvent.this.stop();
         }
     }
 }

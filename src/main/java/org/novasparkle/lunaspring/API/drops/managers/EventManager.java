@@ -2,26 +2,26 @@ package org.novasparkle.lunaspring.API.drops.managers;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.novasparkle.lunaspring.API.drops.DropEvent;
+import org.novasparkle.lunaspring.API.drops.LunaEvent;
 import org.novasparkle.lunaspring.LunaPlugin;
 
 import java.util.List;
 
 @RequiredArgsConstructor @Getter
-public abstract class DropManager {
+public abstract class EventManager {
     private final LunaPlugin lunaPlugin;
     private final List<String> times;
     private final String name;
-    private DropEvent running;
+    private LunaEvent running;
 
-    public boolean rawRun(DropEvent dropEvent) {
-        this.running = dropEvent;
-        return dropEvent.start();
+    public boolean rawRun(LunaEvent lunaEvent) {
+        this.running = lunaEvent;
+        return lunaEvent.start();
     }
 
-    public boolean run(DropEvent dropEvent) {
+    public boolean run(LunaEvent lunaEvent) {
         if (this.isActive()) return false;
-        return this.rawRun(dropEvent);
+        return this.rawRun(lunaEvent);
     }
 
     public abstract boolean run();
