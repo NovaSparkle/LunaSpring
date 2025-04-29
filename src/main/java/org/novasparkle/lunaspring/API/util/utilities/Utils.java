@@ -155,6 +155,16 @@ public class Utils {
         return LocalTime.of((int) hours, (int) minutes, (int) seconds);
     }
 
+    public String timeToString(LocalTime localTime) {
+        int hours = localTime.getHour();
+        int minutes = localTime.getMinute();
+        int seconds = localTime.getSecond();
+        return String.format("%s:%s:%s",
+                hours < 10 ? "0" + hours : hours,
+                minutes < 10 ? "0" + minutes : minutes,
+                seconds < 10 ? "0" + seconds : seconds);
+    }
+
     /**
      * Получить время оставшееся до указанного времени в формате hh:mm.
      */

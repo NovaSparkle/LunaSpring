@@ -46,7 +46,7 @@ public final class LunaSpring extends LunaPlugin {
         this.createPlaceholder("event", ((offlinePlayer, params) -> {
             if (params.equalsIgnoreCase("next_time")) {
                 LocalTime localTime = LunaEventManager.getNextTime();
-                return localTime == null ? "no" : localTime.toString(); // Время след. ивента
+                return localTime == null ? "no" : Utils.timeToString(localTime); // Время след. ивента
             }
 
             if (params.equalsIgnoreCase("next_name")) {
@@ -61,7 +61,7 @@ public final class LunaSpring extends LunaPlugin {
 
             if (params.equalsIgnoreCase("next_left_time")) {
                 LocalTime localTime = LunaEventManager.getLeftTime(LunaEventManager.getNext());
-                return localTime == null ? "no" : localTime.toString(); // Время до след. ивента
+                return localTime == null ? "no" : Utils.timeToString(localTime); // Время до след. ивента
             }
 
             if (params.equalsIgnoreCase("active")) {
@@ -79,7 +79,8 @@ public final class LunaSpring extends LunaPlugin {
             }
 
             if (params.equalsIgnoreCase("left_time")) {
-                return lunaEvent == null ? LSConfig.getMessage("dropNotActive") : Utils.parseTime(lunaEvent.getDelay().getLeftSeconds()).toString();
+                return lunaEvent == null ? LSConfig.getMessage("dropNotActive") : Utils.timeToString(
+                        Utils.parseTime(lunaEvent.getDelay().getLeftSeconds()));
                 // Время, которое осталось до окончания ивента
             }
 
