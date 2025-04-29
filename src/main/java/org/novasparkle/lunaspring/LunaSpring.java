@@ -40,6 +40,13 @@ public final class LunaSpring extends LunaPlugin {
             if (params.equalsIgnoreCase("hooked")) {
                 return String.join(", ", this.hookedPlugins.stream().map(LunaPlugin::getName).toList()); // Список луна плагинов
             }
+
+            if (params.startsWith("world")) { // %lunaspring_world_world%
+                String[] split = params.split("-");
+
+                String placeholder = split.length >= 2 ? LSConfig.getMessage(String.format("worlds.%s", split[1])) : null;
+                return placeholder == null || placeholder.isEmpty() ? (split.length == 1 ? null : split[1]) : placeholder;
+            }
             return null;
         }));
 
