@@ -72,7 +72,7 @@ public abstract class LunaSpringSubCommand {
         }
 
         public boolean invoke(CommandSender sender) {
-            if (!sender.getClass().isAssignableFrom(this.senderClass)) {
+            if (!this.senderClass.isAssignableFrom(sender.getClass())) {
                 sender.sendMessage(LSConfig.getMessage("invalidSender").replace("[sender]", sender.getClass().getSimpleName()));
                 return false;
             }

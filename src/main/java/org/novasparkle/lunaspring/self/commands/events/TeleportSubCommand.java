@@ -23,7 +23,7 @@ public class TeleportSubCommand extends LunaSpringSubCommand {
 
         LunaEvent lunaEvent = LunaEventManager.getActiveEvent();
         if (lunaEvent == null) {
-            LSConfig.sendMessage(sender, "inactive");
+            LSConfig.sendMessage(sender, "events.inactive");
             return;
         }
 

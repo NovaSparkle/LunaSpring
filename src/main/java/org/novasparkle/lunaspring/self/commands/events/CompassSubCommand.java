@@ -37,10 +37,7 @@ public class CompassSubCommand extends LunaSpringSubCommand {
             return;
         }
 
-        CompassMeta compassMeta = (CompassMeta) itemStack.getItemMeta();
-        compassMeta.setLodestone(lunaEvent.getLocation());
-
-        itemStack.setItemMeta(compassMeta);
+        player.setCompassTarget(lunaEvent.getLocation());
         LSConfig.sendMessage(player, "events.compass");
     }
 }
