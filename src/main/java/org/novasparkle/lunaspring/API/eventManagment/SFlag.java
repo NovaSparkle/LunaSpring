@@ -1,4 +1,4 @@
-package org.novasparkle.lunaspring.API.drops;
+package org.novasparkle.lunaspring.API.eventManagment;
 
 import com.sk89q.worldguard.protection.flags.Flags;
 import com.sk89q.worldguard.protection.flags.StateFlag;

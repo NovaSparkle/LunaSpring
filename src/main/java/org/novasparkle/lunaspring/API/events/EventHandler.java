@@ -4,7 +4,7 @@ import org.bukkit.block.Block;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.novasparkle.lunaspring.API.drops.managers.LunaEventManager;
+import org.novasparkle.lunaspring.API.eventManagment.managers.LunaEventManager;
 
 public class EventHandler implements Listener {
     @org.bukkit.event.EventHandler

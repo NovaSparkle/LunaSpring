@@ -7,7 +7,7 @@ import lombok.experimental.UtilityClass;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.novasparkle.lunaspring.API.drops.SFlag;
+import org.novasparkle.lunaspring.API.eventManagment.SFlag;
 import org.novasparkle.lunaspring.API.util.service.RegionService;
 
 import java.util.Set;

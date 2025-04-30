@@ -15,7 +15,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.novasparkle.lunaspring.API.drops.SFlag;
+import org.novasparkle.lunaspring.API.eventManagment.SFlag;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 
 import java.util.Set;

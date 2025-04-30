@@ -1,6 +1,7 @@
 package org.novasparkle.lunaspring.API.commands;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -11,31 +12,32 @@ import org.novasparkle.lunaspring.self.LSConfig;
 import java.util.List;
 
 @Getter
-public abstract class LunaSpringSubCommand {
+public class LunaSpringSubCommand implements LunaCompleter {
+
     private final LunaPlugin plugin;
-    private final int maxArgs;
     private final List<String> commandIdentifiers;
     private final List<AccessFlag> flags;
-    public LunaSpringSubCommand(LunaPlugin plugin, int maxArgs, String[] commandIdentifiers, AccessFlag[] flags) {
+    private final List<String> permissions;
+    private final Invocation invocation;
+    @Setter
+    private LunaCompleter tabCompleter;
+
+    public LunaSpringSubCommand(LunaPlugin plugin,
+                                String[] commandIdentifiers,
+                                AccessFlag[] flags,
+                                String[] permissions, Invocation invocation) {
+
         this.plugin = plugin;
-        this.maxArgs = maxArgs;
         this.commandIdentifiers = List.of(commandIdentifiers);
         this.flags = List.of(flags);
-    }
+        this.permissions = List.of(permissions);
 
-    public boolean invalidArgsAmount(CommandSender sender, String[] args) {
-        if (args.length > this.maxArgs) {
-            sender.sendMessage(Utils.applyReplacements(LSConfig.getMessage("wrongArguments"), "maxArgs-%-" + this.maxArgs));
-            return true;
-        }
-        return false;
+        this.invocation = invocation;
     }
 
     public boolean hasIdentifier(String inputIdentifier) {
         return this.commandIdentifiers.contains(inputIdentifier);
     }
-
-    public abstract void invoke(CommandSender sender, String[] args);
 
     public final boolean invokeFlags(CommandSender sender) {
         for (AccessFlag flag : this.flags) {
@@ -44,12 +46,11 @@ public abstract class LunaSpringSubCommand {
         return true;
     }
 
-    public boolean checkCommand(CommandSender sender, String[] args, String permission) {
-        return hasPermission(sender, permission) && checkCommand(sender, args);
+    public boolean checkCommand(CommandSender sender, String permission) {
+        return hasPermission(sender, permission) && invokeFlags(sender);
     }
-
-    public boolean checkCommand(CommandSender sender, String[] args) {
-        return !invalidArgsAmount(sender, args) && invokeFlags(sender);
+    public boolean checkCommand(CommandSender sender, List<String> permission) {
+        return permission.stream().allMatch(p -> hasPermission(sender, p)) && invokeFlags(sender);
     }
 
     private static boolean hasPermission(CommandSender sender, String permission) {
@@ -60,9 +61,20 @@ public abstract class LunaSpringSubCommand {
         return true;
     }
 
+    @Override
     public List<String> tabComplete(CommandSender sender, List<String> subCommandArgs) {
+        if (this.tabCompleter != null) {
+            tabCompleter.tabComplete(sender, subCommandArgs);
+        }
         return List.of();
     }
+
+
+    public void invoke(CommandSender sender, String[] args) {
+        if (this.checkCommand(sender, this.permissions))
+            invocation.invoke(sender, args);
+    }
+
 
     public enum AccessFlag {
         PLAYER_ONLY(Player.class),

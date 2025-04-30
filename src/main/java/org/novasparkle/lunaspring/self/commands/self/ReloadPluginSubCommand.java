@@ -9,10 +9,9 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.SimplePluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.novasparkle.lunaspring.API.commands.LunaSpringSubCommand;
-import org.novasparkle.lunaspring.API.commands.annotations.AppliedCommand;
+import org.novasparkle.lunaspring.API.commands.Invocation;
+import org.novasparkle.lunaspring.API.commands.annotations.Check;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
-import org.novasparkle.lunaspring.LunaPlugin;
 import org.novasparkle.lunaspring.LunaSpring;
 
 import java.io.File;
@@ -21,19 +20,16 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 
-//@SubCommand(maxArgs = 2, commandIdentifiers = {"pluginreload", "plr"}, flags = {})
-@AppliedCommand("lunaspring")
-public class ReloadPluginSubCommand extends LunaSpringSubCommand {
+//@SubCommand(commandIdentifiers = {"pl", "plugins"}, appliedCommand = "lunaspring")
+@Check(permissions = {"lunaspring.plugins"}, flags = {})
+public class ReloadPluginSubCommand implements Invocation {
     private final PluginManager pluginManager;
-
-    public ReloadPluginSubCommand(LunaPlugin plugin, int maxArgs, String[] commandIdentifiers, AccessFlag[] flags) {
-        super(plugin, maxArgs, commandIdentifiers, flags);
+    public ReloadPluginSubCommand() {
         this.pluginManager = LunaSpring.getINSTANCE().getServer().getPluginManager();
     }
 
     @Override
     public void invoke(CommandSender sender, String[] args) {
-        if (!checkCommand(sender, args, "rlp")) return;
         this.unloadPlugin(args[1]);
         this.loadPlugin(args[1]);
     }

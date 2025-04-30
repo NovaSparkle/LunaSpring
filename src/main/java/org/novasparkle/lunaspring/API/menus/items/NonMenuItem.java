@@ -22,6 +22,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Range;
+import org.novasparkle.lunaspring.API.util.exceptions.NoItemMeta;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
 import org.novasparkle.lunaspring.API.util.service.managers.NBTManager;
 import org.novasparkle.lunaspring.API.util.utilities.MaterialAttribute;
@@ -165,7 +166,7 @@ public class NonMenuItem {
         this.itemStack.setType(this.material);
         ItemMeta meta = this.itemStack.getItemMeta();
         if (meta == null)
-            throw new IllegalArgumentException("У ItemStack отсутствует ItemMeta!");
+            throw new NoItemMeta(this.itemStack);
 
         if (this.displayName != null && !this.displayName.isEmpty())
             meta.setDisplayName(ColorManager.color(this.displayName));
@@ -223,7 +224,7 @@ public class NonMenuItem {
 
     public NonMenuItem applyItemFlags(ConfigurationSection section) {
         ItemMeta meta = this.itemStack.getItemMeta();
-        if (meta == null) throw new IllegalArgumentException("У ItemStack отсутствует ItemMeta!");
+        if (meta == null) throw new NoItemMeta(this.itemStack);
 
         section.getStringList("itemflags").forEach(flag -> {
             ItemFlag itemFlag = ItemFlag.valueOf(flag);
@@ -237,7 +238,7 @@ public class NonMenuItem {
 
     public NonMenuItem applyItemFlags(List<ItemFlag> itemFlags) {
         ItemMeta meta = this.itemStack.getItemMeta();
-        if (meta == null) throw new IllegalArgumentException("У ItemStack отсутствует ItemMeta!");
+        if (meta == null) throw new NoItemMeta(this.itemStack);
         if (itemFlags != null) {
             this.itemFlags.addAll(itemFlags);
             meta.addItemFlags(itemFlags.toArray(new ItemFlag[0]));
@@ -287,7 +288,7 @@ public class NonMenuItem {
         ConfigurationSection aSection = section.getConfigurationSection("attributes");
         if (aSection != null) {
             ItemMeta meta = this.itemStack.getItemMeta();
-            if (meta == null) throw new IllegalArgumentException("У ItemStack отсутствует ItemMeta!");
+            if (meta == null) throw new NoItemMeta(this.itemStack);
 
             for (Attribute attribute : List.of(
                     Attribute.GENERIC_ATTACK_DAMAGE,
@@ -340,7 +341,7 @@ public class NonMenuItem {
 
     public NonMenuItem addAttribute(@NonNull Attribute attribute, @NonNull AttributeModifier modifier) {
         ItemMeta meta = this.itemStack.getItemMeta();
-        if (meta == null) throw new IllegalArgumentException("У ItemStack отсутствует ItemMeta!");
+        if (meta == null) throw new NoItemMeta(this.itemStack);
         meta.addAttributeModifier(attribute, modifier);
 
         this.itemStack.setItemMeta(meta);
@@ -349,7 +350,7 @@ public class NonMenuItem {
 
     public void removeAttribute(Attribute attribute, AttributeModifier.Operation operation, double checkedAmount, boolean removeAll) {
         ItemMeta meta = this.itemStack.getItemMeta();
-        if (meta == null) throw new IllegalArgumentException("У ItemStack отсутствует ItemMeta!");
+        if (meta == null) throw new NoItemMeta(this.itemStack);
 
         Collection<AttributeModifier> modifierMap = meta.getAttributeModifiers(attribute);
         if (modifierMap == null || modifierMap.isEmpty()) return;
@@ -448,6 +449,8 @@ public class NonMenuItem {
             section.set("lore", this.getLore());
             section.set("enchanted", this.glowing);
             section.set("headValue", this.headValue);
+            section.set("enchants", this.enchantments);
+            section.set("flags", this.itemFlags);
             section.set("id", this.id);
         }
         return this;

@@ -4,26 +4,20 @@ import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.CompassMeta;
+import org.novasparkle.lunaspring.API.commands.Invocation;
 import org.novasparkle.lunaspring.API.commands.LunaSpringSubCommand;
-import org.novasparkle.lunaspring.API.commands.annotations.AppliedCommand;
+import org.novasparkle.lunaspring.API.commands.annotations.Check;
 import org.novasparkle.lunaspring.API.commands.annotations.SubCommand;
-import org.novasparkle.lunaspring.API.drops.LunaEvent;
-import org.novasparkle.lunaspring.API.drops.managers.LunaEventManager;
-import org.novasparkle.lunaspring.LunaPlugin;
+import org.novasparkle.lunaspring.API.eventManagment.LunaEvent;
+import org.novasparkle.lunaspring.API.eventManagment.managers.LunaEventManager;
 import org.novasparkle.lunaspring.self.LSConfig;
 
-@SubCommand(maxArgs = 1, commandIdentifiers = {"compass"}, flags = {LunaSpringSubCommand.AccessFlag.PLAYER_ONLY})
-@AppliedCommand("event")
-public class CompassSubCommand extends LunaSpringSubCommand {
-    public CompassSubCommand(LunaPlugin plugin, int maxArgs, String[] commandIdentifiers, AccessFlag[] flags) {
-        super(plugin, maxArgs, commandIdentifiers, flags);
-    }
+@SubCommand(commandIdentifiers = {"compass"}, appliedCommand = "event")
+@Check(permissions = "lunaspring.event.compass", flags = LunaSpringSubCommand.AccessFlag.PLAYER_ONLY)
 
+public class CompassSubCommand implements Invocation {
     @Override
     public void invoke(CommandSender sender, String[] args) {
-        if (!checkCommand(sender, args, "lunaspring.event.compass")) return;
-
         Player player = (Player) sender;
         ItemStack itemStack = player.getInventory().getItemInMainHand();
         if (itemStack.getType() != Material.COMPASS) {

@@ -8,22 +8,25 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.novasparkle.lunaspring.API.commands.annotations.AppliedCommand;
+import org.novasparkle.lunaspring.API.commands.annotations.Check;
 import org.novasparkle.lunaspring.API.commands.annotations.SubCommand;
+import org.novasparkle.lunaspring.API.util.exceptions.InvalidImplementation;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 import org.novasparkle.lunaspring.API.util.utilities.reflection.AnnotationScanner;
 import org.novasparkle.lunaspring.LunaPlugin;
 import org.novasparkle.lunaspring.self.LSConfig;
 
-import java.lang.reflect.Constructor;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
 public final class LunaSpringCommandProcessor implements TabExecutor {
+
     private final List<LunaSpringSubCommand> subCommands;
     private final List<String> commandIdentifiers;
     private final LunaPlugin mainPluginClass;
+
     @Accessors(fluent = true)
     private final String appliedCommand;
 
@@ -42,19 +45,24 @@ public final class LunaSpringCommandProcessor implements TabExecutor {
                 .replace("[commands]", joined).replace("[package]", mainPluginClass.getClass().getPackage().getName()));
 
         for (Class<?> clazz : subCommandsClasses) {
-            AppliedCommand command = clazz.getAnnotation(AppliedCommand.class);
-            if (!command.value().equals(this.appliedCommand)) continue;
 
             SubCommand scAnnotation = clazz.getAnnotation(SubCommand.class);
-            Constructor<?> constructor = clazz.getDeclaredConstructor(
-                    LunaPlugin.class,                           // LunaPlugin
-                    int.class,                                 // maxArgs
-                    String[].class,                           // commandIdentifiers
-                    LunaSpringSubCommand.AccessFlag[].class  // AccessFlags
-            );
+            if (!scAnnotation.appliedCommand().equals(this.appliedCommand)) continue;
+            if (!clazz.isAssignableFrom(Invocation.class))
+                throw new InvalidImplementation(clazz, Invocation.class);
 
-            LunaSpringSubCommand subCommand = (LunaSpringSubCommand) constructor.newInstance(
-                    this.mainPluginClass, scAnnotation.maxArgs(), scAnnotation.commandIdentifiers(), scAnnotation.flags());
+            Check checkAnnotation = clazz.getAnnotation(Check.class);
+            Invocation commandInstance = (Invocation) clazz.getDeclaredConstructor().newInstance();
+
+            LunaSpringSubCommand subCommand = new LunaSpringSubCommand(this.mainPluginClass,
+                    scAnnotation.commandIdentifiers(),
+                    checkAnnotation.flags(),
+                    checkAnnotation.permissions(),
+                    commandInstance);
+            if (clazz.isAssignableFrom(LunaCompleter.class)) {
+                LunaCompleter lunaCompleter = ((LunaCompleter) commandInstance);
+                subCommand.setTabCompleter(lunaCompleter);
+            }
             this.subCommands.add(subCommand);
             this.commandIdentifiers.addAll(subCommand.getCommandIdentifiers());
         }

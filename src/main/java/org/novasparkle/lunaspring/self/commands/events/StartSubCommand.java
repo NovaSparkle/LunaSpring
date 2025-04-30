@@ -1,12 +1,11 @@
 package org.novasparkle.lunaspring.self.commands.events;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
-import org.novasparkle.lunaspring.API.commands.LunaSpringSubCommand;
-import org.novasparkle.lunaspring.API.commands.annotations.AppliedCommand;
+import org.novasparkle.lunaspring.API.commands.LunaCompleter;
+import org.novasparkle.lunaspring.API.commands.annotations.Check;
 import org.novasparkle.lunaspring.API.commands.annotations.SubCommand;
-import org.novasparkle.lunaspring.API.drops.managers.EventManager;
-import org.novasparkle.lunaspring.API.drops.managers.LunaEventManager;
+import org.novasparkle.lunaspring.API.eventManagment.managers.EventManager;
+import org.novasparkle.lunaspring.API.eventManagment.managers.LunaEventManager;
 import org.novasparkle.lunaspring.API.util.utilities.LunaMath;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 import org.novasparkle.lunaspring.LunaPlugin;
@@ -16,17 +15,11 @@ import org.novasparkle.lunaspring.self.LSConfig;
 import java.util.ArrayList;
 import java.util.List;
 
-@SubCommand(maxArgs = 2, commandIdentifiers = {"start"}, flags = {})
-@AppliedCommand("event")
-public class StartSubCommand extends LunaSpringSubCommand {
-    public StartSubCommand(LunaPlugin plugin, int maxArgs, String[] commandIdentifiers, AccessFlag[] flags) {
-        super(plugin, maxArgs, commandIdentifiers, flags);
-    }
-
+@SubCommand(commandIdentifiers = {"start"}, appliedCommand = "event")
+@Check(permissions = "lunaspring.event.start", flags = {})
+public class StartSubCommand implements LunaCompleter {
     @Override
     public void invoke(CommandSender sender, String[] args) {
-        if (!checkCommand(sender, args, "lunaspring.event.start")) return;
-
         if (args.length == 1) {
             List<EventManager> list = new ArrayList<>(LunaEventManager.getManagers());
 

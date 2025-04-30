@@ -1,4 +1,4 @@
-package org.novasparkle.lunaspring.API.drops;
+package org.novasparkle.lunaspring.API.eventManagment;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

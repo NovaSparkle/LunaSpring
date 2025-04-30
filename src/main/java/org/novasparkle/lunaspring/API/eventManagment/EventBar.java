@@ -1,4 +1,4 @@
-package org.novasparkle.lunaspring.API.drops;
+package org.novasparkle.lunaspring.API.eventManagment;
 
 import lombok.Getter;
 import org.bukkit.Bukkit;
@@ -7,7 +7,7 @@ import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
-import org.novasparkle.lunaspring.API.drops.managers.LunaEventManager;
+import org.novasparkle.lunaspring.API.eventManagment.managers.LunaEventManager;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 
 @Getter
