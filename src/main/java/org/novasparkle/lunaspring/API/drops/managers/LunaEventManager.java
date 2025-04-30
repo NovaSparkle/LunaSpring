@@ -19,7 +19,7 @@ public class LunaEventManager {
     @Getter private final Set<EventManager> managers = new HashSet<>();
 
     public boolean register(EventManager eventManager) {
-        if (getDropManager(eventManager.getLunaPlugin()) == null) return managers.add(eventManager);
+        if (getManager(eventManager.getLunaPlugin()) == null) return managers.add(eventManager);
         return false;
     }
 
@@ -28,11 +28,12 @@ public class LunaEventManager {
     }
 
     public void unregister(LunaPlugin lunaPlugin) {
-        EventManager eventManager = getDropManager(lunaPlugin);
+        EventManager eventManager = getManager(lunaPlugin);
         if (eventManager != null) unregister(eventManager);
     }
 
-    public EventManager getDropManager(LunaPlugin lunaPlugin) {
+    public EventManager getManager(LunaPlugin lunaPlugin) {
+        if (lunaPlugin == null) return null;
         return managers.stream().filter(m -> m.getLunaPlugin().equals(lunaPlugin)).findFirst().orElse(null);
     }
 
@@ -52,6 +53,23 @@ public class LunaEventManager {
 
         EventManager eventManager = eventManagers.get(LunaMath.getRandomInt(0, eventManagers.size() - 1));
         return spawn(eventManager);
+    }
+
+    public void stop(EventManager eventManager) {
+        eventManager.stop();
+    }
+
+    public boolean stop() {
+        LunaEvent lunaEvent = getActiveEvent();
+        if (lunaEvent != null) {
+            stop(getManager(lunaEvent.getLunaPlugin()));
+            return true;
+        }
+        return false;
+    }
+
+    public void stopAll() {
+        getManagers().forEach(LunaEventManager::stop);
     }
 
     public boolean isTime(EventManager eventManager) {

@@ -230,10 +230,6 @@ public class Utils {
         Bukkit.getOnlinePlayers().forEach(playerConsumer);
     }
 
-    public void broadcast(String message) {
-        playersAction(p -> p.sendMessage(message));
-    }
-
     public String applyReplacements(String starterLine, String... replacements) {
         byte index = 0;
 

@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
+import org.novasparkle.lunaspring.API.util.utilities.AnnounceUtils;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 
 import java.io.File;
@@ -172,17 +173,20 @@ public class IConfig {
             }
             else if (line.startsWith("[SOUND]")) {
                 if (player == null) continue;
-                player.playSound(player.getLocation(), Sound.valueOf(newLine), 1, 1);
+                AnnounceUtils.sound(player, newLine);
+            }
+            else if (line.startsWith("[SOUND_ALL]")) {
+                AnnounceUtils.soundAll(newLine);
             }
             else if (line.startsWith("[TITLE]")) {
                 if (player == null) continue;
-
-                String[] split = newLine.split(" <S> ");
-                if (split.length < 2) split = new String[]{split[0], ""};
-                player.sendTitle(split[0], split[1], 15, 20, 15);
+                AnnounceUtils.title(player, newLine);
+            }
+            else if (line.startsWith("[TITLE_ALL]")) {
+                AnnounceUtils.titleAll(newLine);
             }
             else if (line.startsWith("[BROADCAST]")) {
-                Utils.playersAction(p -> p.sendMessage(newLine));
+                AnnounceUtils.broadcast(newLine);
             }
             else sender.sendMessage(newLine);
         }

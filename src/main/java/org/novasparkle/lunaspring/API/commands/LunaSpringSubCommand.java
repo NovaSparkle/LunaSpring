@@ -1,11 +1,10 @@
 package org.novasparkle.lunaspring.API.commands;
 
 import lombok.Getter;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.novasparkle.lunaspring.API.util.utilities.Utils;
 import org.novasparkle.lunaspring.LunaPlugin;
 import org.novasparkle.lunaspring.self.LSConfig;
 
@@ -13,25 +12,25 @@ import java.util.List;
 
 @Getter
 public abstract class LunaSpringSubCommand {
-
     private final LunaPlugin plugin;
     private final int maxArgs;
     private final List<String> commandIdentifiers;
     private final List<AccessFlag> flags;
-
     public LunaSpringSubCommand(LunaPlugin plugin, int maxArgs, String[] commandIdentifiers, AccessFlag[] flags) {
         this.plugin = plugin;
         this.maxArgs = maxArgs;
         this.commandIdentifiers = List.of(commandIdentifiers);
         this.flags = List.of(flags);
     }
+
     public boolean invalidArgsAmount(CommandSender sender, String[] args) {
         if (args.length > this.maxArgs) {
-            sender.sendMessage(LSConfig.getMessage("wrongArguments").replace("[maxArgs]", String.valueOf(this.maxArgs)));
+            sender.sendMessage(Utils.applyReplacements(LSConfig.getMessage("wrongArguments"), "maxArgs-%-" + this.maxArgs));
             return true;
         }
         return false;
     }
+
     public boolean hasIdentifier(String inputIdentifier) {
         return this.commandIdentifiers.contains(inputIdentifier);
     }
@@ -61,6 +60,9 @@ public abstract class LunaSpringSubCommand {
         return true;
     }
 
+    public List<String> tabComplete(CommandSender sender, List<String> subCommandArgs) {
+        return List.of();
+    }
 
     public enum AccessFlag {
         PLAYER_ONLY(Player.class),
@@ -72,11 +74,11 @@ public abstract class LunaSpringSubCommand {
         }
 
         public boolean invoke(CommandSender sender) {
-            if (!this.senderClass.isAssignableFrom(sender.getClass())) {
-                sender.sendMessage(LSConfig.getMessage("invalidSender").replace("[sender]", sender.getClass().getSimpleName()));
-                return false;
-            }
-            return true;
+            if (this.senderClass.isAssignableFrom(sender.getClass()) || sender.getClass().isInstance(this.senderClass)) return true;
+
+            sender.sendMessage(Utils.applyReplacements(LSConfig.getMessage("invalidSender"),
+                    "sender-%-" + sender.getClass().getSimpleName()));
+            return false;
         }
     }
 }

@@ -6,7 +6,8 @@ import org.novasparkle.lunaspring.API.commands.LunaSpringCommandProcessor;
 import org.novasparkle.lunaspring.API.drops.LunaEvent;
 import org.novasparkle.lunaspring.API.drops.managers.EventManager;
 import org.novasparkle.lunaspring.API.drops.managers.LunaEventManager;
-import org.novasparkle.lunaspring.API.events.DropHandler;
+import org.novasparkle.lunaspring.API.events.EventHandler;
+import org.novasparkle.lunaspring.API.events.LeaveJoinHandler;
 import org.novasparkle.lunaspring.API.events.MenuHandler;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
@@ -28,7 +29,7 @@ public final class LunaSpring extends LunaPlugin {
         INSTANCE = this;
         this.saveDefaultConfig();
 
-        this.registerListeners(new MenuHandler(), new DropHandler());
+        this.registerListeners(new MenuHandler(), new EventHandler(), new LeaveJoinHandler());
         this.registerCommandProcessor(new LunaSpringCommandProcessor(this, "lunaspring"));
         this.registerCommandProcessor(new LunaSpringCommandProcessor(this, "event"));
 
@@ -78,7 +79,7 @@ public final class LunaSpring extends LunaPlugin {
             LunaEvent lunaEvent = LunaEventManager.getActiveEvent();
             if (params.equalsIgnoreCase("now_name")) {
                 return lunaEvent == null ? LSConfig.getMessage("dropNotActive") :
-                        ColorManager.color(LunaEventManager.getDropManager(lunaEvent.getLunaPlugin()).getName()); // Имя активного ивента
+                        ColorManager.color(LunaEventManager.getManager(lunaEvent.getLunaPlugin()).getName()); // Имя активного ивента
             }
 
             if (params.equalsIgnoreCase("now_id")) {
@@ -98,19 +99,19 @@ public final class LunaSpring extends LunaPlugin {
 
             Location location = lunaEvent == null ? null : lunaEvent.getLocation();
             if (params.equalsIgnoreCase("x")) {
-                return location == null ? "no" : String.valueOf(location.getBlockX());
+                return location == null ? "---" : String.valueOf(location.getBlockX());
             }
 
             if (params.equalsIgnoreCase("y")) {
-                return location == null ? "no" : String.valueOf(location.getBlockY());
+                return location == null ? "---" : String.valueOf(location.getBlockY());
             }
 
             if (params.equalsIgnoreCase("z")) {
-                return location == null ? "no" : String.valueOf(location.getBlockZ());
+                return location == null ? "---" : String.valueOf(location.getBlockZ());
             }
 
             if (params.equalsIgnoreCase("world")) {
-                return location == null ? "no" : location.getWorld().getName();
+                return location == null ? "---" : location.getWorld().getName();
             }
             return null;
         }));

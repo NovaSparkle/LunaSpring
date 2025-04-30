@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.novasparkle.lunaspring.API.commands.annotations.AppliedCommand;
 import org.novasparkle.lunaspring.API.commands.annotations.SubCommand;
+import org.novasparkle.lunaspring.API.util.utilities.Utils;
 import org.novasparkle.lunaspring.API.util.utilities.reflection.AnnotationScanner;
 import org.novasparkle.lunaspring.LunaPlugin;
 import org.novasparkle.lunaspring.self.LSConfig;
@@ -18,12 +19,12 @@ import java.lang.reflect.Constructor;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Getter
 public final class LunaSpringCommandProcessor implements TabExecutor {
     private final List<LunaSpringSubCommand> subCommands;
     private final List<String> commandIdentifiers;
     private final LunaPlugin mainPluginClass;
     @Accessors(fluent = true)
-    @Getter
     private final String appliedCommand;
 
     @SneakyThrows
@@ -53,8 +54,7 @@ public final class LunaSpringCommandProcessor implements TabExecutor {
             );
 
             LunaSpringSubCommand subCommand = (LunaSpringSubCommand) constructor.newInstance(
-                    this.mainPluginClass, scAnnotation.maxArgs(), scAnnotation.commandIdentifiers(), scAnnotation.flags()
-            );
+                    this.mainPluginClass, scAnnotation.maxArgs(), scAnnotation.commandIdentifiers(), scAnnotation.flags());
             this.subCommands.add(subCommand);
             this.commandIdentifiers.addAll(subCommand.getCommandIdentifiers());
         }
@@ -73,6 +73,11 @@ public final class LunaSpringCommandProcessor implements TabExecutor {
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
-        return args.length == 1 ? this.commandIdentifiers : null;
+        if (args.length == 1) return Utils.tabCompleterFiltering(this.commandIdentifiers, args[0]);
+        else if (args.length >= 2) {
+            LunaSpringSubCommand subCommand = this.subCommands.stream().filter(s -> s.hasIdentifier(args[0])).findFirst().orElse(null);
+            if (subCommand != null) return subCommand.tabComplete(sender, List.of(args).subList(1, args.length - 1));
+        }
+        return List.of();
     }
 }

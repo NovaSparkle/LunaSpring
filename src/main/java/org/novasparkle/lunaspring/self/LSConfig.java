@@ -29,7 +29,7 @@ public final class LSConfig {
         return config.getStringList(String.format("messages.%s", path)).stream().map(ColorManager::color).collect(Collectors.toList());
     }
 
-    public @NotNull String getString(String path) {
+    public String getString(String path) {
         return ColorManager.color(config.getString(path));
     }
 

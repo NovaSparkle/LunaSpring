@@ -25,6 +25,7 @@ public abstract class LunaEvent {
     private final LunaPlugin lunaPlugin;
     private final Delay delay;
 
+    @Setter private EventBar eventBar;
     @Setter private EventBlock eventBlock;
     private Location location;
     private EditSession editSession;
@@ -140,9 +141,11 @@ public abstract class LunaEvent {
 
     @Getter
     public class Delay extends LunaTask {
+        private final int max;
         private int leftSeconds;
         public Delay(int seconds) {
             super(0);
+            this.max = seconds;
             this.leftSeconds = seconds;
         }
 
@@ -152,6 +155,8 @@ public abstract class LunaEvent {
                 if (!this.isActive()) return;
 
                 this.leftSeconds--;
+                if (LunaEvent.this.eventBar != null) LunaEvent.this.eventBar.update();
+
                 Thread.sleep(1000L);
             }
 

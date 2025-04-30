@@ -37,7 +37,7 @@ public class DelaySubCommand extends LunaSpringSubCommand {
                 return;
             }
 
-            EventManager eventManager = LunaEventManager.getDropManager(lunaPlugin);
+            EventManager eventManager = LunaEventManager.getManager(lunaPlugin);
             if (eventManager == null) {
                 LSConfig.sendMessage(sender, "events.notExists", "event_name-%-" + args[1]);
                 return;
