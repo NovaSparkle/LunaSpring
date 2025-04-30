@@ -10,6 +10,8 @@ import org.bukkit.entity.Player;
 import org.novasparkle.lunaspring.API.eventManagment.managers.LunaEventManager;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 
+import java.util.List;
+
 @Getter
 public class EventBar {
     private final String starterText;
@@ -35,7 +37,9 @@ public class EventBar {
 
     public void updateTitle() {
         String text = this.starterText;
-        Player player = this.bossBar.getPlayers().getFirst();
+        List<Player> players = this.bossBar.getPlayers();
+        if (players.isEmpty()) throw new RuntimeException();
+        Player player = players.get(0);
 
         Location location = this.lunaEvent.getLocation();
         String x = location == null ? "---" : String.valueOf(location.getBlockX());
