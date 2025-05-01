@@ -64,7 +64,7 @@ public class LunaSpringSubCommand implements LunaCompleter {
     @Override
     public List<String> tabComplete(CommandSender sender, List<String> subCommandArgs) {
         if (this.tabCompleter != null) {
-            tabCompleter.tabComplete(sender, subCommandArgs);
+            return tabCompleter.tabComplete(sender, subCommandArgs);
         }
         return List.of();
     }

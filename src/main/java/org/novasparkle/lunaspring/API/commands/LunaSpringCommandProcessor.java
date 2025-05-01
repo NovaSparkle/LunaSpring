@@ -31,7 +31,7 @@ public final class LunaSpringCommandProcessor implements TabExecutor {
     private final String appliedCommand;
 
     @SneakyThrows
-    public LunaSpringCommandProcessor(LunaPlugin mainPluginClass, String appliedCommand) {
+    public LunaSpringCommandProcessor(@NotNull LunaPlugin mainPluginClass, @NotNull String appliedCommand) {
         this.mainPluginClass = mainPluginClass;
         this.subCommands = new ArrayList<>();
         this.commandIdentifiers = new ArrayList<>();
@@ -51,13 +51,22 @@ public final class LunaSpringCommandProcessor implements TabExecutor {
             if (!Invocation.class.isAssignableFrom(clazz))
                 throw new InvalidImplementation(clazz, Invocation.class);
 
-            Check checkAnnotation = clazz.getAnnotation(Check.class);
+            String[] permissions = new String[] { };
+            LunaSpringSubCommand.AccessFlag[] flags = new LunaSpringSubCommand.AccessFlag[] { };
+
+            Check checkAnnotation;
+            if (clazz.isAnnotationPresent(Check.class)) {
+                checkAnnotation = clazz.getAnnotation(Check.class);
+                permissions = checkAnnotation.permissions();
+                flags = checkAnnotation.flags();
+            }
+
             Invocation commandInstance = (Invocation) clazz.getDeclaredConstructor().newInstance();
 
             LunaSpringSubCommand subCommand = new LunaSpringSubCommand(this.mainPluginClass,
                     scAnnotation.commandIdentifiers(),
-                    checkAnnotation.flags(),
-                    checkAnnotation.permissions(),
+                    flags,
+                    permissions,
                     commandInstance);
             if (clazz.isAssignableFrom(LunaCompleter.class)) {
                 LunaCompleter lunaCompleter = ((LunaCompleter) commandInstance);
