@@ -1,6 +1,7 @@
 package org.novasparkle.lunaspring.self.commands.events;
 
 import org.bukkit.command.CommandSender;
+import org.novasparkle.lunaspring.API.commands.Invocation;
 import org.novasparkle.lunaspring.API.commands.LunaCompleter;
 import org.novasparkle.lunaspring.API.commands.annotations.Check;
 import org.novasparkle.lunaspring.API.commands.annotations.SubCommand;

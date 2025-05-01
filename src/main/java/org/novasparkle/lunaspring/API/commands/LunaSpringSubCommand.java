@@ -50,7 +50,7 @@ public class LunaSpringSubCommand implements LunaCompleter {
         return hasPermission(sender, permission) && invokeFlags(sender);
     }
     public boolean checkCommand(CommandSender sender, List<String> permission) {
-        return permission.stream().allMatch(p -> hasPermission(sender, p)) && invokeFlags(sender);
+        return (permission.isEmpty() || permission.stream().anyMatch(p -> hasPermission(sender, p))) && invokeFlags(sender);
     }
 
     private static boolean hasPermission(CommandSender sender, String permission) {

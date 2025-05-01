@@ -48,7 +48,7 @@ public final class LunaSpringCommandProcessor implements TabExecutor {
 
             SubCommand scAnnotation = clazz.getAnnotation(SubCommand.class);
             if (!scAnnotation.appliedCommand().equals(this.appliedCommand)) continue;
-            if (!clazz.isAssignableFrom(Invocation.class))
+            if (!Invocation.class.isAssignableFrom(clazz))
                 throw new InvalidImplementation(clazz, Invocation.class);
 
             Check checkAnnotation = clazz.getAnnotation(Check.class);
