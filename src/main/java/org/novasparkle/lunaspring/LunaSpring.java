@@ -10,6 +10,7 @@ import org.novasparkle.lunaspring.API.events.EventHandler;
 import org.novasparkle.lunaspring.API.events.LeaveJoinHandler;
 import org.novasparkle.lunaspring.API.events.MenuHandler;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
+import org.novasparkle.lunaspring.API.util.utilities.Color;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 import org.novasparkle.lunaspring.self.LSConfig;
 
@@ -42,11 +43,21 @@ public final class LunaSpring extends LunaPlugin {
                 return String.join(", ", this.hookedPlugins.stream().map(LunaPlugin::getName).toList()); // Список луна плагинов
             }
 
-            if (params.startsWith("world")) { // %lunaspring_world_world%
+            if (params.startsWith("world-")) { // %lunaspring_world-world%
                 String[] split = params.split("-");
 
                 String placeholder = split.length >= 2 ? LSConfig.getMessage(String.format("worlds.%s", split[1])) : null;
                 return placeholder == null || placeholder.isEmpty() ? (split.length == 1 ? null : split[1]) : placeholder;
+            }
+
+            if (params.startsWith("color-")) {
+                String[] split = params.split("-");
+
+                if (split.length >= 2) {
+                    Color color = ColorManager.getColor(split[1]);
+                    return color != null ? color.getVariable() : null;
+                }
+                return "";
             }
             return null;
         }));

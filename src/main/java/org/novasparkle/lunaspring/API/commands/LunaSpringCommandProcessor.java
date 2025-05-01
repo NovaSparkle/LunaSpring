@@ -93,7 +93,7 @@ public final class LunaSpringCommandProcessor implements TabExecutor {
         if (args.length == 1) return Utils.tabCompleterFiltering(this.commandIdentifiers, args[0]);
         else if (args.length >= 2) {
             LunaSpringSubCommand subCommand = this.subCommands.stream().filter(s -> s.hasIdentifier(args[0])).findFirst().orElse(null);
-            if (subCommand != null) return subCommand.tabComplete(sender, List.of(args).subList(1, args.length - 1));
+            if (subCommand != null) return subCommand.tabComplete(sender, List.of(args).subList(1, args.length));
         }
         return List.of();
     }
