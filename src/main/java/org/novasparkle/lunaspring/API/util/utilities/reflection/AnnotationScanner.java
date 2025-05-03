@@ -22,7 +22,7 @@ public class AnnotationScanner {
             while (e.hasMoreElements()) {
                 JarEntry jarEntry = e.nextElement();
                 if (jarEntry.getName().endsWith(".class")) {
-                    String className = jarEntry.getName().replace("/", ".").replace(".class", "");
+                    String className = jarEntry.getName().replace(".class", "").replace('/', '.');
                     Class<?> clazz = Class.forName(className);
                     if (clazz.isAnnotationPresent(annotationClass)) {
                         this.annotatedClasses.add(clazz);
