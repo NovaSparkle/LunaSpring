@@ -25,11 +25,12 @@ authors:
   - NovaSparkle
   - ProGiple
 
+depend:
+  - PlaceholderAPI
 softdepend:
   - NBTAPI
   - WorldEdit
   - WorldGuard
-  - PlaceholderAPI
 
 permissions:
   lunaspring.*:

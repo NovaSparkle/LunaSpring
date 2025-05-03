@@ -162,6 +162,14 @@ public class NonMenuItem {
         return this;
     }
 
+    public NonMenuItem increase() {
+        return this.setAmount(this.amount + 1);
+    }
+
+    public NonMenuItem decrease() {
+        return this.setAmount(this.getAmount() - 1);
+    }
+
     private void update() {
         this.itemStack.setType(this.material);
         ItemMeta meta = this.itemStack.getItemMeta();
