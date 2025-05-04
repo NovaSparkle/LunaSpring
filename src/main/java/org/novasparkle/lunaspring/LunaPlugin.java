@@ -199,10 +199,6 @@ public abstract class LunaPlugin extends JavaPlugin {
                 ""
         ));
         LunaSpring.getINSTANCE().hookPlugin(this);
-
-        AnnotationScanner scanner = new AnnotationScanner();
-        this.processCommands(scanner);
-        this.processListeners(scanner);
     }
 
     @Override
@@ -222,7 +218,7 @@ public abstract class LunaPlugin extends JavaPlugin {
         ));
     }
     @SneakyThrows
-    private void processCommands(AnnotationScanner scanner) {
+    public void processCommands(AnnotationScanner scanner) {
         List<Class<?>> classesToRegister = scanner.getAnnotatedClasses(this, LunaCommand.class);
         for (Class<?> clazz : classesToRegister) {
             String command = clazz.getDeclaredAnnotation(LunaCommand.class).value();
@@ -238,7 +234,7 @@ public abstract class LunaPlugin extends JavaPlugin {
     }
 
     @SneakyThrows
-    private void processListeners(AnnotationScanner scanner) {
+    public void processListeners(AnnotationScanner scanner) {
         List<Class<?>> classes = scanner.getAnnotatedClasses(this, LunaHandler.class);
         for (Class<?> clazz : classes) {
             if (Listener.class.isAssignableFrom(clazz)) {
