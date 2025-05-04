@@ -3,6 +3,8 @@ package org.novasparkle.lunaspring.API.util.utilities;
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Random;
 
 @UtilityClass
@@ -39,6 +41,7 @@ public class LunaMath {
     }
 
     public int getRandomInt(int minValue, int maxValue) {
+        if (minValue >= maxValue) return maxValue;
         return random.nextInt(maxValue - minValue) + minValue;
     }
 
@@ -49,7 +52,8 @@ public class LunaMath {
     }
 
     public double round(double notRoundedNum, int roundLength) {
-        String pattern = "%." + roundLength + "f";
-        return Double.parseDouble(String.format(pattern, notRoundedNum));
+        return BigDecimal.valueOf(notRoundedNum)
+                .setScale(roundLength, RoundingMode.HALF_UP)
+                .doubleValue();
     }
 }
