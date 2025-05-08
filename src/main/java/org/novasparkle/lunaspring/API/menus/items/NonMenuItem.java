@@ -84,7 +84,7 @@ public class NonMenuItem {
         this.applyItemFlags(section);
 
         // NBT
-        ConfigurationSection nbtSection = section.getConfigurationSection("nbtTags");
+        ConfigurationSection nbtSection = section.getConfigurationSection("NBT");
         this.applyNBT(nbtSection);
 
         // Head

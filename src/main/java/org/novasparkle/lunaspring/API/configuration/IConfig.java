@@ -1,11 +1,10 @@
 package org.novasparkle.lunaspring.API.configuration;
 
+import com.google.common.collect.Lists;
 import lombok.Getter;
-import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -18,7 +17,6 @@ import org.novasparkle.lunaspring.API.util.utilities.AnnounceUtils;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 public class IConfig {
@@ -154,8 +152,12 @@ public class IConfig {
     public void sendMessage(CommandSender sender, String id, String... replacements) {
         String path = String.format("messages.%s", id);
 
-        List<String> message = new ArrayList<>(config.getStringList(path));
-        if (message.isEmpty()) return;
+        List<String> message = Lists.newArrayList(config.getStringList(path));
+        if (message.isEmpty()) {
+            String stringMessage = config.getString(String.format("messages.%s", id));
+            if (stringMessage != null && !stringMessage.isEmpty())
+                message.add(stringMessage);
+        }
         for (String line : message) {
             line = Utils.applyReplacements(line, replacements);
 

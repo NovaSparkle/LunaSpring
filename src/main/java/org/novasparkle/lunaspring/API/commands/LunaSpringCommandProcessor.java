@@ -68,7 +68,7 @@ public final class LunaSpringCommandProcessor implements TabExecutor {
                     flags,
                     permissions,
                     commandInstance);
-            if (clazz.isAssignableFrom(LunaCompleter.class)) {
+            if (LunaCompleter.class.isAssignableFrom(clazz)) {
                 LunaCompleter lunaCompleter = ((LunaCompleter) commandInstance);
                 subCommand.setTabCompleter(lunaCompleter);
             }
