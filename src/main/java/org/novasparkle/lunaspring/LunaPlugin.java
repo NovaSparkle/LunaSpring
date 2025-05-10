@@ -8,9 +8,11 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.novasparkle.lunaspring.API.commands.LunaExecutor;
 import org.novasparkle.lunaspring.API.commands.LunaSpringCommandProcessor;
 import org.novasparkle.lunaspring.API.commands.annotations.LunaCommand;
 import org.novasparkle.lunaspring.API.commands.annotations.LunaHandler;
+import org.novasparkle.lunaspring.API.util.exceptions.InvalidImplementation;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
 import org.novasparkle.lunaspring.API.util.utilities.LunaMath;
 import org.novasparkle.lunaspring.API.util.utilities.LunaPAPIExpansion;
@@ -28,6 +30,7 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 public abstract class LunaPlugin extends JavaPlugin {
     private void startMessage(List<String> startMessage) {
@@ -198,6 +201,7 @@ public abstract class LunaPlugin extends JavaPlugin {
                 "        ^ | &fDev-Helper: ^ProGiple",
                 ""
         ));
+        LunaExecutor.initialize(this);
         LunaSpring.getINSTANCE().hookPlugin(this);
     }
 
@@ -218,8 +222,8 @@ public abstract class LunaPlugin extends JavaPlugin {
         ));
     }
     @SneakyThrows
-    public void processCommands(AnnotationScanner scanner) {
-        List<Class<?>> classesToRegister = scanner.getAnnotatedClasses(this, LunaCommand.class);
+    public void processCommands() {
+        Set<Class<LunaCommand>> classesToRegister = AnnotationScanner.getAnnotatedClasses(this, LunaCommand.class);
         for (Class<?> clazz : classesToRegister) {
             String command = clazz.getDeclaredAnnotation(LunaCommand.class).value();
             if (TabExecutor.class.isAssignableFrom(clazz)) {
@@ -229,18 +233,18 @@ public abstract class LunaPlugin extends JavaPlugin {
             } else if (CommandExecutor.class.isAssignableFrom(clazz)) {
                 CommandExecutor tabExecutor = (CommandExecutor) clazz.getDeclaredConstructor().newInstance();
                 this.registerCommand(tabExecutor, command);
-            }
+            } else throw new InvalidImplementation(clazz, CommandExecutor.class);
         }
     }
 
     @SneakyThrows
-    public void processListeners(AnnotationScanner scanner) {
-        List<Class<?>> classes = scanner.getAnnotatedClasses(this, LunaHandler.class);
-        for (Class<?> clazz : classes) {
+    public void processListeners() {
+        Set<Class<LunaHandler>> classes = AnnotationScanner.getAnnotatedClasses(this, LunaHandler.class);
+        for (Class<LunaHandler> clazz : classes) {
             if (Listener.class.isAssignableFrom(clazz)) {
                 Listener listener = (Listener) clazz.getDeclaredConstructor().newInstance();
                 this.registerListeners(listener);
-            }
+            } else throw new InvalidImplementation(clazz, Listener.class);
         }
     }
 }

@@ -6,8 +6,10 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.novasparkle.lunaspring.API.commands.annotations.LunaHandler;
 import org.novasparkle.lunaspring.API.menus.MenuManager;
 
+@LunaHandler
 public class MenuHandler implements Listener {
     @EventHandler
     private void onOpen(InventoryOpenEvent e) {

@@ -2,13 +2,10 @@ package org.novasparkle.lunaspring;
 
 import lombok.Getter;
 import org.bukkit.Location;
-import org.novasparkle.lunaspring.API.commands.LunaSpringCommandProcessor;
+import org.novasparkle.lunaspring.API.commands.LunaExecutor;
 import org.novasparkle.lunaspring.API.eventManagment.LunaEvent;
 import org.novasparkle.lunaspring.API.eventManagment.managers.EventManager;
 import org.novasparkle.lunaspring.API.eventManagment.managers.LunaEventManager;
-import org.novasparkle.lunaspring.API.events.EventHandler;
-import org.novasparkle.lunaspring.API.events.LeaveJoinHandler;
-import org.novasparkle.lunaspring.API.events.MenuHandler;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
 import org.novasparkle.lunaspring.API.util.utilities.Color;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
@@ -30,10 +27,8 @@ public final class LunaSpring extends LunaPlugin {
         INSTANCE = this;
         this.saveDefaultConfig();
 
-        this.registerListeners(new MenuHandler(), new EventHandler(), new LeaveJoinHandler());
-        this.registerCommandProcessor(new LunaSpringCommandProcessor(this, "lunaspring"));
-        this.registerCommandProcessor(new LunaSpringCommandProcessor(this, "event"));
-
+        this.processListeners();
+        LunaExecutor.initialize(this);
         this.registerLunaPlaceholder();
     }
 

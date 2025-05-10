@@ -5,8 +5,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.novasparkle.lunaspring.API.commands.annotations.LunaHandler;
 import org.novasparkle.lunaspring.API.eventManagment.managers.LunaEventManager;
 
+@LunaHandler
 public class LeaveJoinHandler implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {

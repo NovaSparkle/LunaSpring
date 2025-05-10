@@ -6,7 +6,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
-import org.novasparkle.lunaspring.LunaPlugin;
 import org.novasparkle.lunaspring.self.LSConfig;
 
 import java.util.List;
@@ -14,7 +13,6 @@ import java.util.List;
 @Getter
 public class LunaSpringSubCommand implements LunaCompleter {
 
-    private final LunaPlugin plugin;
     private final List<String> commandIdentifiers;
     private final List<AccessFlag> flags;
     private final List<String> permissions;
@@ -22,12 +20,10 @@ public class LunaSpringSubCommand implements LunaCompleter {
     @Setter
     private LunaCompleter tabCompleter;
 
-    public LunaSpringSubCommand(LunaPlugin plugin,
+    public LunaSpringSubCommand(
                                 String[] commandIdentifiers,
                                 AccessFlag[] flags,
                                 String[] permissions, Invocation invocation) {
-
-        this.plugin = plugin;
         this.commandIdentifiers = List.of(commandIdentifiers);
         this.flags = List.of(flags);
         this.permissions = List.of(permissions);
