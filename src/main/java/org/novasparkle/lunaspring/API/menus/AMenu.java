@@ -102,9 +102,6 @@ public abstract class AMenu implements IMenu {
     public Item findFirstItem(ItemStack itemStack) {
         return this.itemList.stream().filter(i -> i.getItemStack().equals(itemStack)).findFirst().orElse(null);
     }
-    public Item findFirstItemById(String id) {
-        return this.itemList.stream().filter(i -> i.checkId(id)).findFirst().orElse(null);
-    }
 
     public List<Item> findItems(Material material) {
         return this.itemList.stream().filter(i -> i.getItemStack().getType().equals(material)).collect(Collectors.toList());
@@ -146,14 +143,6 @@ public abstract class AMenu implements IMenu {
     }
     public boolean itemClick(@NonNull Class<?> clazz, InventoryClickEvent event) {
         Item item = this.findFirstItem(clazz);
-        if (item != null) {
-            item.onClick(event);
-            return true;
-        }
-        return false;
-    }
-    public boolean itemClickId(@NonNull String id, InventoryClickEvent event) {
-        Item item = this.findFirstItemById(id);
         if (item != null) {
             item.onClick(event);
             return true;

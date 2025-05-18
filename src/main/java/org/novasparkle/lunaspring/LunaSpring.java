@@ -54,13 +54,22 @@ public final class LunaSpring extends LunaPlugin {
                 }
                 return "";
             }
+
+            if (params.startsWith("lp-")) { // %lunaspring_lp-SHORT_TRANSLATE_WITH_POINTS-DAYS_OR_HOURS%
+                String[] split = params.split("-");
+                if (split.length < 2) return null;
+
+                Utils.Luckperms.TranslateType translateType = Utils.Luckperms.TranslateType.valueOf(split[1]);
+                Utils.Luckperms.FormatType formatType = Utils.Luckperms.FormatType.valueOf(split[2]);
+                return Utils.Luckperms.getFormatting(Utils.Luckperms.getGroupTime(offlinePlayer), translateType, formatType);
+            }
             return null;
         }));
 
         this.createPlaceholder("event", ((offlinePlayer, params) -> {
             if (params.equalsIgnoreCase("next_time")) {
                 LocalTime localTime = LunaEventManager.getNextTime();
-                return localTime == null ? "no" : Utils.timeToString(localTime); // Время след. ивента
+                return localTime == null ? "no" : Utils.Time.timeToString(localTime); // Время след. ивента
             }
 
             if (params.equalsIgnoreCase("next_name")) {
@@ -75,7 +84,7 @@ public final class LunaSpring extends LunaPlugin {
 
             if (params.equalsIgnoreCase("next_left_time")) {
                 LocalTime localTime = LunaEventManager.getLeftTime(LunaEventManager.getNext());
-                return localTime == null ? "no" : Utils.timeToString(localTime); // Время до след. ивента
+                return localTime == null ? "no" : Utils.Time.timeToString(localTime); // Время до след. ивента
             }
 
             if (params.equalsIgnoreCase("active")) {
@@ -93,8 +102,8 @@ public final class LunaSpring extends LunaPlugin {
             }
 
             if (params.equalsIgnoreCase("left_time")) {
-                return lunaEvent == null ? LSConfig.getMessage("dropNotActive") : Utils.timeToString(
-                        Utils.parseTime(lunaEvent.getDelay().getLeftSeconds()));
+                return lunaEvent == null ? LSConfig.getMessage("dropNotActive") : Utils.Time.timeToString(
+                        Utils.Time.parseTime(lunaEvent.getDelay().getLeftSeconds()));
                 // Время, которое осталось до окончания ивента
             }
 

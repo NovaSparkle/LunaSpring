@@ -93,7 +93,6 @@ public class Item extends NonMenuItem {
         this.menu = aMenu;
         this.slot = slot;
 
-        this.updateDescription();
         aMenu.getInventory().setItem(slot, this.getItemStack());
         return this;
     }

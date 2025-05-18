@@ -201,7 +201,6 @@ public abstract class LunaPlugin extends JavaPlugin {
                 "        ^ | &fDev-Helper: ^ProGiple",
                 ""
         ));
-        LunaExecutor.initialize(this);
         LunaSpring.getINSTANCE().hookPlugin(this);
     }
 

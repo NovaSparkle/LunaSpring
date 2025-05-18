@@ -374,15 +374,6 @@ public class NonMenuItem {
 
     // CHECKS
 
-    public boolean checkId(String id) {
-        return Objects.equals(id, this.id);
-    }
-
-    public boolean checkId(ItemStack item) {
-        String id = NBTManager.getString(item, "lunaspring-item-id");
-        return id != null && !id.isEmpty() && this.checkId(id);
-    }
-
     /**
      * Cравнение с без учета кол-ва предмета
      */

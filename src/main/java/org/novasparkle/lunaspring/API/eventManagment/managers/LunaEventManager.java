@@ -73,7 +73,7 @@ public class LunaEventManager {
     }
 
     public boolean isTime(EventManager eventManager) {
-        LocalTime localTime = Utils.getNextTime(eventManager.getTimes());
+        LocalTime localTime = Utils.Time.getNextTime(eventManager.getTimes());
 
         LocalTime now = LocalTime.now();
         return localTime.getMinute() == now.getMinute() && localTime.getHour() == now.getHour();
@@ -84,7 +84,7 @@ public class LunaEventManager {
     }
 
     public LocalTime getNextTime(EventManager eventManager) {
-        return Utils.getNextTime(eventManager.getTimes());
+        return Utils.Time.getNextTime(eventManager.getTimes());
     }
 
     public LocalTime getNextTime() {
@@ -96,7 +96,7 @@ public class LunaEventManager {
         LocalTime now = LocalTime.now();
         return managers.stream()
                 .min(Comparator.comparing(manager -> {
-                    LocalTime nearestTime = Utils.getNextTime(manager.getTimes());
+                    LocalTime nearestTime = Utils.Time.getNextTime(manager.getTimes());
 
                     long diffInSeconds = Math.abs(nearestTime.toSecondOfDay() - now.toSecondOfDay());
                     return Math.min(diffInSeconds, 24 * 60 * 60 - diffInSeconds);
@@ -105,7 +105,7 @@ public class LunaEventManager {
     }
 
     public LocalTime getLeftTime(EventManager eventManager) {
-        return eventManager == null ? null : Utils.getTimeBetween(LocalTime.now(), getNextTime(eventManager));
+        return eventManager == null ? null : Utils.Time.getTimeBetween(LocalTime.now(), getNextTime(eventManager));
     }
 
     public Set<LunaEvent> getActiveEvents() {

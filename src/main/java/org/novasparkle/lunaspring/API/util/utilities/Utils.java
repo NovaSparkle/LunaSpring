@@ -1,6 +1,7 @@
 package org.novasparkle.lunaspring.API.util.utilities;
 
 import com.google.common.collect.Lists;
+import lombok.Getter;
 import lombok.experimental.UtilityClass;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.*;
@@ -113,74 +114,6 @@ public class Utils {
     }
 
     /**
-     * Получить следующую дату от текущей в коллекции.
-     */
-    public LocalTime getNextTime(Collection<LocalTime> times) {
-        LocalTime now = LocalTime.now();
-        return times.stream()
-                .filter(time -> time.isAfter(now))
-                .min(LocalTime::compareTo)
-                .orElseGet(() -> times.stream()
-                        .min(LocalTime::compareTo)
-                        .orElse(null));
-    }
-
-    public LocalTime getNextTime(List<String> times) {
-        return getNextTime(times.stream().map(LocalTime::parse).collect(Collectors.toSet()));
-    }
-
-    /**
-     * Получить время оставшееся до указанного времени
-     */
-    public LocalTime getTimeBetween(LocalTime now, LocalTime targetTime) {
-        int startInSeconds = now.toSecondOfDay();
-        int endInSeconds = targetTime.toSecondOfDay();
-
-        int differenceInSeconds;
-        if (endInSeconds < startInSeconds) {
-            differenceInSeconds = (24 * 60 * 60 - startInSeconds) + endInSeconds;
-        } else {
-            differenceInSeconds = endInSeconds - startInSeconds;
-        }
-
-        return parseTime(differenceInSeconds);
-    }
-
-    public LocalTime parseTime(long totalSeconds) {
-        long minutes = (totalSeconds % 3600) / 60;
-        long hours = totalSeconds / 3600;
-        long seconds = Math.max(totalSeconds - (minutes * 60 + hours * 3600), 0);
-        return LocalTime.of((int) hours, (int) minutes, (int) seconds);
-    }
-
-    public String timeToString(LocalTime localTime) {
-        int hours = localTime.getHour();
-        int minutes = localTime.getMinute();
-        int seconds = localTime.getSecond();
-        return String.format("%s:%s:%s",
-                hours < 10 ? "0" + hours : hours,
-                minutes < 10 ? "0" + minutes : minutes,
-                seconds < 10 ? "0" + seconds : seconds);
-    }
-
-    /**
-     * Получить время оставшееся до указанного времени в формате hh:mm.
-     */
-    public String getTimeBetween(LocalTime nextTime) {
-        LocalTime nowTime = LocalTime.now();
-        long chrono = nowTime.until(nextTime, ChronoUnit.MINUTES);
-
-        String string = String.format("%s:%s", (int) (chrono / 60), chrono % 60);
-        if (chrono < 0) {
-            int hours = (24 - nowTime.getHour()) + nextTime.getHour();
-            int minutes = (60 - nowTime.getMinute()) + nextTime.getMinute();
-            string = String.format("%s:%s", hours < 10 ? "0" + hours : hours,
-                    minutes < 10 ? "0" + minutes : minutes);
-        }
-        return string;
-    }
-
-    /**
      * Преобразование списка слотов формата ["1", "2-6", "7, 8, 10", "9"] в Set чисел формата [1, 2, 3, 4, 5, 6, ...]
      * @param slotList - начальный список слотов первого формата
      * @return List<Integer> list
@@ -259,5 +192,223 @@ public class Utils {
 
     public String setPlaceholders(OfflinePlayer offlinePlayer, String line) {
         return isPluginEnabled("PlaceholderAPI") ? PlaceholderAPI.setPlaceholders(offlinePlayer, line) : line;
+    }
+
+    @UtilityClass
+    public static class Time {
+        /**
+         * Получить следующую дату от текущей в коллекции.
+         */
+        public LocalTime getNextTime(Collection<LocalTime> times) {
+            LocalTime now = LocalTime.now();
+            return times.stream()
+                    .filter(time -> time.isAfter(now))
+                    .min(LocalTime::compareTo)
+                    .orElseGet(() -> times.stream()
+                            .min(LocalTime::compareTo)
+                            .orElse(null));
+        }
+
+        public LocalTime getNextTime(List<String> times) {
+            return getNextTime(times.stream().map(LocalTime::parse).collect(Collectors.toSet()));
+        }
+
+        /**
+         * Получить время оставшееся до указанного времени
+         */
+        public LocalTime getTimeBetween(LocalTime now, LocalTime targetTime) {
+            int startInSeconds = now.toSecondOfDay();
+            int endInSeconds = targetTime.toSecondOfDay();
+
+            int differenceInSeconds;
+            if (endInSeconds < startInSeconds) {
+                differenceInSeconds = (24 * 60 * 60 - startInSeconds) + endInSeconds;
+            } else {
+                differenceInSeconds = endInSeconds - startInSeconds;
+            }
+
+            return parseTime(differenceInSeconds);
+        }
+
+        public LocalTime parseTime(long totalSeconds) {
+            long minutes = (totalSeconds % 3600) / 60;
+            long hours = totalSeconds / 3600;
+            long seconds = Math.max(totalSeconds - (minutes * 60 + hours * 3600), 0);
+            return LocalTime.of((int) hours, (int) minutes, (int) seconds);
+        }
+
+        public String timeToString(LocalTime localTime) {
+            int hours = localTime.getHour();
+            int minutes = localTime.getMinute();
+            int seconds = localTime.getSecond();
+            return String.format("%s:%s:%s",
+                    hours < 10 ? "0" + hours : hours,
+                    minutes < 10 ? "0" + minutes : minutes,
+                    seconds < 10 ? "0" + seconds : seconds);
+        }
+
+        /**
+         * Получить время оставшееся до указанного времени в формате hh:mm.
+         */
+        public String getTimeBetween(LocalTime nextTime) {
+            LocalTime nowTime = LocalTime.now();
+            long chrono = nowTime.until(nextTime, ChronoUnit.MINUTES);
+
+            String string = String.format("%s:%s", (int) (chrono / 60), chrono % 60);
+            if (chrono < 0) {
+                int hours = (24 - nowTime.getHour()) + nextTime.getHour();
+                int minutes = (60 - nowTime.getMinute()) + nextTime.getMinute();
+                string = String.format("%s:%s", hours < 10 ? "0" + hours : hours,
+                        minutes < 10 ? "0" + minutes : minutes);
+            }
+            return string;
+        }
+    }
+
+    @UtilityClass
+    public static class Luckperms {
+        public String getHighestGroup(OfflinePlayer player) {
+            return setPlaceholders(player, "%luckperms_highest_group_by_weight%");
+        }
+
+        public String getGroupTime(OfflinePlayer player) {
+            String highestGroup = getHighestGroup(player);
+            if (highestGroup == null || highestGroup.isEmpty()) return "∞";
+
+            String timer = Utils.setPlaceholders(player, "%luckperms_group_expiry_time_" + highestGroup + "%");
+            return timer == null || timer.isEmpty() ? "∞" : timer;
+        }
+
+        public String getFormatting(String text, TranslateType translateType, FormatType formatType) {
+            if (text.length() == 1) return text;
+            if (translateType == null) translateType = TranslateType.NONE;
+
+            if (translateType != TranslateType.NONE) text = text
+                        .replace("y", translateType.y)
+                        .replace("mo", translateType.mo)
+                        .replace("w", translateType.w)
+                        .replace("d", translateType.d)
+                        .replace("h", translateType.h)
+                        .replace("m",translateType.m)
+                        .replace("s", translateType.s);
+            if (formatType == null || formatType == FormatType.NONE) return text;
+
+            String[] parts = text.split(" ");
+            long seconds = 0;
+            for (String p : parts) {
+                String part = p.replaceAll("\\D", "").replace(".", "");
+                p = p.replaceAll("\\d", "").replace(".", "");
+
+                long form = LunaMath.toInt(part);
+                if (p.startsWith("с") || p.equalsIgnoreCase("s")) {
+                    seconds += form;
+                }
+                else if ((p.startsWith("м") && !p.contains("с")) || p.startsWith("мин") || p.equalsIgnoreCase("m")) {
+                    seconds += form * 60;
+                }
+                else if (p.startsWith("ч") || p.equalsIgnoreCase("h")) {
+                    seconds += form * 60 * 60;
+                }
+                else if (p.startsWith("д") || p.equalsIgnoreCase("d")) {
+                    seconds += form * 60 * 60 * 24;
+                }
+                else if (p.startsWith("н") || p.equalsIgnoreCase("w")) {
+                    seconds += form * 60 * 60 * 24 * 7;
+                }
+                else if (p.startsWith("мес") || p.equalsIgnoreCase("mo")) {
+                    seconds += form * 60 * 60 * 24 * 30;
+                }
+                else if (p.startsWith("г") || p.equalsIgnoreCase("y")) {
+                    seconds += form * 60 * 60 * 24 * 30 * 12;
+                }
+            }
+
+            switch (formatType) {
+                case ONLY_DAYS -> {
+                    int days = (int) (seconds / (60 * 60 * 24));
+                    return (days > 0 ? days : "<1") + translateType.d;
+                }
+                case DAYS_OR_HOURS -> {
+                    int days = (int) (seconds / (60 * 60 * 24));
+                    int hours = (int) (seconds / 3600);
+                    return days > 0 ? days + translateType.d : ((hours > 0 ? hours : "<1") + translateType.h);
+                }
+                case DAYS_WITH_HOURS -> {
+                    int days = (int) (seconds / (60 * 60 * 24));
+                    int hours = (int) ((seconds % (60 * 60 * 24)) / 3600);
+                    return days > 0 ? days + translateType.d + (hours > 0 ? " " + hours + translateType.h : "") :
+                            ((hours > 0 ? hours : "<1") + translateType.h);
+                }
+                case MAXIMAL_SC -> {
+                    int years = (int) (seconds / (3600 * 24 * 30 * 12));
+                    if (years > 0) return years + translateType.y;
+
+                    int month = (int) (seconds / (3600 * 24 * 30));
+                    if (month > 0) return month + translateType.mo;
+
+                    int weeks = (int) (seconds / (3600 * 24 * 7));
+                    if (weeks > 0) return weeks + translateType.w;
+
+                    int days = (int) (seconds / (3600 * 24));
+                    if (days > 0) return days + translateType.d;
+
+                    int hours = (int) (seconds / 3600);
+                    if (hours > 0) return hours + translateType.h;
+
+                    int minutes = (int) (seconds / 60);
+                    if (minutes > 0) return minutes + translateType.m;
+
+                    return seconds + translateType.s;
+                }
+                case MAXIMAL_SC_DAYS -> {
+                    int days = (int) (seconds / (3600 * 24));
+                    if (days > 0) return days + translateType.d;
+
+                    int hours = (int) (seconds / 3600);
+                    if (hours > 0) return hours + translateType.h;
+
+                    int minutes = (int) (seconds / 60);
+                    if (minutes > 0) return minutes + translateType.m;
+
+                    return seconds + translateType.s;
+                }
+            }
+            return text;
+        }
+
+        public enum FormatType {
+            NONE,
+            ONLY_DAYS,
+            DAYS_OR_HOURS,
+            DAYS_WITH_HOURS,
+            MAXIMAL_SC,
+            MAXIMAL_SC_DAYS;
+        }
+
+        @Getter
+        public enum TranslateType {
+            NONE("y", "mo", "w", "d", "h", "m", "s"),
+            ONLY_TRANSLATE("г", "мес", "нед", "д", "ч", "мин", "сек"),
+            SHORT_TRANSLATE("г", "мес", "н", "д", "ч", "м", "с"),
+            TRANSLATE_WITH_POINTS("г.", "мес.", "нед.", "д.", "ч.", "мин.", "сек."),
+            SHORT_TRANSLATE_WITH_POINTS("г.", "мес.", "н.", "д.", "ч.", "м.", "с.");
+
+            private final String y;
+            private final String mo;
+            private final String w;
+            private final String d;
+            private final String h;
+            private final String m;
+            private final String s;
+            TranslateType(String y, String mo, String w, String d, String h, String m, String s) {
+                this.y = y;
+                this.mo = mo;
+                this.w = w;
+                this.d = d;
+                this.h = h;
+                this.m = m;
+                this.s = s;
+            }
+        }
     }
 }

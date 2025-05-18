@@ -66,12 +66,4 @@ public class Decoration {
     public boolean checkItemStack(ItemStack itemStack) {
         return this.decorationItems.stream().anyMatch(i -> i.getItemStack().equals(itemStack));
     }
-
-    public boolean checkItemId(String id) {
-        return this.decorationItems.stream().anyMatch(i -> i.checkId(id));
-    }
-
-    public boolean checkItemId(ItemStack item) {
-        return this.decorationItems.stream().anyMatch(i -> i.checkId(item));
-    }
 }

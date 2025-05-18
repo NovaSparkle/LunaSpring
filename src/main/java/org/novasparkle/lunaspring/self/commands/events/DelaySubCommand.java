@@ -42,10 +42,10 @@ public class DelaySubCommand implements Invocation {
                 return;
             }
 
-            LocalTime next = Utils.getNextTime(eventManager.getTimes());
+            LocalTime next = Utils.Time.getNextTime(eventManager.getTimes());
             LSConfig.sendMessage(sender, "events.delay", "event_name-%-" + eventManager.getName(),
                     "event_time-%-" + next.toString(),
-                    "event_time_left-%-" + Utils.getTimeBetween(LocalTime.now(), next).toString());
+                    "event_time_left-%-" + Utils.Time.getTimeBetween(LocalTime.now(), next).toString());
         }
     }
 }
