@@ -14,7 +14,6 @@ import org.novasparkle.lunaspring.self.LSConfig;
 
 @SubCommand(commandIdentifiers = {"compass"}, appliedCommand = "event")
 @Check(permissions = "lunaspring.event.compass", flags = LunaSpringSubCommand.AccessFlag.PLAYER_ONLY)
-
 public class CompassSubCommand implements Invocation {
     @Override
     public void invoke(CommandSender sender, String[] args) {

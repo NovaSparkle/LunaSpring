@@ -22,7 +22,7 @@ public class ColorManager {
     /**
      * Поскраска текста.
      */
-    public String color(@NonNull String text) {
+    public String color(String text) {
         return colorService.color(text);
     }
 
