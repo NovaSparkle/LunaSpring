@@ -50,7 +50,7 @@ public class SwitchItem extends Item {
     @Override
     public SwitchItem onClick(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
-        MenuManager.openInventory(this.toMenu, player);
+        MenuManager.openInventory(player, this.toMenu);
         return this;
     }
 }

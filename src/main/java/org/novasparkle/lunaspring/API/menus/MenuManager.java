@@ -9,7 +9,6 @@ import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -17,9 +16,9 @@ import java.util.stream.Collectors;
 @UtilityClass
 public class MenuManager {
     @Getter private final HashMap<Inventory, IMenu> activeInventories = new HashMap<>();
-    public void openInventory(IMenu menu, Player... players) {
+    public void openInventory(Player player, IMenu menu) {
         register(menu.getInventory(), menu);
-        Arrays.stream(players).forEach(player -> player.openInventory(menu.getInventory()));
+        player.openInventory(menu.getInventory());
     }
 
     public void register(Inventory inventory, IMenu menu) {
