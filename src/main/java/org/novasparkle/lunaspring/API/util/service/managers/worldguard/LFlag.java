@@ -1,11 +1,11 @@
-package org.novasparkle.lunaspring.API.eventManagment;
+package org.novasparkle.lunaspring.API.util.service.managers.worldguard;
 
 import com.sk89q.worldguard.protection.flags.Flags;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import lombok.Getter;
 
 @Getter
-public enum SFlag {
+public enum LFlag {
     PASSTHROUGH(Flags.PASSTHROUGH),
     BUILD(Flags.BUILD),
     BLOCK_BREAK(Flags.BLOCK_BREAK),
@@ -75,7 +75,7 @@ public enum SFlag {
     CHORUS_TELEPORT(Flags.CHORUS_TELEPORT);
 
     private final StateFlag stateFlag;
-    SFlag(StateFlag stateFlag) {
+    LFlag(StateFlag stateFlag) {
         this.stateFlag = stateFlag;
     }
 }

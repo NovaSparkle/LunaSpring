@@ -1,4 +1,4 @@
-package org.novasparkle.lunaspring.self.commands.self;
+package org.novasparkle.lunaspring.self.commands;
 
 import org.bukkit.command.CommandSender;
 import org.novasparkle.lunaspring.API.commands.Invocation;

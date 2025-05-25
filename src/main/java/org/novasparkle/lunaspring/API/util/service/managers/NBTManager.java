@@ -188,10 +188,8 @@ public class NBTManager {
     public static UUID getUUID(ItemStack item, String tag) {
         return getRoot(item).getUUID(tag);
     }
+
     public static boolean isSimilar(ItemStack item1, ItemStack item2) {
-        return getRoot(item1).equals(getRoot(item2));
-    }
-    public static boolean isSimilarNoTag(ItemStack item1, ItemStack item2) {
         return getRoot(item1).equals(getRoot(item2));
     }
 }

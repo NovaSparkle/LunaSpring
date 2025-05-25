@@ -1,17 +1,12 @@
 package org.novasparkle.lunaspring;
 
 import lombok.Getter;
-import org.bukkit.Location;
 import org.novasparkle.lunaspring.API.commands.LunaExecutor;
-import org.novasparkle.lunaspring.API.eventManagment.LunaEvent;
-import org.novasparkle.lunaspring.API.eventManagment.managers.EventManager;
-import org.novasparkle.lunaspring.API.eventManagment.managers.LunaEventManager;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
 import org.novasparkle.lunaspring.API.util.utilities.Color;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 import org.novasparkle.lunaspring.self.LSConfig;
 
-import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -62,70 +57,6 @@ public final class LunaSpring extends LunaPlugin {
                 Utils.Luckperms.TranslateType translateType = Utils.Luckperms.TranslateType.valueOf(split[1]);
                 Utils.Luckperms.FormatType formatType = Utils.Luckperms.FormatType.valueOf(split[2]);
                 return Utils.Luckperms.getFormatting(Utils.Luckperms.getGroupTime(offlinePlayer), translateType, formatType);
-            }
-            return null;
-        }));
-        this.createPlaceholder("event", ((offlinePlayer, params) -> {
-            if (params.equalsIgnoreCase("next_time")) {
-                LocalTime localTime = LunaEventManager.getNextTime();
-                return localTime == null ? "no" : Utils.Time.timeToString(localTime); // Время след. ивента
-            }
-
-            if (params.equalsIgnoreCase("next_name")) {
-                EventManager eventManager = LunaEventManager.getNext();
-                return eventManager == null ? "no" : ColorManager.color(eventManager.getName()); // Имя след. ивента
-            }
-
-            if (params.equalsIgnoreCase("next_id")) {
-                EventManager eventManager = LunaEventManager.getNext();
-                return eventManager == null ? "no" : eventManager.getLunaPlugin().getName(); // Айди плагина след. ивента
-            }
-
-            if (params.equalsIgnoreCase("next_left_time")) {
-                LocalTime localTime = LunaEventManager.getLeftTime(LunaEventManager.getNext());
-                return localTime == null ? "no" : Utils.Time.timeToString(localTime); // Время до след. ивента
-            }
-
-            if (params.equalsIgnoreCase("active")) {
-                return LunaEventManager.getActiveEvents().isEmpty() ? "no" : "yes"; // Активен ли сейчас любой ивент
-            }
-
-            LunaEvent lunaEvent = LunaEventManager.getActiveEvent();
-            if (params.equalsIgnoreCase("now_name")) {
-                return lunaEvent == null ? LSConfig.getMessage("dropNotActive") :
-                        ColorManager.color(LunaEventManager.getManager(lunaEvent.getLunaPlugin()).getName()); // Имя активного ивента
-            }
-
-            if (params.equalsIgnoreCase("now_id")) {
-                return lunaEvent == null ? LSConfig.getMessage("dropNotActive") : lunaEvent.getLunaPlugin().getName();
-            }
-
-            if (params.equalsIgnoreCase("left_time")) {
-                return lunaEvent == null ? LSConfig.getMessage("dropNotActive") : Utils.Time.timeToString(
-                        Utils.Time.parseTime(lunaEvent.getDelay().getLeftSeconds()));
-                // Время, которое осталось до окончания ивента
-            }
-
-            if (params.endsWith("[a]")) {
-                return lunaEvent == null ? Utils.setPlaceholders(offlinePlayer, "%event_" + params.replace("[a]", "") + "%") :
-                        LSConfig.getMessage("dropIsActive"); // Проверка на активность ивента
-            }
-
-            Location location = lunaEvent == null ? null : lunaEvent.getLocation();
-            if (params.equalsIgnoreCase("x")) {
-                return location == null ? "---" : String.valueOf(location.getBlockX());
-            }
-
-            if (params.equalsIgnoreCase("y")) {
-                return location == null ? "---" : String.valueOf(location.getBlockY());
-            }
-
-            if (params.equalsIgnoreCase("z")) {
-                return location == null ? "---" : String.valueOf(location.getBlockZ());
-            }
-
-            if (params.equalsIgnoreCase("world")) {
-                return location == null ? "---" : location.getWorld().getName();
             }
             return null;
         }));

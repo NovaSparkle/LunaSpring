@@ -13,21 +13,19 @@ import org.novasparkle.lunaspring.API.util.utilities.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter @Setter @SuppressWarnings("unused")
+@Getter @SuppressWarnings("unused")
 public class Decoration implements Cloneable {
+    private final Inventory inventory;
     private final List<Item> decorationItems;
-    private final IMenu iMenu;
-
-    public Decoration(ConfigurationSection decorationSection, IMenu iMenu) {
-        this.iMenu = iMenu;
+    public Decoration(ConfigurationSection decorationSection, Inventory inventory) {
+        this.inventory = inventory;
         this.decorationItems = new ArrayList<>();
         boolean fillType = decorationSection.getBoolean("fillType.enabled");
 
         if (fillType) {
             ConfigurationSection section = decorationSection.getConfigurationSection("fillType.item");
-            assert section != null;
 
-            Inventory inventory = this.iMenu.getInventory();
+            assert section != null;
             for (int i = 0; i < inventory.getSize(); i++) {
                 if (inventory.getItem(i) == null) this.decorationItems.add(new Item(section, i));
             }
@@ -48,8 +46,9 @@ public class Decoration implements Cloneable {
                 "decorationItems=" + this.decorationItems +
                 '}';
     }
+
     public void insert() {
-        this.decorationItems.forEach(i -> i.insert(this.iMenu));
+        this.decorationItems.forEach(i -> this.inventory.setItem(i.getSlot(), i.getItemStack()));
     }
 
     public int getDecorationsAmount() {
@@ -67,6 +66,7 @@ public class Decoration implements Cloneable {
     public boolean checkItemStack(ItemStack itemStack) {
         return this.decorationItems.stream().anyMatch(i -> i.getItemStack().equals(itemStack));
     }
+
     @Override
     @SneakyThrows
     public Decoration clone() {

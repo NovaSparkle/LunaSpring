@@ -1,4 +1,4 @@
-package org.novasparkle.lunaspring.API.util.service.managers;
+package org.novasparkle.lunaspring.API.util.service.managers.worldguard;
 
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
@@ -7,7 +7,6 @@ import lombok.experimental.UtilityClass;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.novasparkle.lunaspring.API.eventManagment.SFlag;
 import org.novasparkle.lunaspring.API.util.service.RegionService;
 
 import java.util.Set;
@@ -92,8 +91,8 @@ public class RegionManager {
         regionService.setFlag(regionName, flag, state);
     }
 
-    public void setFlag(String regionName, SFlag sFlag, StateFlag.State state) {
-        regionService.setFlag(regionName, sFlag, state);
+    public void setFlag(String regionName, LFlag lFlag, StateFlag.State state) {
+        regionService.setFlag(regionName, lFlag, state);
     }
 
     public int getCount(Player player) {

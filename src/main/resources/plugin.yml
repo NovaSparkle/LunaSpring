@@ -12,15 +12,6 @@ commands:
   plugins:
     aliases:
       - pl
-  lunaevent:
-    aliases:
-      - e
-      - ev
-      - event
-      - lunae
-      - levent
-      - le
-      - lev
 authors:
   - NovaSparkle
   - ProGiple
@@ -42,16 +33,4 @@ permissions:
   lunaspring.hooked:
     default: op
   lunaspring.plugins:
-    default: op
-  lunaspring.event.delay:
-    default: op
-  lunaspring.event.teleport:
-    default: op
-  lunaspring.event.compass:
-    default: op
-  lunaspring.event.locate:
-    default: op
-  lunaspring.event.start:
-    default: op
-  lunaspring.event.stop:
     default: op
