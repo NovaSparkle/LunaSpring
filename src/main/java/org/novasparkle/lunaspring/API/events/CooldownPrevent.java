@@ -2,6 +2,7 @@ package org.novasparkle.lunaspring.API.events;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.SneakyThrows;
 import org.bukkit.event.Cancellable;
 
 import java.util.HashMap;
@@ -13,7 +14,7 @@ import java.util.Map;
  * @param <T> - класс по которому определяется задержка.
  */
 @Getter
-public class CooldownPrevent<T> {
+public class CooldownPrevent<T> implements Cloneable {
     private final Map<T, Long> cooldownMap = new HashMap<>();
     @Setter private int cooldownMS;
 
@@ -42,5 +43,12 @@ public class CooldownPrevent<T> {
             this.cooldownMap.put(object, System.currentTimeMillis() + this.cooldownMS);
             return false;
         }
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    @SneakyThrows
+    public CooldownPrevent<T> clone() {
+        return (CooldownPrevent<T>) super.clone();
     }
 }

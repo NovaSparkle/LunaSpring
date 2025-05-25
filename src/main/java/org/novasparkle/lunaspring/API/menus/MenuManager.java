@@ -9,6 +9,7 @@ import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -16,9 +17,9 @@ import java.util.stream.Collectors;
 @UtilityClass
 public class MenuManager {
     @Getter private final HashMap<Inventory, IMenu> activeInventories = new HashMap<>();
-    public void openInventory(Player player, IMenu menu) {
+    public void openInventory(IMenu menu, Player... players) {
         register(menu.getInventory(), menu);
-        player.openInventory(menu.getInventory());
+        Arrays.stream(players).forEach(player -> player.openInventory(menu.getInventory()));
     }
 
     public void register(Inventory inventory, IMenu menu) {
@@ -48,7 +49,7 @@ public class MenuManager {
     public void handleClose(InventoryCloseEvent event) {
         Inventory inventory = event.getInventory();
         IMenu menu = activeInventories.get(event.getInventory());
-        if (menu != null) {
+        if (menu != null && getActiveViewers(menu).size() <= 1) {
             menu.onClose(event);
             unregister(inventory);
         }
@@ -61,4 +62,9 @@ public class MenuManager {
     public Set<Player> getActiveViewers(IMenu iMenu) {
         return activeInventories.values().stream().filter(menu -> menu.equals(iMenu)).map(IMenu::getPlayer).collect(Collectors.toSet());
     }
+
+    public IMenu getActiveMenu(Player player) {
+        return activeInventories.values().stream().filter(m -> m.getPlayer().equals(player)).findFirst().orElse(null);
+    }
+
 }

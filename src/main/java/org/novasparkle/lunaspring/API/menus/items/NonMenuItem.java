@@ -170,7 +170,7 @@ public class NonMenuItem {
         return this.setAmount(this.getAmount() - 1);
     }
 
-    private void update() {
+    public void update() {
         this.itemStack.setType(this.material);
         ItemMeta meta = this.itemStack.getItemMeta();
         if (meta == null)

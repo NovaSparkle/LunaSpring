@@ -30,9 +30,9 @@ public abstract class AMenu implements IMenu {
     private Inventory inventory;
     private String title;
     @Setter private Decoration decoration;
-
+    private CooldownPrevent<Integer> cooldownPrevent = new CooldownPrevent<>();
     private final Player player;
-    private final CooldownPrevent<Integer> cooldownPrevent = new CooldownPrevent<>();
+
     private final List<Item> itemList = new ArrayList<>();
 
     public AMenu(@NonNull Player player, String title, @Range(from = 9L, to=54) byte size) {
@@ -164,5 +164,13 @@ public abstract class AMenu implements IMenu {
 
     public void drawItems() {
         this.itemList.forEach(System.out::println);
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        AMenu copyMenu = (AMenu) super.clone();
+        copyMenu.decoration = this.decoration.clone();
+        copyMenu.cooldownPrevent = this.cooldownPrevent.clone();
+        return copyMenu;
     }
 }

@@ -9,6 +9,7 @@ import org.bukkit.command.TabExecutor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
+import org.novasparkle.lunaspring.self.LSConfig;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,11 +33,13 @@ public final class LunaSpringCommandProcessor implements TabExecutor {
     @Override
     @SneakyThrows
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        for (LunaSpringSubCommand subCommand : this.subCommands) {
-            if (!subCommand.hasIdentifier(args[0])) continue;
-            subCommand.invoke(sender, args);
-            break;
-        }
+        if (args.length > 0) {
+            for (LunaSpringSubCommand subCommand : this.subCommands) {
+                if (!subCommand.hasIdentifier(args[0])) continue;
+                subCommand.invoke(sender, args);
+                break;
+            }
+        } else LSConfig.sendMessage(sender, "wrongArguments");
         return true;
     }
 

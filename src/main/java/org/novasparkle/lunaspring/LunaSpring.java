@@ -26,7 +26,7 @@ public final class LunaSpring extends LunaPlugin {
         if (INSTANCE != null) super.onEnable();
         INSTANCE = this;
         this.saveDefaultConfig();
-
+        this.loadFile("localization.yml");
         this.processListeners();
         LunaExecutor.initialize(this);
         this.registerLunaPlaceholder();
@@ -65,7 +65,6 @@ public final class LunaSpring extends LunaPlugin {
             }
             return null;
         }));
-
         this.createPlaceholder("event", ((offlinePlayer, params) -> {
             if (params.equalsIgnoreCase("next_time")) {
                 LocalTime localTime = LunaEventManager.getNextTime();

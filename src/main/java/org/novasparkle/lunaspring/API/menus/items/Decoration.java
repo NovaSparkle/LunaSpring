@@ -2,6 +2,7 @@ package org.novasparkle.lunaspring.API.menus.items;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.SneakyThrows;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.Inventory;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter @Setter @SuppressWarnings("unused")
-public class Decoration {
+public class Decoration implements Cloneable {
     private final List<Item> decorationItems;
     private final IMenu iMenu;
 
@@ -65,5 +66,10 @@ public class Decoration {
 
     public boolean checkItemStack(ItemStack itemStack) {
         return this.decorationItems.stream().anyMatch(i -> i.getItemStack().equals(itemStack));
+    }
+    @Override
+    @SneakyThrows
+    public Decoration clone() {
+        return (Decoration) super.clone();
     }
 }
