@@ -33,16 +33,17 @@ public class AnnotationScanner {
                     }
                 }
             }
-        }
+        } catch (IllegalStateException ignored) {}
         return annotatedClasses;
     }
 
     @SneakyThrows
     public <A extends Annotation> Set<ClassEntry<A>> findAnnotatedClasses(LunaPlugin plugin, Class<A> annotationClass) {
         Set<ClassEntry<A>> annotatedClasses = Sets.newHashSet();
-
         try (JarFile jar = new JarFile(plugin.getJar())) {
+
             Enumeration<JarEntry> e = jar.entries();
+
 
             while (e.hasMoreElements()) {
                 JarEntry jarEntry = e.nextElement();
@@ -57,7 +58,7 @@ public class AnnotationScanner {
                     }
                 }
             }
-        }
+        } catch (IllegalStateException ignored) {}
         return annotatedClasses;
     }
 }
