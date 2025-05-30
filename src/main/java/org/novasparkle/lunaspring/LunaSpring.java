@@ -6,6 +6,8 @@ import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
 import org.novasparkle.lunaspring.API.util.utilities.Color;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 import org.novasparkle.lunaspring.self.LSConfig;
+import org.novasparkle.lunaspring.self.PaidPlugin;
+import org.novasparkle.lunaspring.self.lunaengine.LunaEngine;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -15,15 +17,18 @@ public final class LunaSpring extends LunaPlugin {
     private static LunaSpring INSTANCE;
     @Getter
     private final Set<LunaPlugin> hookedPlugins = new HashSet<>();
+    private LunaEngine LE;
 
     @Override
     public void onEnable() {
         if (INSTANCE != null) super.onEnable();
         INSTANCE = this;
+        this.LE = new LunaEngine();
         this.saveDefaultConfig();
         this.loadFile("localization.yml");
         this.processListeners();
         LunaExecutor.initialize(this);
+
         this.registerLunaPlaceholder();
     }
 
@@ -50,6 +55,8 @@ public final class LunaSpring extends LunaPlugin {
                 return "";
             }
 
+
+
             if (params.startsWith("lp-")) { // %lunaspring_lp-SHORT_TRANSLATE_WITH_POINTS-DAYS_OR_HOURS%
                 String[] split = params.split("-");
                 if (split.length < 2) return null;
@@ -63,7 +70,15 @@ public final class LunaSpring extends LunaPlugin {
     }
 
     public void hookPlugin(LunaPlugin lunaPlugin) {
-        if (lunaPlugin != INSTANCE) this.hookedPlugins.add(lunaPlugin);
+        if (lunaPlugin != INSTANCE) {
+            Class<?> pluginClass = lunaPlugin.getClass();
+            if (pluginClass.isAnnotationPresent(PaidPlugin.class) && !this.LE.checkPlugin(lunaPlugin)) {
+                this.getPluginLoader().disablePlugin(lunaPlugin);
+                this.warning("{E}Виртуальный ключ для плагина не найден!");
+                this.warning("{S}Для работы с ним, необходимо получить ключ у администрации -> https://t.me/LunaEngineBot");
+            } else
+                this.hookedPlugins.add(lunaPlugin);
+        }
     }
 
     public LunaPlugin getLunaPlugin(String name) {
