@@ -31,7 +31,7 @@ public abstract class AMenu implements IMenu {
     private String title;
     @Setter private Decoration decoration;
     private CooldownPrevent<Integer> cooldownPrevent = new CooldownPrevent<>();
-    private final Player player;
+    private Player player;
 
     private final List<Item> itemList = new ArrayList<>();
 
@@ -166,11 +166,13 @@ public abstract class AMenu implements IMenu {
         this.itemList.forEach(System.out::println);
     }
 
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
+    protected Object clone(Player player) throws CloneNotSupportedException {
         AMenu copyMenu = (AMenu) super.clone();
+        copyMenu.player = player;
         copyMenu.decoration = this.decoration.clone();
+        copyMenu.inventory = this.getInventory();
         copyMenu.cooldownPrevent = this.cooldownPrevent.clone();
+        System.out.println(copyMenu.inventory == this.getInventory());
         return copyMenu;
     }
 }

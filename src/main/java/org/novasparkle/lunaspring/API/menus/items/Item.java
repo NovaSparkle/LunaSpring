@@ -27,7 +27,7 @@ public class Item extends NonMenuItem {
     private IMenu menu;
     @Setter private byte slot = 0;
 
-    public Item(Material material, String displayName, List<String> lore, int amount, @Range(from = 0, to = 54) byte slot) {
+    public Item(Material material, String displayName, List<String> lore, int amount, @Range(from = 0, to = 53) byte slot) {
         super(material, displayName, lore, amount);
         this.slot = slot;
         this.defaultLore = new ArrayList<>(this.getLore());
@@ -40,7 +40,7 @@ public class Item extends NonMenuItem {
         this.defaultName = this.getDisplayName();
     }
 
-    public Item(NonMenuItem nonMenuItem, @Range(from = 0, to = 54) byte slot) {
+    public Item(NonMenuItem nonMenuItem, @Range(from = 0, to = 53) byte slot) {
         this(nonMenuItem.getMaterial(), nonMenuItem.getDisplayName(), nonMenuItem.getLore(), nonMenuItem.getAmount(), slot);
     }
 
@@ -48,12 +48,12 @@ public class Item extends NonMenuItem {
         this(material, 1);
     }
 
-    public Item(Material material, @Range(from = 0, to = 54) byte slot) {
+    public Item(Material material, @Range(from = 0, to = 53) byte slot) {
         this(material);
         this.slot = slot;
     }
 
-    public Item(@NonNull ConfigurationSection section, @Range(from = 0, to = 54) int slot) {
+    public Item(@NonNull ConfigurationSection section, @Range(from = 0, to = 53) int slot) {
         super(section);
         this.slot = (byte) slot;
         this.defaultLore = new ArrayList<>(this.getLore());
@@ -84,12 +84,12 @@ public class Item extends NonMenuItem {
         return this;
     }
 
-    public Item insert(@Range(from = 0, to = 54) byte slot) {
+    public Item insert(@Range(from = 0, to = 53) byte slot) {
         if (this.menu != null) this.insert(this.menu, slot);
         return this;
     }
 
-    public Item insert(@NonNull IMenu aMenu, @Range(from = 0, to = 54) byte slot) {
+    public Item insert(@NonNull IMenu aMenu, @Range(from = 0, to = 53) byte slot) {
         this.menu = aMenu;
         this.slot = slot;
 

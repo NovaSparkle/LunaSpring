@@ -74,6 +74,7 @@ public final class LunaSpring extends LunaPlugin {
             Class<?> pluginClass = lunaPlugin.getClass();
             if (pluginClass.isAnnotationPresent(PaidPlugin.class) && !this.LE.checkPlugin(lunaPlugin)) {
                 this.getPluginLoader().disablePlugin(lunaPlugin);
+
                 this.warning("{E}Виртуальный ключ для плагина не найден!");
                 this.warning("{S}Для работы с ним, необходимо получить ключ у администрации -> https://t.me/LunaEngineBot");
             } else

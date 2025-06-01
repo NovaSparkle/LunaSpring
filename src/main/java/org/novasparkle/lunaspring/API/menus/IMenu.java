@@ -8,7 +8,7 @@ import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
 
-public interface IMenu extends Cloneable {
+public interface IMenu {
     Inventory getInventory();
     Player getPlayer();
     void onOpen(InventoryOpenEvent event);
