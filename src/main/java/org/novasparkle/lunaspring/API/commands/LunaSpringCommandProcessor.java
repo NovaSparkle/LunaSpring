@@ -19,9 +19,9 @@ public final class LunaSpringCommandProcessor implements TabExecutor {
 
     private final List<LunaSpringSubCommand> subCommands;
     private final List<String> commandIdentifiers;
-
     @Accessors(fluent = true)
     private final String appliedCommand;
+    private Invocation zeroCommand;
 
     @SneakyThrows
     public LunaSpringCommandProcessor(@NotNull String appliedCommand) {
@@ -39,7 +39,9 @@ public final class LunaSpringCommandProcessor implements TabExecutor {
                 subCommand.invoke(sender, args);
                 break;
             }
-        } else LSConfig.sendMessage(sender, "wrongArguments");
+        } else if (this.zeroCommand != null) this.zeroCommand.invoke(sender, args);
+          else LSConfig.sendMessage(sender, "wrongArguments");
+
         return true;
     }
 
@@ -56,5 +58,8 @@ public final class LunaSpringCommandProcessor implements TabExecutor {
     public void registerSubCommand(LunaSpringSubCommand subCommand) {
         this.subCommands.add(subCommand);
         this.commandIdentifiers.addAll(subCommand.getCommandIdentifiers());
+    }
+    public void registerZeroArgCommand(ZeroArgCommand command) {
+        this.zeroCommand = command;
     }
 }
