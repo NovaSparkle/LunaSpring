@@ -44,7 +44,6 @@ public class AnnotationScanner {
 
             Enumeration<JarEntry> e = jar.entries();
 
-
             while (e.hasMoreElements()) {
                 JarEntry jarEntry = e.nextElement();
 
@@ -52,6 +51,11 @@ public class AnnotationScanner {
                     String className = jarEntry.getName().replace(".class", "").replace('/', '.');
                     Class<?> clazz = Class.forName(className);
 
+                    List<Annotation> annotations = List.of(clazz.getAnnotations());
+                    if (!annotations.isEmpty()) {
+                        System.out.println(className);
+                        annotations.forEach(a -> System.out.println(a.annotationType().getName()));
+                    }
                     if (clazz.isAnnotationPresent(annotationClass)) {
                         ClassEntry<A> classEntry = new ClassEntry<>(clazz, annotationClass);
                         annotatedClasses.add(classEntry);
