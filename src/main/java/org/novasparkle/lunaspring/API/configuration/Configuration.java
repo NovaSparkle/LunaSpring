@@ -63,6 +63,10 @@ public class Configuration extends IConfig {
         this.config.set(path, value);
     }
 
+    public void setDouble(String path, double value) {
+        this.config.set(path, value);
+    }
+
     /**
      * Запись локации.
      * @param asLocation если true, то локация запишется в одну строку, если false, то запишется в виде секции со всеми данными.

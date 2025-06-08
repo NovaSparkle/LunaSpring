@@ -134,6 +134,10 @@ public class IConfig {
         return ColorManager.color(Utils.applyReplacements(this.getString(String.format("messages.%s", id)), replacements));
     }
 
+    public double getDouble(String path) {
+        return this.config.getDouble(path);
+    }
+
     /**
     * Отправка сообщения для sender с айди сообщения id из секции конфигурации messages (данные сообщения указаны в формате списка (List<String>)),
     * массив replacements нужен для указания локальных заменителей для сообщения, если указать сразу три заменителя (например никнейм игрока,

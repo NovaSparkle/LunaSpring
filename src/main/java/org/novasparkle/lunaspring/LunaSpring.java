@@ -1,6 +1,7 @@
 package org.novasparkle.lunaspring;
 
 import lombok.Getter;
+import lombok.SneakyThrows;
 import org.novasparkle.lunaspring.API.commands.LunaExecutor;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
 import org.novasparkle.lunaspring.API.util.utilities.Color;
@@ -55,8 +56,6 @@ public final class LunaSpring extends LunaPlugin {
                 return "";
             }
 
-
-
             if (params.startsWith("lp-")) { // %lunaspring_lp-SHORT_TRANSLATE_WITH_POINTS-DAYS_OR_HOURS%
                 String[] split = params.split("-");
                 if (split.length < 2) return null;
@@ -69,16 +68,23 @@ public final class LunaSpring extends LunaPlugin {
         }));
     }
 
+    @SneakyThrows
     public void hookPlugin(LunaPlugin lunaPlugin) {
         if (lunaPlugin != INSTANCE) {
             Class<?> pluginClass = lunaPlugin.getClass();
-            if (pluginClass.isAnnotationPresent(PaidPlugin.class) && !this.LE.checkPlugin(lunaPlugin)) {
-                this.getPluginLoader().disablePlugin(lunaPlugin);
+            if (pluginClass.isAnnotationPresent(PaidPlugin.class)) {
+                if (this.LE.getConnection() == null || this.LE.getConnection().isClosed()) this.LE.connect();
 
-                this.warning("{E}Виртуальный ключ для плагина не найден!");
-                this.warning("{S}Для работы с ним, необходимо получить ключ у администрации -> https://t.me/LunaEngineBot");
-            } else
-                this.hookedPlugins.add(lunaPlugin);
+                if (!this.LE.checkPlugin(lunaPlugin)) {
+                    this.getPluginLoader().disablePlugin(lunaPlugin);
+
+                    this.warning("{E}Виртуальный ключ для плагина не найден!");
+                    this.warning("{S}Для работы с ним, необходимо получить ключ у администрации -> https://t.me/LunaEngineBot");
+                    return;
+                }
+            }
+
+            this.hookedPlugins.add(lunaPlugin);
         }
     }
 
