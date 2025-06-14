@@ -26,8 +26,6 @@ pl_command:
   enabledPlugin: '{S}Включен'
   disabledPlugin: '{E}Отключен'
 
-st: '[SUGGESTCOMMAND] {M}Чтобы создать клан *%*{S}Кликните*%*/clan create [тэг] [префикс]*%* {M}сюда'
-
 # * Сообщения *
 messages:
   noPermission: "{E}Нет прав на выполнение команды!"
