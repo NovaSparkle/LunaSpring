@@ -2,6 +2,9 @@ package org.novasparkle.lunaspring.API.configuration;
 
 import com.google.common.collect.Lists;
 import lombok.Getter;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -152,6 +155,9 @@ public class IConfig {
     *    - "[TITLE] &bMESSAGES <S> &nexample" // <S> (split) - разделитель TITLE и SUBTITLE<br>
     *    - "[SOUND] UI_BUTTON_CLICK"<br>
      */
+
+
+
     @SuppressWarnings("deprecation")
     public void sendMessage(CommandSender sender, String id, String... replacements) {
         String path = String.format("messages.%s", id);
@@ -168,11 +174,37 @@ public class IConfig {
             Player player = sender instanceof Player p ? p : null;
             if (player != null) line = Utils.setPlaceholders(player, line);
 
-            String newLine = ColorManager.color(line
+
+            String newLine = line
                     .replace("[ACTION_BAR] ", "")
                     .replace("[BROADCAST] ", "")
                     .replace("[TITLE] ", "")
-                    .replace("[SOUND] ", ""));
+                    .replace("[SUGGESTCOMMAND] ", "")
+                    .replace("[SOUND] ", "");
+
+            if (line.startsWith("[SUGGESTCOMMAND]")) {
+
+                ComponentBuilder builder = new ComponentBuilder();
+
+                String[] parts = newLine.split("\\*%\\*");
+                for (int i = 0; i < parts.length; i++) {
+
+                    if (i % 2 == 1) {
+                        String clickablePart = parts[i];
+                        String command = parts[++i];
+
+                        TextComponent clickableText = new TextComponent(clickablePart);
+                        clickableText.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, command));
+                        builder.append(clickableText);
+                    } else {
+                        builder.append(ColorManager.colorHex(parts[0]));
+                    }
+                }
+                player.spigot().sendMessage(builder.create());
+                return;
+            }
+            newLine = ColorManager.color(newLine);
+
             if (line.startsWith("[ACTION_BAR]")) {
                 if (player == null) continue;
                 player.sendActionBar(newLine);

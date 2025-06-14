@@ -50,6 +50,7 @@ public class AnnotationScanner {
                 if (jarEntry.getName().endsWith(".class")) {
                     String className = jarEntry.getName().replace(".class", "").replace('/', '.');
                     Class<?> clazz = Class.forName(className);
+
                     if (clazz.isAnnotationPresent(annotationClass)) {
                         ClassEntry<A> classEntry = new ClassEntry<>(clazz, annotationClass);
                         annotatedClasses.add(classEntry);

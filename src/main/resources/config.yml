@@ -21,10 +21,12 @@ colors:
 
 # * Цветовые коды для выделения сообщений в консоли *
 on_load_plugin_text_colors: "bcde"
-# * Использовать ли вместо стандартной команды /plugins (/pl) кастомную? *
+
 pl_command:
   enabledPlugin: '{S}Включен'
   disabledPlugin: '{E}Отключен'
+
+st: '[SUGGESTCOMMAND] {M}Чтобы создать клан *%*{S}Кликните*%*/clan create [тэг] [префикс]*%* {M}сюда'
 
 # * Сообщения *
 messages:

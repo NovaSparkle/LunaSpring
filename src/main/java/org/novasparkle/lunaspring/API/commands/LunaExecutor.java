@@ -19,6 +19,7 @@ public final class LunaExecutor {
         Set<String> commands = plugin.getDescription().getCommands().keySet();
 
         Set<ClassEntry<ZeroArgSubCommand>> zeroArgSubCommandsList = AnnotationScanner.findAnnotatedClasses(plugin, ZeroArgSubCommand.class);
+
         for (String command : commands) {
             LunaSpringCommandProcessor processor = new LunaSpringCommandProcessor(command);
 

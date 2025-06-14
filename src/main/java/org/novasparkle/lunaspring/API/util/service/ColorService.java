@@ -28,6 +28,14 @@ public final class ColorService implements LunaService {
         return Utils.color(text);
     }
 
+    public String colorHex(String text) {
+        if (text == null || text.isEmpty()) return "";
+        for (Color color : this.colorList) {
+            text = text.replaceAll(color.abbr(), color.toHex());
+        }
+        return text;
+    }
+
     public Color getColor(String abbr) {
         return this.colorList.stream().filter(c -> c.abbr().equals(abbr)).findFirst().orElseThrow();
     }
