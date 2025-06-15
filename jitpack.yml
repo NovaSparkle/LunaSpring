@@ -10,3 +10,4 @@ install:
   - mvn -v
   - mvn wrapper:wrapper -Dmaven=3.6.3
   - mvn install -Dmaven.javadoc.skip=true -DskipTests
+version: 3.6.3
