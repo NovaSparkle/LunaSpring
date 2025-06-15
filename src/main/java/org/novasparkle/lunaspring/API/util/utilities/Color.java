@@ -3,8 +3,8 @@ package org.novasparkle.lunaspring.API.util.utilities;
 import lombok.Getter;
 
 
-@Getter
-public record Color(String abbr, String variable) {
+
+public record Color(@Getter String abbr, @Getter String variable) {
 
     @Override
     public String toString() {

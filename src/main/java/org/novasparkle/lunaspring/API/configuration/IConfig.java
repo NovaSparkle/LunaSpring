@@ -201,10 +201,7 @@ public class IConfig {
                         builder.append(clickableText);
                     } else {
                         System.out.println("else");
-                        try {
-                            builder.append(ColorManager.colorHex(parts[i]));
-                        } catch (ArrayIndexOutOfBoundsException )
-
+                        builder.append(ColorManager.colorHex(parts[i]));
                     }
                 }
                 BaseComponent[] created = builder.create();
