@@ -2,11 +2,11 @@ jdk:
   - openjdk16
 
 before_install:
+  - sdk install maven
+  - mvn wrapper:wrapper -Dmaven=3.6.3
+  - mvn -v
   - sdk install java 16.0.2-tem
   - sdk use java 16.0.2-tem
 
 install:
-  - sdk install maven
-  - mvn -v
-  - mvn wrapper:wrapper -Dmaven=3.6.3
   - mvn install -Dmaven.javadoc.skip=true -DskipTests
