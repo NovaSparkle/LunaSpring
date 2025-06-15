@@ -31,7 +31,8 @@ public final class ColorService implements LunaService {
     public String colorHex(String text) {
         if (text == null || text.isEmpty()) return "";
         for (Color color : this.colorList) {
-            text = text.replaceAll(color.abbr(), color.toHex());
+            if (text.length() == 14)
+                text = text.replaceAll(color.abbr(), color.toHex());
         }
         return text;
     }

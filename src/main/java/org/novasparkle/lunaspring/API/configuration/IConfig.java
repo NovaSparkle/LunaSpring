@@ -2,6 +2,7 @@ package org.novasparkle.lunaspring.API.configuration;
 
 import com.google.common.collect.Lists;
 import lombok.Getter;
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -20,6 +21,7 @@ import org.novasparkle.lunaspring.API.util.utilities.AnnounceUtils;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 
 public class IConfig {
@@ -188,20 +190,27 @@ public class IConfig {
 
                 String[] parts = newLine.split("\\*%\\*");
                 for (int i = 0; i < parts.length; i++) {
-
+                    System.out.println(Arrays.toString(parts));
+                    System.out.println(parts.length);
                     if (i % 2 == 1) {
                         String clickablePart = parts[i];
                         String command = parts[++i];
-
+                        System.out.println(clickablePart);
                         TextComponent clickableText = new TextComponent(clickablePart);
                         clickableText.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, command));
                         builder.append(clickableText);
                     } else {
-                        builder.append(ColorManager.colorHex(parts[0]));
+                        System.out.println("else");
+                        try {
+                            builder.append(ColorManager.colorHex(parts[i]));
+                        } catch (ArrayIndexOutOfBoundsException )
+
                     }
                 }
-                player.spigot().sendMessage(builder.create());
-                return;
+                BaseComponent[] created = builder.create();
+                System.out.println(Arrays.toString(created));
+                player.spigot().sendMessage(created);
+                continue;
             }
             newLine = ColorManager.color(newLine);
 
