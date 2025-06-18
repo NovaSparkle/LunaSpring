@@ -47,7 +47,6 @@ public class NonMenuItem {
     private final Map<Enchantment, Integer> enchantments = Maps.newHashMap();
     private final List<ItemFlag> itemFlags = Lists.newArrayList();
 
-
     public NonMenuItem(Material material, String displayName, List<String> lore, int amount) {
         if (material == null) throw new IllegalArgumentException("Материал предмета не может быть null!");
         this.material = material;

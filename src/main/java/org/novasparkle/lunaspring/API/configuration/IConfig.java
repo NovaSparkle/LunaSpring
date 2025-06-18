@@ -158,8 +158,6 @@ public class IConfig {
     *    - "[SOUND] UI_BUTTON_CLICK"<br>
      */
 
-
-
     @SuppressWarnings("deprecation")
     public void sendMessage(CommandSender sender, String id, String... replacements) {
         String path = String.format("messages.%s", id);
@@ -176,7 +174,6 @@ public class IConfig {
             Player player = sender instanceof Player p ? p : null;
             if (player != null) line = Utils.setPlaceholders(player, line);
 
-
             String newLine = line
                     .replace("[ACTION_BAR] ", "")
                     .replace("[BROADCAST] ", "")
@@ -185,28 +182,29 @@ public class IConfig {
                     .replace("[SOUND] ", "");
 
             if (line.startsWith("[SUGGESTCOMMAND]")) {
-
                 ComponentBuilder builder = new ComponentBuilder();
 
                 String[] parts = newLine.split("\\*%\\*");
                 for (int i = 0; i < parts.length; i++) {
-                    System.out.println(Arrays.toString(parts));
-                    System.out.println(parts.length);
+                    // System.out.println(Arrays.toString(parts));
+                    // System.out.println(parts.length);
                     if (i % 2 == 1) {
                         String clickablePart = parts[i];
                         String command = parts[++i];
-                        System.out.println(clickablePart);
+                        // System.out.println(clickablePart);
+
                         TextComponent clickableText = new TextComponent(clickablePart);
                         clickableText.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, command));
                         builder.append(clickableText);
                     } else {
-                        System.out.println("else");
+                        // System.out.println("else");
                         builder.append(ColorManager.colorHex(parts[i]));
                     }
                 }
                 BaseComponent[] created = builder.create();
-                System.out.println(Arrays.toString(created));
-                player.spigot().sendMessage(created);
+                // System.out.println(Arrays.toString(created));
+
+                sender.spigot().sendMessage(created);
                 continue;
             }
             newLine = ColorManager.color(newLine);
