@@ -23,7 +23,7 @@ public class WorldEditManager {
         return WorldEdit.getInstance().newEditSession(BukkitAdapter.adapt(world));
     }
 
-    public EditSession pasteSchematic(File schemFile, Location location, int offsetX, int offsetY, int offsetZ, boolean ignoreAirBlocks) {
+    public EditSession pasteSchematic(File schemFile, Location location, double offsetX, double offsetY, double offsetZ, boolean ignoreAirBlocks) {
         return weService.pasteSchematic(schemFile, location, offsetX, offsetY, offsetZ, ignoreAirBlocks);
     }
 
@@ -31,7 +31,7 @@ public class WorldEditManager {
         return pasteSchematic(schemFile, location, 0, 0, 0, ignoreAirBlocks);
     }
 
-    public EditSession pasteSchematic(File schemFile, Location location, int x, int y, int z) {
+    public EditSession pasteSchematic(File schemFile, Location location, double x, double y, double z) {
         return pasteSchematic(schemFile, location, x, y, z, false);
     }
 

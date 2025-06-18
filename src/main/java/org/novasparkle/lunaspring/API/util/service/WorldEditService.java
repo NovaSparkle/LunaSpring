@@ -25,7 +25,7 @@ public final class WorldEditService implements LunaService {
         return WorldEdit.getInstance().newEditSession(BukkitAdapter.adapt(world));
     }
 
-    public EditSession pasteSchematic(File schemFile, Location location, int offsetX, int offsetY, int offsetZ, boolean ignoreAirBlocks) {
+    public EditSession pasteSchematic(File schemFile, Location location, double offsetX, double offsetY, double offsetZ, boolean ignoreAirBlocks) {
         try {
             ClipboardFormat format = ClipboardFormats.findByFile(schemFile);
 

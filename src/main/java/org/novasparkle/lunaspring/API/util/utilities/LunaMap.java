@@ -1,6 +1,7 @@
 package org.novasparkle.lunaspring.API.util.utilities;
 
 import java.util.*;
+import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
@@ -74,11 +75,11 @@ public class LunaMap<S, E, X> {
     }
 
     public E getFirstValue(S key) {
-        return this.getElement(key).getFirst();
+        return this.containsKey(key) ? this.getElement(key).getFirst() : null;
     }
 
     public X getSecondValue(S key) {
-        return this.getElement(key).getSecond();
+        return this.containsKey(key) ? this.getElement(key).getSecond() : null;
     }
 
     public void replace(S key, E firstValue, X secondValue) {

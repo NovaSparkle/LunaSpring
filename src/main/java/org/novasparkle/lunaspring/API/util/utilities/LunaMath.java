@@ -17,10 +17,14 @@ public class LunaMath {
     }
 
     public int toInt(String text) {
+        return toInt(text, 0);
+    }
+
+    public int toInt(String text, int defaultNum) {
         try {
             return Integer.parseInt(text);
         } catch (NumberFormatException e) {
-            return 0;
+            return defaultNum;
         }
     }
 
@@ -29,10 +33,14 @@ public class LunaMath {
     }
 
     public double toDouble(String text) {
+        return toDouble(text, 0);
+    }
+
+    public double toDouble(String text, double defaultNum) {
         try {
             return Double.parseDouble(text);
         } catch (NumberFormatException e) {
-            return 0;
+            return defaultNum;
         }
     }
 
@@ -47,12 +55,12 @@ public class LunaMath {
 
     public int getRandomInt(String numerical) {
         String[] split = numerical.split("-");
-        if (split.length < 2) split = new String[]{"0", split[0]};
+        if (split.length < 2) return toInt(split[0]);
         return getRandomInt(toInt(split[0]), toInt(split[1]));
     }
 
     public double round(double notRoundedNum, int roundLength) {
-        return BigDecimal.valueOf(notRoundedNum)
+        return roundLength <= 0 ? toInt(notRoundedNum) : BigDecimal.valueOf(notRoundedNum)
                 .setScale(roundLength, RoundingMode.HALF_UP)
                 .doubleValue();
     }
