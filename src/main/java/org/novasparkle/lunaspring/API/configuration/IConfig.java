@@ -2,6 +2,7 @@ package org.novasparkle.lunaspring.API.configuration;
 
 import com.google.common.collect.Lists;
 import lombok.Getter;
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -21,7 +22,6 @@ import org.novasparkle.lunaspring.API.util.utilities.AnnounceUtils;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.List;
 
 public class IConfig {
@@ -186,23 +186,22 @@ public class IConfig {
 
                 String[] parts = newLine.split("\\*%\\*");
                 for (int i = 0; i < parts.length; i++) {
-                    // System.out.println(Arrays.toString(parts));
-                    // System.out.println(parts.length);
                     if (i % 2 == 1) {
                         String clickablePart = parts[i];
                         String command = parts[++i];
-                        // System.out.println(clickablePart);
-
-                        TextComponent clickableText = new TextComponent(clickablePart);
-                        clickableText.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, command));
-                        builder.append(clickableText);
+                        String[] splitColor = clickablePart.split("\\{");
+                        for (String colorPart : splitColor) {
+                            char colorChar = colorPart.charAt(0);
+                            TextComponent clickableText = new TextComponent(colorPart.replace(String.format("%c}", colorChar), ""));
+                            clickableText.setColor(ChatColor.of(ColorManager.getColor(String.format("{%c}", colorChar)).toHex()));
+                            clickableText.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, command));
+                            builder.append(clickableText);
+                        }
                     } else {
-                        // System.out.println("else");
-                        builder.append(ColorManager.colorHex(parts[i]));
+                        builder.append(ColorManager.color(parts[i]));
                     }
                 }
                 BaseComponent[] created = builder.create();
-                // System.out.println(Arrays.toString(created));
 
                 sender.spigot().sendMessage(created);
                 continue;

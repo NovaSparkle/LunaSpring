@@ -25,9 +25,6 @@ public class ColorManager {
     public String color(String text) {
         return colorService.color(text);
     }
-    public String colorHex(String text) {
-        return colorService.colorHex(text);
-    }
 
     /**
      * Получить цвет по аббревиатуре.
