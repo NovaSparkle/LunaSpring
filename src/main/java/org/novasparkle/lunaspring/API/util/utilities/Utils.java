@@ -169,12 +169,12 @@ public class Utils {
             if (replacement.contains("-%-")) {
                 String[] mass = replacement.split("-%-");
                 if (mass.length >= 2) {
-                    line = line.replace("{" + mass[0] + "}", mass[1]).replace("[" + mass[0] + "]", mass[1]);
+                    line = line.replace("[" + mass[0] + "]", mass[1]);
                     continue;
                 }
             }
 
-            line = line.replace("{" + index + "}", replacement).replace("[" + index + "]", replacement);
+            line = line.replace("[" + index + "]", replacement);
             index++;
         }
         return line;

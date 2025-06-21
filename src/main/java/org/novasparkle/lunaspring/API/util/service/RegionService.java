@@ -171,4 +171,5 @@ public final class RegionService implements LunaService {
     public void setFlag(String regionName, LFlag lFlag, StateFlag.State state) {
         this.setFlag(regionName, lFlag.getStateFlag(), state);
     }
+
 }

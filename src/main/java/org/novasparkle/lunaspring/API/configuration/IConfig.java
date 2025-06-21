@@ -23,6 +23,7 @@ import org.novasparkle.lunaspring.API.util.utilities.Utils;
 
 import java.io.File;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class IConfig {
     protected FileConfiguration config;
@@ -182,28 +183,7 @@ public class IConfig {
                     .replace("[SOUND] ", "");
 
             if (line.startsWith("[SUGGESTCOMMAND]")) {
-                ComponentBuilder builder = new ComponentBuilder();
-
-                String[] parts = newLine.split("\\*%\\*");
-                for (int i = 0; i < parts.length; i++) {
-                    if (i % 2 == 1) {
-                        String clickablePart = parts[i];
-                        String command = parts[++i];
-                        String[] splitColor = clickablePart.split("\\{");
-                        for (String colorPart : splitColor) {
-                            char colorChar = colorPart.charAt(0);
-                            TextComponent clickableText = new TextComponent(colorPart.replace(String.format("%c}", colorChar), ""));
-                            clickableText.setColor(ChatColor.of(ColorManager.getColor(String.format("{%c}", colorChar)).toHex()));
-                            clickableText.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, command));
-                            builder.append(clickableText);
-                        }
-                    } else {
-                        builder.append(ColorManager.color(parts[i]));
-                    }
-                }
-                BaseComponent[] created = builder.create();
-
-                sender.spigot().sendMessage(created);
+                this.sendSuggestCommand(newLine, sender);
                 continue;
             }
             newLine = ColorManager.color(newLine);
@@ -231,5 +211,39 @@ public class IConfig {
             }
             else sender.sendMessage(newLine);
         }
+    }
+
+    @SuppressWarnings("deprecation")
+    private void sendSuggestCommand(String line, CommandSender sender) {
+        ComponentBuilder builder = new ComponentBuilder();
+
+        String[] parts = line.split("\\*%\\*");
+        for (int i = 0; i < parts.length; i++) {
+            if (i % 2 == 1) {
+                String clickablePart = parts[i];
+                String command = parts[++i];
+                Pattern pattern = Pattern.compile("\\{([A-Z])}");
+
+                String[] splitColor = clickablePart.split("\\{");
+                for (String colorPart : splitColor) {
+                    if (colorPart.isEmpty()) continue;
+                    char colorChar = colorPart.charAt(0);
+                    String finalString = colorPart;
+                    TextComponent clickableText = new TextComponent();
+                    if (pattern.matcher(clickablePart).find()) {
+                        finalString = colorPart.replace(String.format("%c}", colorChar), "");
+                        clickableText.setColor(ChatColor.of(ColorManager.getColor(String.format("\\{%c\\}", colorChar)).toHex()));
+                    }
+                    clickableText.setText(finalString);
+                    clickableText.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, command));
+                    builder.append(clickableText);
+                }
+
+            } else builder.append(ColorManager.color(parts[i]));
+
+        }
+        BaseComponent[] created = builder.create();
+
+        sender.spigot().sendMessage(created);
     }
 }

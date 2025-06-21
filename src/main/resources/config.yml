@@ -17,7 +17,10 @@ colors:
     variable: '&x&A&F&4&7&F&F'
   LIME_COLOR:
     abbr: '\{L\}'
-    variable: '&x&A&F&4&7&F&F'
+    variable: '&x&0&2&F&B&1&4'
+  YELLOW_COLOR:
+    abbr: '\{Y\}'
+    variable: '&x&e&d&d&3&5&1'
 
 # * Цветовые коды для выделения сообщений в консоли *
 on_load_plugin_text_colors: "bcde"
@@ -32,6 +35,8 @@ messages:
   invalidSender: '{E}Эту команду нельзя использовать от имени: [sender]!'
   wrongArguments: '{E}Команду нельзя вызвать без аргументов!'
   undefinedCommand: '{E}Неизвестная команда!'
+  noDependency: '{E}Зависимость &n[dependency] &r{E}не обнаружена, соответствующий менеджер выключен!'
+  noVaultProvider: '{E}Плагин реализующий экономику Vault отсутствует! (Essentials, CMI, SateCore)'
   reloaded: '{P} {S}Библиотека перезагружена'
   savedSource: '{S}Ресурс [file] сохранен'
   loadedSource: '{S}Ресурс [file] загружен'
