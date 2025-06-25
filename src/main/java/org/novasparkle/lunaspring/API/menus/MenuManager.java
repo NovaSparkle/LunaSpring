@@ -10,7 +10,9 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
 
 import java.util.HashMap;
-import java.util.Set;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @UtilityClass
@@ -48,18 +50,16 @@ public class MenuManager {
     public void handleClose(InventoryCloseEvent event) {
         Inventory inventory = event.getInventory();
         IMenu menu = activeInventories.get(event.getInventory());
-        if (menu != null && getActiveViewers(menu).size() <= 1) {
+        if (menu != null && getActiveViewers(menu.getClass(), true).size() <= 1) {
             menu.onClose(event);
             unregister(inventory);
         }
     }
 
-    public Set<Player> getActiveViewers(Inventory inventory) {
-        return activeInventories.entrySet().stream().filter(entry -> entry.getKey().equals(inventory)).map(e -> e.getValue().getPlayer()).collect(Collectors.toSet());
-    }
-
-    public Set<Player> getActiveViewers(IMenu iMenu) {
-        return activeInventories.values().stream().filter(menu -> menu.equals(iMenu)).map(IMenu::getPlayer).collect(Collectors.toSet());
+    public List<Player> getActiveViewers(Class<?> menuClass, boolean hardCheck) {
+        Predicate<Map.Entry<Inventory, IMenu>> predicate = hardCheck ? entry -> entry.getKey().getClass().equals(menuClass) :
+                entry -> menuClass.isAssignableFrom(entry.getKey().getClass());
+        return activeInventories.entrySet().stream().filter(predicate).map(e -> e.getValue().getPlayer()).collect(Collectors.toList());
     }
 
     public IMenu getActiveMenu(Player player) {
