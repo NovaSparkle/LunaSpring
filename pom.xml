@@ -6,7 +6,7 @@
 
   <groupId>org.novasparkle.lunaspring</groupId>
   <artifactId>LunaSpring</artifactId>
-  <version>3.5.2</version>
+  <version>3.5.3</version>
   <packaging>jar</packaging>
 
   <name>LunaSpring</name>
@@ -18,6 +18,17 @@
 
   <build>
     <plugins>
+
+      <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>3.4.2</version>
+          <configuration>
+              <outputDirectory>
+                  C:\Users\ahrem\OneDrive\Рабочий стол\LunaClansTest\plugins
+              </outputDirectory>
+          </configuration>
+      </plugin>
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

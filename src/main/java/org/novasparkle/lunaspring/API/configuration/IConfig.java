@@ -3,10 +3,8 @@ package org.novasparkle.lunaspring.API.configuration;
 import com.google.common.collect.Lists;
 import lombok.Getter;
 import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.*;
+import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -180,10 +178,17 @@ public class IConfig {
                     .replace("[BROADCAST] ", "")
                     .replace("[TITLE] ", "")
                     .replace("[SUGGESTCOMMAND] ", "")
+                    .replace("[RUNCOMMAND] ", "")
                     .replace("[SOUND] ", "");
 
             if (line.startsWith("[SUGGESTCOMMAND]")) {
-                this.sendSuggestCommand(newLine, sender);
+                this.sendTextComponent(newLine, sender, ClickEvent.Action.SUGGEST_COMMAND);
+                continue;
+            } else if (line.startsWith("[RUNCOMMAND]")) {
+                this.sendTextComponent(newLine, sender, ClickEvent.Action.RUN_COMMAND);
+                continue;
+            } else if (line.startsWith("[HOVER]")) {
+                this.sendTextComponentHover(newLine, sender);
                 continue;
             }
             newLine = ColorManager.color(newLine);
@@ -214,7 +219,7 @@ public class IConfig {
     }
 
     @SuppressWarnings("deprecation")
-    private void sendSuggestCommand(String line, CommandSender sender) {
+    private void sendTextComponent(String line, CommandSender sender, ClickEvent.Action action) {
         ComponentBuilder builder = new ComponentBuilder();
 
         String[] parts = line.split("\\*%\\*");
@@ -229,13 +234,49 @@ public class IConfig {
                     if (colorPart.isEmpty()) continue;
                     char colorChar = colorPart.charAt(0);
                     String finalString = colorPart;
+
                     TextComponent clickableText = new TextComponent();
                     if (pattern.matcher(clickablePart).find()) {
                         finalString = colorPart.replace(String.format("%c}", colorChar), "");
                         clickableText.setColor(ChatColor.of(ColorManager.getColor(String.format("\\{%c\\}", colorChar)).toHex()));
                     }
+
                     clickableText.setText(finalString);
-                    clickableText.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, command));
+                    clickableText.setClickEvent(new ClickEvent(action, command));
+                    builder.append(clickableText);
+                }
+
+            } else builder.append(ColorManager.color(parts[i]));
+
+        }
+        BaseComponent[] created = builder.create();
+
+        sender.spigot().sendMessage(created);
+    }
+    private void sendTextComponentHover(String line, CommandSender sender) {
+        ComponentBuilder builder = new ComponentBuilder();
+
+        String[] parts = line.split("\\*%\\*");
+        for (int i = 0; i < parts.length; i++) {
+            if (i % 2 == 1) {
+                String clickablePart = parts[i];
+                String command = parts[++i];
+                Pattern pattern = Pattern.compile("\\{([A-Z])}");
+
+                String[] splitColor = clickablePart.split("\\{");
+                for (String colorPart : splitColor) {
+                    if (colorPart.isEmpty()) continue;
+                    char colorChar = colorPart.charAt(0);
+                    String finalString = colorPart;
+
+                    TextComponent clickableText = new TextComponent();
+                    if (pattern.matcher(clickablePart).find()) {
+                        finalString = colorPart.replace(String.format("%c}", colorChar), "");
+                        clickableText.setColor(ChatColor.of(ColorManager.getColor(String.format("\\{%c\\}", colorChar)).toHex()));
+                    }
+
+                    clickableText.setText(finalString);
+                    clickableText.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(command)));
                     builder.append(clickableText);
                 }
 

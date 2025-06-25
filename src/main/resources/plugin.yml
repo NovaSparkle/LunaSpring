@@ -18,6 +18,7 @@ authors:
 
 depend:
   - PlaceholderAPI
+
 softdepend:
   - NBTAPI
   - WorldEdit
