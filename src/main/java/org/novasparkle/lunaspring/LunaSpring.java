@@ -62,8 +62,8 @@ public final class LunaSpring extends LunaPlugin {
                 String[] split = params.split("-");
 
                 if (split.length >= 2) {
-                    Color color = ColorManager.getColorFromReplacer(split[1]);
-                    if (color == null) color = ColorManager.getColor(split[1]);
+                    Color color = ColorManager.getColor(split[1]);
+                    if (color == null) color = ColorManager.getColorFromReplacer(split[1]);
 
                     return color != null ? color.getVariable() : null;
                 }
