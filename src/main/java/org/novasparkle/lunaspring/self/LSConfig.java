@@ -1,5 +1,6 @@
 package org.novasparkle.lunaspring.self;
 
+import lombok.Getter;
 import lombok.experimental.UtilityClass;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -12,13 +13,14 @@ import java.util.stream.Collectors;
 
 @UtilityClass
 public final class LSConfig {
-    private final IConfig config;
+    @Getter private final IConfig config;
     static {
         config = new IConfig(LunaSpring.getINSTANCE());
     }
 
     public void reload() {
         config.reload(LunaSpring.getINSTANCE());
+        ColorManager.reloadColors();
     }
 
     public String getMessage(String path) {

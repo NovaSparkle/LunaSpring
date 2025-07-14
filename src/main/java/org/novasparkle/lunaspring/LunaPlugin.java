@@ -18,6 +18,7 @@ import org.novasparkle.lunaspring.API.util.utilities.LunaPAPIExpansion;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 import org.novasparkle.lunaspring.API.util.utilities.reflection.AnnotationScanner;
 import org.novasparkle.lunaspring.self.LSConfig;
+import org.novasparkle.lunaspring.self.PaidPlugin;
 
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 import java.io.File;
@@ -41,10 +42,10 @@ public abstract class LunaPlugin extends JavaPlugin {
         String authors = this.getAuthors();
         startMessage.forEach(m -> {
             String line = m
-                    .replace("^", formattedEndedColor)
+                    .replace("[color]", formattedEndedColor)
                     .replace("[pluginName]", this.getName())
                     .replace("[pluginVersion]", this.getVersion())
-                    .replace("[pluginAuthors]", authors == null || authors.isEmpty() ? "NoData" : authors)
+                    .replace("[pluginAuthors]", authors == null || authors.isEmpty() ? "" : String.format("(by %s)", authors))
                     .replace("[LSVersion]", LunaSpring.getINSTANCE().getVersion());
             this.info(line);
         });
@@ -190,16 +191,27 @@ public abstract class LunaPlugin extends JavaPlugin {
     @Override
     @OverridingMethodsMustInvokeSuper
     public void onEnable() {
-        if (LunaSpring.getINSTANCE().getHookedPlugins().contains(this) || this.equals(LunaSpring.getINSTANCE())) return;
+        if (this.equals(LunaSpring.getINSTANCE())) {
+            this.startMessage(Arrays.asList(
+                    "",
+                    "        [color] | &l[pluginName][color] v[pluginVersion]",
+                    "        [color] | &fAuthor: [color]NovaSparkle",
+                    "        [color] | &fDev-Helper: [color]ProGiple",
+                    ""
+            ));
+            return;
+        }
 
+        if (LunaSpring.getINSTANCE().getHookedPlugins().contains(this)) return;
         this.startMessage(Arrays.asList(
                 "",
-                "        ^ | &l[pluginName]^ v[pluginVersion] (by [pluginAuthors])",
-                "        ^ | &fEngined with ^&lLunaSpring^ v[LSVersion]",
-                "        ^ | &fAuthor: ^NovaSparkle",
-                "        ^ | &fDev-Helper: ^ProGiple",
+                "        [color] | &l[pluginName][color] v[pluginVersion] [pluginAuthors]",
+                "        [color] | &fEngined with [color]&lLunaSpring[color] v[LSVersion]",
+                "        [color] | &fAuthor: [color]NovaSparkle",
+                "        [color] | &fDev-Helper: [color]ProGiple",
                 ""
         ));
+
         LunaSpring.getINSTANCE().hookPlugin(this);
     }
 
@@ -211,11 +223,11 @@ public abstract class LunaPlugin extends JavaPlugin {
 
         this.startMessage(Arrays.asList(
                 "",
-                "        ^ | &n[pluginName]^ v[pluginVersion] (by [pluginAuthors])",
-                "        ^ | &fDisabling with ^&lLunaSpring^ v[LSVersion]",
-                "        ^ | &fDeveloped by ^NovaSparkle",
-                "        ^ | &fDev-Helper: ^ProGiple",
-                "        ^ | ^GoodBye!",
+                "        [color] | &n[pluginName][color] v[pluginVersion] [pluginAuthors]",
+                "        [color] | &fDisabling with [color]&lLunaSpring[color] v[LSVersion]",
+                "        [color] | &fDeveloped by [color]NovaSparkle",
+                "        [color] | &fDev-Helper: [color]ProGiple",
+                "        [color] | [color]GoodBye!",
                 ""
         ));
     }
@@ -244,5 +256,9 @@ public abstract class LunaPlugin extends JavaPlugin {
                 this.registerListeners(listener);
             } else throw new InvalidImplementation(clazz, Listener.class);
         }
+    }
+
+    public boolean isPaid() {
+        return this.getClass().isAnnotationPresent(PaidPlugin.class);
     }
 }

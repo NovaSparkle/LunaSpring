@@ -44,7 +44,6 @@ public class MenuManager {
     public void handleDrag(InventoryDragEvent event) {
         IMenu menu = activeInventories.get(event.getInventory());
         if (menu != null) menu.onDrag(event);
-
     }
 
     public void handleClose(InventoryCloseEvent event) {
@@ -65,5 +64,4 @@ public class MenuManager {
     public IMenu getActiveMenu(Player player) {
         return activeInventories.values().stream().filter(m -> m.getPlayer().equals(player)).findFirst().orElse(null);
     }
-
 }

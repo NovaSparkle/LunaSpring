@@ -1,6 +1,9 @@
 package org.novasparkle.lunaspring.API.util.service.managers.worldguard;
 
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldguard.protection.flags.Flag;
 import com.sk89q.worldguard.protection.flags.StateFlag;
+import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import lombok.experimental.UtilityClass;
@@ -9,6 +12,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.novasparkle.lunaspring.API.util.service.RegionService;
 
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -27,8 +31,8 @@ public class RegionManager {
         return regionService.getRegionManager(world);
     }
 
-    public void createRegion(String name, Location minLoc, Location maxLoc) {
-        regionService.createRegion(name, minLoc, maxLoc);
+    public ProtectedCuboidRegion createRegion(String name, Location minLoc, Location maxLoc) {
+        return regionService.createRegion(name, minLoc, maxLoc);
     }
 
     public void removeRegion(String name) {
@@ -67,6 +71,10 @@ public class RegionManager {
         return regionService.getWorld(regionName);
     }
 
+    public BlockVector3 getVectorPoint(String regionName, boolean isMinPoint) {
+        return regionService.getVectorPoint(regionName, isMinPoint);
+    }
+
     public Location getPoint(String regionName, boolean isMinPoint) {
         return regionService.getPoint(regionName, isMinPoint);
     }
@@ -87,6 +95,22 @@ public class RegionManager {
         return regionService.getOwners(regionName);
     }
 
+    public Map<Flag<?>, Object> getFlags(String regionName) {
+        return regionService.getFlags(regionName);
+    }
+
+    public Map<StateFlag, StateFlag.State> getStateFlags(String regionName) {
+        return regionService.getStateFlags(regionName);
+    }
+
+    public Map<LFlag, LState> getLStateFlags(String regionName) {
+        return regionService.getLStateFlags(regionName);
+    }
+
+    public Set<LFlag> getLStateFlags(String regionName, LState filteringState) {
+        return regionService.getLStateFlags(regionName, filteringState);
+    }
+
     public void setFlag(String regionName, StateFlag flag, StateFlag.State state) {
         regionService.setFlag(regionName, flag, state);
     }
@@ -95,7 +119,11 @@ public class RegionManager {
         regionService.setFlag(regionName, lFlag, state);
     }
 
-    public int getCount(Player player) {
+    public void setFlag(String regionName, LFlag lFlag, LState lState) {
+        regionService.setFlag(regionName, lFlag, lState);
+    }
+
+    public long getCount(Player player) {
         return regionService.getCount(player);
     }
 

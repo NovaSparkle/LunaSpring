@@ -5,6 +5,7 @@ import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.domains.DefaultDomain;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
+import com.sk89q.worldguard.protection.flags.Flag;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
@@ -16,11 +17,15 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.novasparkle.lunaspring.API.util.service.managers.worldguard.LFlag;
+import org.novasparkle.lunaspring.API.util.service.managers.worldguard.LState;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Getter
 public final class RegionService implements LunaService {
@@ -33,15 +38,16 @@ public final class RegionService implements LunaService {
         return this.getRegionContainer().get(BukkitAdapter.adapt(world));
     }
 
-    public void createRegion(String name, Location minLoc, Location maxLoc) {
+    public ProtectedCuboidRegion createRegion(String name, Location minLoc, Location maxLoc) {
         World world = minLoc.getWorld();
-        if (world != maxLoc.getWorld()) return;
+        if (world != maxLoc.getWorld()) return null;
 
         BlockVector3 minVector = BlockVector3.at(minLoc.getBlockX(), minLoc.getBlockY(), minLoc.getBlockZ());
         BlockVector3 maxVector = BlockVector3.at(maxLoc.getBlockX(), maxLoc.getBlockY(), maxLoc.getBlockZ());
         ProtectedCuboidRegion region = new ProtectedCuboidRegion(name, minVector, maxVector);
 
         this.getRegionManager(world).addRegion(region);
+        return region;
     }
 
     public void removeRegion(String name) {
@@ -113,13 +119,17 @@ public final class RegionService implements LunaService {
         return null;
     }
 
-    public Location getPoint(String regionName, boolean isMinPoint) {
+    public BlockVector3 getVectorPoint(String regionName, boolean isMinPoint) {
         ProtectedRegion region = this.getRegion(regionName);
         if (region == null) return null;
 
-        BlockVector3 vector3 = isMinPoint ? region.getMinimumPoint() : region.getMaximumPoint();
+        return isMinPoint ? region.getMinimumPoint() : region.getMaximumPoint();
+    }
+
+    public Location getPoint(String regionName, boolean isMinPoint) {
+        BlockVector3 vector3 = this.getVectorPoint(regionName, isMinPoint);
         World world = this.getWorld(regionName);
-        return world == null ? null : new Location(world, vector3.getBlockX(), vector3.getBlockY(), vector3.getBlockZ());
+        return world == null || vector3 == null ? null : new Location(world, vector3.getBlockX(), vector3.getBlockY(), vector3.getBlockZ());
     }
 
     public boolean containsBlock(String regionName, int x, int y, int z) {
@@ -144,13 +154,60 @@ public final class RegionService implements LunaService {
         region.setFlag(flag, stateFlag);
     }
 
-    public int getCount(Player player) {
-        int amo = 0;
+    public void setFlag(String regionName, LFlag lFlag, StateFlag.State state) {
+        this.setFlag(regionName, lFlag.getWGFlag(), state);
+    }
+
+    public void setFlag(String regionName, LFlag lFlag, LState lState) {
+        this.setFlag(regionName, lFlag.getWGFlag(), lState.getWGState());
+    }
+
+    public Map<Flag<?>, Object> getFlags(String regionName) {
+        ProtectedRegion region = this.getRegion(regionName);
+        if (region == null) return null;
+
+        return region.getFlags();
+    }
+
+    public Map<StateFlag, StateFlag.State> getStateFlags(String regionName) {
+        Map<Flag<?>, Object> flags = this.getFlags(regionName);
+        if (flags == null) return null;
+
+        return flags.entrySet()
+                .stream()
+                .filter(en -> en.getKey() instanceof StateFlag && en.getValue() instanceof StateFlag.State)
+                .collect(Collectors.toMap(en -> (StateFlag) en.getKey(), en -> (StateFlag.State) en.getValue()));
+    }
+
+    public Map<LFlag, LState> getLStateFlags(String regionName) {
+        Map<StateFlag, StateFlag.State> flags = this.getStateFlags(regionName);
+        if (flags == null) return null;
+
+        Set<String> lFlags = Stream.of(LFlag.values()).map(Enum::name).collect(Collectors.toSet());
+        return flags.entrySet()
+                .stream()
+                .filter(en -> lFlags.contains(en.getKey().getName()))
+                .collect(Collectors.toMap(en -> LFlag.valueOf(en.getKey().getName()), en -> LState.valueOf(en.getValue().name())));
+    }
+
+    public Set<LFlag> getLStateFlags(String regionName, LState filteringState) {
+        Map<LFlag, LState> flags = this.getLStateFlags(regionName);
+        if (flags == null) return null;
+
+        return flags.entrySet()
+                .stream()
+                .filter(en -> en.getValue() == filteringState)
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toSet());
+    }
+
+    public long getCount(Player player) {
+        long amo = 0;
         for (RegionManager regionManager : this.getRegionContainer().getLoaded()) {
             amo += regionManager.getRegions().values()
                     .stream()
                     .filter(rg -> this.isOwner(rg.getId(), player))
-                    .collect(Collectors.toSet()).size();
+                    .count();
         }
         return amo;
     }
@@ -167,9 +224,4 @@ public final class RegionService implements LunaService {
 
         return !set.getRegions().isEmpty();
     }
-
-    public void setFlag(String regionName, LFlag lFlag, StateFlag.State state) {
-        this.setFlag(regionName, lFlag.getStateFlag(), state);
-    }
-
 }

@@ -21,6 +21,7 @@ import org.novasparkle.lunaspring.API.util.utilities.Utils;
 
 import java.io.File;
 import java.util.List;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 
 public class IConfig {
@@ -37,9 +38,11 @@ public class IConfig {
     public IConfig(String filePath) {
         this(new File(filePath));
     }
+
     public IConfig(File container, String fileName) {
         this(new File(container, fileName + ".yml"));
     }
+
     public IConfig(File file) {
         this.file = file;
         this.config = YamlConfiguration.loadConfiguration(this.file);
@@ -83,6 +86,7 @@ public class IConfig {
     public List<String> getStringList(String path) {
         return this.config.getStringList(path);
     }
+
     public Location getLocation(String path) {
         return this.config.getLocation(path);
     }
@@ -161,9 +165,9 @@ public class IConfig {
     public void sendMessage(CommandSender sender, String id, String... replacements) {
         String path = String.format("messages.%s", id);
 
-        List<String> message = Lists.newArrayList(config.getStringList(path));
+        List<String> message = Lists.newArrayList(this.config.getStringList(path));
         if (message.isEmpty()) {
-            String stringMessage = config.getString(String.format("messages.%s", id));
+            String stringMessage = this.config.getString(String.format("messages.%s", id));
             if (stringMessage != null && !stringMessage.isEmpty())
                 message.add(stringMessage);
         }
@@ -179,16 +183,17 @@ public class IConfig {
                     .replace("[TITLE] ", "")
                     .replace("[SUGGESTCOMMAND] ", "")
                     .replace("[RUNCOMMAND] ", "")
-                    .replace("[SOUND] ", "");
+                    .replace("[SOUND] ", "")
+                    .replace("[HOVER]", "");
 
             if (line.startsWith("[SUGGESTCOMMAND]")) {
-                this.sendTextComponent(newLine, sender, ClickEvent.Action.SUGGEST_COMMAND);
+                sender.spigot().sendMessage(Utils.createClickableText(newLine, ClickEvent.Action.SUGGEST_COMMAND));
                 continue;
             } else if (line.startsWith("[RUNCOMMAND]")) {
-                this.sendTextComponent(newLine, sender, ClickEvent.Action.RUN_COMMAND);
+                sender.spigot().sendMessage(Utils.createClickableText(newLine, ClickEvent.Action.RUN_COMMAND));
                 continue;
             } else if (line.startsWith("[HOVER]")) {
-                this.sendTextComponentHover(newLine, sender);
+                sender.spigot().sendMessage(Utils.createHoverText(newLine));
                 continue;
             }
             newLine = ColorManager.color(newLine);
@@ -216,75 +221,5 @@ public class IConfig {
             }
             else sender.sendMessage(newLine);
         }
-    }
-
-    @SuppressWarnings("deprecation")
-    private void sendTextComponent(String line, CommandSender sender, ClickEvent.Action action) {
-        ComponentBuilder builder = new ComponentBuilder();
-
-        String[] parts = line.split("\\*%\\*");
-        for (int i = 0; i < parts.length; i++) {
-            if (i % 2 == 1) {
-                String clickablePart = parts[i];
-                String command = parts[++i];
-                Pattern pattern = Pattern.compile("\\{([A-Z])}");
-
-                String[] splitColor = clickablePart.split("\\{");
-                for (String colorPart : splitColor) {
-                    if (colorPart.isEmpty()) continue;
-                    char colorChar = colorPart.charAt(0);
-                    String finalString = colorPart;
-
-                    TextComponent clickableText = new TextComponent();
-                    if (pattern.matcher(clickablePart).find()) {
-                        finalString = colorPart.replace(String.format("%c}", colorChar), "");
-                        clickableText.setColor(ChatColor.of(ColorManager.getColor(String.format("\\{%c\\}", colorChar)).toHex()));
-                    }
-
-                    clickableText.setText(finalString);
-                    clickableText.setClickEvent(new ClickEvent(action, command));
-                    builder.append(clickableText);
-                }
-
-            } else builder.append(ColorManager.color(parts[i]));
-
-        }
-        BaseComponent[] created = builder.create();
-
-        sender.spigot().sendMessage(created);
-    }
-    private void sendTextComponentHover(String line, CommandSender sender) {
-        ComponentBuilder builder = new ComponentBuilder();
-
-        String[] parts = line.split("\\*%\\*");
-        for (int i = 0; i < parts.length; i++) {
-            if (i % 2 == 1) {
-                String clickablePart = parts[i];
-                String command = parts[++i];
-                Pattern pattern = Pattern.compile("\\{([A-Z])}");
-
-                String[] splitColor = clickablePart.split("\\{");
-                for (String colorPart : splitColor) {
-                    if (colorPart.isEmpty()) continue;
-                    char colorChar = colorPart.charAt(0);
-                    String finalString = colorPart;
-
-                    TextComponent clickableText = new TextComponent();
-                    if (pattern.matcher(clickablePart).find()) {
-                        finalString = colorPart.replace(String.format("%c}", colorChar), "");
-                        clickableText.setColor(ChatColor.of(ColorManager.getColor(String.format("\\{%c\\}", colorChar)).toHex()));
-                    }
-
-                    clickableText.setText(finalString);
-                    clickableText.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(command)));
-                    builder.append(clickableText);
-                }
-
-            } else builder.append(ColorManager.color(parts[i]));
-
-        }
-        BaseComponent[] created = builder.create();
-
-        sender.spigot().sendMessage(created);
     }
 }

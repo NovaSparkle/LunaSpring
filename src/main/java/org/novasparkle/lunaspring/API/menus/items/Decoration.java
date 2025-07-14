@@ -67,6 +67,14 @@ public class Decoration implements Cloneable {
         return this.decorationItems.stream().anyMatch(i -> i.getItemStack().equals(itemStack));
     }
 
+    public boolean checkAll(ItemStack itemStack, byte slot) {
+        return this.decorationItems.stream().anyMatch(i -> i.getItemStack().equals(itemStack) && i.getSlot() == slot);
+    }
+
+    public boolean checkAll(Material material, byte slot) {
+        return this.decorationItems.stream().anyMatch(i -> i.getMaterial() == material && i.getSlot() == slot);
+    }
+
     @Override
     @SneakyThrows
     public Decoration clone() {

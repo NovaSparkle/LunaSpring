@@ -76,9 +76,6 @@ public class NonMenuItem {
         // Enchantments
         this.applyEnchantments(section);
 
-        // Attributes
-        this.addAttributes(section);
-
         // ItemFlags
         this.applyItemFlags(section);
 
@@ -169,7 +166,7 @@ public class NonMenuItem {
         return this.setAmount(this.getAmount() - 1);
     }
 
-    public void update() {
+    public NonMenuItem update() {
         this.itemStack.setType(this.material);
         ItemMeta meta = this.itemStack.getItemMeta();
         if (meta == null)
@@ -184,6 +181,7 @@ public class NonMenuItem {
 
         this.itemStack.setItemMeta(meta);
         this.itemStack.setAmount(this.amount);
+        return this;
     }
 
     public ItemStack getDefaultStack() {
@@ -227,7 +225,6 @@ public class NonMenuItem {
         }
         return this;
     }
-
 
     public NonMenuItem applyItemFlags(ConfigurationSection section) {
         ItemMeta meta = this.itemStack.getItemMeta();
@@ -287,62 +284,6 @@ public class NonMenuItem {
                         this.itemStack.addUnsafeEnchantment(enchantment, (Integer) level);
                     });
 
-        return this;
-    }
-
-
-    public NonMenuItem addAttributes(ConfigurationSection section) {
-        ConfigurationSection aSection = section.getConfigurationSection("attributes");
-        if (aSection != null) {
-            ItemMeta meta = this.itemStack.getItemMeta();
-            if (meta == null) throw new NoItemMeta(this.itemStack);
-
-            for (Attribute attribute : List.of(
-                    Attribute.GENERIC_ATTACK_DAMAGE,
-                    Attribute.GENERIC_ARMOR,
-                    Attribute.GENERIC_KNOCKBACK_RESISTANCE,
-                    Attribute.GENERIC_ARMOR_TOUGHNESS,
-                    Attribute.GENERIC_ATTACK_SPEED)) {
-                Collection<AttributeModifier> collection = meta.getAttributeModifiers(attribute);
-                if (collection != null && !collection.isEmpty()) continue;
-
-                MaterialAttribute materialAttribute = MaterialAttribute.valueOf(this.material.name());
-                double defaultAmount = switch (attribute) {
-                    case GENERIC_ARMOR -> materialAttribute.getArmor_protection();
-                    case GENERIC_ARMOR_TOUGHNESS -> materialAttribute.getArmor_weight();
-                    case GENERIC_KNOCKBACK_RESISTANCE -> materialAttribute.getArmor_akb();
-                    case GENERIC_ATTACK_DAMAGE -> materialAttribute.getDamage();
-                    case GENERIC_ATTACK_SPEED -> materialAttribute.getSpeed() - 4;
-                    default -> 0;
-                };
-
-                if (defaultAmount != 0) {
-                    AttributeModifier modifier = new AttributeModifier(
-                            UUID.randomUUID(),
-                            Utils.getRKey((byte) 12),
-                            defaultAmount,
-                            AttributeModifier.Operation.ADD_NUMBER,
-                            this.getEquipmentSlot());
-                    meta.addAttributeModifier(attribute, modifier);
-                }
-            }
-
-            for (String key : aSection.getKeys(false)) {
-                Attribute attribute = Attribute.valueOf(key);
-                String amount = section.getString(key);
-                if (amount == null || amount.isEmpty()) continue;
-
-                double endedValue = Double.parseDouble(amount.replace("%", "")) / (amount.contains("%") ? 100 : 1);
-                AttributeModifier modifier = new AttributeModifier(
-                        UUID.randomUUID(),
-                        attribute.name(),
-                        endedValue,
-                        amount.contains("%") ? AttributeModifier.Operation.ADD_SCALAR : AttributeModifier.Operation.ADD_NUMBER,
-                        this.getEquipmentSlot());
-                meta.addAttributeModifier(attribute, modifier);
-            }
-            this.itemStack.setItemMeta(meta);
-        }
         return this;
     }
 
@@ -464,9 +405,10 @@ public class NonMenuItem {
             if (lore != null && !lore.isEmpty())
                 nonMenuItem.lore = lore;
             if (meta.hasEnchants()) nonMenuItem.glowing = true;
-
         }
         nonMenuItem.itemStack = stack;
+
+        nonMenuItem.update();
         return nonMenuItem;
     }
 }

@@ -100,21 +100,21 @@ public abstract class AMenu implements IMenu {
     }
 
     public Item findFirstItem(ItemStack itemStack) {
-        return this.itemList.stream().filter(i -> i.getItemStack().equals(itemStack)).findFirst().orElse(null);
+        return Utils.find(this.itemList, i -> i.getItemStack().equals(itemStack)).orElse(null);
     }
 
     public List<Item> findItems(Material material) {
         return this.itemList.stream().filter(i -> i.getItemStack().getType().equals(material)).collect(Collectors.toList());
     }
     public Item findFirstItem(Class<?> clazz) {
-        return this.itemList.stream().filter(i -> i.getClass().equals(clazz)).findFirst().orElse(null);
+        return Utils.find(this.itemList, i -> i.getClass().equals(clazz)).orElse(null);
     }
 
     public List<Item> findItems(Class<?> clazz) {
         return this.itemList.stream().filter(i -> i.getClass().equals(clazz)).collect(Collectors.toList());
     }
     public Item findFirstItem(String displayName) {
-        return this.itemList.stream().filter(i -> i.getDisplayName().equals(displayName)).findFirst().orElse(null);
+        return Utils.find(this.itemList, i -> i.getDisplayName().equals(displayName)).orElse(null);
     }
 
     public List<Item> findItems(String displayName) {
@@ -122,7 +122,7 @@ public abstract class AMenu implements IMenu {
     }
 
     public Item findFirstItem(Material material) {
-        return this.itemList.stream().filter(i -> i.getMaterial().equals(material)).findFirst().orElse(null);
+        return Utils.find(this.itemList, i -> i.getMaterial().equals(material)).orElse(null);
     }
 
     public boolean itemClick(@NonNull Material material, InventoryClickEvent event) {
@@ -166,7 +166,7 @@ public abstract class AMenu implements IMenu {
         this.itemList.forEach(System.out::println);
     }
 
-    public Object clone(Player player) throws CloneNotSupportedException {
+    public AMenu clone(Player player) throws CloneNotSupportedException {
         AMenu copyMenu = (AMenu) super.clone();
         copyMenu.player = player;
         copyMenu.decoration = this.decoration.clone();

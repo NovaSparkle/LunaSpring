@@ -1,17 +1,27 @@
 package org.novasparkle.lunaspring.API.util.utilities;
 
+import lombok.experimental.UtilityClass;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.novasparkle.lunaspring.API.configuration.Configuration;
 import org.novasparkle.lunaspring.API.configuration.IConfig;
 import org.novasparkle.lunaspring.LunaSpring;
 
+@UtilityClass
 public class Localization {
-    public static String localize(EntityType type) {
-        return new IConfig(LunaSpring.getINSTANCE().getDataFolder(), "localization").getString(String.format("EntityType.%s", type.name()));
+    public IConfig getLocalizationConfig() {
+        return new IConfig(LunaSpring.getINSTANCE().getDataFolder(), "localization.yml");
     }
 
-    public static String localize(Enchantment enchantment) {
-        return new IConfig(LunaSpring.getINSTANCE().getDataFolder(), "localization").getString(String.format("Enchantment.%s", enchantment.getKey().getKey()));
+    public String localize(EntityType type) {
+        return getLocalizationConfig().getString(String.format("EntityType.%s", type.name()));
+    }
+
+    public String localize(Enchantment enchantment) {
+        return getLocalizationConfig().getString(String.format("Enchantment.%s", enchantment.getKey().getKey()));
+    }
+
+    public String localize(String path) {
+        return getLocalizationConfig().getString("Custom." + path);
     }
 }

@@ -50,6 +50,7 @@ public class NBTManager {
     public ReadableNBT getRoot(ItemStack item) {
         return NBT.readNbt(item);
     }
+
     public boolean hasTag(ItemStack item, String tag) {
         return getRoot(item).hasTag(tag);
     }

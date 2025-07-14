@@ -1,20 +1,30 @@
 package org.novasparkle.lunaspring.API.util.utilities;
 
 import com.google.common.collect.Lists;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
 import me.clip.placeholderapi.PlaceholderAPI;
+import net.md_5.bungee.api.chat.*;
+import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
+import org.jetbrains.annotations.NotNull;
 import org.novasparkle.lunaspring.API.menus.items.Item;
+import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
 
+import javax.annotation.Nullable;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @UtilityClass
 public class Utils {
@@ -83,6 +93,14 @@ public class Utils {
         if (border == 0) return null;
 
         return findRandomLocation(world, border, border);
+    }
+
+    public <T> @NotNull Optional<T> find(Stream<T> collection, Predicate<T> filterPredicate) {
+        return collection.filter(filterPredicate).findFirst();
+    }
+
+    public <T> @NotNull Optional<T> find(Collection<T> collection, Predicate<T> filterPredicate) {
+        return Utils.find(collection.stream(), filterPredicate);
     }
 
     /**
@@ -156,6 +174,73 @@ public class Utils {
                 .toList();
     }
 
+    public BaseComponent[] createHoverText(String line) {
+        ComponentBuilder builder = new ComponentBuilder();
+
+        String[] parts = line.split("\\*%\\*");
+        for (int i = 0; i < parts.length; i++) {
+            if (i % 2 == 1) {
+                String clickablePart = parts[i];
+                String command = parts[++i];
+                Pattern pattern = Pattern.compile("\\{([A-Z])}");
+
+                String[] splitColor = clickablePart.split("\\{");
+                for (String colorPart : splitColor) {
+                    if (colorPart.isEmpty()) continue;
+                    char colorChar = colorPart.charAt(0);
+                    String finalString = colorPart;
+
+                    TextComponent clickableText = new TextComponent();
+                    if (pattern.matcher(clickablePart).find()) {
+                        finalString = colorPart.replace(String.format("%c}", colorChar), "");
+                        clickableText.setColor(net.md_5.bungee.api.ChatColor.of(ColorManager.getColor(String.format("\\{%c\\}", colorChar)).toHex()));
+                    }
+
+                    clickableText.setText(finalString);
+                    clickableText.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(command)));
+                    builder.append(clickableText);
+                }
+
+            } else builder.append(ColorManager.color(parts[i]));
+
+        }
+
+        return builder.create();
+    }
+
+    public BaseComponent[] createClickableText(String line, ClickEvent.Action action) {
+        ComponentBuilder builder = new ComponentBuilder();
+
+        String[] parts = line.split("\\*%\\*");
+        for (int i = 0; i < parts.length; i++) {
+            if (i % 2 == 1) {
+                String clickablePart = parts[i];
+                String command = parts[++i];
+                Pattern pattern = Pattern.compile("\\{([A-Z])}");
+
+                String[] splitColor = clickablePart.split("\\{");
+                for (String colorPart : splitColor) {
+                    if (colorPart.isEmpty()) continue;
+                    char colorChar = colorPart.charAt(0);
+                    String finalString = colorPart;
+
+                    TextComponent clickableText = new TextComponent();
+                    if (pattern.matcher(clickablePart).find()) {
+                        finalString = colorPart.replace(String.format("%c}", colorChar), "");
+                        clickableText.setColor(net.md_5.bungee.api.ChatColor.of(ColorManager.getColor(String.format("\\{%c\\}", colorChar)).toHex()));
+                    }
+
+                    clickableText.setText(finalString);
+                    clickableText.setClickEvent(new ClickEvent(action, command));
+                    builder.append(clickableText);
+                }
+
+            } else builder.append(ColorManager.color(parts[i]));
+
+        }
+
+        return builder.create();
+    }
 
     public void playersAction(Consumer<Player> playerConsumer) {
         Bukkit.getOnlinePlayers().forEach(playerConsumer);
@@ -273,7 +358,7 @@ public class Utils {
 
         public String getGroupTime(OfflinePlayer player) {
             String highestGroup = getHighestGroup(player);
-            if (highestGroup == null || highestGroup.isEmpty()) return "∞";
+            if (highestGroup == null || highestGroup.isEmpty() || highestGroup.contains("%luckperms_")) return "∞";
 
             String timer = Utils.setPlaceholders(player, "%luckperms_group_expiry_time_" + highestGroup + "%");
             return timer == null || timer.isEmpty() ? "∞" : timer;
@@ -385,7 +470,7 @@ public class Utils {
             MAXIMAL_SC_DAYS;
         }
 
-        @Getter
+        @Getter @AllArgsConstructor
         public enum TranslateType {
             NONE("y", "mo", "w", "d", "h", "m", "s"),
             ONLY_TRANSLATE("г", "мес", "нед", "д", "ч", "мин", "сек"),
@@ -400,15 +485,6 @@ public class Utils {
             private final String h;
             private final String m;
             private final String s;
-            TranslateType(String y, String mo, String w, String d, String h, String m, String s) {
-                this.y = y;
-                this.mo = mo;
-                this.w = w;
-                this.d = d;
-                this.h = h;
-                this.m = m;
-                this.s = s;
-            }
         }
     }
 }

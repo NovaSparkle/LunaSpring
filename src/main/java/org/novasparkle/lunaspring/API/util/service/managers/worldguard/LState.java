@@ -5,11 +5,10 @@ import lombok.Getter;
 
 @Getter
 public enum LState {
-    ALLOW(StateFlag.State.ALLOW),
-    DENY(StateFlag.State.DENY);
+    ALLOW,
+    DENY;
 
-    private final StateFlag.State state;
-    LState(StateFlag.State state) {
-        this.state = state;
+    public StateFlag.State getWGState() {
+        return this == ALLOW ? StateFlag.State.ALLOW : StateFlag.State.DENY;
     }
 }

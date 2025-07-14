@@ -3,79 +3,100 @@ package org.novasparkle.lunaspring.API.util.service.managers.worldguard;
 import com.sk89q.worldguard.protection.flags.Flags;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import lombok.Getter;
+import lombok.NonNull;
+import org.novasparkle.lunaspring.API.util.exceptions.WGFlagGetException;
+
+import java.lang.reflect.Field;
 
 @Getter
 public enum LFlag {
-    PASSTHROUGH(Flags.PASSTHROUGH),
-    BUILD(Flags.BUILD),
-    BLOCK_BREAK(Flags.BLOCK_BREAK),
-    BLOCK_PLACE(Flags.BLOCK_PLACE),
-    USE(Flags.USE),
-    INTERACT(Flags.INTERACT),
-    DAMAGE_ANIMALS(Flags.DAMAGE_ANIMALS),
-    PVP(Flags.PVP),
-    SLEEP(Flags.SLEEP),
-    RESPAWN_ANCHORS(Flags.RESPAWN_ANCHORS),
-    TNT(Flags.TNT),
-    CHEST_ACCESS(Flags.CHEST_ACCESS),
-    PLACE_VEHICLE(Flags.PLACE_VEHICLE),
-    DESTROY_VEHICLE(Flags.DESTROY_VEHICLE),
-    LIGHTER(Flags.LIGHTER),
-    RIDE(Flags.RIDE),
-    POTION_SPLASH(Flags.POTION_SPLASH),
-    ITEM_FRAME_ROTATE(Flags.ITEM_FRAME_ROTATE),
-    TRAMPLE_BLOCKS(Flags.TRAMPLE_BLOCKS),
-    FIREWORK_DAMAGE(Flags.FIREWORK_DAMAGE),
-    USE_ANVIL(Flags.USE_ANVIL),
-    ITEM_PICKUP(Flags.ITEM_PICKUP),
-    ITEM_DROP(Flags.ITEM_DROP),
-    EXP_DROPS(Flags.EXP_DROPS),
-    MOB_DAMAGE(Flags.MOB_DAMAGE),
-    CREEPER_EXPLOSION(Flags.CREEPER_EXPLOSION),
-    ENDERDRAGON_BLOCK_DAMAGE(Flags.ENDERDRAGON_BLOCK_DAMAGE),
-    GHAST_FIREBALL(Flags.GHAST_FIREBALL),
-    OTHER_EXPLOSION(Flags.OTHER_EXPLOSION),
-    WITHER_DAMAGE(Flags.WITHER_DAMAGE),
-    ENDER_BUILD(Flags.ENDER_BUILD),
-    SNOWMAN_TRAILS(Flags.SNOWMAN_TRAILS),
-    RAVAGER_RAVAGE(Flags.RAVAGER_RAVAGE),
-    ENTITY_PAINTING_DESTROY(Flags.ENTITY_PAINTING_DESTROY),
-    ENTITY_ITEM_FRAME_DESTROY(Flags.ENTITY_ITEM_FRAME_DESTROY),
-    MOB_SPAWNING(Flags.MOB_SPAWNING),
-    PISTONS(Flags.PISTONS),
-    FIRE_SPREAD(Flags.FIRE_SPREAD),
-    LAVA_FIRE(Flags.LAVA_FIRE),
-    LIGHTNING(Flags.LIGHTNING),
-    SNOW_FALL(Flags.SNOW_FALL),
-    SNOW_MELT(Flags.SNOW_MELT),
-    ICE_FORM(Flags.ICE_FORM),
-    ICE_MELT(Flags.ICE_MELT),
-    FROSTED_ICE_MELT(Flags.FROSTED_ICE_MELT),
-    FROSTED_ICE_FORM(Flags.FROSTED_ICE_FORM),
-    MUSHROOMS(Flags.MUSHROOMS),
-    LEAF_DECAY(Flags.LEAF_DECAY),
-    GRASS_SPREAD(Flags.GRASS_SPREAD),
-    MYCELIUM_SPREAD(Flags.MYCELIUM_SPREAD),
-    VINE_GROWTH(Flags.VINE_GROWTH),
-    CROP_GROWTH(Flags.CROP_GROWTH),
-    SOIL_DRY(Flags.SOIL_DRY),
-    CORAL_FADE(Flags.CORAL_FADE),
-    WATER_FLOW(Flags.WATER_FLOW),
-    LAVA_FLOW(Flags.LAVA_FLOW),
-    SEND_CHAT(Flags.SEND_CHAT),
-    RECEIVE_CHAT(Flags.RECEIVE_CHAT),
-    INVINCIBILITY(Flags.INVINCIBILITY),
-    FALL_DAMAGE(Flags.FALL_DAMAGE),
-    HEALTH_REGEN(Flags.HEALTH_REGEN),
-    HUNGER_DRAIN(Flags.HUNGER_DRAIN),
-    ENTRY(Flags.ENTRY),
-    EXIT(Flags.EXIT),
-    EXIT_VIA_TELEPORT(Flags.EXIT_VIA_TELEPORT),
-    ENDERPEARL(Flags.ENDERPEARL),
-    CHORUS_TELEPORT(Flags.CHORUS_TELEPORT);
+    PASSTHROUGH,
+    BUILD,
+    BLOCK_BREAK,
+    BLOCK_PLACE,
+    USE,
+    INTERACT,
+    DAMAGE_ANIMALS,
+    PVP,
+    SLEEP,
+    RESPAWN_ANCHORS,
+    TNT,
+    CHEST_ACCESS,
+    PLACE_VEHICLE,
+    DESTROY_VEHICLE,
+    LIGHTER,
+    RIDE,
+    POTION_SPLASH,
+    ITEM_FRAME_ROTATE,
+    TRAMPLE_BLOCKS,
+    FIREWORK_DAMAGE,
+    USE_ANVIL,
+    ITEM_PICKUP,
+    ITEM_DROP,
+    EXP_DROPS,
+    MOB_DAMAGE,
+    CREEPER_EXPLOSION,
+    ENDERDRAGON_BLOCK_DAMAGE,
+    GHAST_FIREBALL,
+    OTHER_EXPLOSION,
+    WITHER_DAMAGE,
+    ENDER_BUILD,
+    SNOWMAN_TRAILS,
+    RAVAGER_RAVAGE,
+    ENTITY_PAINTING_DESTROY,
+    ENTITY_ITEM_FRAME_DESTROY,
+    MOB_SPAWNING,
+    PISTONS,
+    FIRE_SPREAD,
+    LAVA_FIRE,
+    LIGHTNING,
+    SNOW_FALL,
+    SNOW_MELT,
+    ICE_FORM,
+    ICE_MELT,
+    FROSTED_ICE_MELT,
+    FROSTED_ICE_FORM,
+    MUSHROOMS,
+    LEAF_DECAY,
+    GRASS_SPREAD,
+    MYCELIUM_SPREAD,
+    VINE_GROWTH,
+    CROP_GROWTH,
+    SOIL_DRY,
+    CORAL_FADE,
+    WATER_FLOW,
+    LAVA_FLOW,
+    SEND_CHAT,
+    RECEIVE_CHAT,
+    INVINCIBILITY,
+    FALL_DAMAGE,
+    HEALTH_REGEN,
+    HUNGER_DRAIN,
+    ENTRY,
+    EXIT,
+    EXIT_VIA_TELEPORT,
+    ENDERPEARL,
+    CHORUS_TELEPORT;
 
-    private final StateFlag stateFlag;
-    LFlag(StateFlag stateFlag) {
-        this.stateFlag = stateFlag;
+    public @NonNull StateFlag getWGFlag() {
+        return LFlag.getWGFlag(this.name());
+    }
+
+    public @NonNull static StateFlag getWGFlag(String id) {
+        id = id.toUpperCase();
+        try {
+            Field field = Flags.class.getField(id);
+            field.setAccessible(true);
+            return (StateFlag) field.get(null);
+        }
+        catch (NoSuchFieldException e) {
+            throw new WGFlagGetException("Не найдено поле " + id);
+        }
+        catch (IllegalAccessException e) {
+            throw new WGFlagGetException("Отсутствует разрешение к полю " + id);
+        }
+        catch (ClassCastException e) {
+            throw new WGFlagGetException("Невозможно преобразовать в StateFlag");
+        }
     }
 }

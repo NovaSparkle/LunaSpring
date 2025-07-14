@@ -16,5 +16,4 @@ public interface IMenu {
     void onClose(InventoryCloseEvent event);
     void onDrag(InventoryDragEvent event);
     boolean isCancelled(Cancellable event, int slot);
-
 }

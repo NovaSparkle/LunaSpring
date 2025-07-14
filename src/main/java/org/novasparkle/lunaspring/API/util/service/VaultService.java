@@ -13,7 +13,6 @@ public class VaultService implements LunaService {
     private Economy economy;
 
     public VaultService() {
-
         if (!Utils.hasPlugin("Vault") || !Utils.isPluginEnabled("Vault")) {
             LunaSpring.getINSTANCE().warning(LSConfig.getMessage("noDependency").replace("[dependency]", "Vault"));
         } else {
@@ -41,6 +40,4 @@ public class VaultService implements LunaService {
     public boolean hasEnoughMoney(OfflinePlayer player, double amount) {
         return this.getBalance(player) >= amount;
     }
-
-
 }

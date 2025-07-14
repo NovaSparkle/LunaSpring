@@ -3,8 +3,11 @@ package org.novasparkle.lunaspring;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.novasparkle.lunaspring.API.commands.LunaExecutor;
+import org.novasparkle.lunaspring.API.util.service.VaultService;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
+import org.novasparkle.lunaspring.API.util.service.managers.VaultManager;
 import org.novasparkle.lunaspring.API.util.utilities.Color;
+import org.novasparkle.lunaspring.API.util.utilities.Localization;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 import org.novasparkle.lunaspring.self.LSConfig;
 import org.novasparkle.lunaspring.self.PaidPlugin;
@@ -22,8 +25,8 @@ public final class LunaSpring extends LunaPlugin {
 
     @Override
     public void onEnable() {
-        if (INSTANCE != null) super.onEnable();
         INSTANCE = this;
+        super.onEnable();
         this.LE = new LunaEngine();
         this.saveDefaultConfig();
         this.loadFile("localization.yml");
@@ -31,6 +34,7 @@ public final class LunaSpring extends LunaPlugin {
         LunaExecutor.initialize(this);
 
         this.registerLunaPlaceholder();
+        VaultManager.setVaultService(new VaultService());
     }
 
     private void registerLunaPlaceholder() {
@@ -39,10 +43,18 @@ public final class LunaSpring extends LunaPlugin {
                 return String.join(", ", this.hookedPlugins.stream().map(LunaPlugin::getName).toList()); // Список луна плагинов
             }
 
-            if (params.startsWith("world-")) { // %lunaspring_world-world%
+            if (params.equalsIgnoreCase("register")) { // %lunaspring_register-SateChat%
+                String[] split = params.split("-");
+                if (split.length == 1) return null;
+
+                LunaPlugin plugin = this.getLunaPlugin(split[2]);
+                return plugin == null ? "no" : "yes";
+            }
+
+            if (params.startsWith("localize-")) { // %lunaspring_localize-world%
                 String[] split = params.split("-");
 
-                String placeholder = split.length >= 2 ? LSConfig.getMessage(String.format("worlds.%s", split[1])) : null;
+                String placeholder = split.length >= 2 ? Localization.localize(split[1]) : null;
                 return placeholder == null || placeholder.isEmpty() ? (split.length == 1 ? null : split[1]) : placeholder;
             }
 
@@ -50,7 +62,9 @@ public final class LunaSpring extends LunaPlugin {
                 String[] split = params.split("-");
 
                 if (split.length >= 2) {
-                    Color color = ColorManager.getColor(split[1]);
+                    Color color = ColorManager.getColorFromReplacer(split[1]);
+                    if (color == null) color = ColorManager.getColor(split[1]);
+
                     return color != null ? color.getVariable() : null;
                 }
                 return "";
@@ -89,7 +103,7 @@ public final class LunaSpring extends LunaPlugin {
     }
 
     public LunaPlugin getLunaPlugin(String name) {
-        return this.hookedPlugins.stream().filter(pl -> pl.getName().equals(name)).findFirst().orElse(null);
+        return Utils.find(this.hookedPlugins, pl -> pl.getName().equals(name)).orElse(null);
     }
 }
 
