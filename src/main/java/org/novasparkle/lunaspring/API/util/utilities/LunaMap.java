@@ -1,12 +1,11 @@
 package org.novasparkle.lunaspring.API.util.utilities;
 
 import java.util.*;
-import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
-public class LunaMap<S, E, X> {
-    private final Map<S, Element<E, X>> map = new HashMap<>();
+public class LunaMap<S, E, X> implements Cloneable {
+    private Map<S, Element<E, X>> map = new HashMap<>();
 
     public void put(S key, E value1, X value2) {
         this.map.put(key, new Element<>(value1, value2));
@@ -103,6 +102,21 @@ public class LunaMap<S, E, X> {
 
     public Element<E, X> getElement(S key) {
         return this.map.get(key);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public LunaMap<S, E, X> clone() {
+        try {
+            LunaMap<S, E, X> clone = (LunaMap<S, E, X>) super.clone();
+
+            clone.map = new HashMap<>();
+            clone.map.putAll(this.map);
+
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError("Cloning LunaMap failed", e);
+        }
     }
 
     public record Element<E, X>(E e, X x) {

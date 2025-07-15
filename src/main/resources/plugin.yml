@@ -35,3 +35,5 @@ permissions:
     default: op
   lunaspring.plugins:
     default: op
+  lunaspring.version:
+    default: op
