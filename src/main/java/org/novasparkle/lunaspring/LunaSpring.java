@@ -9,7 +9,6 @@ import org.novasparkle.lunaspring.API.util.service.managers.VaultManager;
 import org.novasparkle.lunaspring.API.util.utilities.Color;
 import org.novasparkle.lunaspring.API.util.utilities.Localization;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
-import org.novasparkle.lunaspring.self.LSConfig;
 import org.novasparkle.lunaspring.self.PaidPlugin;
 import org.novasparkle.lunaspring.self.lunaengine.LunaEngine;
 

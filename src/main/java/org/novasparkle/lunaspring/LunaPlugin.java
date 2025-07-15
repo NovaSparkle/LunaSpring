@@ -11,7 +11,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.novasparkle.lunaspring.API.commands.LunaSpringCommandProcessor;
 import org.novasparkle.lunaspring.API.commands.annotations.LunaCommand;
 import org.novasparkle.lunaspring.API.commands.annotations.LunaHandler;
-import org.novasparkle.lunaspring.API.util.exceptions.InvalidImplementation;
+import org.novasparkle.lunaspring.API.util.exceptions.InvalidImplementationException;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
 import org.novasparkle.lunaspring.API.util.utilities.LunaMath;
 import org.novasparkle.lunaspring.API.util.utilities.LunaPAPIExpansion;
@@ -243,7 +243,7 @@ public abstract class LunaPlugin extends JavaPlugin {
             } else if (CommandExecutor.class.isAssignableFrom(clazz)) {
                 CommandExecutor tabExecutor = (CommandExecutor) clazz.getDeclaredConstructor().newInstance();
                 this.registerCommand(tabExecutor, command);
-            } else throw new InvalidImplementation(clazz, CommandExecutor.class);
+            } else throw new InvalidImplementationException(clazz, CommandExecutor.class);
         }
     }
 
@@ -254,7 +254,7 @@ public abstract class LunaPlugin extends JavaPlugin {
             if (Listener.class.isAssignableFrom(clazz)) {
                 Listener listener = (Listener) clazz.getDeclaredConstructor().newInstance();
                 this.registerListeners(listener);
-            } else throw new InvalidImplementation(clazz, Listener.class);
+            } else throw new InvalidImplementationException(clazz, Listener.class);
         }
     }
 

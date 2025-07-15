@@ -22,10 +22,9 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Range;
-import org.novasparkle.lunaspring.API.util.exceptions.NoItemMeta;
+import org.novasparkle.lunaspring.API.util.exceptions.NoItemMetaException;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
 import org.novasparkle.lunaspring.API.util.service.managers.NBTManager;
-import org.novasparkle.lunaspring.API.util.utilities.MaterialAttribute;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 
 import java.util.*;
@@ -170,7 +169,7 @@ public class NonMenuItem {
         this.itemStack.setType(this.material);
         ItemMeta meta = this.itemStack.getItemMeta();
         if (meta == null)
-            throw new NoItemMeta(this.itemStack);
+            throw new NoItemMetaException(this.itemStack);
 
         if (this.displayName != null && !this.displayName.isEmpty())
             meta.setDisplayName(ColorManager.color(this.displayName));
@@ -228,7 +227,7 @@ public class NonMenuItem {
 
     public NonMenuItem applyItemFlags(ConfigurationSection section) {
         ItemMeta meta = this.itemStack.getItemMeta();
-        if (meta == null) throw new NoItemMeta(this.itemStack);
+        if (meta == null) throw new NoItemMetaException(this.itemStack);
 
         section.getStringList("itemflags").forEach(flag -> {
             ItemFlag itemFlag = ItemFlag.valueOf(flag);
@@ -242,7 +241,7 @@ public class NonMenuItem {
 
     public NonMenuItem applyItemFlags(List<ItemFlag> itemFlags) {
         ItemMeta meta = this.itemStack.getItemMeta();
-        if (meta == null) throw new NoItemMeta(this.itemStack);
+        if (meta == null) throw new NoItemMetaException(this.itemStack);
         if (itemFlags != null) {
             this.itemFlags.addAll(itemFlags);
             meta.addItemFlags(itemFlags.toArray(new ItemFlag[0]));
@@ -289,7 +288,7 @@ public class NonMenuItem {
 
     public NonMenuItem addAttribute(@NonNull Attribute attribute, @NonNull AttributeModifier modifier) {
         ItemMeta meta = this.itemStack.getItemMeta();
-        if (meta == null) throw new NoItemMeta(this.itemStack);
+        if (meta == null) throw new NoItemMetaException(this.itemStack);
         meta.addAttributeModifier(attribute, modifier);
 
         this.itemStack.setItemMeta(meta);
@@ -298,7 +297,7 @@ public class NonMenuItem {
 
     public void removeAttribute(Attribute attribute, AttributeModifier.Operation operation, double checkedAmount, boolean removeAll) {
         ItemMeta meta = this.itemStack.getItemMeta();
-        if (meta == null) throw new NoItemMeta(this.itemStack);
+        if (meta == null) throw new NoItemMetaException(this.itemStack);
 
         Collection<AttributeModifier> modifierMap = meta.getAttributeModifiers(attribute);
         if (modifierMap == null || modifierMap.isEmpty()) return;
