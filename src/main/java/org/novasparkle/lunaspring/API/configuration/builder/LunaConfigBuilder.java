@@ -16,8 +16,12 @@ import java.util.function.BiConsumer;
 
 @UtilityClass
 public final class LunaConfigBuilder {
+    public Configuration saveToConfig(LunaPlugin plugin, Class<?> configConstructedClass) {
+        return LunaConfigBuilder.saveToConfig(plugin, configConstructedClass, true);
+    }
+
     @SneakyThrows
-    public Configuration saveToConfig(LunaPlugin plugin, Class<?> configConstructedClass, boolean setterCheck) {
+    private Configuration saveToConfig(LunaPlugin plugin, Class<?> configConstructedClass, boolean setterCheck) {
         if (!configConstructedClass.isAnnotationPresent(ConfigConstructor.class)) {
             throw new InvalidAnnotationPresentException(configConstructedClass, ConfigConstructor.class);
         }
@@ -48,10 +52,10 @@ public final class LunaConfigBuilder {
         return finalConfig;
     }
 
-    public void saveToConfigs(LunaPlugin plugin, boolean setterCheck) {
+    public void saveToConfigs(LunaPlugin plugin) {
         Set<ClassEntry<ConfigConstructor>> classList = AnnotationScanner.findAnnotatedClasses(plugin, ConfigConstructor.class);
         for (ClassEntry<ConfigConstructor> entry : classList) {
-            LunaConfigBuilder.saveToConfig(plugin, entry.getClazz(), setterCheck);
+            LunaConfigBuilder.saveToConfig(plugin, entry.getClazz(), true);
         }
     }
 
