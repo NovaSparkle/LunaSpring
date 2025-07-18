@@ -10,6 +10,7 @@ import org.novasparkle.lunaspring.API.util.utilities.reflection.ClassEntry;
 import org.novasparkle.lunaspring.LunaPlugin;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Set;
 import java.util.function.BiConsumer;
@@ -124,22 +125,37 @@ public final class LunaConfigBuilder {
             return finalConfig;
         }
 
-        IConfig config = LunaConfigBuilder.getIConfig(configConstructedClass);
-        if (config == null) config = new IConfig(file);
-
-        if (file.exists() && !file.delete()) return config;
-
-        if (annotation.filePath().equals("config.yml") || annotation.filePath().equals("config")) {
-            plugin.saveDefaultConfig();
-            return LunaConfigBuilder.loadFromConfig(plugin, configConstructedClass);
+        if (file.exists() && !file.delete()) {
+            IConfig config = LunaConfigBuilder.getIConfig(configConstructedClass);
+            return config == null ? new IConfig(file) : config;
         }
 
+        if (annotation.filePath().equals("config.yml") || annotation.filePath().equals("config")) {
+            if (annotation.loadableFromResource()) {
+                plugin.saveDefaultConfig();
+                return LunaConfigBuilder.loadFromConfig(plugin, configConstructedClass);
+            }
+
+            IConfig config = generateConfig(file, plugin, configConstructedClass);
+            plugin.reloadConfig();
+            return config;
+        }
+
+        if (!annotation.loadableFromResource()) return generateConfig(file, plugin, configConstructedClass);
         try {
             plugin.loadFile(annotation.filePath());
             return LunaConfigBuilder.loadFromConfig(plugin, configConstructedClass);
         } catch (IllegalArgumentException e) {
-            return file.exists() || file.getParentFile().mkdirs() && file.createNewFile() ?
+            return generateConfig(file, plugin, configConstructedClass);
+        }
+    }
+
+    private IConfig generateConfig(File file, LunaPlugin plugin, Class<?> configConstructedClass) {
+        try {
+            return file != null && (file.exists() || file.getParentFile().mkdirs() && file.createNewFile()) ?
                     LunaConfigBuilder.saveToConfig(plugin, configConstructedClass, false) : null;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -171,8 +187,14 @@ public final class LunaConfigBuilder {
             field.setAccessible(true);
             if (field.isAnnotationPresent(IgnoredField.class)) continue;
 
-            String path = (field.isAnnotationPresent(ConfigBuilderPath.class) ?
-                    field.getAnnotation(ConfigBuilderPath.class).path() : "") + field.getName().toLowerCase();
+            String name = field.isAnnotationPresent(ConfigBuilderName.class) ? field.getAnnotation(ConfigBuilderName.class).value() : field.getName().toLowerCase();
+            String path = (field.isAnnotationPresent(ConfigBuilderPath.class) ? field.getAnnotation(ConfigBuilderPath.class).value() : "") + name;
+
+            if (field.isAnnotationPresent(ConfigBuilderSection.class)) {
+                LunaConfigBuilder.processFields(field.getType(), consumer);
+                continue;
+            }
+
             consumer.accept(field, path);
         }
     }
