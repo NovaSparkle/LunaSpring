@@ -40,7 +40,7 @@ public final class LunaConfigBuilder {
         else config = (Configuration) loadedConfig;
 
         Configuration finalConfig = config;
-        LunaConfigBuilder.processFields(configConstructedClass, (f, p) -> {
+        LunaConfigBuilder.processFields(configConstructedClass, null, (f, p) -> {
             try {
                 Object object = f.get(null);
                 finalConfig.set(p, object);
@@ -74,7 +74,7 @@ public final class LunaConfigBuilder {
         if (config == null) config = new IConfig(file);
 
         IConfig finalConfig = config;
-        LunaConfigBuilder.processFields(configConstructedClass, (f, p) -> {
+        LunaConfigBuilder.processFields(configConstructedClass, null, (f, p) -> {
             Object object = finalConfig.getObject(p);
             if (object == null || f.getType().isAssignableFrom(object.getClass())) {
                 try {
@@ -113,7 +113,7 @@ public final class LunaConfigBuilder {
             else config = (Configuration) loadedConfig;
 
             Configuration finalConfig = config;
-            LunaConfigBuilder.processFields(configConstructedClass, (f, p) -> {
+            LunaConfigBuilder.processFields(configConstructedClass, null, (f, p) -> {
                 try {
                     finalConfig.set(p, f.get(null));
                 } catch (IllegalAccessException e) {
@@ -182,16 +182,16 @@ public final class LunaConfigBuilder {
         }
     }
 
-    private void processFields(Class<?> clazz, BiConsumer<Field, String> consumer) {
+    private void processFields(Class<?> clazz, String additivePath, BiConsumer<Field, String> consumer) {
         for (Field field : clazz.getDeclaredFields()) {
             field.setAccessible(true);
             if (field.isAnnotationPresent(IgnoredField.class)) continue;
 
             String name = field.isAnnotationPresent(ConfigBuilderName.class) ? field.getAnnotation(ConfigBuilderName.class).value() : field.getName().toLowerCase();
             String path = (field.isAnnotationPresent(ConfigBuilderPath.class) ? field.getAnnotation(ConfigBuilderPath.class).value() : "") + name;
-
+            if (additivePath != null && !additivePath.isEmpty()) path = additivePath + "." + path;
             if (field.isAnnotationPresent(ConfigBuilderSection.class)) {
-                LunaConfigBuilder.processFields(field.getType(), consumer);
+                LunaConfigBuilder.processFields(field.getType(), path, consumer);
                 continue;
             }
 
