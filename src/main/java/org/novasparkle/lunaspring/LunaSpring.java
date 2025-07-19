@@ -3,9 +3,7 @@ package org.novasparkle.lunaspring;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.novasparkle.lunaspring.API.commands.LunaExecutor;
-import org.novasparkle.lunaspring.API.util.service.VaultService;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
-import org.novasparkle.lunaspring.API.util.service.managers.VaultManager;
 import org.novasparkle.lunaspring.API.util.utilities.Color;
 import org.novasparkle.lunaspring.API.util.utilities.Localization;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
@@ -17,14 +15,14 @@ import java.util.Set;
 
 public final class LunaSpring extends LunaPlugin {
     @Getter
-    private static LunaSpring INSTANCE;
+    private static LunaSpring instance;
     @Getter
     private final Set<LunaPlugin> hookedPlugins = new HashSet<>();
     private LunaEngine LE;
 
     @Override
     public void onEnable() {
-        INSTANCE = this;
+        instance = this;
         super.onEnable();
         this.LE = new LunaEngine();
         this.saveDefaultConfig();
@@ -33,7 +31,7 @@ public final class LunaSpring extends LunaPlugin {
         LunaExecutor.initialize(this);
 
         this.registerLunaPlaceholder();
-        VaultManager.setVaultService(new VaultService());
+//        VaultManager.setVaultService(new VaultService());
     }
 
     private void registerLunaPlaceholder() {
@@ -83,7 +81,7 @@ public final class LunaSpring extends LunaPlugin {
 
     @SneakyThrows
     public void hookPlugin(LunaPlugin lunaPlugin) {
-        if (lunaPlugin != INSTANCE) {
+        if (lunaPlugin != instance) {
             Class<?> pluginClass = lunaPlugin.getClass();
             if (pluginClass.isAnnotationPresent(PaidPlugin.class)) {
                 if (this.LE.getConnection() == null || this.LE.getConnection().isClosed()) this.LE.connect();

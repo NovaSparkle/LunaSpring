@@ -17,7 +17,7 @@ public class HookedSubCommand implements Invocation {
     @Override
     public void invoke(CommandSender sender, String[] args) {
         String hooked = LSConfig.getMessage("hooked");
-        List<String> pluginNames = LunaSpring.getINSTANCE().getHookedPlugins().stream()
+        List<String> pluginNames = LunaSpring.getInstance().getHookedPlugins().stream()
                 .map(LunaPlugin::getName)
                 .sorted(Comparator.comparingInt(String::length))
                 .toList();

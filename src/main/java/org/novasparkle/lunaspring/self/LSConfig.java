@@ -3,7 +3,6 @@ package org.novasparkle.lunaspring.self;
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
 import org.bukkit.command.CommandSender;
-import org.jetbrains.annotations.NotNull;
 import org.novasparkle.lunaspring.API.configuration.IConfig;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
 import org.novasparkle.lunaspring.LunaSpring;
@@ -15,11 +14,11 @@ import java.util.stream.Collectors;
 public final class LSConfig {
     @Getter private final IConfig config;
     static {
-        config = new IConfig(LunaSpring.getINSTANCE());
+        config = new IConfig(LunaSpring.getInstance());
     }
 
     public void reload() {
-        config.reload(LunaSpring.getINSTANCE());
+        config.reload(LunaSpring.getInstance());
         ColorManager.reloadColors();
     }
 

@@ -30,7 +30,7 @@ public class LunaEngine {
 
     @SneakyThrows
     public void connect() {
-        synchronized (LunaSpring.getINSTANCE()) {
+        synchronized (LunaSpring.getInstance()) {
             if (connection == null || connection.isClosed()) {
                 Class.forName("com.mysql.cj.jdbc.Driver");
                 this.connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + db, user, pw);

@@ -23,6 +23,7 @@ softdepend:
   - NBTAPI
   - WorldEdit
   - WorldGuard
+  - Vault
 
 permissions:
   lunaspring.*:

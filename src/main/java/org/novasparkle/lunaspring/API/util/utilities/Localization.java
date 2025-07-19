@@ -3,14 +3,13 @@ package org.novasparkle.lunaspring.API.util.utilities;
 import lombok.experimental.UtilityClass;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
-import org.novasparkle.lunaspring.API.configuration.Configuration;
 import org.novasparkle.lunaspring.API.configuration.IConfig;
 import org.novasparkle.lunaspring.LunaSpring;
 
 @UtilityClass
 public class Localization {
     public IConfig getLocalizationConfig() {
-        return new IConfig(LunaSpring.getINSTANCE().getDataFolder(), "localization.yml");
+        return new IConfig(LunaSpring.getInstance().getDataFolder(), "localization.yml");
     }
 
     public String localize(EntityType type) {

@@ -46,7 +46,7 @@ public abstract class LunaPlugin extends JavaPlugin {
                     .replace("[pluginName]", this.getName())
                     .replace("[pluginVersion]", this.getVersion())
                     .replace("[pluginAuthors]", authors == null || authors.isEmpty() ? "" : String.format("(by %s)", authors))
-                    .replace("[LSVersion]", LunaSpring.getINSTANCE().getVersion());
+                    .replace("[LSVersion]", LunaSpring.getInstance().getVersion());
             this.info(line);
         });
     }
@@ -191,7 +191,7 @@ public abstract class LunaPlugin extends JavaPlugin {
     @Override
     @OverridingMethodsMustInvokeSuper
     public void onEnable() {
-        if (this.equals(LunaSpring.getINSTANCE())) {
+        if (this.equals(LunaSpring.getInstance())) {
             this.startMessage(Arrays.asList(
                     "",
                     "        [color] | &l[pluginName][color] v[pluginVersion]",
@@ -202,7 +202,7 @@ public abstract class LunaPlugin extends JavaPlugin {
             return;
         }
 
-        if (LunaSpring.getINSTANCE().getHookedPlugins().contains(this)) return;
+        if (LunaSpring.getInstance().getHookedPlugins().contains(this)) return;
         this.startMessage(Arrays.asList(
                 "",
                 "        [color] | &l[pluginName][color] v[pluginVersion] [pluginAuthors]",
@@ -212,14 +212,14 @@ public abstract class LunaPlugin extends JavaPlugin {
                 ""
         ));
 
-        LunaSpring.getINSTANCE().hookPlugin(this);
+        LunaSpring.getInstance().hookPlugin(this);
     }
 
     @Override
     @OverridingMethodsMustInvokeSuper
     public void onDisable() {
         Bukkit.getScheduler().cancelTasks(this);
-        if (this.equals(LunaSpring.getINSTANCE())) return;
+        if (this.equals(LunaSpring.getInstance())) return;
 
         this.startMessage(Arrays.asList(
                 "",

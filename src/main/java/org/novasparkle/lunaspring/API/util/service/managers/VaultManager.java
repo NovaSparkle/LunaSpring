@@ -1,14 +1,15 @@
 package org.novasparkle.lunaspring.API.util.service.managers;
 
-import lombok.Setter;
 import lombok.experimental.UtilityClass;
 import org.bukkit.OfflinePlayer;
 import org.novasparkle.lunaspring.API.util.service.VaultService;
 
 @UtilityClass
 public class VaultManager {
-    @Setter
-    private VaultService vaultService;
+    private final VaultService vaultService;
+    static {
+        vaultService = new VaultService();
+    }
 
     public void withdraw(OfflinePlayer player, double amount) {
         vaultService.withdraw(player, amount);
@@ -18,8 +19,8 @@ public class VaultManager {
         vaultService.deposit(player, amount);
     }
 
-    public void getBalance(OfflinePlayer player, double amount) {
-        vaultService.withdraw(player, amount);
+    public double getBalance(OfflinePlayer player) {
+        return vaultService.getBalance(player);
     }
 
     public boolean hasEnoughMoney(OfflinePlayer player, double amount) {

@@ -14,11 +14,11 @@ public class VaultService implements LunaService {
 
     public VaultService() {
         if (!Utils.hasPlugin("Vault") || !Utils.isPluginEnabled("Vault")) {
-            LunaSpring.getINSTANCE().warning(LSConfig.getMessage("noDependency").replace("[dependency]", "Vault"));
+            LunaSpring.getInstance().warning(LSConfig.getMessage("noDependency").replace("[dependency]", "Vault"));
         } else {
             RegisteredServiceProvider<Economy> registeredServiceProvider = getServer().getServicesManager().getRegistration(Economy.class);
             if (registeredServiceProvider == null) {
-                LunaSpring.getINSTANCE().warning(LSConfig.getMessage("noVaultProvider"));
+                LunaSpring.getInstance().warning(LSConfig.getMessage("noVaultProvider"));
             } else {
                 this.economy = registeredServiceProvider.getProvider();
             }

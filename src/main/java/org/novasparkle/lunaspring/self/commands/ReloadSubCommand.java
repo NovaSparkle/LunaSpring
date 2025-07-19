@@ -12,7 +12,7 @@ import org.novasparkle.lunaspring.self.LSConfig;
 public class ReloadSubCommand implements Invocation {
     @Override
     public void invoke(CommandSender sender, String[] args) {
-        LunaSpring.getINSTANCE().reloadConfig();
+        LunaSpring.getInstance().reloadConfig();
         LSConfig.reload();
         sender.sendMessage(LSConfig.getMessage("reloaded"));
 

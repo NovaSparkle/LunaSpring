@@ -22,7 +22,7 @@ public class PluginsSubCommand implements Invocation {
 
         List<String> list = LSConfig.getStringList("plugins");
 
-        for (Plugin plugin : LunaSpring.getINSTANCE().getServer().getPluginManager().getPlugins()) {
+        for (Plugin plugin : LunaSpring.getInstance().getServer().getPluginManager().getPlugins()) {
             String status = plugin.isEnabled() ? enabledPlugin : disabledPlugin;
             list.forEach(l -> {
                 String authors = plugin.getDescription().getAuthors().isEmpty() ? "Не указано" : String.join(", ", plugin.getDescription().getAuthors());

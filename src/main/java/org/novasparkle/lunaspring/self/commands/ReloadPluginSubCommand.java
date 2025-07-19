@@ -25,7 +25,7 @@ import java.util.Map;
 public class ReloadPluginSubCommand implements Invocation {
     private final PluginManager pluginManager;
     public ReloadPluginSubCommand() {
-        this.pluginManager = LunaSpring.getINSTANCE().getServer().getPluginManager();
+        this.pluginManager = LunaSpring.getInstance().getServer().getPluginManager();
     }
 
     @Override
