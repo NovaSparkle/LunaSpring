@@ -202,8 +202,7 @@ public class NonMenuItem {
     // APPLIERS - NBT, ItemFlags, Attributes, Enchantments, BaseHeads
 
     public NonMenuItem applyNBT(Map<String, String> nbtTags) {
-        nbtTags.forEach((key, value) ->
-                NBTManager.setString(this.itemStack, key, value));
+        nbtTags.forEach((key, value) -> NBTManager.setString(this.itemStack, key, value));
         return this;
     }
 
@@ -218,7 +217,6 @@ public class NonMenuItem {
                     else if (value instanceof Boolean boolValue) NBTManager.setBool(this.itemStack, key, boolValue);
 
                     else if (value instanceof Double dValue) NBTManager.setDouble(itemStack, key, dValue);
-
                 }
             });
         }
@@ -229,22 +227,23 @@ public class NonMenuItem {
         ItemMeta meta = this.itemStack.getItemMeta();
         if (meta == null) throw new NoItemMetaException(this.itemStack);
 
-        section.getStringList("itemflags").forEach(flag -> {
-            ItemFlag itemFlag = ItemFlag.valueOf(flag);
-            this.itemFlags.add(itemFlag);
-            meta.addItemFlags(itemFlag);
-        });
+        this.applyItemFlags(section.getStringList("itemflags").stream().map(ItemFlag::valueOf).collect(Collectors.toSet()));
         this.itemStack.setItemMeta(meta);
 
         return this;
     }
 
-    public NonMenuItem applyItemFlags(List<ItemFlag> itemFlags) {
+    public NonMenuItem applyItemFlags(Collection<ItemFlag> itemFlags) {
+        return this.applyItemFlags(itemFlags.toArray(new ItemFlag[0]));
+    }
+
+    public NonMenuItem applyItemFlags(ItemFlag... itemFlags) {
         ItemMeta meta = this.itemStack.getItemMeta();
         if (meta == null) throw new NoItemMetaException(this.itemStack);
         if (itemFlags != null) {
-            this.itemFlags.addAll(itemFlags);
-            meta.addItemFlags(itemFlags.toArray(new ItemFlag[0]));
+            this.itemFlags.addAll(List.of(itemFlags));
+            meta.addItemFlags(itemFlags);
+            this.itemStack.setItemMeta(meta);
         }
         return this;
     }
@@ -267,6 +266,10 @@ public class NonMenuItem {
         return this;
     }
 
+    public NonMenuItem applyEnchantment(Enchantment enchantment, int level) {
+        this.itemStack.addUnsafeEnchantment(enchantment, level);
+        return this;
+    }
 
     public NonMenuItem applyEnchantments(Map<Enchantment, Integer> enchants) {
         if (enchants != null)
@@ -282,7 +285,6 @@ public class NonMenuItem {
                         this.enchantments.put(enchantment, (Integer) level);
                         this.itemStack.addUnsafeEnchantment(enchantment, (Integer) level);
                     });
-
         return this;
     }
 
