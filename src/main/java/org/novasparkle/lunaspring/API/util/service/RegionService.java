@@ -30,7 +30,6 @@ import java.util.stream.Stream;
 
 @Getter
 public final class RegionService implements LunaService {
-
     public RegionContainer getRegionContainer() {
         return WorldGuard.getInstance().getPlatform().getRegionContainer();
     }

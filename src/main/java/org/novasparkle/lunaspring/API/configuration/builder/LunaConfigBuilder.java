@@ -174,6 +174,7 @@ public final class LunaConfigBuilder {
 
         try {
             Field field = configConstructedClass.getDeclaredField("config");
+            field.setAccessible(true);
 
             Object object = field.get(null);
             return IConfig.class.isAssignableFrom(field.getType()) && object != null ? (IConfig) object : null;
