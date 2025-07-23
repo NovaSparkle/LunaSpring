@@ -38,3 +38,5 @@ permissions:
     default: op
   lunaspring.version:
     default: op
+  lunaspring.moveignore:
+    default: op

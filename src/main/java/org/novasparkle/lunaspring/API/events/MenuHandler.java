@@ -40,7 +40,9 @@ public class MenuHandler implements Listener {
     @EventHandler
     public void onMove(PlayerMoveEvent e) {
         if (!e.hasExplicitlyChangedBlock()) return;
+
         Player player = e.getPlayer();
+        if (player.isOp() || player.hasPermission("lunaspring.moveignore")) return;
 
         IMenu menu = MenuManager.getActiveMenu(player);
         if (menu != null && !menu.getClass().isAnnotationPresent(CACHED_ANNOTATION)) {
