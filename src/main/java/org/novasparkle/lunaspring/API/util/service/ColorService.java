@@ -38,7 +38,7 @@ public final class ColorService implements LunaService {
     }
 
     public Color getColor(String abbr) {
-        return Utils.find(this.colorList, c -> c.abbr().equals(abbr)).orElseThrow();
+        return Utils.find(this.colorList, c -> c.abbr().equals(abbr)).orElse(null);
     }
 
     public Color getColorFromReplacer(String replacerAbbr) {

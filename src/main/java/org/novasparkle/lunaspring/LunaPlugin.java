@@ -35,9 +35,9 @@ import java.util.Set;
 public abstract class LunaPlugin extends JavaPlugin {
     private void startMessage(List<String> startMessage) {
         String textColorString = LSConfig.getString("on_load_plugin_text_colors");
-        char endedColor = textColorString == null || textColorString.isEmpty() ? 'b' :
+        char endedColor = textColorString == null || textColorString.isEmpty() ? ' ' :
                 textColorString.charAt(LunaMath.getRandomInt(0, textColorString.length()));
-        String formattedEndedColor = "&" + endedColor;
+        String formattedEndedColor = endedColor == ' ' ? "" : "&" + endedColor;
 
         String authors = this.getAuthors();
         startMessage.forEach(m -> {

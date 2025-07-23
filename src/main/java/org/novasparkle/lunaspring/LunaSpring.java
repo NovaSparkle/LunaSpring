@@ -2,8 +2,10 @@ package org.novasparkle.lunaspring;
 
 import lombok.Getter;
 import lombok.SneakyThrows;
+import org.bukkit.Bukkit;
 import org.novasparkle.lunaspring.API.commands.LunaExecutor;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
+import org.novasparkle.lunaspring.API.util.service.managers.VaultManager;
 import org.novasparkle.lunaspring.API.util.utilities.Color;
 import org.novasparkle.lunaspring.API.util.utilities.Localization;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
@@ -31,7 +33,7 @@ public final class LunaSpring extends LunaPlugin {
         LunaExecutor.initialize(this);
 
         this.registerLunaPlaceholder();
-//        VaultManager.setVaultService(new VaultService());
+        Bukkit.getScheduler().runTask(this, VaultManager::initialize);
     }
 
     private void registerLunaPlaceholder() {
@@ -40,11 +42,11 @@ public final class LunaSpring extends LunaPlugin {
                 return String.join(", ", this.hookedPlugins.stream().map(LunaPlugin::getName).toList()); // Список луна плагинов
             }
 
-            if (params.equalsIgnoreCase("register")) { // %lunaspring_register-SateChat%
+            if (params.startsWith("register-")) { // %lunaspring_register-SateChat%
                 String[] split = params.split("-");
                 if (split.length == 1) return null;
 
-                LunaPlugin plugin = this.getLunaPlugin(split[2]);
+                LunaPlugin plugin = this.getLunaPlugin(split[1]);
                 return plugin == null ? "no" : "yes";
             }
 

@@ -78,7 +78,9 @@ public final class LunaConfigBuilder {
             Object object = finalConfig.getObject(p);
             if (object == null || f.getType().isAssignableFrom(object.getClass())) {
                 try {
-                    f.set(null, object);
+                    try {
+                        f.set(null, object);
+                    } catch (IllegalArgumentException ignored) {}
                 } catch (IllegalAccessException e) {
                     throw new RuntimeException(e);
                 }
