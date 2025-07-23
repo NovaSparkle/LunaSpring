@@ -1,16 +1,22 @@
 package org.novasparkle.lunaspring.API.events;
 
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.novasparkle.lunaspring.API.commands.annotations.LunaHandler;
+import org.novasparkle.lunaspring.API.menus.IMenu;
 import org.novasparkle.lunaspring.API.menus.MenuManager;
+import org.novasparkle.lunaspring.API.menus.MoveIgnored;
 
 @LunaHandler
 public class MenuHandler implements Listener {
+    private final Class<MoveIgnored> CACHED_ANNOTATION = MoveIgnored.class;
+
     @EventHandler
     private void onOpen(InventoryOpenEvent e) {
         MenuManager.handleOpen(e);
@@ -29,5 +35,16 @@ public class MenuHandler implements Listener {
     @EventHandler
     private void onClick(InventoryClickEvent e) {
         MenuManager.handleClick(e);
+    }
+
+    @EventHandler
+    public void onMove(PlayerMoveEvent e) {
+        if (!e.hasExplicitlyChangedBlock()) return;
+        Player player = e.getPlayer();
+
+        IMenu menu = MenuManager.getActiveMenu(player);
+        if (menu != null && !menu.getClass().isAnnotationPresent(CACHED_ANNOTATION)) {
+            player.closeInventory();
+        }
     }
 }
