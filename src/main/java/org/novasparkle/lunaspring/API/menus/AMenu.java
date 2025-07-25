@@ -194,13 +194,5 @@ public abstract class AMenu implements ItemListMenu {
         this.itemList.forEach(System.out::println);
     }
 
-//    public AMenu clone(Player player) throws CloneNotSupportedException {
-//        AMenu copyMenu = (AMenu) super.clone();
-//        copyMenu.player = player;
-//        copyMenu.decoration = this.decoration.clone();
-//        copyMenu.inventory = this.getInventory();
-//        copyMenu.cooldownPrevent = this.cooldownPrevent.clone();
-//        System.out.println(copyMenu.inventory == this.getInventory());
-//        return copyMenu;
-//    }
+
 }
