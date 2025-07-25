@@ -184,8 +184,10 @@ public abstract class AMenu implements ItemListMenu {
         this.itemList.addAll(Arrays.asList(items));
     }
 
-    public void addItems(List<Item> items) {
+    @Override
+    public Collection<Item> addItems(Collection<Item> items) {
         this.itemList.addAll(items);
+        return this.itemList;
     }
 
     public void drawItems() {
