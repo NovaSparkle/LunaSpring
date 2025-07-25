@@ -9,7 +9,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.jetbrains.annotations.Range;
-import org.novasparkle.lunaspring.API.menus.IMenu;
+import org.novasparkle.lunaspring.API.menus.ItemListMenu;
 import org.novasparkle.lunaspring.API.util.utilities.LunaMath;
 
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ public class Item extends NonMenuItem {
     private final List<String> defaultLore;
     private final String defaultName;
 
-    private IMenu menu;
+    private ItemListMenu menu;
     @Setter private byte slot = 0;
 
     public Item(Material material, String displayName, List<String> lore, int amount, @Range(from = 0, to = 53) byte slot) {
@@ -89,21 +89,21 @@ public class Item extends NonMenuItem {
         return this;
     }
 
-    public Item insert(@NonNull IMenu aMenu, @Range(from = 0, to = 53) byte slot) {
-        this.menu = aMenu;
+    public Item insert(@NonNull ItemListMenu itemListMenu, @Range(from = 0, to = 53) byte slot) {
+        this.menu = itemListMenu;
         this.slot = slot;
 
-        aMenu.getInventory().setItem(slot, this.getItemStack());
+        itemListMenu.getInventory().setItem(slot, this.getItemStack());
         return this;
     }
 
-    public Item insert(@NonNull IMenu aMenu) {
-        this.insert(aMenu, this.slot);
+    public Item insert(@NonNull ItemListMenu itemListMenu) {
+        this.insert(itemListMenu, this.slot);
         return this;
     }
 
-    public Item insert(@NonNull IMenu aMenu, @Range(from = 0, to = 6) byte row, @Range(from = 0, to = 9) byte column) {
-        this.insert(aMenu, (byte) LunaMath.getIndex(row, column));
+    public Item insert(@NonNull ItemListMenu itemListMenu, @Range(from = 0, to = 6) byte row, @Range(from = 0, to = 9) byte column) {
+        this.insert(itemListMenu, (byte) LunaMath.getIndex(row, column));
         return this;
     }
 
@@ -122,8 +122,9 @@ public class Item extends NonMenuItem {
         return this;
     }
 
-    public Item remove(@NonNull IMenu iMenu) {
-        iMenu.getInventory().setItem(this.slot, null);
+    public Item remove(@NonNull ItemListMenu itemListMenu) {
+        itemListMenu.getItemList().remove(this);
+        itemListMenu.getInventory().setItem(this.slot, null);
         return this;
     }
 

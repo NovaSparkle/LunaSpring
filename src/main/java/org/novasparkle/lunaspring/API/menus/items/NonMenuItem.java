@@ -100,6 +100,18 @@ public class NonMenuItem {
         return this;
     }
 
+    public NonMenuItem increase() {
+        return this.setAmount(this.amount + 1);
+    }
+
+    public NonMenuItem decrease() {
+        return this.setAmount(this.getAmount() - 1);
+    }
+
+    public NonMenuItem addAmount(int add) {
+        return this.setAmount(this.getAmount() + add);
+    }
+
     public NonMenuItem setDisplayName(String displayName) {
         this.displayName = ColorManager.color(displayName);
         this.update();
@@ -155,14 +167,6 @@ public class NonMenuItem {
 
         this.setAll(newMaterial, amount, displayName, lore, itemSection.getBoolean("enchanted"));
         return this;
-    }
-
-    public NonMenuItem increase() {
-        return this.setAmount(this.amount + 1);
-    }
-
-    public NonMenuItem decrease() {
-        return this.setAmount(this.getAmount() - 1);
     }
 
     public NonMenuItem update() {

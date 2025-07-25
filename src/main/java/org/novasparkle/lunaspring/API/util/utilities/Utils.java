@@ -211,6 +211,7 @@ public class Utils {
 
         String[] parts = line.split("\\*%\\*");
         for (int i = 0; i < parts.length; i++) {
+            System.out.println(i);
             if (i % 2 == 1) {
                 String clickablePart = parts[i];
                 String command = parts[++i];

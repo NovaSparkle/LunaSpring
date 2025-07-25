@@ -19,19 +19,16 @@ import org.novasparkle.lunaspring.API.menus.items.Item;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 @Getter
 @SuppressWarnings({"deprecation", "unused"})
-public abstract class AMenu implements IMenu {
+public abstract class AMenu implements ItemListMenu {
     private Inventory inventory;
     private String title;
     @Setter private Decoration decoration;
-    private CooldownPrevent<Integer> cooldownPrevent = new CooldownPrevent<>();
-    private Player player;
+    private final CooldownPrevent<Integer> cooldownPrevent = new CooldownPrevent<>();
+    private final Player player;
 
     private final List<Item> itemList = new ArrayList<>();
 
@@ -91,40 +88,52 @@ public abstract class AMenu implements IMenu {
                 ", itemList=" + this.itemList +
                 '}';
     }
+
+    @Override
     public void clear() {
         this.itemList.clear();
     }
 
+    @Override
     public List<Item> findItems(ItemStack itemStack) {
         return this.itemList.stream().filter(i -> i.getItemStack().equals(itemStack)).collect(Collectors.toList());
     }
 
+    @Override
     public Item findFirstItem(ItemStack itemStack) {
         return Utils.find(this.itemList, i -> i.getItemStack().equals(itemStack)).orElse(null);
     }
 
+    @Override
     public List<Item> findItems(Material material) {
         return this.itemList.stream().filter(i -> i.getItemStack().getType().equals(material)).collect(Collectors.toList());
     }
+
+    @Override
     public Item findFirstItem(Class<?> clazz) {
         return Utils.find(this.itemList, i -> i.getClass().equals(clazz)).orElse(null);
     }
-
+    @Override
     public List<Item> findItems(Class<?> clazz) {
         return this.itemList.stream().filter(i -> i.getClass().equals(clazz)).collect(Collectors.toList());
     }
+
+    @Override
     public Item findFirstItem(String displayName) {
         return Utils.find(this.itemList, i -> i.getDisplayName().equals(displayName)).orElse(null);
     }
 
+    @Override
     public List<Item> findItems(String displayName) {
         return this.itemList.stream().filter(i -> i.getDisplayName().equals(displayName)).collect(Collectors.toList());
     }
 
+    @Override
     public Item findFirstItem(Material material) {
         return Utils.find(this.itemList, i -> i.getMaterial().equals(material)).orElse(null);
     }
 
+    @Override
     public boolean itemClick(@NonNull Material material, InventoryClickEvent event) {
         Item item = this.findFirstItem(material);
         if (item != null) {
@@ -133,6 +142,8 @@ public abstract class AMenu implements IMenu {
         }
         return false;
     }
+
+    @Override
     public boolean itemClick(@NonNull String displayName, InventoryClickEvent event) {
         Item item = this.findFirstItem(displayName);
         if (item != null) {
@@ -141,6 +152,8 @@ public abstract class AMenu implements IMenu {
         }
         return false;
     }
+
+    @Override
     public boolean itemClick(@NonNull Class<?> clazz, InventoryClickEvent event) {
         Item item = this.findFirstItem(clazz);
         if (item != null) {
@@ -150,10 +163,23 @@ public abstract class AMenu implements IMenu {
         return false;
     }
 
-    public void insertAllItems() {
-        this.itemList.forEach(i -> i.insert(this));
+    @Override
+    public boolean itemClick(@NonNull ItemStack itemStack, InventoryClickEvent event) {
+        Item item = this.findFirstItem(itemStack);
+        if (item != null) {
+            item.onClick(event);
+            return true;
+        }
+        return false;
     }
 
+    @Override
+    public Collection<Item> insertAllItems() {
+        this.itemList.forEach(i -> i.insert(this));
+        return this.itemList;
+    }
+
+    @Override
     public void addItems(Item... items) {
         this.itemList.addAll(Arrays.asList(items));
     }
@@ -166,13 +192,13 @@ public abstract class AMenu implements IMenu {
         this.itemList.forEach(System.out::println);
     }
 
-    public AMenu clone(Player player) throws CloneNotSupportedException {
-        AMenu copyMenu = (AMenu) super.clone();
-        copyMenu.player = player;
-        copyMenu.decoration = this.decoration.clone();
-        copyMenu.inventory = this.getInventory();
-        copyMenu.cooldownPrevent = this.cooldownPrevent.clone();
-        System.out.println(copyMenu.inventory == this.getInventory());
-        return copyMenu;
-    }
+//    public AMenu clone(Player player) throws CloneNotSupportedException {
+//        AMenu copyMenu = (AMenu) super.clone();
+//        copyMenu.player = player;
+//        copyMenu.decoration = this.decoration.clone();
+//        copyMenu.inventory = this.getInventory();
+//        copyMenu.cooldownPrevent = this.cooldownPrevent.clone();
+//        System.out.println(copyMenu.inventory == this.getInventory());
+//        return copyMenu;
+//    }
 }
