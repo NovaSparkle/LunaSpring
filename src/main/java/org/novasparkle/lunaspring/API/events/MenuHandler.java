@@ -13,6 +13,8 @@ import org.novasparkle.lunaspring.API.menus.IMenu;
 import org.novasparkle.lunaspring.API.menus.MenuManager;
 import org.novasparkle.lunaspring.API.menus.MoveIgnored;
 
+import java.util.UUID;
+
 @LunaHandler
 public class MenuHandler implements Listener {
     private final Class<MoveIgnored> CACHED_ANNOTATION = MoveIgnored.class;
@@ -37,15 +39,21 @@ public class MenuHandler implements Listener {
         MenuManager.handleClick(e);
     }
 
-    @EventHandler
+    @EventHandler @SuppressWarnings("deprecation")
     public void onMove(PlayerMoveEvent e) {
-        if (!e.hasExplicitlyChangedBlock()) return;
-
         Player player = e.getPlayer();
         if (player.isOp() || player.hasPermission("lunaspring.moveignore")) return;
 
-        if (player.isGliding() || player.isFlying()) return;
+        if (e.hasChangedOrientation() && (player.isGliding() || player.isFlying())) {
+            this.closeIMenu(player);
+            return;
+        }
 
+        if (!e.hasExplicitlyChangedBlock() || (player.getFallDistance() > 0 && !player.isOnGround())) return;
+        this.closeIMenu(player);
+    }
+
+    private void closeIMenu(Player player) {
         IMenu menu = MenuManager.getActiveMenu(player);
         if (menu != null && !menu.getClass().isAnnotationPresent(CACHED_ANNOTATION)) {
             player.closeInventory();
