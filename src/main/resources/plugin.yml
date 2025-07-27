@@ -15,11 +15,8 @@ commands:
 authors:
   - NovaSparkle
   - ProGiple
-
-depend:
-  - PlaceholderAPI
-
 softdepend:
+  - PlaceholderAPI
   - NBTAPI
   - WorldEdit
   - WorldGuard

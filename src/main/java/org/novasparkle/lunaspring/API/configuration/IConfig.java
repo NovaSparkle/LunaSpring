@@ -146,6 +146,10 @@ public class IConfig {
         return this.config.getDouble(path);
     }
 
+    public long getLong(String path) {
+        return this.config.getLong(path);
+    }
+
     /**
     * Отправка сообщения для sender с айди сообщения id из секции конфигурации messages (данные сообщения указаны в формате списка (List<String>)),
     * массив replacements нужен для указания локальных заменителей для сообщения, если указать сразу три заменителя (например никнейм игрока,

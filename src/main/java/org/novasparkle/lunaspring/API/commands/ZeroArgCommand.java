@@ -25,12 +25,14 @@ public class ZeroArgCommand implements Invocation {
         if (this.checkCommand(sender, this.getPermissions()))
             this.getInvocation().invoke(sender, args);
     }
+
     protected final boolean invokeFlags(CommandSender sender) {
         for (AccessFlag flag : this.flags) {
             if (!flag.invoke(sender)) return false;
         }
         return true;
     }
+
     protected boolean hasPermission(CommandSender sender, String permission) {
         if (!sender.hasPermission(permission) && !sender.hasPermission("lunaspring.*")) {
             sender.sendMessage(LSConfig.getMessage("noPermission"));

@@ -63,6 +63,10 @@ public class Configuration extends IConfig {
         this.config.set(path, value);
     }
 
+    public void setLong(String path, long value) {
+        this.config.set(path, value);
+    }
+
     public void setDouble(String path, double value) {
         this.config.set(path, value);
     }

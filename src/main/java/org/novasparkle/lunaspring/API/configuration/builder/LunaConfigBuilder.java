@@ -75,16 +75,21 @@ public final class LunaConfigBuilder {
 
         IConfig finalConfig = config;
         LunaConfigBuilder.processFields(configConstructedClass, null, (f, p) -> {
-            Object object = finalConfig.getObject(p);
-            if (object == null || f.getType().isAssignableFrom(object.getClass())) {
-                try {
-                    try {
-                        f.set(null, object);
-                    } catch (IllegalArgumentException ignored) {}
-                } catch (IllegalAccessException e) {
-                    throw new RuntimeException(e);
-                }
-            }
+            Class<?> clazz = f.getType();
+            try {
+                if (clazz == int.class || clazz == Integer.class)
+                    f.set(null, finalConfig.getInt(p));
+                else if (clazz == double.class || clazz == Double.class)
+                    f.set(null, finalConfig.getDouble(p));
+                else if (clazz == float.class || clazz == Float.class)
+                    f.set(null, (float) finalConfig.getDouble(p));
+                else if (clazz == byte.class || clazz == Byte.class)
+                    f.set(null, (byte) finalConfig.getInt(p));
+                else if (clazz == long.class || clazz == Long.class)
+                    f.set(null, finalConfig.getLong(p));
+                else
+                    f.set(null, finalConfig.getObject(p));
+            } catch (IllegalAccessException ignored) {}
         });
 
         return config;
@@ -152,6 +157,10 @@ public final class LunaConfigBuilder {
         }
     }
 
+    public IConfig generateConfig(LunaPlugin plugin, Class<?> configConstructedClass) {
+        return LunaConfigBuilder.generateConfig(plugin, configConstructedClass, false);
+    }
+
     private IConfig generateConfig(File file, LunaPlugin plugin, Class<?> configConstructedClass) {
         try {
             return file != null && (file.exists() || file.getParentFile().mkdirs() && file.createNewFile()) ?
@@ -166,6 +175,10 @@ public final class LunaConfigBuilder {
         for (ClassEntry<ConfigConstructor> entry : classList) {
             LunaConfigBuilder.generateConfig(plugin, entry.getClazz(), mayReplaceExistsFile);
         }
+    }
+
+    public void generateConfigs(LunaPlugin plugin) {
+        LunaConfigBuilder.generateConfigs(plugin, false);
     }
 
     @SneakyThrows

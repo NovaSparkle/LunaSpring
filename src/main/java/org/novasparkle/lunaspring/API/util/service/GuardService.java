@@ -6,21 +6,25 @@ import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.domains.DefaultDomain;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.flags.Flag;
+import com.sk89q.worldguard.protection.flags.Flags;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import lombok.Getter;
+import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.novasparkle.lunaspring.API.util.exceptions.WGFlagGetException;
 import org.novasparkle.lunaspring.API.util.service.managers.worldguard.LFlag;
 import org.novasparkle.lunaspring.API.util.service.managers.worldguard.LState;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -29,7 +33,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Getter
-public final class RegionService implements LunaService {
+public final class GuardService implements LunaService {
     public RegionContainer getRegionContainer() {
         return WorldGuard.getInstance().getPlatform().getRegionContainer();
     }
@@ -207,18 +211,19 @@ public final class RegionService implements LunaService {
     }
 
     public void setFlag(String regionName, LFlag lFlag, StateFlag.State state) {
-        this.setFlag(regionName, lFlag.getWGFlag(), state);
+        this.setFlag(regionName, getWGFlag(lFlag), state);
     }
 
     public void setFlag(String regionName, LFlag lFlag, LState lState) {
-        this.setFlag(regionName, lFlag.getWGFlag(), lState.getWGState());
+        this.setFlag(regionName, getWGFlag(lFlag), getWGState(lState));
     }
+
     public void setFlag(@NotNull ProtectedRegion region, LFlag lFlag, StateFlag.State state) {
-        this.setFlag(region, lFlag.getWGFlag(), state);
+        this.setFlag(region, getWGFlag(lFlag), state);
     }
 
     public void setFlag(@NotNull ProtectedRegion region, LFlag lFlag, LState lState) {
-        this.setFlag(region, lFlag.getWGFlag(), lState.getWGState());
+        this.setFlag(region, getWGFlag(lFlag), getWGState(lState));
     }
 
     public Map<Flag<?>, Object> getFlags(String regionName) {
@@ -328,5 +333,31 @@ public final class RegionService implements LunaService {
         ApplicableRegionSet set = manager.getApplicableRegions(rg);
 
         return !set.getRegions().isEmpty();
+    }
+
+    public StateFlag.State getWGState(LState lState) {
+        return lState == LState.ALLOW ? StateFlag.State.ALLOW : StateFlag.State.DENY;
+    }
+
+    public @NonNull StateFlag getWGFlag(LFlag flag) {
+        return this.getWGFlag(flag.name());
+    }
+
+    public @NonNull StateFlag getWGFlag(String id) {
+        id = id.toUpperCase();
+        try {
+            Field field = Flags.class.getField(id);
+            field.setAccessible(true);
+            return (StateFlag) field.get(null);
+        }
+        catch (NoSuchFieldException e) {
+            throw new WGFlagGetException("Не найдено поле " + id);
+        }
+        catch (IllegalAccessException e) {
+            throw new WGFlagGetException("Отсутствует разрешение к полю " + id);
+        }
+        catch (ClassCastException e) {
+            throw new WGFlagGetException("Невозможно преобразовать в StateFlag");
+        }
     }
 }

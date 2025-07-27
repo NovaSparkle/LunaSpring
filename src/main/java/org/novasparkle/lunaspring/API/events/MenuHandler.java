@@ -44,6 +44,8 @@ public class MenuHandler implements Listener {
         Player player = e.getPlayer();
         if (player.isOp() || player.hasPermission("lunaspring.moveignore")) return;
 
+        if (player.isGliding() || player.isFlying()) return;
+
         IMenu menu = MenuManager.getActiveMenu(player);
         if (menu != null && !menu.getClass().isAnnotationPresent(CACHED_ANNOTATION)) {
             player.closeInventory();

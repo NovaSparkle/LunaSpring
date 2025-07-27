@@ -6,6 +6,7 @@ import lombok.experimental.UtilityClass;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Random;
+import java.util.function.Function;
 
 @UtilityClass
 public class LunaMath {
@@ -32,6 +33,10 @@ public class LunaMath {
         return (int) num;
     }
 
+    public byte toByte(int num) {
+        return (byte) num;
+    }
+
     public double toDouble(String text) {
         return toDouble(text, 0);
     }
@@ -42,6 +47,30 @@ public class LunaMath {
         } catch (NumberFormatException e) {
             return defaultNum;
         }
+    }
+
+    public long toLong(String text, long defaultNum) {
+        try {
+            return Long.parseLong(text);
+        } catch (NumberFormatException e) {
+            return defaultNum;
+        }
+    }
+
+    public long toLong(String text) {
+        return toLong(text, 0);
+    }
+
+    public byte toByte(String text, byte defaultNum) {
+        try {
+            return Byte.parseByte(text);
+        } catch (NumberFormatException e) {
+            return defaultNum;
+        }
+    }
+
+    public byte toByte(String text) {
+        return toByte(text, (byte) 0);
     }
 
     public boolean isEven(int num) {

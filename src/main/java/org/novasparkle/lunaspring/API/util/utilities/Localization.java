@@ -17,7 +17,7 @@ public class Localization {
     }
 
     public String localize(Enchantment enchantment) {
-        return getLocalizationConfig().getString(String.format("Enchantment.%s", enchantment.getKey().getKey()));
+        return getLocalizationConfig().getString(String.format("Enchantment.%s", enchantment.getKey().getKey().toUpperCase()));
     }
 
     public String localize(String path) {

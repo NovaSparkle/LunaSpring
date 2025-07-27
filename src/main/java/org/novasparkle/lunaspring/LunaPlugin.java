@@ -17,6 +17,7 @@ import org.novasparkle.lunaspring.API.util.utilities.LunaMath;
 import org.novasparkle.lunaspring.API.util.utilities.LunaPAPIExpansion;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 import org.novasparkle.lunaspring.API.util.utilities.reflection.AnnotationScanner;
+import org.novasparkle.lunaspring.API.util.utilities.reflection.ClassEntry;
 import org.novasparkle.lunaspring.self.LSConfig;
 import org.novasparkle.lunaspring.self.PaidPlugin;
 
@@ -152,7 +153,7 @@ public abstract class LunaPlugin extends JavaPlugin {
      */
     public boolean createPlaceholder(String identifier, LunaPAPIExpansion.Request request) {
         if (Utils.isPluginEnabled("PlaceholderAPI")) {
-            if (identifier == null) identifier = this.getName().toLowerCase();
+            if (identifier == null || identifier.isEmpty()) identifier = this.getName().toLowerCase();
             boolean registered = new LunaPAPIExpansion(this, identifier, request).register();
 
             if (registered) this.info(LSConfig.getMessage("placeholderRegistered").replace("[identifier]", identifier));
@@ -194,9 +195,16 @@ public abstract class LunaPlugin extends JavaPlugin {
         if (this.equals(LunaSpring.getInstance())) {
             this.startMessage(Arrays.asList(
                     "",
-                    "        [color] | &l[pluginName][color] v[pluginVersion]",
-                    "        [color] | &fAuthor: [color]NovaSparkle",
-                    "        [color] | &fDev-Helper: [color]ProGiple",
+                    "       [color]┏┓",
+                    "       [color]┃┃         v[pluginVersion]",
+                    "       [color]┃┃┏┓┏┳━┓┏━━┳━━┳━━┳━┳┳━┓┏━━┓",
+                    "       [color]┃┃┃┃┃┃┏┓┫┏┓┃━━┫┏┓┃┏╋┫┏┓┫┏┓┃",
+                    "       [color]┃┗┫┗┛┃┃┃┃┏┓┣━━┃┗┛┃┃┃┃┃┃┃┗┛┃",
+                    "       [color]┗━┻━━┻┛┗┻┛┗┻━━┫┏━┻┛┗┻┛┗┻━┓┃",
+                    "       [color]╋╋╋╋╋╋╋╋╋╋╋╋╋╋┃┃╋╋╋╋╋╋╋┏━┛┃",
+                    "       [color]╋╋╋╋╋╋╋╋╋╋╋╋╋╋┗┛╋╋╋╋╋╋╋┗━━┛",
+                    "       [color]| &fAuthor: [color]NovaSparkle",
+                    "       [color]| &fDev-Helper: [color]ProGiple",
                     ""
             ));
             return;
@@ -232,9 +240,11 @@ public abstract class LunaPlugin extends JavaPlugin {
         ));
     }
     @SneakyThrows
-    public void processCommands() {
-        Set<Class<LunaCommand>> classesToRegister = AnnotationScanner.getAnnotatedClasses(this, LunaCommand.class);
-        for (Class<?> clazz : classesToRegister) {
+    public void processCommands(String... allowedPackages) {
+        Set<ClassEntry<LunaCommand>> classes = AnnotationScanner.findAnnotatedClasses(this, LunaCommand.class, allowedPackages);
+        for (ClassEntry<LunaCommand> entry : classes) {
+            Class<?> clazz = entry.getClazz();
+
             String command = clazz.getDeclaredAnnotation(LunaCommand.class).value();
             if (TabExecutor.class.isAssignableFrom(clazz)) {
                 TabExecutor tabExecutor = (TabExecutor) clazz.getDeclaredConstructor().newInstance();
@@ -248,10 +258,11 @@ public abstract class LunaPlugin extends JavaPlugin {
     }
 
     @SneakyThrows
-    public void processListeners() {
-        Set<Class<LunaHandler>> classes = AnnotationScanner.getAnnotatedClasses(this, LunaHandler.class);
-        for (Class<LunaHandler> clazz : classes) {
-            if (Listener.class.isAssignableFrom(clazz)) {
+    public void processListeners(String... allowedPackages) {
+        Set<ClassEntry<LunaHandler>> classes = AnnotationScanner.findAnnotatedClasses(this, LunaHandler.class, allowedPackages);
+        for (ClassEntry<LunaHandler> entry : classes) {
+            Class<?> clazz = entry.getClazz();
+            if (Listener.class.isAssignableFrom(entry.getClazz())) {
                 Listener listener = (Listener) clazz.getDeclaredConstructor().newInstance();
                 this.registerListeners(listener);
             } else throw new InvalidImplementationException(clazz, Listener.class);
