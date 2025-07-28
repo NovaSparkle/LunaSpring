@@ -40,7 +40,9 @@ public class LunaEngine {
 
     @SneakyThrows
     public boolean checkPlugin(LunaPlugin plugin) {
-        if (this.connection == null || this.connection.isClosed()) return false;
+        if (this.connection == null || this.connection.isClosed()) {
+            return false;
+        }
 
         PreparedStatement statement = this.connection.prepareStatement(String.format("SELECT value from plugin_keys WHERE ipv4='%s' AND plugin_name='%s'", Inet4Address.getLocalHost().getHostAddress(), plugin.getName()));
         ResultSet resultSet = statement.executeQuery();

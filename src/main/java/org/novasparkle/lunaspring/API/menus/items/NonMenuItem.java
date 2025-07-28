@@ -3,7 +3,6 @@ package org.novasparkle.lunaspring.API.menus.items;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import me.clip.placeholderapi.PlaceholderAPI;
@@ -21,6 +20,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 import org.novasparkle.lunaspring.API.util.exceptions.NoItemMetaException;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
@@ -56,6 +56,10 @@ public class NonMenuItem {
         this.update();
     }
 
+    public NonMenuItem() {
+        this(Material.STONE);
+    }
+
     public NonMenuItem(Material material) {
         this(material, null, Lists.newArrayList(), 1);
     }
@@ -64,7 +68,7 @@ public class NonMenuItem {
         this(material, null, Lists.newArrayList(), amount);
     }
 
-    public NonMenuItem(@NonNull ConfigurationSection section) {
+    public NonMenuItem(@NotNull ConfigurationSection section) {
         this(Material.getMaterial(Objects.requireNonNull(section.getString("material"))),
                 section.getString("displayName"),
                 section.getStringList("lore"),
@@ -88,7 +92,7 @@ public class NonMenuItem {
 
     // SETTERS
 
-    public NonMenuItem setMaterial(@NonNull Material material) {
+    public NonMenuItem setMaterial(@NotNull Material material) {
         this.material = material;
         this.update();
         return this;
@@ -151,7 +155,7 @@ public class NonMenuItem {
         return this;
     }
 
-    public NonMenuItem setAll(@NonNull ConfigurationSection itemSection) {
+    public NonMenuItem setAll(@NotNull ConfigurationSection itemSection) {
         String strMaterial = itemSection.getString("material");
         Material newMaterial = strMaterial == null || strMaterial.isEmpty() ? null : Material.valueOf(strMaterial);
 
@@ -265,7 +269,7 @@ public class NonMenuItem {
         return this;
     }
 
-    public NonMenuItem applyBaseHead(@NonNull OfflinePlayer player) {
+    public NonMenuItem applyBaseHead(@NotNull OfflinePlayer player) {
         NBTManager.base64head(this.itemStack, player);
         return this;
     }
@@ -292,7 +296,7 @@ public class NonMenuItem {
         return this;
     }
 
-    public NonMenuItem addAttribute(@NonNull Attribute attribute, @NonNull AttributeModifier modifier) {
+    public NonMenuItem addAttribute(@NotNull Attribute attribute, @NotNull AttributeModifier modifier) {
         ItemMeta meta = this.itemStack.getItemMeta();
         if (meta == null) throw new NoItemMetaException(this.itemStack);
         meta.addAttributeModifier(attribute, modifier);
@@ -373,7 +377,7 @@ public class NonMenuItem {
         return location.getWorld().dropItemNaturally(location, this.getItemStack());
     }
 
-    public void give(@NonNull Player player) {
+    public void give(@NotNull Player player) {
         this.lore.forEach(lr -> PlaceholderAPI.setPlaceholders(player, lr));
         player.getInventory().addItem(this.itemStack);
     }
@@ -383,7 +387,7 @@ public class NonMenuItem {
         player.getInventory().addItem(this.getDefaultStack());
     }
 
-    public NonMenuItem serialize(@NonNull ConfigurationSection section, boolean asItemStack) {
+    public NonMenuItem serialize(@NotNull ConfigurationSection section, boolean asItemStack) {
         if (asItemStack)
             section.set("item", this.itemStack);
         else {

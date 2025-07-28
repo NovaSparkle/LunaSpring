@@ -2,21 +2,17 @@ package org.novasparkle.lunaspring.API.util.service.managers.worldguard;
 
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldguard.protection.flags.Flag;
-import com.sk89q.worldguard.protection.flags.Flags;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
-import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import org.novasparkle.lunaspring.API.util.exceptions.WGFlagGetException;
 import org.novasparkle.lunaspring.API.util.service.GuardService;
 
-import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -228,11 +224,11 @@ public class GuardManager {
         return guardService.getWGState(lState);
     }
 
-    public @NonNull StateFlag getWGFlag(LFlag flag) {
+    public @NotNull StateFlag getWGFlag(LFlag flag) {
         return guardService.getWGFlag(flag);
     }
 
-    public @NonNull StateFlag getWGFlag(String id) {
+    public @NotNull StateFlag getWGFlag(String id) {
         return guardService.getWGFlag(id);
     }
 }

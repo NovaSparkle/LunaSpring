@@ -9,7 +9,7 @@ import org.novasparkle.lunaspring.LunaSpring;
 @UtilityClass
 public class Localization {
     public IConfig getLocalizationConfig() {
-        return new IConfig(LunaSpring.getInstance().getDataFolder(), "localization.yml");
+        return new IConfig(LunaSpring.getInstance().getDataFolder(), "localization");
     }
 
     public String localize(EntityType type) {

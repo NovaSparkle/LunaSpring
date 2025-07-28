@@ -11,6 +11,7 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 import org.novasparkle.lunaspring.API.events.CooldownPrevent;
@@ -32,13 +33,13 @@ public abstract class AMenu implements ItemListMenu {
 
     private final List<Item> itemList = new ArrayList<>();
 
-    public AMenu(@NonNull Player player, String title, @Range(from = 9L, to=54) byte size) {
+    public AMenu(@NotNull Player player, String title, @Range(from = 9L, to=54) byte size) {
         this.player = player;
         this.title = title;
         this.inventory = Bukkit.createInventory(this.player, size, Utils.color(title));
     }
 
-    public AMenu(@NonNull Player player, ConfigurationSection menuSection) {
+    public AMenu(@NotNull Player player, ConfigurationSection menuSection) {
         this.player = player;
         this.title = menuSection.getString("title");
         this.inventory = Bukkit.createInventory(this.player,
@@ -47,7 +48,7 @@ public abstract class AMenu implements ItemListMenu {
         this.decoration.insert();
     }
 
-    public AMenu(@NonNull Player player, String title, @Range(from = 9L, to=54) byte size, ConfigurationSection decorSection) {
+    public AMenu(@NotNull Player player, String title, @Range(from = 9L, to=54) byte size, ConfigurationSection decorSection) {
         this.player = player;
         this.title = title;
         this.inventory = Bukkit.createInventory(this.player, size, ColorManager.color(title));
@@ -55,7 +56,7 @@ public abstract class AMenu implements ItemListMenu {
         this.decoration.insert();
     }
 
-    public AMenu(@NonNull Player player) {
+    public AMenu(@NotNull Player player) {
         this.player = player;
     }
 
@@ -134,7 +135,7 @@ public abstract class AMenu implements ItemListMenu {
     }
 
     @Override
-    public boolean itemClick(@NonNull Material material, InventoryClickEvent event) {
+    public boolean itemClick(@NotNull Material material, InventoryClickEvent event) {
         Item item = this.findFirstItem(material);
         if (item != null) {
             item.onClick(event);
@@ -144,7 +145,7 @@ public abstract class AMenu implements ItemListMenu {
     }
 
     @Override
-    public boolean itemClick(@NonNull String displayName, InventoryClickEvent event) {
+    public boolean itemClick(@NotNull String displayName, InventoryClickEvent event) {
         Item item = this.findFirstItem(displayName);
         if (item != null) {
             item.onClick(event);

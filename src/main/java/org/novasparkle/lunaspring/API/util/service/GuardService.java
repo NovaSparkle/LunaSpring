@@ -13,7 +13,6 @@ import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import lombok.Getter;
-import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -339,11 +338,11 @@ public final class GuardService implements LunaService {
         return lState == LState.ALLOW ? StateFlag.State.ALLOW : StateFlag.State.DENY;
     }
 
-    public @NonNull StateFlag getWGFlag(LFlag flag) {
+    public @NotNull StateFlag getWGFlag(LFlag flag) {
         return this.getWGFlag(flag.name());
     }
 
-    public @NonNull StateFlag getWGFlag(String id) {
+    public @NotNull StateFlag getWGFlag(String id) {
         id = id.toUpperCase();
         try {
             Field field = Flags.class.getField(id);

@@ -42,6 +42,6 @@ public class AnnotationScanner {
     }
 
     public <A extends Annotation> Set<ClassEntry<A>> findAnnotatedClasses(LunaPlugin plugin, Class<A> annotationClass, List<Class<?>> ignoredClasses) {
-        return findAnnotatedClasses(plugin, annotationClass, ignoredClasses, (String[]) null);
+        return findAnnotatedClasses(plugin, annotationClass, ignoredClasses, new String[]{});
     }
 }

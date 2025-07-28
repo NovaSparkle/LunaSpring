@@ -1,13 +1,13 @@
 package org.novasparkle.lunaspring.API.menus.items;
 
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 import org.novasparkle.lunaspring.API.menus.ItemListMenu;
 import org.novasparkle.lunaspring.API.util.utilities.LunaMath;
@@ -44,6 +44,12 @@ public class Item extends NonMenuItem {
         this(nonMenuItem.getMaterial(), nonMenuItem.getDisplayName(), nonMenuItem.getLore(), nonMenuItem.getAmount(), slot);
     }
 
+    public Item() {
+        super();
+        this.defaultLore = new ArrayList<>(this.getLore());
+        this.defaultName = this.getDisplayName();
+    }
+
     public Item(Material material) {
         this(material, 1);
     }
@@ -53,14 +59,14 @@ public class Item extends NonMenuItem {
         this.slot = slot;
     }
 
-    public Item(@NonNull ConfigurationSection section, @Range(from = 0, to = 53) int slot) {
+    public Item(@NotNull ConfigurationSection section, @Range(from = 0, to = 53) int slot) {
         super(section);
         this.slot = (byte) slot;
         this.defaultLore = new ArrayList<>(this.getLore());
         this.defaultName = this.getDisplayName();
     }
 
-    public Item(@NonNull ConfigurationSection section, boolean rowCol) {
+    public Item(@NotNull ConfigurationSection section, boolean rowCol) {
         this(section, 0);
         if (rowCol)
             this.slot = (byte) LunaMath.getIndex(section.getInt("slot.row"), section.getInt("slot.column"));
@@ -89,7 +95,7 @@ public class Item extends NonMenuItem {
         return this;
     }
 
-    public Item insert(@NonNull ItemListMenu itemListMenu, @Range(from = 0, to = 53) byte slot) {
+    public Item insert(@NotNull ItemListMenu itemListMenu, @Range(from = 0, to = 53) byte slot) {
         this.menu = itemListMenu;
         this.slot = slot;
 
@@ -97,12 +103,12 @@ public class Item extends NonMenuItem {
         return this;
     }
 
-    public Item insert(@NonNull ItemListMenu itemListMenu) {
+    public Item insert(@NotNull ItemListMenu itemListMenu) {
         this.insert(itemListMenu, this.slot);
         return this;
     }
 
-    public Item insert(@NonNull ItemListMenu itemListMenu, @Range(from = 0, to = 6) byte row, @Range(from = 0, to = 9) byte column) {
+    public Item insert(@NotNull ItemListMenu itemListMenu, @Range(from = 0, to = 6) byte row, @Range(from = 0, to = 9) byte column) {
         this.insert(itemListMenu, (byte) LunaMath.getIndex(row, column));
         return this;
     }
@@ -122,7 +128,7 @@ public class Item extends NonMenuItem {
         return this;
     }
 
-    public Item remove(@NonNull ItemListMenu itemListMenu) {
+    public Item remove(@NotNull ItemListMenu itemListMenu) {
         itemListMenu.getItemList().remove(this);
         itemListMenu.getInventory().setItem(this.slot, null);
         return this;

@@ -2,9 +2,7 @@ package org.novasparkle.lunaspring.API.configuration;
 
 import com.google.common.collect.Lists;
 import lombok.Getter;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.*;
-import net.md_5.bungee.api.chat.hover.content.Text;
+import net.md_5.bungee.api.chat.ClickEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -21,8 +19,6 @@ import org.novasparkle.lunaspring.API.util.utilities.Utils;
 
 import java.io.File;
 import java.util.List;
-import java.util.function.Function;
-import java.util.regex.Pattern;
 
 public class IConfig {
     protected FileConfiguration config;
@@ -131,7 +127,7 @@ public class IConfig {
     }
 
     public Material getMaterial(String path) {
-        return Material.getMaterial(this.getString(path));
+        return Material.valueOf(this.getString(path));
     }
 
     public FileConfiguration self() {
