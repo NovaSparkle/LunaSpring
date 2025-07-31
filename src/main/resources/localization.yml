@@ -80,7 +80,7 @@ EntityType:
   ZOMBIE_VILLAGER: "Зомбифицированный житель"
   ZOMBIFIED_PIGLIN: "Свинозомби"
   ZOGLIN: "Зоглин"
-Enchantment:
+enchants:
   PROTECTION: 'Защита'
   FIRE_PROTECTION: 'Огнеупорность'
   FEATHER_FALLING: 'Плавное падение'
@@ -123,7 +123,3 @@ Enchantment:
   VANISHING_CURSE: 'Проклятие утраты'
   SOUL_SPEED: 'Скорость души'
   SWIFT_SNEAK: 'Проворство'
-Custom:
-  world: "Верхний"
-  world_nether: "Нижний"
-  world_the_end: "Энд"

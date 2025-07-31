@@ -199,10 +199,10 @@ public abstract class AMenu implements ItemListMenu {
                 '}';
     }
 
-    public void copyTo(Player player) {
+    public AMenu copy(Player player) {
         AMenu newMenu = this.clone();
         newMenu.player = player;
-        MenuManager.openInventory(newMenu);
+        return newMenu;
     }
 
     @Override

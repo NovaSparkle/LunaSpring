@@ -1,7 +1,6 @@
 package org.novasparkle.lunaspring.API.util.service;
 
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.novasparkle.lunaspring.API.configuration.IConfig;
 import org.novasparkle.lunaspring.API.util.utilities.Color;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
@@ -11,14 +10,14 @@ import java.util.List;
 
 public final class ColorService implements LunaService {
     private final List<Color> colorList = new ArrayList<>();
-    private final IConfig loadedConfig;
+    private final IConfig config;
     public ColorService(IConfig configuration) {
-        this.loadedConfig = configuration;
+        this.config = configuration;
         this.reload();
     }
 
     public void reload() {
-        ConfigurationSection section = this.loadedConfig.getSection("colors");
+        ConfigurationSection section = this.config.getSection("colors");
         if (section == null) throw new RuntimeException("Секция с цветами не найдена, нужная секция: colors");
 
         this.colorList.clear();

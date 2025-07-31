@@ -63,6 +63,7 @@ public class IConfig {
      * Перезагрузка config.yml
      */
     public void reload(Plugin plugin) {
+        plugin.saveDefaultConfig();
         plugin.reloadConfig();
         this.config = plugin.getConfig();
     }

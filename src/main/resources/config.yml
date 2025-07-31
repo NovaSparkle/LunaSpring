@@ -43,7 +43,6 @@ messages:
   listenerRegistered: '{S}Оcновной обработчик событий LunaSpring зарегистрирован'
   placeholderRegistered: '{S}Плейсхолдер {M}[identifier] {S}зарегистрирован!'
   hooked: "{P} &f| {S}[plugin] &f| {S}[version] &f|"
-  version: "{P} &f| Версия плагина: {S}[version]"
   server-info:
     - ""
     - "&fОнлайн игроков: {S}[online] &f/ {S}[max-players]"
@@ -58,3 +57,7 @@ messages:
     - '    {S}| &fСостояние: {S}[status]'
     - ''
   subCommandClasses: 'В пакете [package] отсканировано [amount] подкоманд: [commands]'
+  worlds:
+    world: "Верхний"
+    world_nether: "Нижний"
+    world_the_end: "Энд"

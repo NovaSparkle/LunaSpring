@@ -17,51 +17,69 @@ import java.util.stream.Collectors;
 
 @UtilityClass
 public class MenuManager {
-    @Getter private final HashMap<Inventory, IMenu> activeInventories = new HashMap<>();
+    @Getter private final Map<Inventory, List<IMenu>> activeInventories = new HashMap<>();
     public void openInventory(IMenu menu) {
         register(menu.getInventory(), menu);
         menu.getPlayer().openInventory(menu.getInventory());
     }
 
     public void register(Inventory inventory, IMenu menu) {
-        activeInventories.put(inventory, menu);
+        List<IMenu> menus = activeInventories.get(inventory);
+        menus.add(menu);
+        activeInventories.putIfAbsent(inventory, menus);
     }
 
-    public void unregister(Inventory inventory) {
+    public void unregister(IMenu iMenu) {
+        Inventory inventory = iMenu.getInventory();
+        List<IMenu> menus = activeInventories.get(inventory);
         activeInventories.remove(inventory);
+
+        if (menus.size() > 1) {
+            menus.remove(iMenu);
+            activeInventories.put(inventory, menus);
+        }
     }
 
     public void handleOpen(InventoryOpenEvent event) {
-        IMenu menu = activeInventories.get(event.getInventory());
-        if (menu != null) menu.onOpen(event);
+        List<IMenu> menus = activeInventories.get(event.getInventory());
+        if (!menus.isEmpty()) {
+            menus.forEach(m -> m.onOpen(event));
+        }
     }
 
     public void handleClick(InventoryClickEvent event) {
-        IMenu menu = activeInventories.get(event.getInventory());
-        if (menu != null && !menu.isCancelled(event, event.getRawSlot())) menu.onClick(event);
+        List<IMenu> menus = activeInventories.get(event.getInventory());
+        if (!menus.isEmpty()) {
+            for (IMenu menu : menus) {
+                if (!menu.isCancelled(event, event.getRawSlot())) {
+                    menu.onClick(event);
+                }
+            }
+        }
     }
 
     public void handleDrag(InventoryDragEvent event) {
-        IMenu menu = activeInventories.get(event.getInventory());
-        if (menu != null) menu.onDrag(event);
+        List<IMenu> menus = activeInventories.get(event.getInventory());
+        if (!menus.isEmpty()) {
+            menus.forEach(m -> m.onDrag(event));
+        }
     }
 
     public void handleClose(InventoryCloseEvent event) {
-        Inventory inventory = event.getInventory();
-        IMenu menu = activeInventories.get(event.getInventory());
-        if (menu != null && getActiveViewers(menu.getClass(), true).size() <= 1) {
-            menu.onClose(event);
-            unregister(inventory);
+        List<IMenu> menus = activeInventories.get(event.getInventory());
+        IMenu iMenu = menus.stream().filter(m -> m.getPlayer().getUniqueId().equals(event.getPlayer().getUniqueId())).findFirst().orElse(null);
+        if (iMenu != null) {
+            iMenu.onClose(event);
+            unregister(iMenu);
         }
     }
 
     public List<Player> getActiveViewers(Class<?> menuClass, boolean hardCheck) {
-        Predicate<Map.Entry<Inventory, IMenu>> predicate = hardCheck ? entry -> entry.getKey().getClass().equals(menuClass) :
-                entry -> menuClass.isAssignableFrom(entry.getKey().getClass());
-        return activeInventories.entrySet().stream().filter(predicate).map(e -> e.getValue().getPlayer()).collect(Collectors.toList());
+        Predicate<IMenu> predicate = hardCheck ? iMenu -> menuClass.equals(iMenu.getClass()) : iMenu -> menuClass.isAssignableFrom(iMenu.getClass());
+        return activeInventories.values().stream().flatMap(List::stream).filter(predicate).map(IMenu::getPlayer).collect(Collectors.toList());
     }
 
     public IMenu getActiveMenu(Player player) {
-        return activeInventories.values().stream().filter(m -> m.getPlayer().equals(player)).findFirst().orElse(null);
+        return activeInventories.values().stream().flatMap(List::stream).filter(m -> m.getPlayer().equals(player)).findFirst().orElse(null);
     }
 }

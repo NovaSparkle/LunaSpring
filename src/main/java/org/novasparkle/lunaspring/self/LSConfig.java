@@ -15,11 +15,11 @@ public final class LSConfig {
     @Getter private final IConfig config;
     static {
         config = new IConfig(LunaSpring.getInstance());
+        ColorManager.init(config);
     }
 
     public void reload() {
         config.reload(LunaSpring.getInstance());
-        ColorManager.reloadColors();
     }
 
     public String getMessage(String path) {
