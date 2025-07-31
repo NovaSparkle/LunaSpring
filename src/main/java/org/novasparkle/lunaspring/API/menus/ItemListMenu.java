@@ -30,6 +30,5 @@ public interface ItemListMenu extends IMenu {
     Collection<Item> addItems(Collection<Item> items);
 
     Collection<Item> insertAllItems();
-
     void clear();
 }

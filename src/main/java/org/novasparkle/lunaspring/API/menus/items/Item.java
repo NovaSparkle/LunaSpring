@@ -14,13 +14,12 @@ import org.novasparkle.lunaspring.API.util.utilities.LunaMath;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.UnaryOperator;
 
 @Getter
 @Accessors(chain = true, fluent = false)
 @SuppressWarnings({"unused"})
-public class Item extends NonMenuItem {
+public class Item extends NonMenuItem implements Cloneable {
     private final List<String> defaultLore;
     private final String defaultName;
 
@@ -134,17 +133,13 @@ public class Item extends NonMenuItem {
         return this;
     }
 
-    @Override
-    public boolean equals(Object item) {
-        if (this == item) return true;
-        if (item == null || getClass() != item.getClass()) return false;
-        if (!super.equals(item)) return false;
-        Item thatItem = (Item) item;
-        return Objects.equals(getMenu(), thatItem.getMenu());
-    }
-
     public Item onClick(InventoryClickEvent event) {
         event.setCancelled(true);
         return this;
+    }
+
+    @Override
+    public Item clone() throws CloneNotSupportedException {
+        return (Item) super.clone();
     }
 }

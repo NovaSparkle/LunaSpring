@@ -18,9 +18,9 @@ import java.util.stream.Collectors;
 @UtilityClass
 public class MenuManager {
     @Getter private final HashMap<Inventory, IMenu> activeInventories = new HashMap<>();
-    public void openInventory(Player player, IMenu menu) {
+    public void openInventory(IMenu menu) {
         register(menu.getInventory(), menu);
-        player.openInventory(menu.getInventory());
+        menu.getPlayer().openInventory(menu.getInventory());
     }
 
     public void register(Inventory inventory, IMenu menu) {

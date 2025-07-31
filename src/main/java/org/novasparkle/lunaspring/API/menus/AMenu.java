@@ -3,6 +3,7 @@ package org.novasparkle.lunaspring.API.menus;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import lombok.SneakyThrows;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -28,8 +29,8 @@ public abstract class AMenu implements ItemListMenu {
     private Inventory inventory;
     private String title;
     @Setter private Decoration decoration;
-    private final CooldownPrevent<Integer> cooldownPrevent = new CooldownPrevent<>();
-    private final Player player;
+    private CooldownPrevent<Integer> cooldownPrevent = new CooldownPrevent<>();
+    private Player player;
 
     private final List<Item> itemList = new ArrayList<>();
 
@@ -80,14 +81,6 @@ public abstract class AMenu implements ItemListMenu {
             this.decoration = new Decoration(decorSection, this.inventory);
             this.decoration.insert();
         }
-    }
-    @Override
-    public String toString() {
-        return "AMenu{" +
-                "player=" + this.player +
-                ", title=" + this.title +
-                ", itemList=" + this.itemList +
-                '}';
     }
 
     @Override
@@ -195,5 +188,41 @@ public abstract class AMenu implements ItemListMenu {
         this.itemList.forEach(System.out::println);
     }
 
+    @Override
+    public String toString() {
+        return "AMenu{" +
+                "inventory=" + inventory + '\n' +
+                ", title='" + title + '\n' +
+                ", cooldownPrevent=" + cooldownPrevent + '\n' +
+                ", player=" + player + '\n' +
+                ", itemList=" + itemList +
+                '}';
+    }
 
+    public void copyTo(Player player) {
+        AMenu newMenu = this.clone();
+        newMenu.player = player;
+        MenuManager.openInventory(newMenu);
+    }
+
+    @Override
+    @SneakyThrows
+    protected AMenu clone() {
+        AMenu aMenu = (AMenu) super.clone();
+        aMenu.decoration = this.decoration.clone();
+        aMenu.inventory = this.inventory;
+        aMenu.cooldownPrevent = this.cooldownPrevent.clone();
+//        if (!this.itemList.isEmpty()) {
+//            List<Item> items = new ArrayList<>();
+//            this.itemList.forEach(i -> {
+//                try {
+//                    items.add(i.clone());
+//                } catch (CloneNotSupportedException e) {
+//                    throw new RuntimeException(e);
+//                }
+//            });
+//            aMenu.itemList = items;
+//        }
+        return aMenu;
+    }
 }
