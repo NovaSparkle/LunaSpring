@@ -102,6 +102,9 @@ public class NBTManager {
     public void setItemStack(Block block, String key, ItemStack value) {
         getBlockData(block).setItemStack(key, value);
     }
+    public String getType(ItemStack item, String key) {
+        return getRoot(item).getType(key).name();
+    }
 
     public void setString(ItemStack item, String tag, String value) {
         NBTManager.set(item, nbt -> nbt.setString(tag, value));

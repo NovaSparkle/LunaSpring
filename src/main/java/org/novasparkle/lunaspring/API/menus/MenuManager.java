@@ -9,6 +9,7 @@ import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +25,7 @@ public class MenuManager {
     }
 
     public void register(Inventory inventory, IMenu menu) {
-        List<IMenu> menus = activeInventories.get(inventory);
+        List<IMenu> menus = activeInventories.getOrDefault(inventory, new ArrayList<>());
         menus.add(menu);
         activeInventories.putIfAbsent(inventory, menus);
     }
@@ -32,45 +33,57 @@ public class MenuManager {
     public void unregister(IMenu iMenu) {
         Inventory inventory = iMenu.getInventory();
         List<IMenu> menus = activeInventories.get(inventory);
-        activeInventories.remove(inventory);
+        if (menus != null) {
+            activeInventories.remove(inventory);
 
-        if (menus.size() > 1) {
-            menus.remove(iMenu);
-            activeInventories.put(inventory, menus);
+            if (menus.size() > 1) {
+                menus.remove(iMenu);
+                activeInventories.put(inventory, menus);
+            }
         }
     }
 
     public void handleOpen(InventoryOpenEvent event) {
         List<IMenu> menus = activeInventories.get(event.getInventory());
-        if (!menus.isEmpty()) {
-            menus.forEach(m -> m.onOpen(event));
+        if (menus != null && !menus.isEmpty()) {
+            if (menus.size() > 1) {
+                menus.stream().filter(m -> m.getPlayer().getUniqueId().equals(event.getPlayer().getUniqueId())).findFirst().ifPresent(clickedMenu -> clickedMenu.onOpen(event));
+            } else {
+                menus.get(0).onOpen(event);
+            }
         }
     }
 
     public void handleClick(InventoryClickEvent event) {
         List<IMenu> menus = activeInventories.get(event.getInventory());
-        if (!menus.isEmpty()) {
-            for (IMenu menu : menus) {
-                if (!menu.isCancelled(event, event.getRawSlot())) {
-                    menu.onClick(event);
-                }
+        if (menus != null && !menus.isEmpty()) {
+            if (menus.size() > 1) {
+                menus.stream().filter(m -> m.getPlayer().getUniqueId().equals(event.getWhoClicked().getUniqueId())).findFirst().ifPresent(clickedMenu -> clickedMenu.onClick(event));
+            } else {
+                menus.get(0).onClick(event);
             }
         }
     }
 
     public void handleDrag(InventoryDragEvent event) {
         List<IMenu> menus = activeInventories.get(event.getInventory());
-        if (!menus.isEmpty()) {
-            menus.forEach(m -> m.onDrag(event));
+        if (menus != null && !menus.isEmpty()) {
+            if (menus.size() > 1) {
+                menus.stream().filter(m -> m.getPlayer().getUniqueId().equals(event.getWhoClicked().getUniqueId())).findFirst().ifPresent(clickedMenu -> clickedMenu.onDrag(event));
+            } else {
+                menus.get(0).onDrag(event);
+            }
         }
     }
 
     public void handleClose(InventoryCloseEvent event) {
         List<IMenu> menus = activeInventories.get(event.getInventory());
-        IMenu iMenu = menus.stream().filter(m -> m.getPlayer().getUniqueId().equals(event.getPlayer().getUniqueId())).findFirst().orElse(null);
-        if (iMenu != null) {
-            iMenu.onClose(event);
-            unregister(iMenu);
+        if (menus != null && !menus.isEmpty()) {
+            IMenu iMenu = menus.stream().filter(m -> m.getPlayer().getUniqueId().equals(event.getPlayer().getUniqueId())).findFirst().orElse(null);
+            if (iMenu != null) {
+                iMenu.onClose(event);
+                unregister(iMenu);
+            }
         }
     }
 
