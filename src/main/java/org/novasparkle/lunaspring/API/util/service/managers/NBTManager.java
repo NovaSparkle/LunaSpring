@@ -106,6 +106,10 @@ public class NBTManager {
         return getRoot(item).getType(key).name();
     }
 
+    public void removeKey(ItemStack item, String key) {
+        NBTManager.set(item, nbt -> nbt.removeKey(key));
+    }
+
     public void setString(ItemStack item, String tag, String value) {
         NBTManager.set(item, nbt -> nbt.setString(tag, value));
     }
