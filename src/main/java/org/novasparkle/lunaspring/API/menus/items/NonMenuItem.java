@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 @Getter
 @SuppressWarnings({"unused", "deprecation"})
 @Accessors(chain = true, fluent = false)
-public class NonMenuItem {
+public class NonMenuItem implements Cloneable {
     @Setter private ItemStack itemStack;
     private final String id = Utils.getRKey((byte) 14);
     private Material material;
@@ -43,8 +43,8 @@ public class NonMenuItem {
     private int amount;
     private boolean glowing = false;
     private String headValue;
-    private final Map<Enchantment, Integer> enchantments = Maps.newHashMap();
-    private final List<ItemFlag> itemFlags = Lists.newArrayList();
+    private Map<Enchantment, Integer> enchantments = Maps.newHashMap();
+    private List<ItemFlag> itemFlags = Lists.newArrayList();
 
     public NonMenuItem(Material material, String displayName, List<String> lore, int amount) {
         if (material == null) throw new IllegalArgumentException("Материал предмета не может быть null!");
@@ -419,5 +419,15 @@ public class NonMenuItem {
 
         nonMenuItem.update();
         return nonMenuItem;
+    }
+
+    @Override
+    public NonMenuItem clone() throws CloneNotSupportedException {
+        NonMenuItem copy = (NonMenuItem) super.clone();
+        copy.itemStack = this.itemStack.clone();
+        copy.lore = new ArrayList<>(this.lore);
+        copy.enchantments = new HashMap<>(this.enchantments);
+        copy.itemFlags = new ArrayList<>(this.itemFlags);
+        return copy;
     }
 }

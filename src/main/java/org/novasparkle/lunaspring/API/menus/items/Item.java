@@ -19,8 +19,8 @@ import java.util.function.UnaryOperator;
 @Getter
 @Accessors(chain = true, fluent = false)
 @SuppressWarnings({"unused"})
-public class Item extends NonMenuItem implements Cloneable {
-    private final List<String> defaultLore;
+public class Item extends NonMenuItem {
+    private List<String> defaultLore;
     private final String defaultName;
 
     private ItemListMenu menu;
@@ -140,6 +140,8 @@ public class Item extends NonMenuItem implements Cloneable {
 
     @Override
     public Item clone() throws CloneNotSupportedException {
-        return (Item) super.clone();
+        Item copy = (Item) super.clone();
+        copy.defaultLore = new ArrayList<>(this.defaultLore);
+        return copy;
     }
 }

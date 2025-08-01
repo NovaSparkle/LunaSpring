@@ -15,7 +15,7 @@ import java.util.Map;
  */
 @Getter
 public class CooldownPrevent<T> implements Cloneable {
-    private final Map<T, Long> cooldownMap = new HashMap<>();
+    private Map<T, Long> cooldownMap = new HashMap<>();
     @Setter private int cooldownMS;
 
     public CooldownPrevent() {
@@ -49,6 +49,8 @@ public class CooldownPrevent<T> implements Cloneable {
     @SuppressWarnings("unchecked")
     @SneakyThrows
     public CooldownPrevent<T> clone() {
-        return (CooldownPrevent<T>) super.clone();
+        CooldownPrevent<T> cooldownPrevent = (CooldownPrevent<T>) super.clone();
+        cooldownPrevent.cooldownMap = new HashMap<>(this.cooldownMap);
+        return cooldownPrevent;
     }
 }

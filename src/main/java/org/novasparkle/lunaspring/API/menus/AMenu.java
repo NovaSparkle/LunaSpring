@@ -32,7 +32,7 @@ public abstract class AMenu implements ItemListMenu {
     private CooldownPrevent<Integer> cooldownPrevent = new CooldownPrevent<>();
     private Player player;
 
-    private final List<Item> itemList = new ArrayList<>();
+    private List<Item> itemList = new ArrayList<>();
 
     public AMenu(@NotNull Player player, String title, @Range(from = 9L, to=54) byte size) {
         this.player = player;
@@ -46,7 +46,7 @@ public abstract class AMenu implements ItemListMenu {
         this.inventory = Bukkit.createInventory(this.player,
                 Math.min(menuSection.getInt("size"), 54), ColorManager.color(this.title));
         this.decoration = new Decoration(Objects.requireNonNull(menuSection.getConfigurationSection("decoration")), this.inventory);
-        this.decoration.insert();
+        this.decoration.insert(this.inventory);
     }
 
     public AMenu(@NotNull Player player, String title, @Range(from = 9L, to=54) byte size, ConfigurationSection decorSection) {
@@ -54,7 +54,7 @@ public abstract class AMenu implements ItemListMenu {
         this.title = title;
         this.inventory = Bukkit.createInventory(this.player, size, ColorManager.color(title));
         this.decoration = new Decoration(decorSection, this.inventory);
-        this.decoration.insert();
+        this.decoration.insert(this.inventory);
     }
 
     public AMenu(@NotNull Player player) {
@@ -79,7 +79,7 @@ public abstract class AMenu implements ItemListMenu {
         this.title = title;
         if (decorate) {
             this.decoration = new Decoration(decorSection, this.inventory);
-            this.decoration.insert();
+            this.decoration.insert(this.inventory);
         }
     }
 
@@ -207,22 +207,21 @@ public abstract class AMenu implements ItemListMenu {
 
     @Override
     @SneakyThrows
-    protected AMenu clone() {
+    public AMenu clone() {
         AMenu aMenu = (AMenu) super.clone();
         aMenu.decoration = this.decoration.clone();
         aMenu.inventory = this.inventory;
         aMenu.cooldownPrevent = this.cooldownPrevent.clone();
-//        if (!this.itemList.isEmpty()) {
-//            List<Item> items = new ArrayList<>();
-//            this.itemList.forEach(i -> {
-//                try {
-//                    items.add(i.clone());
-//                } catch (CloneNotSupportedException e) {
-//                    throw new RuntimeException(e);
-//                }
-//            });
-//            aMenu.itemList = items;
-//        }
+        List<Item> items = new ArrayList<>();
+        this.itemList.forEach(i -> {
+            try {
+                items.add(i.clone());
+            } catch (CloneNotSupportedException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        aMenu.itemList = items;
+
         return aMenu;
     }
 }

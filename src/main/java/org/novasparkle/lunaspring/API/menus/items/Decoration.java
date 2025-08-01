@@ -1,13 +1,11 @@
 package org.novasparkle.lunaspring.API.menus.items;
 
 import lombok.Getter;
-import lombok.Setter;
 import lombok.SneakyThrows;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.novasparkle.lunaspring.API.menus.IMenu;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 
 import java.util.ArrayList;
@@ -15,10 +13,8 @@ import java.util.List;
 
 @Getter @SuppressWarnings("unused")
 public class Decoration implements Cloneable {
-    private final Inventory inventory;
-    private final List<Item> decorationItems;
+    private List<Item> decorationItems;
     public Decoration(ConfigurationSection decorationSection, Inventory inventory) {
-        this.inventory = inventory;
         this.decorationItems = new ArrayList<>();
         boolean fillType = decorationSection.getBoolean("fillType.enabled");
 
@@ -47,8 +43,8 @@ public class Decoration implements Cloneable {
                 '}';
     }
 
-    public void insert() {
-        this.decorationItems.forEach(i -> this.inventory.setItem(i.getSlot(), i.getItemStack()));
+    public void insert(Inventory inventory) {
+        this.decorationItems.forEach(i -> inventory.setItem(i.getSlot(), i.getItemStack()));
     }
 
     public int getDecorationsAmount() {
@@ -78,6 +74,8 @@ public class Decoration implements Cloneable {
     @Override
     @SneakyThrows
     public Decoration clone() {
-        return (Decoration) super.clone();
+        Decoration copy = (Decoration) super.clone();
+        copy.decorationItems = new ArrayList<>(this.decorationItems);
+        return copy;
     }
 }

@@ -56,4 +56,9 @@ public class SwitchItem extends Item {
         MenuManager.openInventory(this.menuFunction.apply(player));
         return this;
     }
+
+    @Override
+    public SwitchItem clone() throws CloneNotSupportedException {
+        return (SwitchItem) super.clone();
+    }
 }
