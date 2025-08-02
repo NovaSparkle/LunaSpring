@@ -162,7 +162,6 @@ public class NonMenuItem implements Cloneable {
         int amount = itemSection.getInt("amount");
         String displayName = itemSection.getString("displayName");
         List<String> lore = new ArrayList<>(itemSection.getStringList("lore"));
-
         this.itemFlags.clear();
         this.enchantments.clear();
         this.applyBaseHead(itemSection);

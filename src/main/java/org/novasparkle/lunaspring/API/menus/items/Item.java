@@ -21,7 +21,7 @@ import java.util.function.UnaryOperator;
 @SuppressWarnings({"unused"})
 public class Item extends NonMenuItem {
     private List<String> defaultLore;
-    private final String defaultName;
+    private String defaultName;
 
     private ItemListMenu menu;
     @Setter private byte slot = 0;
@@ -115,6 +115,22 @@ public class Item extends NonMenuItem {
     public Item replaceLore(UnaryOperator<String> operator) {
         this.getLore().replaceAll(operator);
         this.update();
+        return this;
+    }
+
+    @Override
+    public NonMenuItem setAll(@NotNull ConfigurationSection itemSection) {
+        super.setAll(itemSection);
+        this.defaultLore = new ArrayList<>(itemSection.getStringList("lore"));
+        this.defaultName = itemSection.getString("displayName");
+        return this;
+    }
+
+    @Override
+    public NonMenuItem setAll(Material material, int amount, String displayName, List<String> lore, boolean enchanted) {
+        super.setAll(material, amount, displayName, lore, enchanted);
+        this.defaultLore = new ArrayList<>(lore);
+        this.defaultName = displayName;
         return this;
     }
 
