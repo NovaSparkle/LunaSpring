@@ -195,14 +195,13 @@ public abstract class LunaPlugin extends JavaPlugin {
         if (this.equals(LunaSpring.getInstance())) {
             this.startMessage(Arrays.asList(
                     "",
-                    "       [color]┏┓",
-                    "       [color]┃┃         v[pluginVersion]",
-                    "       [color]┃┃┏┓┏┳━┓┏━━┳━━┳━━┳━┳┳━┓┏━━┓",
-                    "       [color]┃┃┃┃┃┃┏┓┫┏┓┃━━┫┏┓┃┏╋┫┏┓┫┏┓┃",
-                    "       [color]┃┗┫┗┛┃┃┃┃┏┓┣━━┃┗┛┃┃┃┃┃┃┃┗┛┃",
-                    "       [color]┗━┻━━┻┛┗┻┛┗┻━━┫┏━┻┛┗┻┛┗┻━┓┃",
-                    "       [color]╋╋╋╋╋╋╋╋╋╋╋╋╋╋┃┃╋╋╋╋╋╋╋┏━┛┃",
-                    "       [color]╋╋╋╋╋╋╋╋╋╋╋╋╋╋┗┛╋╋╋╋╋╋╋┗━━┛",
+                    "       [color]╭╮╱╱╱╱╱╱╱╱╱╱╱╭━━━╮",
+                    "       [color]┃┃╱╱╭╮╭┳━╮╭━━┫╰━━┳━━┳━┳┳━╮╭━━╮",
+                    "       [color]┃┃╱╭┫┃┃┃╭╮┫╭╮┣━━╮┃╭╮┃╭╋┫╭╮┫╭╮┃",
+                    "       [color]┃╰━╯┃╰╯┃┃┃┃╭╮┃╰━╯┃╰╯┃┃┃┃┃┃┃╰╯┃",
+                    "       [color]╰━━━┻━━┻╯╰┻╯╰┻━━━┫╭━┻╯╰┻╯╰┻━╮┃",
+                    "       [color]╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱┃┃╱╱╱╱╱╱╱╭━╯┃",
+                    "       [color]                 ╰╯       ╰━━╯",
                     "       [color]| &fAuthor: [color]NovaSparkle",
                     "       [color]| &fDev-Helper: [color]ProGiple",
                     ""

@@ -95,4 +95,9 @@ public class MenuManager {
     public IMenu getActiveMenu(Player player) {
         return activeInventories.values().stream().flatMap(List::stream).filter(m -> m.getPlayer().equals(player)).findFirst().orElse(null);
     }
+
+    public List<IMenu> getActiveMenus(Class<?> menuClass, boolean hardCheck) {
+        Predicate<IMenu> predicate = hardCheck ? iMenu -> menuClass.equals(iMenu.getClass()) : iMenu -> menuClass.isAssignableFrom(iMenu.getClass());
+        return activeInventories.values().stream().flatMap(List::stream).filter(predicate).collect(Collectors.toList());
+    }
 }
