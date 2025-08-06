@@ -24,12 +24,9 @@ import java.util.function.Consumer;
 @UtilityClass
 public class NBTManager {
 
-    public ItemStack base64head(ItemStack head, OfflinePlayer player) {
-        if (!head.getType().equals(Material.PLAYER_HEAD)) throw new IllegalArgumentException("ItemStack должен иметь материал PLAYER_HEAD! Текущий: " + head.getType().name());
-        SkullMeta meta = (SkullMeta) head.getItemMeta();
-        meta.setOwningPlayer(player);
-        head.setItemMeta(meta);
-        return head;
+    public void base64head(ItemStack head, OfflinePlayer player) {
+        UUID uuid = player.getUniqueId();
+        NBTManager.base64head(head, uuid.toString().replace("-", ""), uuid);
     }
 
     public void base64head(ItemStack head, String value, UUID uuid) {
