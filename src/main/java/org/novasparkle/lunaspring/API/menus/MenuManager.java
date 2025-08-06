@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @UtilityClass
 public class MenuManager {
@@ -27,6 +28,10 @@ public class MenuManager {
     public void register(Inventory inventory, IMenu menu) {
         List<IMenu> menus = activeInventories.getOrDefault(inventory, new ArrayList<>());
         menus.add(menu);
+        activeInventories.putIfAbsent(inventory, menus);
+    }
+
+    public void register(Inventory inventory, List<IMenu> menus) {
         activeInventories.putIfAbsent(inventory, menus);
     }
 
@@ -87,17 +92,21 @@ public class MenuManager {
         }
     }
 
-    public List<Player> getActiveViewers(Class<?> menuClass, boolean hardCheck) {
+    public Stream<Player> getActiveViewers(Class<?> menuClass, boolean hardCheck) {
         Predicate<IMenu> predicate = hardCheck ? iMenu -> menuClass.equals(iMenu.getClass()) : iMenu -> menuClass.isAssignableFrom(iMenu.getClass());
-        return activeInventories.values().stream().flatMap(List::stream).filter(predicate).map(IMenu::getPlayer).collect(Collectors.toList());
+        return activeInventories.values().stream().flatMap(List::stream).filter(predicate).map(IMenu::getPlayer);
     }
 
     public IMenu getActiveMenu(Player player) {
         return activeInventories.values().stream().flatMap(List::stream).filter(m -> m.getPlayer().equals(player)).findFirst().orElse(null);
     }
 
-    public List<IMenu> getActiveMenus(Class<?> menuClass, boolean hardCheck) {
+    public <T> Stream<T> getActiveMenus(Class<T> menuClass, boolean hardCheck) {
         Predicate<IMenu> predicate = hardCheck ? iMenu -> menuClass.equals(iMenu.getClass()) : iMenu -> menuClass.isAssignableFrom(iMenu.getClass());
-        return activeInventories.values().stream().flatMap(List::stream).filter(predicate).collect(Collectors.toList());
+        return activeInventories.values()
+                .stream()
+                .flatMap(List::stream)
+                .filter(predicate)
+                .map(menuClass::cast);
     }
 }
