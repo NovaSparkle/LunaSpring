@@ -22,7 +22,7 @@ public class AnnotationScanner {
                 JarEntry jarEntry = e.nextElement();
                 if (jarEntry.getName().endsWith(".class")) {
                     String className = jarEntry.getName().replace(".class", "").replace('/', '.');
-                    if (allowedPackages != null && allowedPackages.length > 0 && Arrays.stream(allowedPackages).anyMatch(className::startsWith)) continue;
+                    if (allowedPackages != null && allowedPackages.length > 0 && Arrays.stream(allowedPackages).noneMatch(className::startsWith)) continue;
 
                     Class<?> clazz = Class.forName(className);
                     if (ignoredClasses != null && !ignoredClasses.isEmpty() && ignoredClasses.contains(clazz)) continue;
