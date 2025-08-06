@@ -209,11 +209,9 @@ public abstract class AMenu implements ItemListMenu {
     @SneakyThrows
     public AMenu clone() {
         AMenu aMenu = (AMenu) super.clone();
-        aMenu.decoration = this.decoration.clone();
+        if (this.decoration != null) aMenu.decoration = this.decoration.clone();
         aMenu.inventory = this.inventory;
-        System.out.println(aMenu.inventory);
-        System.out.println(this.inventory);
-        aMenu.cooldownPrevent = this.cooldownPrevent.clone();
+        if (this.cooldownPrevent != null) aMenu.cooldownPrevent = this.cooldownPrevent.clone();
         List<Item> items = new ArrayList<>();
         this.itemList.forEach(i -> {
             try {
