@@ -1,5 +1,6 @@
 package org.novasparkle.lunaspring.API.commands;
 
+import java.util.Arrays;
 import java.util.List;
 
 public record CommandReq(String[] permissions, ZeroArgCommand.AccessFlag[] accessFlags, List<String> tabCompleteIgnore, int maxArgs, int minArgs) {
@@ -9,5 +10,16 @@ public record CommandReq(String[] permissions, ZeroArgCommand.AccessFlag[] acces
         this.tabCompleteIgnore = tabCompleteIgnore;
         this.maxArgs = maxArgs;
         this.minArgs = minArgs;
+    }
+
+    @Override
+    public String toString() {
+        return "CommandReq{" +
+                "permissions=" + Arrays.toString(permissions) +
+                ", accessFlags=" + Arrays.toString(accessFlags) +
+                ", tabCompleteIgnore=" + tabCompleteIgnore +
+                ", maxArgs=" + maxArgs +
+                ", minArgs=" + minArgs +
+                '}';
     }
 }

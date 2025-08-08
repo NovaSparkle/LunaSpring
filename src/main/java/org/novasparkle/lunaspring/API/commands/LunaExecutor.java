@@ -77,7 +77,6 @@ public final class LunaExecutor {
                 throw new InvalidImplementationException(clazz, Invocation.class);
 
             Check checkAnnotation = (Check) classEntry.getAdditionalAnnotations().stream().filter(a -> a.annotationType().equals(Check.class)).findFirst().orElse(null);
-
             String[] permissions = new String[] { };
             LunaSpringSubCommand.AccessFlag[] flags = new ZeroArgCommand.AccessFlag[] { };
             String[] ignoreTabCompleting = new String[] { };
