@@ -26,6 +26,7 @@ public final class ColorService implements LunaService {
             assert colorSection != null;
             this.colorList.add(new Color(colorSection.getString("abbr"), colorSection.getString("variable")));
         }
+        System.out.println(colorList);
     }
 
     public String color(String text) {

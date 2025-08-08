@@ -1,31 +1,44 @@
 package org.novasparkle.lunaspring.self.commands;
 
 import org.bukkit.command.CommandSender;
-import org.novasparkle.lunaspring.API.commands.Invocation;
+import org.novasparkle.lunaspring.API.commands.LunaCompleter;
 import org.novasparkle.lunaspring.API.commands.annotations.Check;
 import org.novasparkle.lunaspring.API.commands.annotations.SubCommand;
 import org.novasparkle.lunaspring.LunaPlugin;
 import org.novasparkle.lunaspring.LunaSpring;
 import org.novasparkle.lunaspring.self.LSConfig;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 @SubCommand(commandIdentifiers = {"hooked"}, appliedCommand = "lunaspring")
 @Check(permissions = {"lunaspring.hooked"}, flags = {})
-public class HookedSubCommand implements Invocation {
+public class HookedSubCommand implements LunaCompleter {
     @Override
     public void invoke(CommandSender sender, String[] args) {
         String hooked = LSConfig.getMessage("hooked");
-        List<String> pluginNames = LunaSpring.getInstance().getHookedPlugins().stream()
-                .map(LunaPlugin::getName)
-                .sorted(Comparator.comparingInt(String::length))
+        List<LunaPlugin> plugins = LunaSpring.getInstance().getHookedPlugins().stream()
+                .sorted(Comparator.comparingInt(pl -> pl.getName().length()))
                 .toList();
-        int maxLength = pluginNames.get(pluginNames.size() - 1).length();
-        for (String plName : pluginNames) {
-            int spaces = (maxLength - plName.length()) / 2;
-            String formatted = " ".repeat(spaces) + plName + " ".repeat(spaces);
-            sender.sendMessage(hooked.replace("[plugin]", formatted));
+        int maxLength = plugins.get(plugins.size() - 1).getName().length();
+        for (LunaPlugin lunaPlugin : plugins) {
+            int spaces = maxLength - lunaPlugin.getName().length();
+            int leftSpaces = spaces / 2;
+            int rightSpaces = spaces - leftSpaces;
+            String formatted = " ".repeat(leftSpaces) + lunaPlugin.getName() + " ".repeat(rightSpaces);
+            String message = hooked.replace("[plugin]", formatted);
+            if (args.length == 2 && args[1].equals("-v")) {
+                String version = LSConfig.getMessage("version");
+                message = message + version.replace("[version]", lunaPlugin.getVersion());
+            }
+            sender.sendMessage(message);
         }
+    }
+
+    @Override
+    public List<String> tabComplete(CommandSender sender, List<String> args) {
+        if (args.size() == 1) return Collections.singletonList("-v");
+        return null;
     }
 }

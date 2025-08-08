@@ -150,7 +150,6 @@ public class NonMenuItem implements Cloneable {
             this.setLore(lore);
         if (displayName != null && !displayName.isEmpty())
             this.setDisplayName(displayName);
-
         this.setGlowing(enchanted);
         return this;
     }

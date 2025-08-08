@@ -31,6 +31,8 @@ pl_command:
 
 # * Сообщения *
 messages:
+  tooManyArgs: '{E}Слишком много аргементов!'
+  tooLowArgs: '{E}Слишком мало аргементов!'
   noPermission: "{E}Нет прав на выполнение команды!"
   invalidSender: '{E}Эту команду нельзя использовать от имени: [sender]!'
   wrongArguments: '{E}Команду нельзя вызвать без аргументов!'
@@ -42,7 +44,8 @@ messages:
   loadedSource: '{S}Ресурс [file] загружен'
   listenerRegistered: '{S}Оcновной обработчик событий LunaSpring зарегистрирован'
   placeholderRegistered: '{S}Плейсхолдер {M}[identifier] {S}зарегистрирован!'
-  hooked: "{P} &f| {S}[plugin] &f| {S}[version] &f|"
+  hooked: "{P} &f| {S}[plugin] &f| "
+  version: '{S}[version] &f|'
   server-info:
     - ""
     - "&fОнлайн игроков: {S}[online] &f/ {S}[max-players]"

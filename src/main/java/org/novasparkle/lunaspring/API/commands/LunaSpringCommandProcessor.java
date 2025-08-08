@@ -13,6 +13,7 @@ import org.novasparkle.lunaspring.self.LSConfig;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 public final class LunaSpringCommandProcessor implements TabExecutor {
@@ -47,10 +48,25 @@ public final class LunaSpringCommandProcessor implements TabExecutor {
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
-        if (args.length == 1) return Utils.tabCompleterFiltering(this.commandIdentifiers, args[0]);
+
+        if (args.length == 1) {
+            List<LunaSpringSubCommand> subCommands = this.subCommands.stream()
+                    .filter(sc ->
+                            sc.getCommandIdentifiers().stream()
+                                    .anyMatch(identifier ->
+                                            identifier.startsWith(args[0]))).toList();
+            if (!subCommands.isEmpty()) {
+                List<String> allCommandIdentifiers = Utils.tabCompleterFiltering(this.commandIdentifiers, args[0]);
+                List<String> tabCompleteIgnore = subCommands.stream().flatMap(cmd -> cmd.getCommandRequirements().tabCompleteIgnore().stream()).toList();
+                return allCommandIdentifiers.stream().filter(id -> !tabCompleteIgnore.contains(id)).collect(Collectors.toList());
+            }
+        }
         else if (args.length >= 2) {
             LunaSpringSubCommand subCommand = this.subCommands.stream().filter(s -> s.hasIdentifier(args[0])).findFirst().orElse(null);
-            if (subCommand != null) return subCommand.tabComplete(sender, List.of(args).subList(1, args.length));
+            if (subCommand != null) {
+                List<String> arguments = List.of(args).subList(1, args.length);
+                return subCommand.tabComplete(sender, arguments);
+            }
         }
         return List.of();
     }

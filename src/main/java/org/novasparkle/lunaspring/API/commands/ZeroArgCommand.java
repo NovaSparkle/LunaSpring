@@ -40,9 +40,16 @@ public class ZeroArgCommand implements Invocation {
         }
         return true;
     }
+    protected boolean hasPermission(CommandSender sender, List<String> permissions) {
+        if (permissions.stream().noneMatch(sender::hasPermission) && !sender.hasPermission("lunaspring.*")) {
+            sender.sendMessage(LSConfig.getMessage("noPermission"));
+            return false;
+        }
+        return true;
+    }
 
-    protected boolean checkCommand(CommandSender sender, List<String> permission) {
-        return (permission.isEmpty() || permission.stream().anyMatch(p -> hasPermission(sender, p))) && invokeFlags(sender);
+    protected boolean checkCommand(CommandSender sender, List<String> permissions) {
+        return (permissions.isEmpty() || hasPermission(sender, permissions)) && invokeFlags(sender);
     }
 
     public enum AccessFlag {
@@ -62,4 +69,6 @@ public class ZeroArgCommand implements Invocation {
             return false;
         }
     }
+
+
 }

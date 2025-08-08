@@ -121,16 +121,33 @@ public class Item extends NonMenuItem {
     @Override
     public NonMenuItem setAll(@NotNull ConfigurationSection itemSection) {
         super.setAll(itemSection);
+        int row = itemSection.getInt("slot.row");
+        int column = itemSection.getInt("slot.column");
+        if (row != 0 && column != 0) {
+            this.setSlot(((byte) LunaMath.getIndex(row, column)));
+        } else {
+            int slot = itemSection.getInt("slot");
+            if (slot == 0) throw new RuntimeException(String.format("В секции %s слот предмета не указан или указан как 0", itemSection.getName()));
+            this.setSlot((byte) slot);
+        }
         this.defaultLore = new ArrayList<>(itemSection.getStringList("lore"));
         this.defaultName = itemSection.getString("displayName");
         return this;
     }
 
-    @Override
-    public NonMenuItem setAll(Material material, int amount, String displayName, List<String> lore, boolean enchanted) {
+
+    public NonMenuItem setAll(Material material, int amount, String displayName, List<String> lore, boolean enchanted, int slot) {
         super.setAll(material, amount, displayName, lore, enchanted);
         this.defaultLore = new ArrayList<>(lore);
         this.defaultName = displayName;
+        this.slot = (byte) slot;
+        return this;
+    }
+    public NonMenuItem setAll(Material material, int amount, String displayName, List<String> lore, boolean enchanted, int row, int column) {
+        super.setAll(material, amount, displayName, lore, enchanted);
+        this.defaultLore = new ArrayList<>(lore);
+        this.defaultName = displayName;
+        this.slot = (byte) LunaMath.getIndex(row, column);
         return this;
     }
 

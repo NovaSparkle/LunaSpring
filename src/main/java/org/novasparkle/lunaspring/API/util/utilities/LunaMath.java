@@ -6,7 +6,6 @@ import lombok.experimental.UtilityClass;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Random;
-import java.util.function.Function;
 
 @UtilityClass
 public class LunaMath {

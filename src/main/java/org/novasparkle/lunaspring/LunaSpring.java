@@ -25,9 +25,10 @@ public final class LunaSpring extends LunaPlugin {
     @Override
     public void onEnable() {
         instance = this;
+        this.saveDefaultConfig();
         super.onEnable();
         this.LE = new LunaEngine();
-        this.saveDefaultConfig();
+
         this.loadFile("localization.yml");
         this.processListeners();
         LunaExecutor.initialize(this);
