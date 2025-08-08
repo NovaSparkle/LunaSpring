@@ -1,5 +1,6 @@
 package org.novasparkle.lunaspring.API.util.service;
 
+import lombok.Getter;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -9,6 +10,7 @@ import org.novasparkle.lunaspring.self.LSConfig;
 
 import static org.bukkit.Bukkit.getServer;
 
+@Getter
 public class VaultService implements LunaService {
     private Economy economy;
 

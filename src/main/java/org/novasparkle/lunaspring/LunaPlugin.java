@@ -195,7 +195,7 @@ public abstract class LunaPlugin extends JavaPlugin {
         if (this.equals(LunaSpring.getInstance())) {
             this.startMessage(Arrays.asList(
                     "",
-                    "       [color]╭╮╱╱╱╱╱╱╱╱╱╱╱╭━━━╮",
+                    "       [color]╭╮╱╱╱╱╱╱╱╱╱╱╱╭━━━╮ v[LSVersion]",
                     "       [color]┃┃╱╱╭╮╭┳━╮╭━━┫╰━━┳━━┳━┳┳━╮╭━━╮",
                     "       [color]┃┃╱╭┫┃┃┃╭╮┫╭╮┣━━╮┃╭╮┃╭╋┫╭╮┫╭╮┃",
                     "       [color]┃╰━╯┃╰╯┃┃┃┃╭╮┃╰━╯┃╰╯┃┃┃┃┃┃┃╰╯┃",

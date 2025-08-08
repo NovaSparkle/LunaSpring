@@ -54,7 +54,7 @@ public final class LunaSpring extends LunaPlugin {
             if (params.startsWith("localize-")) { // %lunaspring_localize-world%
                 String[] split = params.split("-");
 
-                String placeholder = split.length >= 2 ? Localization.localize(split[1]) : null;
+                String placeholder = split.length >= 2 ? Localization.localize(Utils.setPlaceholders(offlinePlayer, split[1])) : null;
                 return placeholder == null || placeholder.isEmpty() ? (split.length == 1 ? null : split[1]) : placeholder;
             }
 

@@ -50,7 +50,9 @@ public class MenuHandler implements Listener {
         }
 
         if (!e.hasExplicitlyChangedBlock() || (player.getFallDistance() > 0 && !player.isOnGround())) return;
-        this.closeIMenu(player);
+
+        if (player.getWorld().getNearbyPlayers(player.getLocation(), 1.7).isEmpty())
+            this.closeIMenu(player);
     }
 
     private void closeIMenu(Player player) {

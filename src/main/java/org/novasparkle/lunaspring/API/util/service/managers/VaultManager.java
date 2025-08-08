@@ -1,11 +1,14 @@
 package org.novasparkle.lunaspring.API.util.service.managers;
 
+import lombok.Getter;
 import lombok.experimental.UtilityClass;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.OfflinePlayer;
 import org.novasparkle.lunaspring.API.util.service.VaultService;
 
 @UtilityClass
 public class VaultManager {
+    @Getter
     private VaultService vaultService;
 
     public void initialize() {
