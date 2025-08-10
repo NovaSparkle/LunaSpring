@@ -54,7 +54,7 @@ public final class LunaSpringCommandProcessor implements TabExecutor {
                     .filter(sc ->
                             sc.getCommandIdentifiers().stream()
                                     .anyMatch(identifier ->
-                                            identifier.startsWith(args[0]))).toList();
+                                            identifier.startsWith(args[0])) && sc.hasPermission(sender, sc.getPermissions())).toList();
             if (!subCommands.isEmpty()) {
                 List<String> allCommandIdentifiers = Utils.tabCompleterFiltering(this.commandIdentifiers, args[0]);
                 List<String> tabCompleteIgnore = subCommands.stream().flatMap(cmd -> cmd.getCommandRequirements().tabCompleteIgnore().stream()).toList();
