@@ -8,14 +8,10 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.novasparkle.lunaspring.API.commands.annotations.LunaHandler;
 import org.novasparkle.lunaspring.API.menus.IMenu;
 import org.novasparkle.lunaspring.API.menus.MenuManager;
 import org.novasparkle.lunaspring.API.menus.MoveIgnored;
 
-import java.util.UUID;
-
-@LunaHandler
 public class MenuHandler implements Listener {
     private final Class<MoveIgnored> CACHED_ANNOTATION = MoveIgnored.class;
 

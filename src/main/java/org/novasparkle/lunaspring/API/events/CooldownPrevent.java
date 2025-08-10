@@ -36,13 +36,17 @@ public class CooldownPrevent<T> implements Cloneable {
     public boolean isCancelled(Cancellable event, T object) {
         if (this.cooldownMS <= 0) return false;
 
-        if (this.cooldownMap.containsKey(object) && this.cooldownMap.get(object) >= System.currentTimeMillis()) {
+        if (this.contains(object)) {
             if (event != null) event.setCancelled(true);
             return true;
         } else {
             this.cooldownMap.put(object, System.currentTimeMillis() + this.cooldownMS);
             return false;
         }
+    }
+
+    public boolean contains(T object) {
+        return this.cooldownMap.containsKey(object) && this.cooldownMap.get(object) >= System.currentTimeMillis();
     }
 
     @Override

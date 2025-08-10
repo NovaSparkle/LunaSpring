@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.SneakyThrows;
 import org.bukkit.Bukkit;
 import org.novasparkle.lunaspring.API.commands.LunaExecutor;
+import org.novasparkle.lunaspring.API.events.MenuHandler;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
 import org.novasparkle.lunaspring.API.util.service.managers.VaultManager;
 import org.novasparkle.lunaspring.API.util.utilities.Color;
@@ -30,8 +31,8 @@ public final class LunaSpring extends LunaPlugin {
         this.LE = new LunaEngine();
 
         this.loadFile("localization.yml");
-        this.processListeners();
-        LunaExecutor.initialize(this);
+        this.registerListeners(new MenuHandler());
+        LunaExecutor.initialize(this, "org.novasparkle.lunaspring.self.commands");
 
         this.registerLunaPlaceholder();
         Bukkit.getScheduler().runTask(this, VaultManager::initialize);
@@ -74,8 +75,8 @@ public final class LunaSpring extends LunaPlugin {
                 String[] split = params.split("-");
                 if (split.length < 2) return null;
 
-                Utils.Luckperms.TranslateType translateType = Utils.Luckperms.TranslateType.valueOf(split[1]);
-                Utils.Luckperms.FormatType formatType = Utils.Luckperms.FormatType.valueOf(split[2]);
+                Utils.Luckperms.TranslateType translateType = Utils.Luckperms.TranslateType.valueOf(split[1].toUpperCase());
+                Utils.Luckperms.FormatType formatType = Utils.Luckperms.FormatType.valueOf(split[2].toUpperCase());
                 return Utils.Luckperms.getFormatting(Utils.Luckperms.getGroupTime(offlinePlayer), translateType, formatType);
             }
             return null;

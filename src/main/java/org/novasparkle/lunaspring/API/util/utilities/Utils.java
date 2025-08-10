@@ -15,10 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import org.novasparkle.lunaspring.API.menus.items.Item;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneId;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -239,7 +236,6 @@ public class Utils {
                 }
 
             } else builder.append(ColorManager.color(parts[i]));
-
         }
 
         return builder.create();
@@ -325,23 +321,6 @@ public class Utils {
             return getNextTime(times.stream().map(LocalTime::parse).collect(Collectors.toSet()));
         }
 
-        /**
-         * Получить время оставшееся до указанного времени
-         */
-        public LocalTime getTimeBetween(LocalTime now, LocalTime targetTime) {
-            int startInSeconds = now.toSecondOfDay();
-            int endInSeconds = targetTime.toSecondOfDay();
-
-            int differenceInSeconds;
-            if (endInSeconds < startInSeconds) {
-                differenceInSeconds = (24 * 60 * 60 - startInSeconds) + endInSeconds;
-            } else {
-                differenceInSeconds = endInSeconds - startInSeconds;
-            }
-
-            return parseTime(differenceInSeconds);
-        }
-
         public LocalTime parseTime(long totalSeconds) {
             long minutes = (totalSeconds % 3600) / 60;
             long hours = totalSeconds / 3600;
@@ -364,16 +343,18 @@ public class Utils {
          */
         public String getTimeBetween(LocalTime nextTime) {
             LocalTime nowTime = LocalTime.now();
-            long chrono = nowTime.until(nextTime, ChronoUnit.MINUTES);
 
-            String string = String.format("%s:%s", (int) (chrono / 60), chrono % 60);
-            if (chrono < 0) {
-                int hours = (24 - nowTime.getHour()) + nextTime.getHour();
-                int minutes = (60 - nowTime.getMinute()) + nextTime.getMinute();
-                string = String.format("%s:%s", hours < 10 ? "0" + hours : hours,
-                        minutes < 10 ? "0" + minutes : minutes);
+            if (nextTime.isBefore(nowTime)) {
+                nextTime = nextTime.plusHours(24);
             }
-            return string;
+
+            Duration duration = Duration.between(nowTime, nextTime);
+            long totalMinutes = duration.toMinutes();
+
+            long hours = totalMinutes / 60;
+            long minutes = totalMinutes % 60;
+
+            return String.format("%02d:%02d", hours, minutes);
         }
     }
 
