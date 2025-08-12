@@ -33,7 +33,7 @@ public class LunaSpringSubCommand extends ZeroArgCommand implements LunaComplete
             LSConfig.sendMessage(sender, "tooManyArgs");
             return false;
 
-        } else if (this.commandRequirements.minArgs() != Integer.MAX_VALUE && this.commandRequirements.minArgs() > args.length) {
+        } else if (this.commandRequirements.minArgs() != Integer.MIN_VALUE && this.commandRequirements.minArgs() > args.length) {
             LSConfig.sendMessage(sender, "tooLowArgs");
             return false;
         }

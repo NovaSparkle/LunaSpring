@@ -52,7 +52,7 @@ public class LunaPAPIExpansion extends PlaceholderExpansion {
 
     @Override
     public String onRequest(OfflinePlayer offlinePlayer, @NotNull String params) {
-        return this.request == null ? "" : this.request.sendRequest(offlinePlayer, params);
+        return this.request == null ? null : this.request.sendRequest(offlinePlayer, params);
     }
 
     @FunctionalInterface

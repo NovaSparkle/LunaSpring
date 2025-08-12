@@ -84,7 +84,7 @@ public class NBTManager {
         getBlockData(block).setString(key, value);
     }
 
-    public void setString(Block block, String key, boolean value) {
+    public void setBoolean(Block block, String key, boolean value) {
         getBlockData(block).setBoolean(key, value);
     }
 
@@ -99,12 +99,17 @@ public class NBTManager {
     public void setItemStack(Block block, String key, ItemStack value) {
         getBlockData(block).setItemStack(key, value);
     }
+
     public String getType(ItemStack item, String key) {
         return getRoot(item).getType(key).name();
     }
 
     public void removeKey(ItemStack item, String key) {
         NBTManager.set(item, nbt -> nbt.removeKey(key));
+    }
+
+    public void removeKey(Block block, String key) {
+        NBTManager.getBlockData(block).removeKey(key);
     }
 
     public void setString(ItemStack item, String tag, String value) {
