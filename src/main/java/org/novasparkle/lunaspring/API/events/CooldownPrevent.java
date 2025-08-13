@@ -1,5 +1,6 @@
 package org.novasparkle.lunaspring.API.events;
 
+import com.google.common.collect.Maps;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
@@ -15,7 +16,7 @@ import java.util.Map;
  */
 @Getter
 public class CooldownPrevent<T> implements Cloneable {
-    private Map<T, Long> cooldownMap = new HashMap<>();
+    private Map<T, Long> cooldownMap = Maps.newHashMap();
     @Setter private int cooldownMS;
 
     public CooldownPrevent() {
@@ -40,13 +41,17 @@ public class CooldownPrevent<T> implements Cloneable {
             if (event != null) event.setCancelled(true);
             return true;
         } else {
-            this.cooldownMap.put(object, System.currentTimeMillis() + this.cooldownMS);
+            this.put(object);
             return false;
         }
     }
 
     public boolean contains(T object) {
         return this.cooldownMap.containsKey(object) && this.cooldownMap.get(object) >= System.currentTimeMillis();
+    }
+
+    public void put(T object) {
+        this.cooldownMap.put(object, System.currentTimeMillis() + this.cooldownMS);
     }
 
     @Override

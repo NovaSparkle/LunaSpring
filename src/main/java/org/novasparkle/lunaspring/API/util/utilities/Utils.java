@@ -12,6 +12,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.novasparkle.lunaspring.API.menus.items.Item;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
 
@@ -94,6 +95,24 @@ public class Utils {
         if (border == 0) return null;
 
         return findRandomLocation(world, border, border);
+    }
+
+    public Material getMaterial(@Nullable String string) {
+        if (string == null || string.isEmpty()) return null;
+        return Material.getMaterial(string);
+    }
+
+    public <E extends Enum<E>> E getEnumValue(@NotNull Class<E> clazz, @Nullable String string, E defaultValue) {
+        if (string == null || string.isEmpty()) return null;
+        try {
+            return Enum.valueOf(clazz, string);
+        } catch (IllegalArgumentException e) {
+            return defaultValue;
+        }
+    }
+
+    public <E extends Enum<E>> E getEnumValue(@NotNull Class<E> clazz, @Nullable String string) {
+        return getEnumValue(clazz, string, null);
     }
 
     public <T> @NotNull Optional<T> find(Stream<T> collection, Predicate<T> filterPredicate) {

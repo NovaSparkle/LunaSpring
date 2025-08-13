@@ -112,12 +112,6 @@ public class Item extends NonMenuItem {
         return this;
     }
 
-    public Item replaceLore(UnaryOperator<String> operator) {
-        this.getLore().replaceAll(operator);
-        this.update();
-        return this;
-    }
-
     @Override
     public NonMenuItem setAll(@NotNull ConfigurationSection itemSection) {
         super.setAll(itemSection);

@@ -18,7 +18,9 @@ import org.novasparkle.lunaspring.API.util.utilities.AnnounceUtils;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.util.List;
+import java.util.function.Function;
 
 public class IConfig {
     protected FileConfiguration config;
@@ -145,6 +147,11 @@ public class IConfig {
 
     public long getLong(String path) {
         return this.config.getLong(path);
+    }
+
+    public <T> T readObject(String path, Function<ConfigurationSection, T> function) {
+        ConfigurationSection section = this.getSection(path);
+        return section == null ? null : function.apply(section);
     }
 
     /**

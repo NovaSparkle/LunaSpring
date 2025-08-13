@@ -20,11 +20,16 @@ public interface ItemListMenu extends IMenu {
     Item findFirstItem(Class<?> clazz);
     Item findFirstItem(String displayName);
     Item findFirstItem(Material material);
+    Item findFirstItem(int slot);
+    Item findFirstItem(ItemStack itemStack, int slot);
 
     boolean itemClick(@NotNull Material material, InventoryClickEvent event);
     boolean itemClick(@NotNull String displayName, InventoryClickEvent event);
     boolean itemClick(@NotNull Class<?> clazz, InventoryClickEvent event);
     boolean itemClick(@NotNull ItemStack itemStack, InventoryClickEvent event);
+    boolean itemClick(int slot, InventoryClickEvent event);
+    boolean itemClick(@NotNull ItemStack itemStack, int slot, InventoryClickEvent event);
+    boolean itemClick(@NotNull InventoryClickEvent event);
 
     void addItems(Item... items);
     Collection<Item> addItems(Collection<Item> items);

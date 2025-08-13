@@ -60,7 +60,3 @@ messages:
     - '    {S}| &fСостояние: {S}[status]'
     - ''
   subCommandClasses: 'В пакете [package] отсканировано [amount] подкоманд: [commands]'
-  worlds:
-    world: "Верхний"
-    world_nether: "Нижний"
-    world_the_end: "Энд"

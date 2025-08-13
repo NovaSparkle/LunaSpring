@@ -10,7 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.novasparkle.lunaspring.API.commands.LunaSpringCommandProcessor;
 import org.novasparkle.lunaspring.API.commands.annotations.LunaCommand;
-import org.novasparkle.lunaspring.API.commands.annotations.LunaHandler;
+import org.novasparkle.lunaspring.API.events.LunaHandler;
 import org.novasparkle.lunaspring.API.util.exceptions.InvalidImplementationException;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
 import org.novasparkle.lunaspring.API.util.utilities.LunaMath;

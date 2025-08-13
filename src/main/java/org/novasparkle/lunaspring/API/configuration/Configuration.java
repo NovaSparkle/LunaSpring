@@ -7,6 +7,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.util.List;
 
 
@@ -114,6 +115,17 @@ public class Configuration extends IConfig {
         if (path == null)
             return this.config.createSection(name);
         return this.config.createSection(String.format("%s.%s", path, name));
+    }
+
+    @SneakyThrows
+    public void writeObject(String path, Object object) {
+        Class<?> clazz = object.getClass();
+        for (Field field : clazz.getDeclaredFields()) {
+            field.setAccessible(true);
+            if (field.isAnnotationPresent(IgnoredField.class)) continue;
+
+            this.set(path + field.getName(), field.get(object));
+        }
     }
 
     /**

@@ -28,6 +28,7 @@ import org.novasparkle.lunaspring.API.util.service.managers.NBTManager;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 
 import java.util.*;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
 @Getter
@@ -47,7 +48,7 @@ public class NonMenuItem implements Cloneable {
     private List<ItemFlag> itemFlags = Lists.newArrayList();
 
     public NonMenuItem(Material material, String displayName, List<String> lore, int amount) {
-        if (material == null) throw new IllegalArgumentException("Материал предмета не может быть null!");
+        if (material == null) material = Material.STONE;
         this.material = material;
         this.displayName = displayName;
         this.lore = lore;
@@ -69,7 +70,7 @@ public class NonMenuItem implements Cloneable {
     }
 
     public NonMenuItem(@NotNull ConfigurationSection section) {
-        this(Material.getMaterial(Objects.requireNonNull(section.getString("material"))),
+        this(Utils.getMaterial(section.getString("material")),
                 section.getString("displayName"),
                 section.getStringList("lore"),
                 section.getInt("amount"));
@@ -189,16 +190,10 @@ public class NonMenuItem implements Cloneable {
         return this;
     }
 
-    public ItemStack getDefaultStack() {
-        ItemStack item = new ItemStack(this.material, this.amount);
-
-        ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(ColorManager.color(this.displayName));
-        meta.setLore(this.lore.stream().map(ColorManager::color).collect(Collectors.toList()));
-        item.setItemMeta(meta);
-
-        if (this.headValue != null) NBTManager.base64head(item, this.headValue);
-        return item;
+    public NonMenuItem replaceLore(UnaryOperator<String> operator) {
+        this.getLore().replaceAll(operator);
+        this.update();
+        return this;
     }
 
     public EquipmentSlot getEquipmentSlot() {
@@ -376,13 +371,8 @@ public class NonMenuItem implements Cloneable {
     }
 
     public void give(@NotNull Player player) {
-        this.lore.forEach(lr -> PlaceholderAPI.setPlaceholders(player, lr));
+        this.replaceLore(lr -> PlaceholderAPI.setPlaceholders(player, lr));
         player.getInventory().addItem(this.itemStack);
-    }
-
-    public void giveDefault(Player player) {
-        this.lore.forEach(lr -> PlaceholderAPI.setPlaceholders(player, lr));
-        player.getInventory().addItem(this.getDefaultStack());
     }
 
     public NonMenuItem serialize(@NotNull ConfigurationSection section, boolean asItemStack) {

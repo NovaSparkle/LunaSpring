@@ -32,8 +32,7 @@ public abstract class AMenu implements ItemListMenu {
     private CooldownPrevent<Integer> cooldownPrevent = new CooldownPrevent<>();
     private Player player;
 
-    private List<Item> itemList = new ArrayList<>();
-
+    private final List<Item> itemList = new ArrayList<>();
     public AMenu(@NotNull Player player, String title, @Range(from = 9L, to=54) byte size) {
         this.player = player;
         this.title = title;
@@ -107,6 +106,7 @@ public abstract class AMenu implements ItemListMenu {
     public Item findFirstItem(Class<?> clazz) {
         return Utils.find(this.itemList, i -> i.getClass().equals(clazz)).orElse(null);
     }
+
     @Override
     public List<Item> findItems(Class<?> clazz) {
         return this.itemList.stream().filter(i -> i.getClass().equals(clazz)).collect(Collectors.toList());
@@ -125,6 +125,17 @@ public abstract class AMenu implements ItemListMenu {
     @Override
     public Item findFirstItem(Material material) {
         return Utils.find(this.itemList, i -> i.getMaterial().equals(material)).orElse(null);
+    }
+
+    @Override
+    public Item findFirstItem(int slot) {
+        return Utils.find(this.itemList, i -> i.getSlot() == slot).orElse(null);
+    }
+
+    @Override
+    public Item findFirstItem(ItemStack itemStack, int slot) {
+        return Utils.find(this.itemList, i -> i.getItemStack().equals(itemStack) &&
+                i.getSlot() == slot).orElse(null);
     }
 
     @Override
@@ -168,6 +179,39 @@ public abstract class AMenu implements ItemListMenu {
     }
 
     @Override
+    public boolean itemClick(int slot, InventoryClickEvent event) {
+        Item item = this.findFirstItem(slot);
+        if (item != null) {
+            item.onClick(event);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean itemClick(@NotNull ItemStack itemStack, int slot, InventoryClickEvent event) {
+        Item item = this.findFirstItem(itemStack, slot);
+        if (item != null) {
+            item.onClick(event);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean itemClick(@NotNull InventoryClickEvent event) {
+        ItemStack itemStack = event.getCurrentItem();
+        if (itemStack == null || itemStack.getType().isAir()) return false;
+
+        Item item = this.findFirstItem(itemStack, event.getSlot());
+        if (item != null) {
+            item.onClick(event);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public Collection<Item> insertAllItems() {
         this.itemList.forEach(i -> i.insert(this));
         return this.itemList;
@@ -184,7 +228,7 @@ public abstract class AMenu implements ItemListMenu {
         return this.itemList;
     }
 
-    public void drawItems() {
+    public void logItems() {
         this.itemList.forEach(System.out::println);
     }
 

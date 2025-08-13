@@ -1,4 +1,4 @@
-package org.novasparkle.lunaspring.API.configuration.builder;
+package org.novasparkle.lunaspring.API.events;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -6,6 +6,5 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
-public @interface ConfigBuilderSection {
-}
+@Target(ElementType.TYPE)
+public @interface LunaHandler {}

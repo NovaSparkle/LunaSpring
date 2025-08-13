@@ -2,9 +2,12 @@ package org.novasparkle.lunaspring.API.util.utilities;
 
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
+import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Collection;
+import java.util.List;
 import java.util.Random;
 
 @UtilityClass
@@ -81,14 +84,40 @@ public class LunaMath {
         return random.nextInt(maxValue - minValue) + minValue;
     }
 
-    public int getRandomInt(String numerical) {
-        String[] split = numerical.split("-");
+    public int getRandomInt(String numerical, String splitRegex) {
+        String[] split = numerical.split(splitRegex);
         if (split.length < 2) return toInt(split[0]);
         return getRandomInt(toInt(split[0]), toInt(split[1]));
     }
 
+    public int getRandomInt(String numerical) {
+        return getRandomInt(numerical, "-");
+    }
+
+    public double getRandomDouble(double minValue, double maxValue) {
+        if (minValue >= maxValue) return maxValue;
+        return minValue + Math.random() * (maxValue - minValue);
+    }
+
+    public double getRandomDouble(String numerical, String splitRegex) {
+        String[] split = numerical.split(splitRegex);
+        if (split.length < 2) return toDouble(split[0]);
+        return getRandomDouble(toDouble(split[0]), toDouble(split[1]));
+    }
+
+    public double getRandomDouble(String numerical) {
+        return getRandomDouble(numerical, "-");
+    }
+
+    public @Nullable <T> T getRandom(List<T> collection) {
+        if (collection.isEmpty()) return null;
+        if (collection.size() == 1) return collection.get(0);
+        return collection.get(getRandomInt(0, collection.size()));
+    }
+
     public double round(double notRoundedNum, int roundLength) {
-        return roundLength <= 0 ? toInt(notRoundedNum) : BigDecimal.valueOf(notRoundedNum)
+        if (roundLength < 0) roundLength = 0;
+        return BigDecimal.valueOf(notRoundedNum)
                 .setScale(roundLength, RoundingMode.HALF_UP)
                 .doubleValue();
     }

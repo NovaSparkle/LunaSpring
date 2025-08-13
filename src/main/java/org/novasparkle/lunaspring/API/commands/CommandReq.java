@@ -1,5 +1,7 @@
 package org.novasparkle.lunaspring.API.commands;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -13,7 +15,7 @@ public record CommandReq(String[] permissions, ZeroArgCommand.AccessFlag[] acces
     }
 
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         return "CommandReq{" +
                 "permissions=" + Arrays.toString(permissions) +
                 ", accessFlags=" + Arrays.toString(accessFlags) +

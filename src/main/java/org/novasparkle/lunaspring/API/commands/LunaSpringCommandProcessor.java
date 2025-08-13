@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 
 @Getter
 public final class LunaSpringCommandProcessor implements TabExecutor {
-
     private final List<LunaSpringSubCommand> subCommands;
     private final List<String> commandIdentifiers;
     @Accessors(fluent = true)
