@@ -5,7 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
 import me.clip.placeholderapi.PlaceholderAPI;
-import net.md_5.bungee.api.chat.*;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
@@ -24,7 +26,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -194,72 +195,53 @@ public class Utils {
                 .toList();
     }
 
-    public BaseComponent[] createHoverText(String line) {
-        ComponentBuilder builder = new ComponentBuilder();
+    public TextComponent createClickableText(String line, ClickEvent.Action action) {
+        TextComponent mainComponent = new TextComponent();
 
-        String[] parts = line.split("\\*%\\*");
+        ColorManager.color(line);
+        String[] parts = line.split("\\*%\\*", -1);
+
         for (int i = 0; i < parts.length; i++) {
-            if (i % 2 == 1) {
-                String clickablePart = parts[i];
-                String command = parts[++i];
-                Pattern pattern = Pattern.compile("\\{([A-Z])}");
+            if (i % 2 == 0) {
+                mainComponent.addExtra(new TextComponent(parts[i]));
+            } else {
+                if (i + 1 < parts.length) {
+                    String clickText = parts[i];
+                    String command = parts[i + 1];
+                    i++;
 
-                String[] splitColor = clickablePart.split("\\{");
-                for (String colorPart : splitColor) {
-                    if (colorPart.isEmpty()) continue;
-                    char colorChar = colorPart.charAt(0);
-                    String finalString = colorPart;
+                    TextComponent clickableComponent = new TextComponent(clickText);
+                    clickableComponent.setClickEvent(new ClickEvent(action, command));
 
-                    TextComponent clickableText = new TextComponent();
-                    if (pattern.matcher(clickablePart).find()) {
-                        finalString = colorPart.replace(String.format("%c}", colorChar), "");
-                        clickableText.setColor(net.md_5.bungee.api.ChatColor.of(ColorManager.getColor(String.format("\\{%c\\}", colorChar)).toHex()));
-                    }
-
-                    clickableText.setText(finalString);
-                    clickableText.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(command)));
-                    builder.append(clickableText);
+                    mainComponent.addExtra(clickableComponent);
                 }
-
-            } else builder.append(ColorManager.color(parts[i]));
-
+            }
         }
-
-        return builder.create();
+        return mainComponent;
     }
+    public TextComponent createHoverableText(String line) {
+        TextComponent mainComponent = new TextComponent();
 
-    public BaseComponent[] createClickableText(String line, ClickEvent.Action action) {
-        ComponentBuilder builder = new ComponentBuilder();
+        ColorManager.color(line);
+        String[] parts = line.split("\\*%\\*", -1);
 
-        String[] parts = line.split("\\*%\\*");
         for (int i = 0; i < parts.length; i++) {
-            System.out.println(i);
-            if (i % 2 == 1) {
-                String clickablePart = parts[i];
-                String command = parts[++i];
-                Pattern pattern = Pattern.compile("\\{([A-Z])}");
+            if (i % 2 == 0) {
+                mainComponent.addExtra(new TextComponent(parts[i]));
+            } else {
+                if (i + 1 < parts.length) {
+                    String clickText = parts[i];
+                    String command = parts[i + 1];
+                    i++;
 
-                String[] splitColor = clickablePart.split("\\{");
-                for (String colorPart : splitColor) {
-                    if (colorPart.isEmpty()) continue;
-                    char colorChar = colorPart.charAt(0);
-                    String finalString = colorPart;
+                    TextComponent clickableComponent = new TextComponent(clickText);
+                    clickableComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(command)));
 
-                    TextComponent clickableText = new TextComponent();
-                    if (pattern.matcher(clickablePart).find()) {
-                        finalString = colorPart.replace(String.format("%c}", colorChar), "");
-                        clickableText.setColor(net.md_5.bungee.api.ChatColor.of(ColorManager.getColor(String.format("\\{%c\\}", colorChar)).toHex()));
-                    }
-
-                    clickableText.setText(finalString);
-                    clickableText.setClickEvent(new ClickEvent(action, command));
-                    builder.append(clickableText);
+                    mainComponent.addExtra(clickableComponent);
                 }
-
-            } else builder.append(ColorManager.color(parts[i]));
+            }
         }
-
-        return builder.create();
+        return mainComponent;
     }
 
     public void playersAction(Consumer<Player> playerConsumer) {

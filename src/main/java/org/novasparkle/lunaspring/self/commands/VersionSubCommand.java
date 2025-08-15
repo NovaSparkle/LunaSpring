@@ -12,6 +12,6 @@ import org.novasparkle.lunaspring.self.LSConfig;
 public class VersionSubCommand implements Invocation {
     @Override
     public void invoke(CommandSender sender, String[] args) {
-        LSConfig.sendMessage(sender, "version", "version-%-" + LunaSpring.getInstance().getVersion());
+        LSConfig.sendMessage(sender, "showVersion", "pluginName-%-" + LunaSpring.getInstance().getName(), "version-%-" + LunaSpring.getInstance().getVersion());
     }
 }

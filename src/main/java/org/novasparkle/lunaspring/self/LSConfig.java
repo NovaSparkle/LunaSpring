@@ -5,6 +5,7 @@ import org.bukkit.command.CommandSender;
 import org.novasparkle.lunaspring.API.configuration.IConfig;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
 import org.novasparkle.lunaspring.LunaSpring;
+import org.novasparkle.lunaspring.self.configuration.Message;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,5 +40,8 @@ public final class LSConfig {
 
     public static void sendMessage(CommandSender sender, String id, String... rpl) {
         config.sendMessage(sender, id, rpl);
+    }
+    public static void sendMessage(CommandSender sender, Message message, String... rpl) {
+        config.sendMessage(sender, message.getMessageId(), rpl);
     }
 }

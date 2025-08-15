@@ -24,7 +24,7 @@ public final class LunaExecutor {
         for (String command : commands) {
             LunaSpringCommandProcessor processor = new LunaSpringCommandProcessor(command);
 
-            ClassEntry<ZeroArgSubCommand> zeroArgSubCommandClassEntry = Utils.find(zeroArgSubCommandsList, zac -> zac.getAnnotation().appliedCommand().equals(command)).orElse(null);
+            ClassEntry<ZeroArgSubCommand> zeroArgSubCommandClassEntry = Utils.find(zeroArgSubCommandsList, zac -> zac.getAnnotation().value().equals(command)).orElse(null);
             if (zeroArgSubCommandClassEntry != null) {
                 processZeroArgsCommand(zeroArgSubCommandClassEntry, processor);
             }
@@ -46,7 +46,6 @@ public final class LunaExecutor {
         String[] permissions = new String[] { };
         LunaSpringSubCommand.AccessFlag[] flags = new LunaSpringSubCommand.AccessFlag[] { };
 
-
         Check checkAnnotation = (Check) entry.getAdditionalAnnotations().stream().filter(a -> a.annotationType().equals(Check.class)).findFirst().orElse(null);
         if (checkAnnotation != null) {
             permissions = checkAnnotation.permissions();
@@ -55,13 +54,14 @@ public final class LunaExecutor {
         } else {
             Permissions permissionsAnnotation = (Permissions) Utils.find(entry.getAdditionalAnnotations(), a -> a.annotationType().equals(Permissions.class)).orElse(null);
             if (permissionsAnnotation != null) {
-                permissions = permissionsAnnotation.permissionList();
+                permissions = permissionsAnnotation.value();
             }
             Flags flagsAnnotation = (Flags) Utils.find(entry.getAdditionalAnnotations(), a -> a.annotationType().equals(Flags.class)).orElse(null);
             if (flagsAnnotation != null) {
-                flags = flagsAnnotation.flagList();
+                flags = flagsAnnotation.value();
             }
         }
+
 
         processor.registerZeroArgCommand(new ZeroArgCommand(flags, permissions, (Invocation) clazz.getDeclaredConstructor().newInstance()));
     }
@@ -83,17 +83,19 @@ public final class LunaExecutor {
             int maxArgs = Integer.MAX_VALUE;
             int minArgs = Integer.MAX_VALUE;
 
+
+
             if (checkAnnotation != null) {
                 permissions = checkAnnotation.permissions();
                 flags = checkAnnotation.flags();
             } else {
                 Permissions permissionsAnnotation = (Permissions) Utils.find(classEntry.getAdditionalAnnotations(), a -> a.annotationType().equals(Permissions.class)).orElse(null);
                 if (permissionsAnnotation != null) {
-                    permissions = permissionsAnnotation.permissionList();
+                    permissions = permissionsAnnotation.value();
                 }
                 Flags flagsAnnotation = (Flags) Utils.find(classEntry.getAdditionalAnnotations(), a -> a.annotationType().equals(Flags.class)).orElse(null);
                 if (flagsAnnotation != null) {
-                    flags = flagsAnnotation.flagList();
+                    flags = flagsAnnotation.value();
                 }
             }
             Args argsAnnotation = (Args) Utils.find(classEntry.getAdditionalAnnotations(), a -> a.annotationType().equals(Args.class)).orElse(null);
@@ -103,10 +105,10 @@ public final class LunaExecutor {
             }
             TabCompleteIgnore tabCompleteIgnore = (TabCompleteIgnore) Utils.find(classEntry.getAdditionalAnnotations(), a -> a.annotationType().equals(TabCompleteIgnore.class)).orElse(null);
             if (tabCompleteIgnore != null) {
-                if (tabCompleteIgnore.ignoreList().length == 0) {
+                if (tabCompleteIgnore.value().length == 0) {
                     ignoreTabCompleting = subCommandAnnotation.commandIdentifiers();
                 } else
-                    ignoreTabCompleting = tabCompleteIgnore.ignoreList();
+                    ignoreTabCompleting = tabCompleteIgnore.value();
             }
 
             Invocation commandInstance = (Invocation) clazz.getDeclaredConstructor().newInstance();

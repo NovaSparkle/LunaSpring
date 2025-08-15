@@ -1,6 +1,7 @@
 package org.novasparkle.lunaspring.API.commands;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -14,6 +15,8 @@ public class ZeroArgCommand implements Invocation {
     private final List<ZeroArgCommand.AccessFlag> flags;
     private final List<String> permissions;
     private final Invocation invocation;
+    @Setter
+    private String appliedCommand;
 
     public ZeroArgCommand(AccessFlag[] flags, String[] permissions, Invocation invocation) {
         this.flags = List.of(flags);
@@ -22,7 +25,7 @@ public class ZeroArgCommand implements Invocation {
     }
 
     public void invoke(CommandSender sender, String[] args) {
-        if (this.checkCommand(sender, this.getPermissions()))
+        if (permissions.isEmpty() || this.hasPermission(sender, permissions) && this.invokeFlags(sender))
             this.getInvocation().invoke(sender, args);
     }
 
@@ -34,22 +37,18 @@ public class ZeroArgCommand implements Invocation {
     }
 
     protected boolean hasPermission(CommandSender sender, String permission) {
-        if (!sender.hasPermission(permission) && !sender.hasPermission("lunaspring.*")) {
+        if (!sender.hasPermission(permission.replace("#", appliedCommand)) && !sender.hasPermission("lunaspring.*")) {
             sender.sendMessage(LSConfig.getMessage("noPermission"));
             return false;
         }
         return true;
     }
     protected boolean hasPermission(CommandSender sender, List<String> permissions) {
-        if (permissions.stream().noneMatch(sender::hasPermission) && !sender.hasPermission("lunaspring.*")) {
+        if (permissions.stream().map(perm -> perm.replace("#", appliedCommand)).noneMatch(sender::hasPermission) && !sender.hasPermission("lunaspring.*")) {
             sender.sendMessage(LSConfig.getMessage("noPermission"));
             return false;
         }
         return true;
-    }
-
-    protected boolean checkCommand(CommandSender sender, List<String> permissions) {
-        return (permissions.isEmpty() || hasPermission(sender, permissions)) && invokeFlags(sender);
     }
 
     public enum AccessFlag {
@@ -69,6 +68,4 @@ public class ZeroArgCommand implements Invocation {
             return false;
         }
     }
-
-
 }

@@ -18,7 +18,6 @@ import org.novasparkle.lunaspring.API.util.utilities.AnnounceUtils;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 
 import java.io.File;
-import java.lang.reflect.Field;
 import java.util.List;
 import java.util.function.Function;
 
@@ -201,7 +200,7 @@ public class IConfig {
                 sender.spigot().sendMessage(Utils.createClickableText(newLine, ClickEvent.Action.RUN_COMMAND));
                 continue;
             } else if (line.startsWith("[HOVER]")) {
-                sender.spigot().sendMessage(Utils.createHoverText(newLine));
+                sender.spigot().sendMessage(Utils.createHoverableText(newLine));
                 continue;
             }
             newLine = ColorManager.color(newLine);

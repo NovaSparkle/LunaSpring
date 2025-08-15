@@ -39,13 +39,14 @@ messages:
   undefinedCommand: '{E}Неизвестная команда!'
   noDependency: '{E}Зависимость &n[dependency] &r{E}не обнаружена, соответствующий менеджер выключен!'
   noVaultProvider: '{E}Плагин реализующий экономику Vault отсутствует! (Essentials, CMI, SateCore)'
-  reloaded: '{P} {S}Библиотека перезагружена'
+  reloaded: '{P}{S}Библиотека перезагружена'
   savedSource: '{S}Ресурс [file] сохранен'
   loadedSource: '{S}Ресурс [file] загружен'
   listenerRegistered: '{S}Оcновной обработчик событий LunaSpring зарегистрирован'
   placeholderRegistered: '{S}Плейсхолдер {M}[identifier] {S}зарегистрирован!'
-  hooked: "{P} &f| {S}[plugin] &f| "
+  hooked: "{P}&f| {S}[plugin] &f| "
   version: '{S}[version] &f|'
+  showVersion: '[pluginName] [version]'
   server-info:
     - ""
     - "&fОнлайн игроков: {S}[online] &f/ {S}[max-players]"
