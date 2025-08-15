@@ -10,5 +10,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface Flags {
-    ZeroArgCommand.AccessFlag[] value();
+    ZeroArgCommand.AccessFlag[] value() default {};
 }
