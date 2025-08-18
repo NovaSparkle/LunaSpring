@@ -30,6 +30,10 @@ public final class LunaSpringCommandProcessor implements TabExecutor {
         this.appliedCommand = appliedCommand;
     }
 
+    public boolean isEmpty() {
+        return !this.subCommands.isEmpty() && this.zeroCommand != null;
+    }
+
     @Override
     @SneakyThrows
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {

@@ -33,7 +33,7 @@ public final class LunaExecutor {
                 processSubCommand(classEntry, command, processor);
             }
 
-            if (zeroArgSubCommandClassEntry != null || !classList.isEmpty())
+            if (!processor.isEmpty())
                 plugin.registerCommandProcessor(processor);
         }
     }
