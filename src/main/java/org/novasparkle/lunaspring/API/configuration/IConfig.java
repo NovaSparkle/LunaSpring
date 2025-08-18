@@ -15,6 +15,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
 import org.novasparkle.lunaspring.API.util.utilities.AnnounceUtils;
+import org.novasparkle.lunaspring.API.util.utilities.ComponentUtils;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 
 import java.io.File;
@@ -194,13 +195,13 @@ public class IConfig {
                     .replace("[HOVER]", "");
 
             if (line.startsWith("[SUGGESTCOMMAND]")) {
-                sender.spigot().sendMessage(Utils.createClickableText(newLine, ClickEvent.Action.SUGGEST_COMMAND));
+                sender.spigot().sendMessage(ComponentUtils.createClickableText(newLine, ClickEvent.Action.SUGGEST_COMMAND));
                 continue;
             } else if (line.startsWith("[RUNCOMMAND]")) {
-                sender.spigot().sendMessage(Utils.createClickableText(newLine, ClickEvent.Action.RUN_COMMAND));
+                sender.spigot().sendMessage(ComponentUtils.createClickableText(newLine, ClickEvent.Action.RUN_COMMAND));
                 continue;
             } else if (line.startsWith("[HOVER]")) {
-                sender.spigot().sendMessage(Utils.createHoverableText(newLine));
+                sender.spigot().sendMessage(ComponentUtils.createHoverableText(newLine));
                 continue;
             }
             newLine = ColorManager.color(newLine);

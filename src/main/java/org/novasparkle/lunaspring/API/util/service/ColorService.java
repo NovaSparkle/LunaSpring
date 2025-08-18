@@ -1,5 +1,6 @@
 package org.novasparkle.lunaspring.API.util.service;
 
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.novasparkle.lunaspring.API.configuration.IConfig;
 import org.novasparkle.lunaspring.API.util.utilities.Color;
@@ -7,6 +8,8 @@ import org.novasparkle.lunaspring.API.util.utilities.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public final class ColorService implements LunaService {
     private final List<Color> colorList = new ArrayList<>();
@@ -26,7 +29,6 @@ public final class ColorService implements LunaService {
             assert colorSection != null;
             this.colorList.add(new Color(colorSection.getString("abbr"), colorSection.getString("variable")));
         }
-        System.out.println(colorList);
     }
 
     public String color(String text) {
@@ -50,10 +52,18 @@ public final class ColorService implements LunaService {
         return false;
     }
 
-    @Override
-    public String toString() {
-        return "ColorService{" +
-                "colorList=" + colorList +
-                '}';
+    public String parseHexColors(String text) {
+        Matcher matcher = Pattern.compile("(&x(&[0-9a-fA-F]){6})").matcher(text);
+        StringBuilder buffer = new StringBuilder();
+
+        while (matcher.find()) {
+            String hexCode = matcher.group(1)
+                    .replace("&x", "")
+                    .replace("&", "");
+            matcher.appendReplacement(buffer, ChatColor.of("#" + hexCode).toString());
+        }
+        matcher.appendTail(buffer);
+
+        return buffer.toString();
     }
 }

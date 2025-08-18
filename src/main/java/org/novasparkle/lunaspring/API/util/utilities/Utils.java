@@ -5,9 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
 import me.clip.placeholderapi.PlaceholderAPI;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.*;
 import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
@@ -26,6 +24,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -195,54 +195,7 @@ public class Utils {
                 .toList();
     }
 
-    public TextComponent createClickableText(String line, ClickEvent.Action action) {
-        TextComponent mainComponent = new TextComponent();
 
-        ColorManager.color(line);
-        String[] parts = line.split("\\*%\\*", -1);
-
-        for (int i = 0; i < parts.length; i++) {
-            if (i % 2 == 0) {
-                mainComponent.addExtra(new TextComponent(parts[i]));
-            } else {
-                if (i + 1 < parts.length) {
-                    String clickText = parts[i];
-                    String command = parts[i + 1];
-                    i++;
-
-                    TextComponent clickableComponent = new TextComponent(clickText);
-                    clickableComponent.setClickEvent(new ClickEvent(action, command));
-
-                    mainComponent.addExtra(clickableComponent);
-                }
-            }
-        }
-        return mainComponent;
-    }
-    public TextComponent createHoverableText(String line) {
-        TextComponent mainComponent = new TextComponent();
-
-        ColorManager.color(line);
-        String[] parts = line.split("\\*%\\*", -1);
-
-        for (int i = 0; i < parts.length; i++) {
-            if (i % 2 == 0) {
-                mainComponent.addExtra(new TextComponent(parts[i]));
-            } else {
-                if (i + 1 < parts.length) {
-                    String clickText = parts[i];
-                    String command = parts[i + 1];
-                    i++;
-
-                    TextComponent clickableComponent = new TextComponent(clickText);
-                    clickableComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(command)));
-
-                    mainComponent.addExtra(clickableComponent);
-                }
-            }
-        }
-        return mainComponent;
-    }
 
     public void playersAction(Consumer<Player> playerConsumer) {
         Bukkit.getOnlinePlayers().forEach(playerConsumer);

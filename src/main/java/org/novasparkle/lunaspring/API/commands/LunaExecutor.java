@@ -81,7 +81,7 @@ public final class LunaExecutor {
             LunaSpringSubCommand.AccessFlag[] flags = new ZeroArgCommand.AccessFlag[] { };
             String[] ignoreTabCompleting = new String[] { };
             int maxArgs = Integer.MAX_VALUE;
-            int minArgs = Integer.MAX_VALUE;
+            int minArgs = Integer.MIN_VALUE;
 
 
 

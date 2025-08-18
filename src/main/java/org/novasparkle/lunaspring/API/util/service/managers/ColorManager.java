@@ -57,6 +57,15 @@ public class ColorManager {
     }
 
     /**
+     * Преобразует строку с HEX-цветами (&x&R&G&B) в формат BungeeCordAPI
+     * @param text - Входная строка
+     * @return - Строка вида BungeeCordAPI
+     */
+    public String parseHexColors(String text) {
+        return colorService.parseHexColors(text);
+    }
+
+    /**
      * Добавляет новый цвет color в список значений для использования, если color уже загружен через конфиг LunaSpring, то тот обновлён не будет
      * @param color - значение цвета
      * @return true - если новый color успешно добавлен
