@@ -14,7 +14,6 @@ import org.novasparkle.lunaspring.API.util.utilities.LunaMath;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.UnaryOperator;
 
 @Getter
 @Accessors(chain = true, fluent = false)
@@ -121,7 +120,7 @@ public class Item extends NonMenuItem {
             this.setSlot(((byte) LunaMath.getIndex(row, column)));
         } else {
             int slot = itemSection.getInt("slot");
-            if (slot == 0) throw new RuntimeException(String.format("В секции %s слот предмета не указан или указан как 0", itemSection.getName()));
+            if (slot == 0) throw new RuntimeException("Слот не может быть отрицательным");
             this.setSlot((byte) slot);
         }
         this.defaultLore = new ArrayList<>(itemSection.getStringList("lore"));
