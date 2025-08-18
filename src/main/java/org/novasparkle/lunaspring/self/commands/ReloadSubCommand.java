@@ -15,6 +15,5 @@ public class ReloadSubCommand implements Invocation {
         LunaSpring.getInstance().reloadConfig();
         LSConfig.reload();
         sender.sendMessage(LSConfig.getMessage("reloaded"));
-
     }
 }

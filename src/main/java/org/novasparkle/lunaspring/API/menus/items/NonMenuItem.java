@@ -225,12 +225,7 @@ public class NonMenuItem implements Cloneable {
     }
 
     public NonMenuItem applyItemFlags(ConfigurationSection section) {
-        ItemMeta meta = this.itemStack.getItemMeta();
-        if (meta == null) throw new NoItemMetaException(this.itemStack);
-
         this.applyItemFlags(section.getStringList("itemflags").stream().map(ItemFlag::valueOf).collect(Collectors.toSet()));
-        this.itemStack.setItemMeta(meta);
-
         return this;
     }
 
@@ -268,13 +263,16 @@ public class NonMenuItem implements Cloneable {
     }
 
     public NonMenuItem applyEnchantment(Enchantment enchantment, int level) {
+        this.enchantments.put(enchantment, level);
         this.itemStack.addUnsafeEnchantment(enchantment, level);
         return this;
     }
 
     public NonMenuItem applyEnchantments(Map<Enchantment, Integer> enchants) {
-        if (enchants != null)
+        if (enchants != null) {
+            this.enchantments.putAll(enchants);
             this.itemStack.addUnsafeEnchantments(enchants);
+        }
         return this;
     }
 

@@ -25,6 +25,7 @@ public abstract class PageMenu<T> extends AMenu {
             throw new RuntimeException("Список слотов кнопок не может быть пустым!");
         }
     }
+
     public void partition(List<T> classifiedItems) {
         for (int i = 0; i < classifiedItems.size(); i += itemsOrder.size()) {
             int end = Math.min(i + itemsOrder.size(), classifiedItems.size());
@@ -35,9 +36,8 @@ public abstract class PageMenu<T> extends AMenu {
     public abstract void reloadPage(int page);
 
     public class NextButton extends Item {
-
-        public NextButton(ConfigurationSection section) {
-            super(section, true);
+        public NextButton(ConfigurationSection section, boolean rowCol) {
+            super(section, rowCol);
         }
 
         @Override
@@ -49,8 +49,8 @@ public abstract class PageMenu<T> extends AMenu {
 
     public class PreviousButton extends Item {
 
-        public PreviousButton(ConfigurationSection section) {
-            super(section, true);
+        public PreviousButton(ConfigurationSection section, boolean rowCol) {
+            super(section, rowCol);
         }
 
         @Override

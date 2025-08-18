@@ -125,9 +125,6 @@ public class GuardManager {
         guardService.setFlag(regionName, lFlag, lState);
     }
 
-
-
-
     public void addMember(@NotNull ProtectedRegion region, Player player) {
         guardService.addMember(region, player);
     }
