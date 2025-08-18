@@ -25,7 +25,7 @@ public class ZeroArgCommand implements Invocation {
     }
 
     public void invoke(CommandSender sender, String[] args) {
-        if (permissions.isEmpty() || this.hasPermission(sender, permissions) && this.invokeFlags(sender))
+        if (permissions.isEmpty() || this.hasPermission(sender) && this.invokeFlags(sender))
             this.getInvocation().invoke(sender, args);
     }
 
@@ -43,12 +43,15 @@ public class ZeroArgCommand implements Invocation {
         }
         return true;
     }
-    protected boolean hasPermission(CommandSender sender, List<String> permissions) {
+    protected boolean hasPermission(CommandSender sender) {
         if (permissions.stream().map(perm -> perm.replace("#", appliedCommand)).noneMatch(sender::hasPermission) && !sender.hasPermission("lunaspring.*")) {
             sender.sendMessage(LSConfig.getMessage("noPermission"));
             return false;
         }
         return true;
+    }
+    protected boolean hasPermissionNoMessage(CommandSender sender) {
+        return permissions.isEmpty() || permissions.stream().map(perm -> perm.replace("#", appliedCommand)).anyMatch(sender::hasPermission) || sender.hasPermission("lunaspring.*");
     }
 
     public enum AccessFlag {

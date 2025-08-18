@@ -24,7 +24,7 @@ public class LunaSpringSubCommand extends ZeroArgCommand implements LunaComplete
 
 
     public void invoke(CommandSender sender, String[] args) {
-        if (this.getPermissions().isEmpty() || this.hasPermission(sender, this.getPermissions()) && checkArgs(sender, args))
+        if (this.getPermissions().isEmpty() || this.hasPermission(sender) && checkArgs(sender, args))
             this.getInvocation().invoke(sender, args);
     }
 

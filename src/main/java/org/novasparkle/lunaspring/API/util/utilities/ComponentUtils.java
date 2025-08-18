@@ -14,20 +14,34 @@ public class ComponentUtils {
 
         String[] parts = message.split("\\*%\\*", -1);
 
-        for (int i = 0; i < parts.length; i++) {
-            String text = parts[i];
-            if (i % 2 == 0) {
-                builder.append(TextComponent.fromLegacyText(text));
+        int mode = 0;
+        String buttonText = null;
 
-            } else if (i + 1 < parts.length) {
-                String command = parts[i + 1];
-                i += 2;
-                for (BaseComponent baseComponent : TextComponent.fromLegacyText(text)) {
-                    baseComponent.setClickEvent(new ClickEvent(action, command));
-                    builder.append(baseComponent);
-                }
+        for (String part : parts) {
+            switch (mode) {
+                case 0:
+                    builder.append(TextComponent.fromLegacyText(part));
+                    mode = 1;
+                    break;
+
+                case 1:
+                    buttonText = part;
+                    mode = 2;
+                    break;
+
+                case 2:
+                    if (buttonText != null) {
+                        for (BaseComponent baseComponent : TextComponent.fromLegacyText(buttonText)) {
+                            baseComponent.setClickEvent(new ClickEvent(action, part));
+                            builder.append(baseComponent);
+                        }
+                    }
+                    buttonText = null;
+                    mode = 0;
+                    break;
             }
         }
+
         return builder.create();
     }
     public BaseComponent[] createHoverableText(String line) {
@@ -38,19 +52,31 @@ public class ComponentUtils {
 
         String[] parts = message.split("\\*%\\*", -1);
 
-        for (int i = 0; i < parts.length; i++) {
-            String text = parts[i];
-            if (i % 2 == 0) {
-                builder.append(TextComponent.fromLegacyText(text));
+        int mode = 0;
+        String buttonText = null;
 
-            } else if (i + 1 < parts.length) {
-                String textToShow = parts[i + 1];
-                i += 2;
+        for (String part : parts) {
+            switch (mode) {
+                case 0:
+                    builder.append(TextComponent.fromLegacyText(part));
+                    mode = 1;
+                    break;
 
-                for (BaseComponent baseComponent : TextComponent.fromLegacyText(text)) {
-                    baseComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(textToShow)));
-                    builder.append(baseComponent);
-                }
+                case 1:
+                    buttonText = part;
+                    mode = 2;
+                    break;
+
+                case 2:
+                    if (buttonText != null) {
+                        for (BaseComponent baseComponent : TextComponent.fromLegacyText(buttonText)) {
+                            baseComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(part)));
+                            builder.append(baseComponent);
+                        }
+                    }
+                    buttonText = null;
+                    mode = 0;
+                    break;
             }
         }
         return builder.create();
