@@ -170,15 +170,15 @@ public class IConfig {
      */
 
     @SuppressWarnings("deprecation")
-    public void sendMessage(CommandSender sender, String id, String... replacements) {
-        String path = String.format("messages.%s", id);
+    public void sendMessage(String messagesPath, CommandSender sender, String id, String... replacements) {
+        String path = String.format("%s.%s", messagesPath, id);
 
         List<String> message = Lists.newArrayList(this.config.getStringList(path));
         if (message.isEmpty()) {
-            String stringMessage = this.config.getString(String.format("messages.%s", id));
-            if (stringMessage != null && !stringMessage.isEmpty())
-                message.add(stringMessage);
+            String stringMessage = this.config.getString(path);
+            if (stringMessage != null && !stringMessage.isEmpty()) message.add(stringMessage);
         }
+
         for (String line : message) {
             line = Utils.applyReplacements(line, replacements);
 
@@ -229,5 +229,9 @@ public class IConfig {
             }
             else sender.sendMessage(newLine);
         }
+    }
+
+    public void sendMessage(CommandSender sender, String id, String... replacements) {
+        this.sendMessage("messages", sender, id, replacements);
     }
 }

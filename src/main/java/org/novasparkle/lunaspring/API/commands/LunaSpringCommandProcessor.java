@@ -75,12 +75,11 @@ public final class LunaSpringCommandProcessor implements TabExecutor {
     }
 
     public void registerSubCommand(LunaSpringSubCommand subCommand) {
-        subCommand.setAppliedCommand(this.appliedCommand);
         this.subCommands.add(subCommand);
         this.commandIdentifiers.addAll(subCommand.getCommandIdentifiers());
     }
+
     public void registerZeroArgCommand(ZeroArgCommand command) {
-        command.setAppliedCommand(this.appliedCommand);
         this.zeroCommand = command;
     }
 }

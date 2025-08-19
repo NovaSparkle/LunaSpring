@@ -18,7 +18,7 @@ public class AnnotationScanner {
     @SneakyThrows
     public <A extends Annotation> Set<ClassEntry<A>> findAnnotatedClasses(LunaPlugin plugin, Class<A> annotationClass, List<Class<?>> ignoredClasses, String... allowedPackages) {
         Set<ClassEntry<A>> annotatedClasses = Sets.newHashSet();
-        allowedPackages = Arrays.stream(allowedPackages).map(packagee -> packagee.replace("#", plugin.getClass().getPackage().getName())).toList().toArray(new String[0]);
+        allowedPackages = Arrays.stream(allowedPackages).map(p -> p.replace("#", plugin.getClass().getPackage().getName())).toList().toArray(new String[0]);
         try (JarFile jar = new JarFile(plugin.getJar())) {
             Enumeration<JarEntry> e = jar.entries();
 

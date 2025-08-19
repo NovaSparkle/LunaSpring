@@ -50,11 +50,10 @@ public class NonMenuItem implements Cloneable {
     public NonMenuItem(Material material, String displayName, List<String> lore, int amount) {
         if (material == null) material = Material.STONE;
         this.material = material;
-        this.displayName = displayName;
-        this.lore = lore;
         this.amount = Math.max(amount, 1);
         this.itemStack = new ItemStack(this.material, this.amount);
-        this.update();
+        this.displayName = ColorManager.color(displayName);
+        this.setLore(lore);
     }
 
     public NonMenuItem() {
@@ -117,16 +116,15 @@ public class NonMenuItem implements Cloneable {
         return this.setAmount(this.getAmount() + add);
     }
 
-    public NonMenuItem setDisplayName(String displayName) {
-        this.displayName = ColorManager.color(displayName);
+    public NonMenuItem setDisplayName(String displayName, String... replacements) {
+        this.displayName = ColorManager.color(Utils.applyReplacements(displayName, replacements));
         this.update();
         return this;
     }
 
-    public NonMenuItem setLore(List<String> lore) {
-        lore.replaceAll(ColorManager::color);
+    public NonMenuItem setLore(List<String> lore, String... replacements) {
         this.lore = lore;
-        this.update();
+        this.replaceLore(l -> ColorManager.color(Utils.applyReplacements(l, replacements)));
         return this;
     }
 
@@ -179,10 +177,10 @@ public class NonMenuItem implements Cloneable {
             throw new NoItemMetaException(this.itemStack);
 
         if (this.displayName != null && !this.displayName.isEmpty())
-            meta.setDisplayName(ColorManager.color(this.displayName));
+            meta.setDisplayName(this.displayName);
 
         if (this.lore != null && !this.lore.isEmpty())
-            meta.setLore(this.lore.stream().map(ColorManager::color).collect(Collectors.toList()));
+            meta.setLore(new ArrayList<>(this.lore));
 
 
         this.itemStack.setItemMeta(meta);

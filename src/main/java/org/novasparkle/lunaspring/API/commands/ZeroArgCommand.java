@@ -1,26 +1,37 @@
 package org.novasparkle.lunaspring.API.commands;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
+import org.novasparkle.lunaspring.LunaPlugin;
 import org.novasparkle.lunaspring.self.LSConfig;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 @Getter
 public class ZeroArgCommand implements Invocation {
+    private final LunaPlugin plugin;
+    private final String appliedCommand;
     private final List<ZeroArgCommand.AccessFlag> flags;
     private final List<String> permissions;
     private final Invocation invocation;
-    @Setter
-    private String appliedCommand;
 
-    public ZeroArgCommand(AccessFlag[] flags, String[] permissions, Invocation invocation) {
+    @Builder(buildMethodName = "zerobuild", builderMethodName = "zerobuilder")
+    public ZeroArgCommand(LunaPlugin lunaPlugin, String appliedCommand, AccessFlag[] flags, String[] permissions, Invocation invocation) {
+        this.plugin = lunaPlugin;
+        this.appliedCommand = appliedCommand;
         this.flags = List.of(flags);
-        this.permissions = List.of(permissions);
+        this.permissions = Arrays.stream(permissions)
+                .map(p -> p.replace("@", plugin.getName().toLowerCase()).replace("#", appliedCommand))
+                .toList();
         this.invocation = invocation;
     }
 
@@ -36,22 +47,16 @@ public class ZeroArgCommand implements Invocation {
         return true;
     }
 
-    protected boolean hasPermission(CommandSender sender, String permission) {
-        if (!sender.hasPermission(permission.replace("#", appliedCommand)) && !sender.hasPermission("lunaspring.*")) {
-            sender.sendMessage(LSConfig.getMessage("noPermission"));
-            return false;
-        }
-        return true;
-    }
     protected boolean hasPermission(CommandSender sender) {
-        if (permissions.stream().map(perm -> perm.replace("#", appliedCommand)).noneMatch(sender::hasPermission) && !sender.hasPermission("lunaspring.*")) {
+        if (permissions.stream().noneMatch(sender::hasPermission) && !sender.hasPermission("lunaspring.*")) {
             sender.sendMessage(LSConfig.getMessage("noPermission"));
             return false;
         }
         return true;
     }
+
     protected boolean hasPermissionNoMessage(CommandSender sender) {
-        return permissions.isEmpty() || permissions.stream().map(perm -> perm.replace("#", appliedCommand)).anyMatch(sender::hasPermission) || sender.hasPermission("lunaspring.*");
+        return permissions.isEmpty() || permissions.stream().anyMatch(sender::hasPermission) || sender.hasPermission("lunaspring.*");
     }
 
     public enum AccessFlag {

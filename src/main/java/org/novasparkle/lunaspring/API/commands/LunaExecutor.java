@@ -24,13 +24,11 @@ public final class LunaExecutor {
         for (String command : commands) {
             LunaSpringCommandProcessor processor = new LunaSpringCommandProcessor(command);
 
-            ClassEntry<ZeroArgSubCommand> zeroArgSubCommandClassEntry = Utils.find(zeroArgSubCommandsList, zac -> zac.getAnnotation().value().equals(command)).orElse(null);
-            if (zeroArgSubCommandClassEntry != null) {
-                processZeroArgsCommand(zeroArgSubCommandClassEntry, processor);
-            }
+            Utils.find(zeroArgSubCommandsList, zac -> zac.getAnnotation().value().equals(command))
+                    .ifPresent(zeroArgSubCommandClassEntry -> processZeroArgsCommand(plugin, zeroArgSubCommandClassEntry, processor));
 
             for (ClassEntry<SubCommand> classEntry : classList) {
-                processSubCommand(classEntry, command, processor);
+                processSubCommand(plugin, classEntry, command, processor);
             }
 
             if (!processor.isEmpty())
@@ -39,7 +37,7 @@ public final class LunaExecutor {
     }
 
     @SneakyThrows
-    public void processZeroArgsCommand(ClassEntry<ZeroArgSubCommand> entry, LunaSpringCommandProcessor processor) {
+    public void processZeroArgsCommand(LunaPlugin lunaPlugin, ClassEntry<ZeroArgSubCommand> entry, LunaSpringCommandProcessor processor) {
         Class<?> clazz = entry.getClazz();
         if (!Invocation.class.isAssignableFrom(clazz)) throw new InvalidImplementationException(clazz, Invocation.class);
 
@@ -62,12 +60,19 @@ public final class LunaExecutor {
             }
         }
 
-
-        processor.registerZeroArgCommand(new ZeroArgCommand(flags, permissions, (Invocation) clazz.getDeclaredConstructor().newInstance()));
+        Invocation invocation = (Invocation) clazz.getDeclaredConstructor().newInstance();
+        ZeroArgCommand zeroArgCommand = ZeroArgCommand.zerobuilder()
+                .lunaPlugin(lunaPlugin)
+                .appliedCommand(processor.appliedCommand())
+                .flags(flags)
+                .invocation(invocation)
+                .permissions(permissions)
+                .zerobuild();
+        processor.registerZeroArgCommand(zeroArgCommand);
     }
 
     @SneakyThrows
-    public void processSubCommand(ClassEntry<SubCommand> classEntry, String command, LunaSpringCommandProcessor processor) {
+    public void processSubCommand(LunaPlugin lunaPlugin, ClassEntry<SubCommand> classEntry, String command, LunaSpringCommandProcessor processor) {
         SubCommand subCommandAnnotation = classEntry.getAnnotation();
 
         if (subCommandAnnotation.appliedCommand().equals(command)) {
@@ -83,8 +88,6 @@ public final class LunaExecutor {
             int maxArgs = Integer.MAX_VALUE;
             int minArgs = Integer.MIN_VALUE;
 
-
-
             if (checkAnnotation != null) {
                 permissions = checkAnnotation.permissions();
                 flags = checkAnnotation.flags();
@@ -98,11 +101,13 @@ public final class LunaExecutor {
                     flags = flagsAnnotation.value();
                 }
             }
+
             Args argsAnnotation = (Args) Utils.find(classEntry.getAdditionalAnnotations(), a -> a.annotationType().equals(Args.class)).orElse(null);
             if (argsAnnotation != null) {
                 maxArgs = argsAnnotation.max();
                 minArgs = argsAnnotation.min();
             }
+
             TabCompleteIgnore tabCompleteIgnore = (TabCompleteIgnore) Utils.find(classEntry.getAdditionalAnnotations(), a -> a.annotationType().equals(TabCompleteIgnore.class)).orElse(null);
             if (tabCompleteIgnore != null) {
                 if (tabCompleteIgnore.value().length == 0) {
@@ -112,14 +117,15 @@ public final class LunaExecutor {
             }
 
             Invocation commandInstance = (Invocation) clazz.getDeclaredConstructor().newInstance();
-
             CommandReq commandReq = new CommandReq(permissions, flags, List.of(ignoreTabCompleting), maxArgs, minArgs);
 
-            LunaSpringSubCommand subCommand = new LunaSpringSubCommand(
-                    commandReq,
-                    subCommandAnnotation.commandIdentifiers(),
-                    commandInstance);
-
+            LunaSpringSubCommand subCommand = LunaSpringSubCommand.builder()
+                    .lunaPlugin(lunaPlugin)
+                    .appliedCommand(command)
+                    .commandReq(commandReq)
+                    .commandIdentifiers(subCommandAnnotation.commandIdentifiers())
+                    .invocation(commandInstance)
+                    .build();
             if (LunaCompleter.class.isAssignableFrom(clazz)) {
                 LunaCompleter lunaCompleter = ((LunaCompleter) commandInstance);
                 subCommand.setTabCompleter(lunaCompleter);

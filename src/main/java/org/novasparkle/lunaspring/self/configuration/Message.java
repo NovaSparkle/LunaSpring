@@ -8,7 +8,7 @@ import org.novasparkle.lunaspring.self.LSConfig;
 public enum Message {
     TOO_MANY_ARGS("tooManyArgs"),
     TOO_LOW_ARGS("tooLowArgs"),
-    N0_PERMISSION("noPermission"),
+    NO_PERMISSION("noPermission"),
     INVALID_SENDER("invalidSender"),
     WRONG_ARGUMENTS("wrongArguments"),
     UNDEFINED_COMMAND("undefinedCommand"),

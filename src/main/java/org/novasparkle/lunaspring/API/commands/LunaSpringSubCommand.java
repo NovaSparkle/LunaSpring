@@ -1,8 +1,11 @@
 package org.novasparkle.lunaspring.API.commands;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 import org.bukkit.command.CommandSender;
+import org.novasparkle.lunaspring.LunaPlugin;
 import org.novasparkle.lunaspring.self.LSConfig;
 
 import java.util.List;
@@ -15,13 +18,13 @@ public class LunaSpringSubCommand extends ZeroArgCommand implements LunaComplete
     @Setter
     private LunaCompleter tabCompleter;
 
-    public LunaSpringSubCommand(CommandReq commandReq, String[] commandIdentifiers, Invocation invocation) {
-        super(commandReq.accessFlags(), commandReq.permissions(), invocation);
+    @Builder
+    public LunaSpringSubCommand(LunaPlugin lunaPlugin, String appliedCommand, CommandReq commandReq, String[] commandIdentifiers, Invocation invocation) {
+        super(lunaPlugin, appliedCommand, commandReq.accessFlags(), commandReq.permissions(), invocation);
 
         this.commandRequirements = commandReq;
         this.commandIdentifiers = List.of(commandIdentifiers);
     }
-
 
     public void invoke(CommandSender sender, String[] args) {
         if (this.getPermissions().isEmpty() || this.hasPermission(sender) && checkArgs(sender, args))
