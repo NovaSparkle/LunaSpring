@@ -31,8 +31,9 @@ public final class LunaExecutor {
                 processSubCommand(plugin, classEntry, command, processor);
             }
 
-            if (!processor.isEmpty())
+            if (!processor.isEmpty()) {
                 plugin.registerCommandProcessor(processor);
+            }
         }
     }
 

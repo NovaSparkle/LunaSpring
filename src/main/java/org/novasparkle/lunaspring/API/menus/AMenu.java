@@ -32,7 +32,7 @@ public abstract class AMenu implements ItemListMenu {
     private CooldownPrevent<Integer> cooldownPrevent = new CooldownPrevent<>();
     private Player player;
 
-    private final List<Item> itemList = new ArrayList<>();
+    private List<Item> itemList = new ArrayList<>();
     public AMenu(@NotNull Player player, String title, @Range(from = 9L, to=54) byte size) {
         this.player = player;
         this.title = title;
@@ -256,8 +256,7 @@ public abstract class AMenu implements ItemListMenu {
         if (this.decoration != null) aMenu.decoration = this.decoration.clone();
         aMenu.inventory = this.inventory;
         if (this.cooldownPrevent != null) aMenu.cooldownPrevent = this.cooldownPrevent.clone();
-        List<Item> items = new ArrayList<>();
-
+        aMenu.itemList = new ArrayList<>();
         return aMenu;
     }
 }
