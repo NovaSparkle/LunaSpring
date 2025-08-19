@@ -1,6 +1,6 @@
 package org.novasparkle.lunaspring.API.commands.annotations;
 
-import org.novasparkle.lunaspring.API.commands.ZeroArgCommand;
+import org.novasparkle.lunaspring.API.commands.processor.ZeroArgCommand;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

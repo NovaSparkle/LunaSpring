@@ -1,4 +1,4 @@
-package org.novasparkle.lunaspring.API.commands;
+package org.novasparkle.lunaspring.API.commands.processor;
 
 import org.jetbrains.annotations.NotNull;
 

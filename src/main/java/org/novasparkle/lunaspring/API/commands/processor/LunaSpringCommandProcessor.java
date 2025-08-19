@@ -1,4 +1,4 @@
-package org.novasparkle.lunaspring.API.commands;
+package org.novasparkle.lunaspring.API.commands.processor;
 
 import lombok.Getter;
 import lombok.SneakyThrows;
@@ -8,6 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.novasparkle.lunaspring.API.commands.Invocation;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 import org.novasparkle.lunaspring.self.LSConfig;
 

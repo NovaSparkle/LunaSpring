@@ -8,7 +8,7 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.novasparkle.lunaspring.API.commands.LunaSpringCommandProcessor;
+import org.novasparkle.lunaspring.API.commands.processor.LunaSpringCommandProcessor;
 import org.novasparkle.lunaspring.API.commands.annotations.LunaCommand;
 import org.novasparkle.lunaspring.API.events.LunaHandler;
 import org.novasparkle.lunaspring.API.util.exceptions.InvalidImplementationException;
@@ -226,7 +226,23 @@ public abstract class LunaPlugin extends JavaPlugin {
     @OverridingMethodsMustInvokeSuper
     public void onDisable() {
         Bukkit.getScheduler().cancelTasks(this);
-        if (this.equals(LunaSpring.getInstance())) return;
+        if (this.equals(LunaSpring.getInstance())) {
+            this.startMessage(Arrays.asList(
+                    "",
+                    "       [color]╭╮╱╱╱╱╱╱╱╱╱╱╱╭━━━╮ v[LSVersion]",
+                    "       [color]┃┃╱╱╭╮╭┳━╮╭━━┫╰━━┳━━┳━┳┳━╮╭━━╮",
+                    "       [color]┃┃╱╭┫┃┃┃╭╮┫╭╮┣━━╮┃╭╮┃╭╋┫╭╮┫╭╮┃",
+                    "       [color]┃╰━╯┃╰╯┃┃┃┃╭╮┃╰━╯┃╰╯┃┃┃┃┃┃┃╰╯┃",
+                    "       [color]╰━━━┻━━┻╯╰┻╯╰┻━━━┫╭━┻╯╰┻╯╰┻━╮┃",
+                    "       [color]╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱┃┃╱╱╱╱╱╱╱╭━╯┃",
+                    "       [color]                 ╰╯       ╰━━╯",
+                    "       [color]| &fAuthor: [color]NovaSparkle",
+                    "       [color]| &fDev-Helper: [color]ProGiple",
+                    "       [color]| Plugin disabling... Goodbye!",
+                    ""
+            ));
+            return;
+        }
 
         this.startMessage(Arrays.asList(
                 "",

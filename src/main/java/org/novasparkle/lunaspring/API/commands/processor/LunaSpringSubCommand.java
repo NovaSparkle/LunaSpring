@@ -1,10 +1,11 @@
-package org.novasparkle.lunaspring.API.commands;
+package org.novasparkle.lunaspring.API.commands.processor;
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.experimental.SuperBuilder;
 import org.bukkit.command.CommandSender;
+import org.novasparkle.lunaspring.API.commands.Invocation;
+import org.novasparkle.lunaspring.API.commands.LunaCompleter;
 import org.novasparkle.lunaspring.LunaPlugin;
 import org.novasparkle.lunaspring.self.LSConfig;
 

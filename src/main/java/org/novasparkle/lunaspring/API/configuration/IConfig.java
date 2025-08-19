@@ -191,6 +191,8 @@ public class IConfig {
                     .replace("[TITLE] ", "")
                     .replace("[SUGGESTCOMMAND] ", "")
                     .replace("[RUNCOMMAND] ", "")
+                    .replace("[URL] ", "")
+                    .replace("[CLIPBOARDCOPY] ", "")
                     .replace("[SOUND] ", "")
                     .replace("[HOVER]", "");
 
@@ -203,9 +205,15 @@ public class IConfig {
             } else if (line.startsWith("[HOVER]")) {
                 sender.spigot().sendMessage(ComponentUtils.createHoverableText(newLine));
                 continue;
+            } else if (line.startsWith("[URL]")) {
+                sender.spigot().sendMessage(ComponentUtils.createClickableText(newLine, ClickEvent.Action.OPEN_URL));
+                continue;
+            } else if (line.startsWith("[CLIPBOARDCOPY]")) {
+                sender.spigot().sendMessage(ComponentUtils.createClickableText(newLine, ClickEvent.Action.COPY_TO_CLIPBOARD));
+                continue;
             }
-            newLine = ColorManager.color(newLine);
 
+            newLine = ColorManager.color(newLine);
             if (line.startsWith("[ACTION_BAR]")) {
                 if (player == null) continue;
                 player.sendActionBar(newLine);

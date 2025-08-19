@@ -1,20 +1,17 @@
-package org.novasparkle.lunaspring.API.commands;
+package org.novasparkle.lunaspring.API.commands.processor;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
+import org.novasparkle.lunaspring.API.commands.Invocation;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 import org.novasparkle.lunaspring.LunaPlugin;
 import org.novasparkle.lunaspring.self.LSConfig;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Function;
-import java.util.function.UnaryOperator;
 
 @Getter
 public class ZeroArgCommand implements Invocation {
