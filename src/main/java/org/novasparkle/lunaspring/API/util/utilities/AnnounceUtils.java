@@ -60,8 +60,13 @@ public class AnnounceUtils {
         title(player, title, subtitle, 15, 20, 15);
     }
 
-    public void title(Player player, String[] title, int inTicks, int easeTicks, int outTicks) {
-        if (title.length >= 1) title(player, title[0], title.length < 2 ? "" : title[1], inTicks, easeTicks, outTicks);
+    public void title(Player player, String[] split, int inTicks, int easeTicks, int outTicks) {
+        String title = split.length >= 1 ? split[0] : "";
+        String subtitle = split.length >= 2 ? split[1] : "";
+        inTicks = split.length >= 3 ? LunaMath.toInt(split[2], inTicks) : inTicks;
+        easeTicks = split.length >= 4 ? LunaMath.toInt(split[3], easeTicks) : easeTicks;
+        outTicks = split.length >= 5 ? LunaMath.toInt(split[4], outTicks) : outTicks;
+        title(player, title, subtitle, inTicks, easeTicks, outTicks);
     }
 
     public void title(Player player, String[] title) {
