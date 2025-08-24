@@ -15,6 +15,7 @@ import org.novasparkle.lunaspring.API.util.utilities.Utils;
 import org.novasparkle.lunaspring.self.PaidPlugin;
 import org.novasparkle.lunaspring.self.lunaengine.LunaEngine;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -111,11 +112,7 @@ public final class LunaSpring extends LunaPlugin {
 
     @Override
     public void onDisable() {
-        LunaTask.getTaskIds().forEach(i -> {
-            BukkitScheduler scheduler = Bukkit.getScheduler();
-            if (scheduler.isQueued(i) || scheduler.isCurrentlyRunning(i))
-                scheduler.cancelTask(i);
-        });
+        new ArrayList<>(LunaTask.getTasks()).forEach(LunaTask::cancel);
         super.onDisable();
     }
 }

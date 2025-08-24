@@ -12,7 +12,7 @@ import java.util.List;
 @Getter @RequiredArgsConstructor
 public abstract class LunaTask extends BukkitRunnable {
     @Getter
-    private static final List<Integer> taskIds = new ArrayList<>();
+    private static final List<LunaTask> tasks = new ArrayList<>();
 
     private final long ticks;
     private boolean isActive;
@@ -22,7 +22,7 @@ public abstract class LunaTask extends BukkitRunnable {
     @Override
     public void run() {
         if (this.isActive) return;
-        taskIds.add(this.getTaskId());
+        tasks.add(this);
 
         this.isActive = true;
         this.start();
@@ -33,7 +33,7 @@ public abstract class LunaTask extends BukkitRunnable {
         this.isActive = false;
 
         int id = this.getTaskId();
-        taskIds.remove(id);
+        tasks.remove(this);
 
         BukkitScheduler scheduler = Bukkit.getScheduler();
         if (scheduler.isQueued(id) || scheduler.isCurrentlyRunning(id))
