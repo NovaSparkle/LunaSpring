@@ -21,7 +21,7 @@ public class SectionLoot extends InventoryLoot<ItemStack, ConfigurationSection> 
     }
 
     @Override
-    public void generate(ConfigurationSection section) {
+    protected void generate(ConfigurationSection section) {
         Set<String> keys = section.getKeys(false);
 
         String calculated = RarityManager.calculate(keys, k -> section.getDouble(k + ".chance"));
