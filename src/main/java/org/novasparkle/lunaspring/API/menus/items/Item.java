@@ -1,8 +1,10 @@
 package org.novasparkle.lunaspring.API.menus.items;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -25,6 +27,7 @@ public class Item extends NonMenuItem {
     private ItemListMenu menu;
     @Setter private byte slot = 0;
 
+    @Builder
     public Item(Material material, String displayName, List<String> lore, int amount, @Range(from = 0, to = 53) byte slot) {
         super(material, displayName, lore, amount);
         this.slot = slot;

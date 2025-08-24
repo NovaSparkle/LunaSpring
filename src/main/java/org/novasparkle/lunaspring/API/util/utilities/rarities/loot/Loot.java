@@ -5,6 +5,7 @@ import lombok.Getter;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.novasparkle.lunaspring.API.menus.items.NonMenuItem;
 
 import java.util.Collection;
@@ -13,21 +14,26 @@ import java.util.List;
 @Getter
 public abstract class Loot<T, E> {
     private final List<T> list = Lists.newArrayList();
+    private final E object;
     private final int maximumItems;
-    public Loot(E object, Collection<T> collection, int maximumItems) {
-        this.list.addAll(collection);
+    public Loot(E object, @Nullable Collection<T> collection, int maximumItems) {
+        if (collection != null) this.list.addAll(collection);
+        this.object = object;
         this.maximumItems = maximumItems;
+        this.generate(object);
     }
 
     public Loot(E object, int maximumItems) {
+        this.object = object;
         this.maximumItems = maximumItems;
+        this.generate(object);
     }
 
-    public void add(T t) {
+    public void add(@NotNull T t) {
         this.list.add(t);
     }
 
-    public void remove(T t) {
+    public void remove(@NotNull T t) {
         this.list.remove(t);
     }
 

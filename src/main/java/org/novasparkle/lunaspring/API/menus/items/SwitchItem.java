@@ -1,5 +1,6 @@
 package org.novasparkle.lunaspring.API.menus.items;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Material;
@@ -16,6 +17,8 @@ import java.util.function.Function;
 @Getter @SuppressWarnings("unused")
 public class SwitchItem extends Item {
     private Function<Player, IMenu> menuFunction;
+
+    @Builder(builderMethodName = "switchbuilder", buildMethodName = "switchbuild")
     public SwitchItem(Material material,
                       String displayName,
                       List<String> lore,

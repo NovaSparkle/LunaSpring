@@ -2,6 +2,7 @@ package org.novasparkle.lunaspring.API.menus.items;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -49,6 +50,7 @@ public class NonMenuItem implements Cloneable {
     private Map<Enchantment, Integer> enchantments = Maps.newHashMap();
     private List<ItemFlag> itemFlags = Lists.newArrayList();
 
+    @Builder(builderMethodName = "superbuilder", buildMethodName = "superbuild")
     public NonMenuItem(Material material, String displayName, List<String> lore, int amount) {
         if (material == null) material = Material.STONE;
         this.material = material;
@@ -306,6 +308,7 @@ public class NonMenuItem implements Cloneable {
         // attributes:
         //   GENERIC_ARMOR:
         //     operation: ADD_NUMBER
+        //     slot: CHESTPLATE
         //     value: 0.4
 
         for (String key : aSection.getKeys(false)) {
@@ -315,7 +318,8 @@ public class NonMenuItem implements Cloneable {
             AttributeModifier.Operation operation = Utils.getEnumValue(AttributeModifier.Operation.class, stringOperation, AttributeModifier.Operation.ADD_NUMBER);
 
             double value = aSection.getDouble(key + ".value");
-            this.addAttribute(attribute, new AttributeModifier(UUID.randomUUID(), Utils.getRKey((byte) 12), value, operation));
+            EquipmentSlot slot = Utils.getEnumValue(EquipmentSlot.class, aSection.getString(key + ".slot"));
+            this.addAttribute(attribute, new AttributeModifier(UUID.randomUUID(), Utils.getRKey((byte) 12), value, operation, slot));
         }
         return this;
     }
