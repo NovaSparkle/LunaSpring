@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import me.clip.placeholderapi.PlaceholderAPI;
+import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -19,12 +20,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 import org.novasparkle.lunaspring.API.util.exceptions.NoItemMetaException;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
 import org.novasparkle.lunaspring.API.util.service.managers.NBTManager;
+import org.novasparkle.lunaspring.API.util.utilities.LunaMath;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 
 import java.util.*;
@@ -88,6 +90,15 @@ public class NonMenuItem implements Cloneable {
 
         // Head
         this.applyBaseHead(section);
+
+        // ATTRIBUTES
+        this.applyAttributes(section);
+
+        // META COLOR
+        this.setMetaColor(section.getString("color"));
+
+        // DURABILITY
+        this.setDurability(section);
     }
 
     // SETTERS
@@ -165,6 +176,9 @@ public class NonMenuItem implements Cloneable {
         this.applyBaseHead(itemSection);
         this.applyEnchantments(itemSection);
         this.applyItemFlags(itemSection);
+        this.applyAttributes(itemSection);
+        this.setMetaColor(itemSection.getString("color"));
+        this.setDurability(itemSection);
 
         this.setAll(newMaterial, amount, displayName, lore, itemSection.getBoolean("enchanted"));
         return this;
@@ -285,6 +299,84 @@ public class NonMenuItem implements Cloneable {
         return this;
     }
 
+    public NonMenuItem applyAttributes(ConfigurationSection section) {
+        ConfigurationSection aSection = section.getConfigurationSection("attributes");
+        if (aSection == null) return this;
+
+        // attributes:
+        //   GENERIC_ARMOR:
+        //     operation: ADD_NUMBER
+        //     value: 0.4
+
+        for (String key : aSection.getKeys(false)) {
+            Attribute attribute = Attribute.valueOf(key);
+
+            String stringOperation = aSection.getString(key + ".operation");
+            AttributeModifier.Operation operation = Utils.getEnumValue(AttributeModifier.Operation.class, stringOperation, AttributeModifier.Operation.ADD_NUMBER);
+
+            double value = aSection.getDouble(key + ".value");
+            this.addAttribute(attribute, new AttributeModifier(UUID.randomUUID(), Utils.getRKey((byte) 12), value, operation));
+        }
+        return this;
+    }
+
+    public NonMenuItem setDurability(int amount, boolean isSpentMode) {
+        this.getItemStack().setDurability((short) (isSpentMode ? amount : this.material.getMaxDurability() - amount));
+        return this;
+    }
+
+    public NonMenuItem setDurability(ConfigurationSection section) {
+        ConfigurationSection durabilitySection = section.getConfigurationSection("durability");
+        if (durabilitySection == null) {
+            int durability = section.getInt("durability");
+            return this.setDurability(durability, false);
+        }
+
+        int durability = durabilitySection.getInt("amount");
+        boolean isSpentMode = durabilitySection.getBoolean("spent");
+        return this.setDurability(durability, isSpentMode);
+    }
+
+    public int getDurability() {
+        return this.material.getMaxDurability() - this.getItemStack().getDurability();
+    }
+
+    public NonMenuItem setMetaColor(Color color) {
+        ItemMeta meta = this.itemStack.getItemMeta();
+        if (meta instanceof LeatherArmorMeta colorMeta) {
+            colorMeta.setColor(color);
+            return this;
+        }
+
+        if (meta instanceof PotionMeta colorMeta) {
+            colorMeta.setColor(color);
+            return this;
+        }
+
+        if (meta instanceof MapMeta colorMeta) {
+            colorMeta.setColor(color);
+            return this;
+        }
+
+        return this;
+    }
+
+    public NonMenuItem setMetaColor(int red, int green, int blue) {
+        return this.setMetaColor(Color.fromRGB(red, green, blue));
+    }
+
+    public NonMenuItem setMetaColor(int rgb) {
+        return this.setMetaColor(Color.fromRGB(rgb));
+    }
+
+    // red;green;blue
+    public NonMenuItem setMetaColor(String rgbDelimiter) {
+        if (rgbDelimiter == null || rgbDelimiter.isEmpty()) return this;
+        String[] split = rgbDelimiter.split(";");
+        if (split.length < 3) return this;
+        else return this.setMetaColor(LunaMath.toInt(split[0]), LunaMath.toInt(split[1]), LunaMath.toInt(split[2]));
+    }
+
     public NonMenuItem addAttribute(@NotNull Attribute attribute, @NotNull AttributeModifier modifier) {
         ItemMeta meta = this.itemStack.getItemMeta();
         if (meta == null) throw new NoItemMetaException(this.itemStack);
@@ -392,17 +484,18 @@ public class NonMenuItem implements Cloneable {
         NonMenuItem nonMenuItem = new NonMenuItem(stack.getType(), stack.getAmount());
         ItemMeta meta = nonMenuItem.itemStack.getItemMeta();
         if (meta != null) {
-
             nonMenuItem.displayName = meta.getDisplayName();
-            List<String> lore = meta.getLore();
-            if (lore != null && !lore.isEmpty())
-                nonMenuItem.lore = lore;
-            if (meta.hasEnchants()) nonMenuItem.glowing = true;
-        }
-        nonMenuItem.itemStack = stack;
 
-        nonMenuItem.update();
-        return nonMenuItem;
+            List<String> lore = meta.getLore();
+            if (lore != null && !lore.isEmpty()) nonMenuItem.lore = lore;
+
+            if (meta.hasEnchants()) nonMenuItem.glowing = true;
+
+            nonMenuItem.itemFlags = new ArrayList<>(meta.getItemFlags());
+        }
+
+        nonMenuItem.itemStack = stack;
+        return nonMenuItem.update();
     }
 
     @Override
