@@ -8,9 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.novasparkle.lunaspring.API.util.utilities.LunaMath;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.ToDoubleFunction;
 
@@ -56,6 +54,6 @@ public class RarityManager {
     }
 
     public @NotNull ItemStack calculateItemStack(ConfigurationSection section, StackRandomizer... randomizers) {
-        return calculateItemStack(section, List.of(randomizers));
+        return calculateItemStack(section, Arrays.asList(randomizers));
     }
 }

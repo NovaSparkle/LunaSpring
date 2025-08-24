@@ -34,11 +34,10 @@ public enum StackRandomizer {
         }
     }),
     ADVANCED_DURABILITY(null, i -> {
-        if (i.getType().getMaxDurability() > 1 && i.getDurability() > 0)
-            i.setDurability((short) LunaMath.getRandomInt(1, i.getType().getMaxDurability() - i.getDurability()));
+        if (i.getType().getMaxDurability() > 0) i.setDurability((short) LunaMath.getRandomInt(0, i.getType().getMaxDurability() - i.getDurability()));
     }),
     DURABILITY(ADVANCED_DURABILITY, i -> {
-        if (i.getType().getMaxDurability() > 1) i.setDurability((short) LunaMath.getRandomInt(1, i.getType().getMaxDurability()));
+        if (i.getType().getMaxDurability() > 0) i.setDurability((short) LunaMath.getRandomInt(0, i.getType().getMaxDurability()));
     });
 
     private final StackRandomizer priorityRandomizer;

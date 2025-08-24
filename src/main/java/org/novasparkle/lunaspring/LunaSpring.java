@@ -3,12 +3,14 @@ package org.novasparkle.lunaspring;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.bukkit.Bukkit;
+import org.bukkit.scheduler.BukkitScheduler;
 import org.novasparkle.lunaspring.API.commands.LunaExecutor;
 import org.novasparkle.lunaspring.API.events.MenuHandler;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
 import org.novasparkle.lunaspring.API.util.service.managers.VaultManager;
 import org.novasparkle.lunaspring.API.util.utilities.Color;
 import org.novasparkle.lunaspring.API.util.utilities.Localization;
+import org.novasparkle.lunaspring.API.util.utilities.LunaTask;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 import org.novasparkle.lunaspring.self.PaidPlugin;
 import org.novasparkle.lunaspring.self.lunaengine.LunaEngine;
@@ -105,6 +107,16 @@ public final class LunaSpring extends LunaPlugin {
 
     public LunaPlugin getLunaPlugin(String name) {
         return Utils.find(this.hookedPlugins, pl -> pl.getName().equals(name)).orElse(null);
+    }
+
+    @Override
+    public void onDisable() {
+        LunaTask.getTaskIds().forEach(i -> {
+            BukkitScheduler scheduler = Bukkit.getScheduler();
+            if (scheduler.isQueued(i) || scheduler.isCurrentlyRunning(i))
+                scheduler.cancelTask(i);
+        });
+        super.onDisable();
     }
 }
 
