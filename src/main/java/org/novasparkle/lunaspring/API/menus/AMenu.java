@@ -22,6 +22,7 @@ import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 @Getter
 @SuppressWarnings({"deprecation", "unused"})
@@ -29,7 +30,7 @@ public abstract class AMenu implements ItemListMenu {
     private Inventory inventory;
     private String title;
     @Setter private Decoration decoration;
-    private CooldownPrevent<Integer> cooldownPrevent = new CooldownPrevent<>();
+    @Setter private CooldownPrevent<Integer> cooldownPrevent = new CooldownPrevent<>();
     private Player player;
 
     private List<Item> itemList = new ArrayList<>();
@@ -60,13 +61,21 @@ public abstract class AMenu implements ItemListMenu {
         this.player = player;
     }
 
+    public int getSize() {
+        return this.inventory.getSize();
+    }
+
+    public void setClickCooldown(long time, TimeUnit timeUnit) {
+        this.cooldownPrevent = new CooldownPrevent<>(time, timeUnit);
+    }
+
+    public void setClickCooldown(int timeMillis) {
+        this.cooldownPrevent = new CooldownPrevent<>(timeMillis);
+    }
+
     @Override
     public boolean isCancelled(@Nullable Cancellable event, int slot) {
         return this.cooldownPrevent.isCancelled(event, slot);
-    }
-
-    public void setClickCooldown(int millis) {
-        this.cooldownPrevent.setCooldownMS(millis);
     }
 
     public void initialize(ConfigurationSection section, boolean decorate) {

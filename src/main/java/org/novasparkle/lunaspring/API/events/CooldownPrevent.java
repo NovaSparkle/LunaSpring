@@ -1,13 +1,16 @@
 package org.novasparkle.lunaspring.API.events;
 
 import com.google.common.collect.Maps;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import org.bukkit.event.Cancellable;
+import org.novasparkle.lunaspring.API.util.service.realized.Cache;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -16,15 +19,27 @@ import java.util.Map;
  */
 @Getter
 public class CooldownPrevent<T> implements Cloneable {
-    private Map<T, Long> cooldownMap = Maps.newHashMap();
-    @Setter private int cooldownMS;
+    private Cache<T, Long> cache;
 
     public CooldownPrevent() {
         this(0);
     }
 
     public CooldownPrevent(int cooldownMS) {
-        this.cooldownMS = cooldownMS;
+        this(cooldownMS, TimeUnit.MILLISECONDS);
+    }
+
+    public CooldownPrevent(long cacheTTL, TimeUnit cacheUnit) {
+        this.cache = new Cache<>(cacheTTL, cacheUnit);
+    }
+
+    @Builder
+    public CooldownPrevent(long cacheTTL, TimeUnit cacheUnit, long maximumSize) {
+        this.cache = new Cache<>(cacheTTL, cacheUnit, maximumSize);
+    }
+
+    public CooldownPrevent(Cache<T, Long> cache) {
+        this.cache = cache;
     }
 
     /**
@@ -35,7 +50,7 @@ public class CooldownPrevent<T> implements Cloneable {
      * @param object объект для проверки на задержку.
      */
     public boolean isCancelled(Cancellable event, T object) {
-        if (this.cooldownMS <= 0) return false;
+        if (this.cache.getTtl() <= 0) return false;
 
         if (this.contains(object)) {
             if (event != null) event.setCancelled(true);
@@ -47,11 +62,11 @@ public class CooldownPrevent<T> implements Cloneable {
     }
 
     public boolean contains(T object) {
-        return this.cooldownMap.containsKey(object) && this.cooldownMap.get(object) >= System.currentTimeMillis();
+        return this.cache.getIfPresent(object) != null;
     }
 
     public void put(T object) {
-        this.cooldownMap.put(object, System.currentTimeMillis() + this.cooldownMS);
+        this.cache.put(object, System.currentTimeMillis());
     }
 
     @Override
@@ -59,7 +74,7 @@ public class CooldownPrevent<T> implements Cloneable {
     @SneakyThrows
     public CooldownPrevent<T> clone() {
         CooldownPrevent<T> cooldownPrevent = (CooldownPrevent<T>) super.clone();
-        cooldownPrevent.cooldownMap = new HashMap<>(this.cooldownMap);
+        cooldownPrevent.cache = this.cache.duplicate();
         return cooldownPrevent;
     }
 }
