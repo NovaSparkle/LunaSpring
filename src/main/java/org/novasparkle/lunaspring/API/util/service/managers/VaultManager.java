@@ -2,9 +2,8 @@ package org.novasparkle.lunaspring.API.util.service.managers;
 
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
-import net.milkbowl.vault.economy.Economy;
 import org.bukkit.OfflinePlayer;
-import org.novasparkle.lunaspring.API.util.service.VaultService;
+import org.novasparkle.lunaspring.API.util.service.realized.VaultService;
 
 @UtilityClass
 public class VaultManager {
@@ -29,5 +28,9 @@ public class VaultManager {
 
     public boolean hasEnoughMoney(OfflinePlayer player, double amount) {
         return vaultService.hasEnoughMoney(player, amount);
+    }
+
+    public boolean isEnabled() {
+        return vaultService.mayUseService();
     }
 }

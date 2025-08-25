@@ -186,7 +186,7 @@ public class NonMenuItem implements Cloneable {
         return this;
     }
 
-    public NonMenuItem update() {
+    public NonMenuItem update() throws NoItemMetaException {
         this.itemStack.setType(this.material);
         ItemMeta meta = this.itemStack.getItemMeta();
         if (meta == null)
@@ -247,7 +247,7 @@ public class NonMenuItem implements Cloneable {
         return this.applyItemFlags(itemFlags.toArray(new ItemFlag[0]));
     }
 
-    public NonMenuItem applyItemFlags(ItemFlag... itemFlags) {
+    public NonMenuItem applyItemFlags(ItemFlag... itemFlags) throws NoItemMetaException {
         ItemMeta meta = this.itemStack.getItemMeta();
         if (meta == null) throw new NoItemMetaException(this.itemStack);
         if (itemFlags != null) {
@@ -332,8 +332,8 @@ public class NonMenuItem implements Cloneable {
     public NonMenuItem setDurability(ConfigurationSection section) {
         ConfigurationSection durabilitySection = section.getConfigurationSection("durability");
         if (durabilitySection == null) {
-            int durability = section.getInt("durability");
-            return this.setDurability(durability, false);
+            int durability = section.getInt("durability", -1);
+            return durability >= 0 ? this.setDurability(durability, false) : this;
         }
 
         int durability = durabilitySection.getInt("amount");
@@ -381,7 +381,7 @@ public class NonMenuItem implements Cloneable {
         else return this.setMetaColor(LunaMath.toInt(split[0]), LunaMath.toInt(split[1]), LunaMath.toInt(split[2]));
     }
 
-    public NonMenuItem addAttribute(@NotNull Attribute attribute, @NotNull AttributeModifier modifier) {
+    public NonMenuItem addAttribute(@NotNull Attribute attribute, @NotNull AttributeModifier modifier) throws NoItemMetaException {
         ItemMeta meta = this.itemStack.getItemMeta();
         if (meta == null) throw new NoItemMetaException(this.itemStack);
         meta.addAttributeModifier(attribute, modifier);
@@ -390,7 +390,7 @@ public class NonMenuItem implements Cloneable {
         return this;
     }
 
-    public void removeAttribute(Attribute attribute, AttributeModifier.Operation operation, double checkedAmount, boolean removeAll) {
+    public void removeAttribute(Attribute attribute, AttributeModifier.Operation operation, double checkedAmount, boolean removeAll) throws NoItemMetaException {
         ItemMeta meta = this.itemStack.getItemMeta();
         if (meta == null) throw new NoItemMetaException(this.itemStack);
 

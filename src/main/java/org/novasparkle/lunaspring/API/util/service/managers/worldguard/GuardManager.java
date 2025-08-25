@@ -11,7 +11,8 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import org.novasparkle.lunaspring.API.util.service.GuardService;
+import org.novasparkle.lunaspring.API.util.exceptions.WGFlagGetException;
+import org.novasparkle.lunaspring.API.util.service.realized.GuardService;
 
 import java.util.List;
 import java.util.Map;
@@ -225,7 +226,11 @@ public class GuardManager {
         return guardService.getWGFlag(flag);
     }
 
-    public @NotNull StateFlag getWGFlag(String id) {
+    public @NotNull StateFlag getWGFlag(String id) throws WGFlagGetException {
         return guardService.getWGFlag(id);
+    }
+
+    public boolean isEnabled() {
+        return guardService.mayUseService();
     }
 }

@@ -11,17 +11,21 @@ import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.io.BukkitObjectInputStream;
+import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.novasparkle.lunaspring.API.menus.items.Item;
+import org.novasparkle.lunaspring.API.util.exceptions.SerializerException;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
@@ -449,6 +453,42 @@ public class Utils {
             private final String h;
             private final String m;
             private final String s;
+        }
+    }
+
+    @UtilityClass
+    public static class Base64 {
+        public <E> String serialize(E object) throws SerializerException {
+            if (object == null) return null;
+
+            try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                 BukkitObjectOutputStream dataOutput = new BukkitObjectOutputStream(outputStream)) {
+
+                dataOutput.writeObject(object);
+                return java.util.Base64.getEncoder().encodeToString(outputStream.toByteArray());
+            } catch (IOException e) {
+                throw new SerializerException(String.format("Объект %s невозможно сериализовать!", object.getClass().getSimpleName()));
+            }
+        }
+
+        public <E> E deserialize(Class<E> dataClass, String data) throws SerializerException {
+            if (data == null || data.isEmpty()) return null;
+
+            try (ByteArrayInputStream inputStream = new ByteArrayInputStream(java.util.Base64.getDecoder().decode(data));
+                 BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream)) {
+
+                return dataClass.cast(dataInput.readObject());
+            } catch (IOException | ClassNotFoundException | ClassCastException e) {
+                throw new SerializerException(String.format("Строку невозможно десериализовать в %s!", dataClass.getSimpleName()));
+            }
+        }
+
+        public String serializeItemStack(ItemStack itemStack) throws SerializerException {
+            return serialize(itemStack);
+        }
+
+        public ItemStack deserializeItemStack(String data) throws SerializerException {
+            return deserialize(ItemStack.class, data);
         }
     }
 }

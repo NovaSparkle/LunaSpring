@@ -8,7 +8,7 @@ import com.sk89q.worldedit.world.biome.BiomeType;
 import lombok.experimental.UtilityClass;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.novasparkle.lunaspring.API.util.service.WorldEditService;
+import org.novasparkle.lunaspring.API.util.service.realized.WorldEditService;
 
 import java.io.File;
 

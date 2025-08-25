@@ -5,7 +5,7 @@ import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.Nullable;
 import org.novasparkle.lunaspring.API.configuration.IConfig;
-import org.novasparkle.lunaspring.API.util.service.ColorService;
+import org.novasparkle.lunaspring.API.util.service.realized.ColorService;
 import org.novasparkle.lunaspring.API.util.utilities.Color;
 
 /**

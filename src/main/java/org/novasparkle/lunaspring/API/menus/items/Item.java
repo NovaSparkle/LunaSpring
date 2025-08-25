@@ -12,6 +12,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 import org.novasparkle.lunaspring.API.menus.ItemListMenu;
+import org.novasparkle.lunaspring.API.util.exceptions.SlotIsNotPositiveException;
 import org.novasparkle.lunaspring.API.util.utilities.LunaMath;
 
 import java.util.ArrayList;
@@ -21,8 +22,8 @@ import java.util.List;
 @Accessors(chain = true, fluent = false)
 @SuppressWarnings({"unused"})
 public class Item extends NonMenuItem {
-    private List<String> defaultLore;
-    private String defaultName;
+    @Setter private List<String> defaultLore;
+    @Setter private String defaultName;
 
     private ItemListMenu menu;
     @Setter private byte slot = 0;
@@ -115,7 +116,7 @@ public class Item extends NonMenuItem {
     }
 
     @Override
-    public NonMenuItem setAll(@NotNull ConfigurationSection itemSection) {
+    public NonMenuItem setAll(@NotNull ConfigurationSection itemSection) throws SlotIsNotPositiveException {
         super.setAll(itemSection);
         int row = itemSection.getInt("slot.row");
         int column = itemSection.getInt("slot.column");
@@ -123,7 +124,7 @@ public class Item extends NonMenuItem {
             this.setSlot(((byte) LunaMath.getIndex(row, column)));
         } else {
             int slot = itemSection.getInt("slot");
-            if (slot == 0) throw new RuntimeException("Слот не может быть отрицательным");
+            if (slot < 0) throw new SlotIsNotPositiveException();
             this.setSlot((byte) slot);
         }
         this.defaultLore = new ArrayList<>(itemSection.getStringList("lore"));
