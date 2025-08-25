@@ -490,5 +490,38 @@ public class Utils {
         public ItemStack deserializeItemStack(String data) throws SerializerException {
             return deserialize(ItemStack.class, data);
         }
+
+        public <E> String serializeList(Collection<E> items) throws SerializerException {
+            if (items == null) return null;
+            try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                 BukkitObjectOutputStream dataOutput = new BukkitObjectOutputStream(outputStream)) {
+
+                dataOutput.writeInt(items.size());
+                for (E item : items) {
+                    dataOutput.writeObject(item);
+                }
+                return java.util.Base64.getEncoder().encodeToString(outputStream.toByteArray());
+
+            } catch (IOException e) {
+                throw new SerializerException("Данную коллекцию объектов невозможно сериализовать!");
+            }
+        }
+
+        public <E> List<E> deserializeList(Class<E> dataClass, String data) {
+            try (ByteArrayInputStream inputStream = new ByteArrayInputStream(java.util.Base64.getDecoder().decode(data));
+                 BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream)) {
+
+                int size = dataInput.readInt();
+                List<E> items = new ArrayList<>();
+                for (int i = 0; i < size; i++) {
+                    items.add(dataClass.cast(dataInput.readObject()));
+                }
+
+                return items;
+
+            } catch (IOException | ClassNotFoundException | ClassCastException e) {
+                throw new SerializerException(String.format("Строку невозможно десериализовать в список %s!", dataClass.getSimpleName()));
+            }
+        }
     }
 }
