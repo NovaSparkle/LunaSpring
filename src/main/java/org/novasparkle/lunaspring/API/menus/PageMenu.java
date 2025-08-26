@@ -10,16 +10,23 @@ import org.novasparkle.lunaspring.API.menus.items.Item;
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 public abstract class PageMenu<T> extends AMenu {
-    protected final List<List<T>> itemList = new ArrayList<>();
+    private final List<List<T>> itemList = new ArrayList<>();
     @Setter
-    @Getter
     private int page;
-    @Getter
-    private final List<Integer> itemsOrder;
+    @Setter
+    private List<Integer> itemsOrder;
     public PageMenu(Player player, List<Integer> itemsOrder) {
         super(player);
         this.itemsOrder = itemsOrder;
+        this.page = 1;
+        if (this.itemsOrder.isEmpty()) {
+            throw new RuntimeException("Список слотов кнопок не может быть пустым!");
+        }
+    }
+    public PageMenu(Player player) {
+        super(player);
         this.page = 1;
         if (this.itemsOrder.isEmpty()) {
             throw new RuntimeException("Список слотов кнопок не может быть пустым!");
