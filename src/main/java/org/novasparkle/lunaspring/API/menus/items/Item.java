@@ -22,11 +22,11 @@ import java.util.List;
 @Accessors(chain = true, fluent = false)
 @SuppressWarnings({"unused"})
 public class Item extends NonMenuItem {
-    @Setter private List<String> defaultLore;
-    @Setter private String defaultName;
+    @Setter protected List<String> defaultLore;
+    @Setter protected String defaultName;
 
-    private ItemListMenu menu;
-    @Setter private byte slot = 0;
+    protected ItemListMenu menu;
+    @Setter protected byte slot = 0;
 
     @Builder
     public Item(Material material, String displayName, List<String> lore, int amount, @Range(from = 0, to = 53) byte slot) {

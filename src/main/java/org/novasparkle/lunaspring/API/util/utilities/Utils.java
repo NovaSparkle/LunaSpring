@@ -632,5 +632,17 @@ public class Utils {
         public void give(@NotNull Player player, Collection<ItemStack> itemList) {
             give(player, itemList, true);
         }
+
+        public void give(@NotNull Player player, Location dropLocation, boolean putOnArmor, ItemStack... itemStacks) {
+            give(player, dropLocation, List.of(itemStacks), putOnArmor);
+        }
+
+        public void give(@NotNull Player player, boolean putOnArmor, ItemStack... itemStacks) {
+            give(player, player.getLocation(), putOnArmor, itemStacks);
+        }
+
+        public void give(@NotNull Player player, ItemStack... itemStacks) {
+            give(player, true, itemStacks);
+        }
     }
 }

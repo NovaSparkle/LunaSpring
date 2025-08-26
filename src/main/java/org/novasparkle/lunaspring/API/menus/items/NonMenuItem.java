@@ -39,16 +39,16 @@ import java.util.stream.Collectors;
 @Accessors(chain = true, fluent = false)
 public class NonMenuItem implements Cloneable {
     @Setter private ItemStack itemStack;
-    private final String id = Utils.getRKey((byte) 14);
-    private Material material;
-    private String displayName;
-    private List<String> lore;
+    @Setter private String id = Utils.getRKey((byte) 14);
+    protected Material material;
+    protected String displayName;
+    protected List<String> lore;
     @Range(from = 1, to = 64)
-    private int amount;
-    private boolean glowing = false;
-    private String headValue;
-    private Map<Enchantment, Integer> enchantments = Maps.newHashMap();
-    private List<ItemFlag> itemFlags = Lists.newArrayList();
+    protected int amount;
+    protected boolean glowing = false;
+    protected String headValue;
+    protected Map<Enchantment, Integer> enchantments = Maps.newHashMap();
+    protected List<ItemFlag> itemFlags = Lists.newArrayList();
 
     @Builder(builderMethodName = "superbuilder", buildMethodName = "superbuild")
     public NonMenuItem(Material material, String displayName, List<String> lore, int amount) {
@@ -458,13 +458,17 @@ public class NonMenuItem implements Cloneable {
 
     // ACTIONS
 
+    public Item drop(Location location) {
+        return location.getWorld().dropItem(location, this.getItemStack());
+    }
+
     public Item dropNaturally(Location location) {
         return location.getWorld().dropItemNaturally(location, this.getItemStack());
     }
 
     public void give(@NotNull Player player) {
         this.replaceLore(lr -> PlaceholderAPI.setPlaceholders(player, lr));
-        player.getInventory().addItem(this.itemStack);
+        Utils.Items.give(player, false, this.itemStack);
     }
 
     public NonMenuItem serialize(@NotNull ConfigurationSection section, boolean asItemStack) {
