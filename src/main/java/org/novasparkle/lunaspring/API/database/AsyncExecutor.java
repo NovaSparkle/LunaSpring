@@ -18,7 +18,6 @@ public class AsyncExecutor {
         this.connectionPool = new ConnectionPool(section);
     }
 
-
     public void executeAsync(String query, Object... params) {
         executor.submit(() -> {
             try {
@@ -28,6 +27,7 @@ public class AsyncExecutor {
             }
         });
     }
+
     public void executeSync(String query, Object... params) {
         try {
             connectionPool.executeUpdate(query, 1, params);
@@ -35,7 +35,6 @@ public class AsyncExecutor {
             throw new RuntimeException(e);
         }
     }
-
 
     public <T> List<T> executeQuery(String query, ResultSetHandler<T> handler, Object... params) {
         try {

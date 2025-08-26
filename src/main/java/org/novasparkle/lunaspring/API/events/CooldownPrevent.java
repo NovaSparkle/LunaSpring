@@ -1,15 +1,11 @@
 package org.novasparkle.lunaspring.API.events;
 
-import com.google.common.collect.Maps;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.SneakyThrows;
 import org.bukkit.event.Cancellable;
 import org.novasparkle.lunaspring.API.util.service.realized.Cache;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 
@@ -20,6 +16,7 @@ import java.util.concurrent.TimeUnit;
 @Getter
 public class CooldownPrevent<T> implements Cloneable {
     private Cache<T, Long> cache;
+    private long cooldown;
 
     public CooldownPrevent() {
         this(0);
@@ -30,16 +27,29 @@ public class CooldownPrevent<T> implements Cloneable {
     }
 
     public CooldownPrevent(long cacheTTL, TimeUnit cacheUnit) {
-        this.cache = new Cache<>(cacheTTL, cacheUnit);
+        if (cacheUnit != TimeUnit.MILLISECONDS) cacheTTL = TimeUnit.MILLISECONDS.convert(cacheTTL, cacheUnit);
+        this.cache = new Cache<>(cacheTTL, TimeUnit.MILLISECONDS);
+        this.cooldown = cacheTTL;
     }
 
     @Builder
     public CooldownPrevent(long cacheTTL, TimeUnit cacheUnit, long maximumSize) {
+        if (cacheUnit != TimeUnit.MILLISECONDS) cacheTTL = TimeUnit.MILLISECONDS.convert(cacheTTL, cacheUnit);
         this.cache = new Cache<>(cacheTTL, cacheUnit, maximumSize);
+        this.cooldown = cacheTTL;
     }
 
-    public CooldownPrevent(Cache<T, Long> cache) {
-        this.cache = cache;
+    public long getRemaining(T object) {
+        if (this.contains(object)) {
+            return this.cache.get(object, v -> 0L) - System.currentTimeMillis();
+        }
+
+        return 0L;
+    }
+
+    public void setCooldown(long value) {
+        this.cooldown = value;
+        this.cache = this.cache.duplicate(value, TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -66,7 +76,7 @@ public class CooldownPrevent<T> implements Cloneable {
     }
 
     public void put(T object) {
-        this.cache.put(object, System.currentTimeMillis());
+        this.cache.put(object, System.currentTimeMillis() + this.cooldown);
     }
 
     @Override

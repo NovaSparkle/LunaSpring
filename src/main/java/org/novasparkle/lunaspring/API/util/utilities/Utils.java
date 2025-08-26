@@ -11,7 +11,9 @@ import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.jetbrains.annotations.NotNull;
@@ -27,6 +29,7 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -40,8 +43,7 @@ public class Utils {
      * Покраска текста
      */
     public String color(String text) {
-        if (text != null && !text.isEmpty())
-            return ChatColor.translateAlternateColorCodes('&', text);
+        if (text != null && !text.isEmpty()) return ChatColor.translateAlternateColorCodes('&', text);
         return null;
     }
 
@@ -66,6 +68,7 @@ public class Utils {
         }
         return endValue.toString();
     }
+
     public String getRKey(byte size) {
         return Utils.getRKey(size, true);
     }
@@ -108,7 +111,7 @@ public class Utils {
     }
 
     public <E extends Enum<E>> E getEnumValue(@NotNull Class<E> clazz, @Nullable String string, E defaultValue) {
-        if (string == null || string.isEmpty()) return null;
+        if (string == null || string.isEmpty()) return defaultValue;
         try {
             return Enum.valueOf(clazz, string);
         } catch (IllegalArgumentException e) {
@@ -507,7 +510,7 @@ public class Utils {
             }
         }
 
-        public <E> List<E> deserializeList(Class<E> dataClass, String data) {
+        public <E> List<E> deserializeList(Class<E> dataClass, String data) throws SerializerException {
             try (ByteArrayInputStream inputStream = new ByteArrayInputStream(java.util.Base64.getDecoder().decode(data));
                  BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream)) {
 
@@ -523,5 +526,111 @@ public class Utils {
                 throw new SerializerException(String.format("Строку невозможно десериализовать в список %s!", dataClass.getSimpleName()));
             }
         }
+    }
+
+    @UtilityClass
+    public static class Items {
+        public ItemStack[] getStorage(Inventory inventory) {
+            return inventory.getContents();
+        }
+
+        public ItemStack[] getStorage(Collection<ItemStack> collection) {
+            return collection.toArray(new ItemStack[0]);
+        }
+
+        @SuppressWarnings("all")
+        public void remove(@NotNull ItemStack[] storage, Function<ItemStack, Boolean> checkFunction, final int amount) {
+            int left = amount;
+            for (ItemStack itemStack : storage) {
+                if (left <= 0) break;
+
+                if (itemStack == null) continue;
+                if (checkFunction == null || checkFunction.apply(itemStack)) {
+                    int different = left - itemStack.getAmount();
+                    left -= different > 0 ? itemStack.getAmount() : left;
+
+                    itemStack.setAmount(different >= 0 ? 0 : Math.abs(different));
+                }
+            }
+        }
+
+        public void remove(@NotNull ItemStack[] storage, @NotNull ItemStack similarItem, final int amount) {
+            remove(storage, i -> i != null && i.isSimilar(similarItem), amount);
+        }
+
+        public void remove(@NotNull ItemStack[] storage, @NotNull Material material, final int amount) {
+            remove(storage, i -> i != null && i.getType() == material, amount);
+        }
+
+        public Stream<ItemStack> get(@NotNull ItemStack[] storage, Predicate<ItemStack> predicate) {
+            return Arrays.stream(storage).filter(predicate);
+        }
+
+        public Stream<ItemStack> get(@NotNull ItemStack[] storage, ItemStack similarItem) {
+            return get(storage, i -> i != null && i.isSimilar(similarItem));
+        }
+
+        public Stream<ItemStack> get(@NotNull ItemStack[] storage, Material material) {
+            return get(storage, i -> i != null && i.getType() == material);
+        }
+
+        public int getAmount(@NotNull ItemStack[] storage, Predicate<ItemStack> predicate) {
+            return get(storage, predicate).mapToInt(ItemStack::getAmount).sum();
+        }
+
+        public int getAmount(@NotNull ItemStack[] storage, ItemStack similarItem) {
+            return getAmount(storage, i -> i != null && i.isSimilar(similarItem));
+        }
+
+        public int getAmount(@NotNull ItemStack[] storage, Material material) {
+            return getAmount(storage, i -> i != null && i.getType() == material);
+        }
+
+        public void give(@NotNull Player player, Location dropLocation, Collection<ItemStack> itemList, boolean putOnArmor) {
+            PlayerInventory inventory = player.getInventory();
+            for (ItemStack itemStack : itemList) {
+                EquipmentSlot equipmentSlot = Utils.getEquipmentSlot(itemStack.getType());
+                if (putOnArmor && equipmentSlot != EquipmentSlot.HAND) {
+                    ItemStack armor = inventory.getItem(equipmentSlot);
+                    if (armor == null || armor.getType().isAir()) {
+                        inventory.setItem(equipmentSlot, itemStack.clone());
+                        continue;
+                    }
+                }
+
+                if (inventory.firstEmpty() > -1) {
+                    inventory.addItem(itemStack.clone());
+                    continue;
+                }
+
+                HashMap<Integer, ? extends ItemStack> finds = inventory.all(itemStack);
+                int leftAmount = itemStack.getAmount();
+                for (ItemStack value : finds.values()) {
+                    int maxStack = value.getType().getMaxStackSize();
+                    if (value.getAmount() >= maxStack) continue;
+
+                    int different = maxStack - value.getAmount();
+                    if (different >= leftAmount) {
+                        value.setAmount(value.getAmount() + leftAmount);
+                        leftAmount = 0;
+                        break;
+                    } else {
+                        leftAmount -= different;
+                        value.setAmount(maxStack);
+                    }
+                }
+
+                if (leftAmount > 0)
+                    player.getWorld().dropItem(dropLocation, itemStack.clone());
+            }
+        }
+    }
+
+    public void give(@NotNull Player player, Collection<ItemStack> itemList, boolean putOnArmor) {
+        Utils.Items.give(player, player.getLocation(), itemList, putOnArmor);
+    }
+
+    public void give(@NotNull Player player, Collection<ItemStack> itemList) {
+        give(player, itemList, true);
     }
 }

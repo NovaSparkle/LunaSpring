@@ -27,7 +27,7 @@ public class MenuManager {
     public void register(Inventory inventory, IMenu menu) {
         List<IMenu> menus = activeInventories.getOrDefault(inventory, new ArrayList<>());
         menus.add(menu);
-        activeInventories.putIfAbsent(inventory, menus);
+        register(inventory, menus);
     }
 
     public void register(Inventory inventory, List<IMenu> menus) {

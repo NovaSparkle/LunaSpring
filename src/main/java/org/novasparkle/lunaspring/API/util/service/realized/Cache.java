@@ -17,22 +17,22 @@ public class Cache<K, V> {
     private final TimeUnit unit;
     private final long maximumSize;
     public Cache(long ttl, TimeUnit ttlUnit, long maximumSize) {
-        this.cache = Caffeine.newBuilder()
-                .expireAfterWrite(ttl, ttlUnit)
-                .maximumSize(maximumSize)
-                .build();
+        Caffeine<Object, Object> caffeine = Caffeine.newBuilder()
+                .expireAfterWrite(ttl, ttlUnit);
+        if (maximumSize >= 0) {
+            this.cache = caffeine.maximumSize(maximumSize).build();
+        }
+        else {
+            this.cache = caffeine.build();
+        }
+
         this.ttl = ttl;
         this.unit = ttlUnit;
         this.maximumSize = maximumSize < 0 ? -1 : maximumSize;
     }
 
     public Cache(long ttl, TimeUnit ttlUnit) {
-        this.cache = Caffeine.newBuilder()
-                .expireAfterWrite(ttl, ttlUnit)
-                .build();
-        this.ttl = ttl;
-        this.unit = ttlUnit;
-        this.maximumSize = -1;
+        this(ttl, ttlUnit, -1);
     }
 
     public Cache(Cache<K, V> forCloningCache) {
@@ -59,12 +59,19 @@ public class Cache<K, V> {
         this.cache.cleanUp();
     }
 
-    public Cache<K, V> duplicate() {
-        Cache<K, V> cloned = new Cache<>(this.ttl, this.unit, this.maximumSize);
-        for (Map.Entry<K, V> entry : this.cache.asMap().entrySet()) {
+    public Cache<K, V> duplicate(long cacheTTL, TimeUnit timeUnit, long maximumSize) {
+        Cache<K, V> cloned = new Cache<>(cacheTTL, timeUnit, maximumSize);
+        for (Map.Entry<K, V> entry : this.toMap().entrySet()) {
             cloned.put(entry.getKey(), entry.getValue());
         }
         return cloned;
     }
 
+    public Cache<K, V> duplicate(long cacheTTL, TimeUnit timeUnit) {
+        return this.duplicate(cacheTTL, timeUnit, this.maximumSize);
+    }
+
+    public Cache<K, V> duplicate() {
+        return this.duplicate(this.ttl, this.unit, this.maximumSize);
+    }
 }
