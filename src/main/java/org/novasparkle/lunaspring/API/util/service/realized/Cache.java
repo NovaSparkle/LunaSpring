@@ -55,6 +55,14 @@ public class Cache<K, V> {
         this.cache.put(key, value);
     }
 
+    public void remove(K key) {
+        this.cache.invalidate(key);
+    }
+
+    public void clear() {
+        this.cache.invalidateAll();
+    }
+
     public void cleanUp() {
         this.cache.cleanUp();
     }

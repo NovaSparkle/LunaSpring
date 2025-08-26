@@ -52,6 +52,10 @@ public class CooldownPrevent<T> implements Cloneable {
         this.cache = this.cache.duplicate(value, TimeUnit.MILLISECONDS);
     }
 
+    public void remove(T key) {
+        this.cache.remove(key);
+    }
+
     /**
      * Возвращает true если определилось то, что object всё еще недоступен, и false если время задержки истекло или для object нет задержек
      * (если время задержки не 0, то при получении false, для object создаётся задержка).
