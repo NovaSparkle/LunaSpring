@@ -10,11 +10,12 @@ import org.novasparkle.lunaspring.API.menus.items.Item;
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
 public abstract class PageMenu<T> extends AMenu {
-    private final List<List<T>> itemList = new ArrayList<>();
+    protected final List<List<T>> items = new ArrayList<>();
     @Setter
+    @Getter
     private int page;
+    @Getter
     @Setter
     private List<Integer> itemsOrder;
     public PageMenu(Player player, List<Integer> itemsOrder) {
@@ -36,7 +37,7 @@ public abstract class PageMenu<T> extends AMenu {
     public void partition(List<T> classifiedItems) {
         for (int i = 0; i < classifiedItems.size(); i += itemsOrder.size()) {
             int end = Math.min(i + itemsOrder.size(), classifiedItems.size());
-            this.itemList.add(classifiedItems.subList(i, end));
+            this.items.add(classifiedItems.subList(i, end));
         }
     }
 
