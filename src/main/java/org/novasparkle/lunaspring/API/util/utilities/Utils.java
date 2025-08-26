@@ -624,13 +624,13 @@ public class Utils {
                     player.getWorld().dropItem(dropLocation, itemStack.clone());
             }
         }
-    }
 
-    public void give(@NotNull Player player, Collection<ItemStack> itemList, boolean putOnArmor) {
-        Utils.Items.give(player, player.getLocation(), itemList, putOnArmor);
-    }
+        public void give(@NotNull Player player, Collection<ItemStack> itemList, boolean putOnArmor) {
+            give(player, player.getLocation(), itemList, putOnArmor);
+        }
 
-    public void give(@NotNull Player player, Collection<ItemStack> itemList) {
-        give(player, itemList, true);
+        public void give(@NotNull Player player, Collection<ItemStack> itemList) {
+            give(player, itemList, true);
+        }
     }
 }
