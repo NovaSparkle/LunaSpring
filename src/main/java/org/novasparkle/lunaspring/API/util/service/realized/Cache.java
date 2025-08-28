@@ -17,8 +17,7 @@ public class Cache<K, V> {
     private final TimeUnit unit;
     private final long maximumSize;
     public Cache(long ttl, TimeUnit ttlUnit, long maximumSize) {
-        Caffeine<Object, Object> caffeine = Caffeine.newBuilder()
-                .expireAfterWrite(ttl, ttlUnit);
+        Caffeine<Object, Object> caffeine = Caffeine.newBuilder().expireAfterWrite(ttl, ttlUnit);
         if (maximumSize >= 0) {
             this.cache = caffeine.maximumSize(maximumSize).build();
         }

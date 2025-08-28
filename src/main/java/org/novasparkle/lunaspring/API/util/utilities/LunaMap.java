@@ -1,10 +1,11 @@
 package org.novasparkle.lunaspring.API.util.utilities;
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
-public class LunaMap<S, E, X> implements Cloneable {
+public class LunaMap<S, E, X> implements Cloneable, Serializable {
     private Map<S, Element<E, X>> map = new HashMap<>();
 
     public void put(S key, E value1, X value2) {

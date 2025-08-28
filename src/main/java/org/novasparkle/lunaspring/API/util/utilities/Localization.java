@@ -4,6 +4,8 @@ import lombok.experimental.UtilityClass;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.novasparkle.lunaspring.API.configuration.IConfig;
+import org.novasparkle.lunaspring.API.util.utilities.lists.GenericList;
+import org.novasparkle.lunaspring.API.util.utilities.lists.LunaLists;
 import org.novasparkle.lunaspring.LunaSpring;
 
 @UtilityClass

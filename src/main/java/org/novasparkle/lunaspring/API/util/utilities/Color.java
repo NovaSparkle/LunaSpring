@@ -2,8 +2,10 @@ package org.novasparkle.lunaspring.API.util.utilities;
 
 import lombok.Getter;
 
+import java.io.Serializable;
+
 @SuppressWarnings("all")
-public record Color(@Getter String abbr, @Getter String variable) {
+public record Color(@Getter String abbr, @Getter String variable) implements Serializable {
 
     @Override
     public String toString() {

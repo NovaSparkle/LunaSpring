@@ -30,6 +30,7 @@ import org.novasparkle.lunaspring.API.util.service.managers.NBTManager;
 import org.novasparkle.lunaspring.API.util.utilities.LunaMath;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
