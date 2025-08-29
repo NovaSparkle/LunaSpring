@@ -363,6 +363,7 @@ public class NonMenuItem implements Cloneable {
             return this;
         }
 
+        this.itemStack.setItemMeta(meta);
         return this;
     }
 
