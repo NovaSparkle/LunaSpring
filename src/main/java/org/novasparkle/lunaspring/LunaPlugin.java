@@ -1,6 +1,7 @@
 package org.novasparkle.lunaspring;
 
 import lombok.SneakyThrows;
+import lombok.experimental.Accessors;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
@@ -8,8 +9,11 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.novasparkle.lunaspring.API.commands.Invocation;
 import org.novasparkle.lunaspring.API.commands.processor.LunaSpringCommandProcessor;
 import org.novasparkle.lunaspring.API.commands.annotations.LunaCommand;
+import org.novasparkle.lunaspring.API.commands.processor.LunaSpringSubCommand;
+import org.novasparkle.lunaspring.API.commands.processor.ZeroArgCommand;
 import org.novasparkle.lunaspring.API.events.LunaHandler;
 import org.novasparkle.lunaspring.API.util.exceptions.InvalidImplementationException;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
@@ -28,12 +32,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Predicate;
 
 public abstract class LunaPlugin extends JavaPlugin {
+    @Accessors(fluent = true)
+    private final List<LunaSpringCommandProcessor> processors = new ArrayList<>();
+
     private void startMessage(List<String> startMessage) {
         String textColorString = LSConfig.getString("on_load_plugin_text_colors");
         char endedColor = textColorString == null || textColorString.isEmpty() ? ' ' :
@@ -113,6 +118,7 @@ public abstract class LunaPlugin extends JavaPlugin {
 
     public void registerCommandProcessor(LunaSpringCommandProcessor processor) {
         this.registerTabExecutor(processor, processor.appliedCommand());
+        if (!this.processors.contains(processor)) this.processors.add(processor);
     }
 
     /**
@@ -286,5 +292,9 @@ public abstract class LunaPlugin extends JavaPlugin {
 
     public boolean isPaid() {
         return this.getClass().isAnnotationPresent(PaidPlugin.class);
+    }
+
+    public LunaSpringCommandProcessor getProcessor(String appliedCommand) {
+        return Utils.find(this.processors, p -> p.appliedCommand().equalsIgnoreCase(appliedCommand)).orElse(null);
     }
 }
