@@ -2,21 +2,17 @@ package org.novasparkle.lunaspring.API.menus;
 
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
-import org.novasparkle.lunaspring.API.util.service.realized.Cache;
-import org.novasparkle.lunaspring.LunaSpring;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -100,9 +96,7 @@ public class MenuManager {
             IMenu iMenu = menus.stream().filter(m -> m.getPlayer().getUniqueId().equals(player.getUniqueId())).findFirst().orElse(null);
             if (iMenu != null) {
                 iMenu.onClose(event);
-                Bukkit.getScheduler().runTaskLater(LunaSpring.getInstance(), () -> {
-                    unregister(iMenu);
-                }, 2L);
+                unregister(iMenu);
             }
         }
     }

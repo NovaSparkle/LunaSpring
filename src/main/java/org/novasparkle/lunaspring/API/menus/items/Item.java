@@ -9,10 +9,12 @@ import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 import org.novasparkle.lunaspring.API.menus.ItemListMenu;
 import org.novasparkle.lunaspring.API.util.exceptions.SlotIsNotPositiveException;
+import org.novasparkle.lunaspring.API.util.service.managers.NBTManager;
 import org.novasparkle.lunaspring.API.util.utilities.LunaMath;
 
 import java.util.ArrayList;
@@ -22,6 +24,8 @@ import java.util.List;
 @Accessors(chain = true, fluent = false)
 @SuppressWarnings({"unused"})
 public class Item extends NonMenuItem {
+    public static final String MARKER_NBT = "lunaspring_marker_menu_item";
+
     @Setter protected List<String> defaultLore;
     @Setter protected String defaultName;
 
@@ -34,12 +38,14 @@ public class Item extends NonMenuItem {
         this.slot = slot;
         this.defaultLore = new ArrayList<>(this.getLore());
         this.defaultName = this.getDisplayName();
+        this.applyMenuNBT();
     }
 
     public Item(Material material, int amount) {
         super(material, amount);
         this.defaultLore = new ArrayList<>(this.getLore());
         this.defaultName = this.getDisplayName();
+        this.applyMenuNBT();
     }
 
     public Item(NonMenuItem nonMenuItem, @Range(from = 0, to = 53) byte slot) {
@@ -50,6 +56,7 @@ public class Item extends NonMenuItem {
         super();
         this.defaultLore = new ArrayList<>(this.getLore());
         this.defaultName = this.getDisplayName();
+        this.applyMenuNBT();
     }
 
     public Item(Material material) {
@@ -66,6 +73,7 @@ public class Item extends NonMenuItem {
         this.slot = (byte) slot;
         this.defaultLore = new ArrayList<>(this.getLore());
         this.defaultName = this.getDisplayName();
+        this.applyMenuNBT();
     }
 
     public Item(@NotNull ConfigurationSection section, boolean rowCol) {
@@ -145,6 +153,27 @@ public class Item extends NonMenuItem {
         this.defaultLore = new ArrayList<>(lore);
         this.defaultName = displayName;
         this.slot = (byte) LunaMath.getIndex(row, column);
+        return this;
+    }
+
+    public Item applyMenuNBT() {
+        if (!this.getClass().isAnnotationPresent(IgnoreMenuNBT.class)) {
+            NBTManager.setBool(this.getItemStack(), MARKER_NBT, true);
+        }
+
+        return this;
+    }
+
+    public boolean equalsStacks(ItemStack itemStack) {
+        ItemStack forCheckItem = this.getItemStack().clone();
+        NBTManager.removeKey(forCheckItem, MARKER_NBT);
+        return itemStack.equals(forCheckItem);
+    }
+
+    @Override
+    public NonMenuItem update() {
+        super.update();
+        this.applyMenuNBT();
         return this;
     }
 
