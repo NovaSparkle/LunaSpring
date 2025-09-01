@@ -2,23 +2,28 @@ package org.novasparkle.lunaspring.API.menus;
 
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
+import org.novasparkle.lunaspring.API.util.service.realized.Cache;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 @UtilityClass
 public class MenuManager {
     @Getter private final Map<Inventory, List<IMenu>> activeInventories = new HashMap<>();
+    @Getter private final Cache<Player, Inventory> cachedInventories = new Cache<>(250, TimeUnit.MILLISECONDS, 250);
+
     public void openInventory(IMenu menu) {
         register(menu.getInventory(), menu);
         menu.getPlayer().openInventory(menu.getInventory());
@@ -38,6 +43,7 @@ public class MenuManager {
         Inventory inventory = iMenu.getInventory();
         List<IMenu> menus = activeInventories.get(inventory);
         if (menus != null) {
+            cachedInventories.put(iMenu.getPlayer(), inventory);
             activeInventories.remove(inventory);
 
             if (menus.size() > 1) {
@@ -59,10 +65,17 @@ public class MenuManager {
     }
 
     public void handleClick(InventoryClickEvent event) {
-        List<IMenu> menus = activeInventories.get(event.getInventory());
+        Player player = (Player) event.getWhoClicked();
+        Inventory inventory = event.getInventory();
+        if (inventory.equals(cachedInventories.getIfPresent(player))) {
+            event.setCancelled(true);
+            return;
+        }
+
+        List<IMenu> menus = activeInventories.get(inventory);
         if (menus != null && !menus.isEmpty()) {
             if (menus.size() > 1) {
-                menus.stream().filter(m -> m.getPlayer().getUniqueId().equals(event.getWhoClicked().getUniqueId())).findFirst().ifPresent(clickedMenu -> clickedMenu.onClick(event));
+                menus.stream().filter(m -> m.getPlayer().getUniqueId().equals(player.getUniqueId())).findFirst().ifPresent(clickedMenu -> clickedMenu.onClick(event));
             } else {
                 menus.get(0).onClick(event);
             }
@@ -70,10 +83,17 @@ public class MenuManager {
     }
 
     public void handleDrag(InventoryDragEvent event) {
-        List<IMenu> menus = activeInventories.get(event.getInventory());
+        Player player = (Player) event.getWhoClicked();
+        Inventory inventory = event.getInventory();
+        if (inventory.equals(cachedInventories.getIfPresent(player))) {
+            event.setCancelled(true);
+            return;
+        }
+
+        List<IMenu> menus = activeInventories.get(inventory);
         if (menus != null && !menus.isEmpty()) {
             if (menus.size() > 1) {
-                menus.stream().filter(m -> m.getPlayer().getUniqueId().equals(event.getWhoClicked().getUniqueId())).findFirst().ifPresent(clickedMenu -> clickedMenu.onDrag(event));
+                menus.stream().filter(m -> m.getPlayer().getUniqueId().equals(player.getUniqueId())).findFirst().ifPresent(clickedMenu -> clickedMenu.onDrag(event));
             } else {
                 menus.get(0).onDrag(event);
             }
@@ -81,9 +101,13 @@ public class MenuManager {
     }
 
     public void handleClose(InventoryCloseEvent event) {
-        List<IMenu> menus = activeInventories.get(event.getInventory());
+        Player player = (Player) event.getPlayer();
+        Inventory inventory = event.getInventory();
+        if (inventory.equals(cachedInventories.getIfPresent(player))) return;
+
+        List<IMenu> menus = activeInventories.get(inventory);
         if (menus != null && !menus.isEmpty()) {
-            IMenu iMenu = menus.stream().filter(m -> m.getPlayer().getUniqueId().equals(event.getPlayer().getUniqueId())).findFirst().orElse(null);
+            IMenu iMenu = menus.stream().filter(m -> m.getPlayer().getUniqueId().equals(player.getUniqueId())).findFirst().orElse(null);
             if (iMenu != null) {
                 iMenu.onClose(event);
                 unregister(iMenu);

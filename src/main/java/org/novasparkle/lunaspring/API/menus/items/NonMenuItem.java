@@ -350,17 +350,12 @@ public class NonMenuItem implements Cloneable {
         ItemMeta meta = this.itemStack.getItemMeta();
         if (meta instanceof LeatherArmorMeta colorMeta) {
             colorMeta.setColor(color);
-            return this;
         }
-
-        if (meta instanceof PotionMeta colorMeta) {
+        else if (meta instanceof PotionMeta colorMeta) {
             colorMeta.setColor(color);
-            return this;
         }
-
-        if (meta instanceof MapMeta colorMeta) {
+        else if (meta instanceof MapMeta colorMeta) {
             colorMeta.setColor(color);
-            return this;
         }
 
         this.itemStack.setItemMeta(meta);
