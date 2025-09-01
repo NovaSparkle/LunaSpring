@@ -10,6 +10,7 @@ import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
 import org.novasparkle.lunaspring.API.util.service.realized.Cache;
+import org.novasparkle.lunaspring.LunaSpring;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,7 +23,6 @@ import java.util.stream.Stream;
 @UtilityClass
 public class MenuManager {
     @Getter private final Map<Inventory, List<IMenu>> activeInventories = new HashMap<>();
-    @Getter private final Cache<Player, Inventory> cachedInventories = new Cache<>(250, TimeUnit.MILLISECONDS, 250);
 
     public void openInventory(IMenu menu) {
         register(menu.getInventory(), menu);
@@ -43,9 +43,7 @@ public class MenuManager {
         Inventory inventory = iMenu.getInventory();
         List<IMenu> menus = activeInventories.get(inventory);
         if (menus != null) {
-            cachedInventories.put(iMenu.getPlayer(), inventory);
             activeInventories.remove(inventory);
-
             if (menus.size() > 1) {
                 menus.remove(iMenu);
                 activeInventories.put(inventory, menus);
@@ -67,13 +65,10 @@ public class MenuManager {
     public void handleClick(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
         Inventory inventory = event.getInventory();
-        if (inventory.equals(cachedInventories.getIfPresent(player))) {
-            event.setCancelled(true);
-            return;
-        }
 
         List<IMenu> menus = activeInventories.get(inventory);
         if (menus != null && !menus.isEmpty()) {
+            System.out.println(System.currentTimeMillis());
             if (menus.size() > 1) {
                 menus.stream().filter(m -> m.getPlayer().getUniqueId().equals(player.getUniqueId())).findFirst().ifPresent(clickedMenu -> clickedMenu.onClick(event));
             } else {
@@ -85,10 +80,6 @@ public class MenuManager {
     public void handleDrag(InventoryDragEvent event) {
         Player player = (Player) event.getWhoClicked();
         Inventory inventory = event.getInventory();
-        if (inventory.equals(cachedInventories.getIfPresent(player))) {
-            event.setCancelled(true);
-            return;
-        }
 
         List<IMenu> menus = activeInventories.get(inventory);
         if (menus != null && !menus.isEmpty()) {
@@ -103,14 +94,15 @@ public class MenuManager {
     public void handleClose(InventoryCloseEvent event) {
         Player player = (Player) event.getPlayer();
         Inventory inventory = event.getInventory();
-        if (inventory.equals(cachedInventories.getIfPresent(player))) return;
 
         List<IMenu> menus = activeInventories.get(inventory);
         if (menus != null && !menus.isEmpty()) {
             IMenu iMenu = menus.stream().filter(m -> m.getPlayer().getUniqueId().equals(player.getUniqueId())).findFirst().orElse(null);
             if (iMenu != null) {
                 iMenu.onClose(event);
-                unregister(iMenu);
+                Bukkit.getScheduler().runTaskLater(LunaSpring.getInstance(), () -> {
+                    unregister(iMenu);
+                }, 2L);
             }
         }
     }
