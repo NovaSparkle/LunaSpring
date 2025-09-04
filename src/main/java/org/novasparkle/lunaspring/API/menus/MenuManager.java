@@ -2,12 +2,17 @@ package org.novasparkle.lunaspring.API.menus;
 
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.novasparkle.lunaspring.API.menus.items.Item;
+import org.novasparkle.lunaspring.LunaSpring;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -64,7 +69,6 @@ public class MenuManager {
 
         List<IMenu> menus = activeInventories.get(inventory);
         if (menus != null && !menus.isEmpty()) {
-            System.out.println(System.currentTimeMillis());
             if (menus.size() > 1) {
                 menus.stream().filter(m -> m.getPlayer().getUniqueId().equals(player.getUniqueId())).findFirst().ifPresent(clickedMenu -> clickedMenu.onClick(event));
             } else {
@@ -97,6 +101,8 @@ public class MenuManager {
             if (iMenu != null) {
                 iMenu.onClose(event);
                 unregister(iMenu);
+
+                Bukkit.getScheduler().runTaskLater(LunaSpring.getInstance(), () -> cleanInventory(player), 3L);
             }
         }
     }
@@ -117,5 +123,14 @@ public class MenuManager {
                 .flatMap(List::stream)
                 .filter(predicate)
                 .map(menuClass::cast);
+    }
+
+    public void cleanInventory(final @NotNull Player player) {
+        for (final ItemStack itemStack : player.getInventory().getContents()) {
+            if (itemStack == null || !Item.isMarkered(itemStack)) continue;
+
+            player.getInventory().remove(itemStack);
+        }
+        player.updateInventory();
     }
 }

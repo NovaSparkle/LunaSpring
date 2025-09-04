@@ -241,21 +241,44 @@ public class Utils {
         return isPluginEnabled("PlaceholderAPI") ? PlaceholderAPI.setPlaceholders(offlinePlayer, line) : line;
     }
 
+    public String setBracketPlaceholders(OfflinePlayer player, String line) {
+        if (line.contains("{") && line.contains("}")) {
+            Matcher matcher = Pattern.compile("\\{([^}]+)}").matcher(line);
+
+            StringBuilder builder = new StringBuilder();
+            while (matcher.find()) {
+                String replacement = setNakedPlaceholders(player, matcher.group(1));
+                matcher.appendReplacement(builder, Matcher.quoteReplacement(replacement));
+            }
+            matcher.appendTail(builder);
+        }
+
+        return Utils.setPlaceholders(player, line);
+    }
+
+    public String setNakedPlaceholders(OfflinePlayer player, String line) {
+        return setPlaceholders(player, "%" + line + "%");
+    }
+
+    public CompassDirection getCompassDirection(double angle) {
+        angle = (angle + 360) % 360;
+
+        if (angle >= 337.5 || angle < 22.5) return CompassDirection.EAST;
+        if (angle >= 22.5 && angle < 67.5) return CompassDirection.SOUTH_EAST;
+        if (angle >= 67.5 && angle < 112.5) return CompassDirection.NORTH;
+        if (angle >= 112.5 && angle < 157.5) return CompassDirection.SOUTH_WEST;
+        if (angle >= 157.5 && angle < 202.5) return CompassDirection.WEST;
+        if (angle >= 202.5 && angle < 247.5) return CompassDirection.NORTH_WEST;
+        if (angle >= 247.5 && angle < 292.5) return CompassDirection.SOUTH;
+        return CompassDirection.NORTH_EAST;
+    }
+
     public CompassDirection getCompassDirection(Location from, Location to) {
         double dx = to.getX() - from.getX();
         double dz = to.getZ() - from.getZ();
 
         double angle = Math.toDegrees(Math.atan2(-dz, dx));
-        angle = (angle + 360) % 360;
-
-        if (angle >= 337.5 || angle < 22.5) return CompassDirection.EAST;
-        if (angle >= 22.5 && angle < 67.5) return CompassDirection.NORTH_EAST;
-        if (angle >= 67.5 && angle < 112.5) return CompassDirection.SOUTH;
-        if (angle >= 112.5 && angle < 157.5) return CompassDirection.NORTH_WEST;
-        if (angle >= 157.5 && angle < 202.5) return CompassDirection.WEST;
-        if (angle >= 202.5 && angle < 247.5) return CompassDirection.SOUTH_WEST;
-        if (angle >= 247.5 && angle < 292.5) return CompassDirection.NORTH;
-        return CompassDirection.SOUTH_EAST;
+        return getCompassDirection(angle);
     }
 
     @UtilityClass

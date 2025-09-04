@@ -5,6 +5,7 @@ import lombok.SneakyThrows;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.novasparkle.lunaspring.API.commands.LunaExecutor;
+import org.novasparkle.lunaspring.API.events.ItemMarkeredCleanHandler;
 import org.novasparkle.lunaspring.API.events.MenuHandler;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
 import org.novasparkle.lunaspring.API.util.service.managers.VaultManager;
@@ -18,12 +19,12 @@ import org.novasparkle.lunaspring.self.lunaengine.LunaEngine;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public final class LunaSpring extends LunaPlugin {
-    @Getter
-    private static LunaSpring instance;
-    @Getter
-    private final Set<LunaPlugin> hookedPlugins = new HashSet<>();
+    @Getter private static LunaSpring instance;
+    @Getter private final Set<LunaPlugin> hookedPlugins = new HashSet<>();
     private LunaEngine LE;
 
     @Override
@@ -34,8 +35,8 @@ public final class LunaSpring extends LunaPlugin {
         this.LE = new LunaEngine();
 
         this.loadFile("localization.yml");
-        this.registerListeners(new MenuHandler());
-        LunaExecutor.initialize(this, "org.novasparkle.lunaspring.self.commands");
+        this.registerListeners(new MenuHandler(), new ItemMarkeredCleanHandler());
+        LunaExecutor.initialize(this, "#.self.commands");
 
         this.registerLunaPlaceholder();
         Bukkit.getScheduler().runTask(this, VaultManager::initialize);
@@ -57,9 +58,13 @@ public final class LunaSpring extends LunaPlugin {
 
             if (params.startsWith("localize-")) { // %lunaspring_localize-world%
                 String[] split = params.split("-");
+                if (split.length < 2) return null;
 
-                String placeholder = split.length >= 2 ? Localization.localize(Utils.setPlaceholders(offlinePlayer, split[1])) : null;
-                return placeholder == null || placeholder.isEmpty() ? (split.length == 1 ? null : split[1]) : placeholder;
+                String splittedPath = split[1];
+                splittedPath = Utils.setBracketPlaceholders(offlinePlayer, splittedPath);
+
+                String placeholder = Localization.localize(Utils.setPlaceholders(offlinePlayer, splittedPath));
+                return placeholder == null || placeholder.isEmpty() ? splittedPath : placeholder;
             }
 
             if (params.startsWith("color-")) {
@@ -82,6 +87,7 @@ public final class LunaSpring extends LunaPlugin {
                 Utils.Luckperms.FormatType formatType = Utils.Luckperms.FormatType.valueOf(split[2].toUpperCase());
                 return Utils.Luckperms.getFormatting(Utils.Luckperms.getGroupTime(offlinePlayer), translateType, formatType);
             }
+
             return null;
         }));
     }

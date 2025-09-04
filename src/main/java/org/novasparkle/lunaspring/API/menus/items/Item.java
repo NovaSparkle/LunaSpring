@@ -140,7 +140,6 @@ public class Item extends NonMenuItem {
         return this;
     }
 
-
     public NonMenuItem setAll(Material material, int amount, String displayName, List<String> lore, boolean enchanted, int slot) {
         super.setAll(material, amount, displayName, lore, enchanted);
         this.defaultLore = new ArrayList<>(lore);
@@ -148,6 +147,7 @@ public class Item extends NonMenuItem {
         this.slot = (byte) slot;
         return this;
     }
+
     public NonMenuItem setAll(Material material, int amount, String displayName, List<String> lore, boolean enchanted, int row, int column) {
         super.setAll(material, amount, displayName, lore, enchanted);
         this.defaultLore = new ArrayList<>(lore);
@@ -177,13 +177,17 @@ public class Item extends NonMenuItem {
         return this;
     }
 
-    public Item updateDescription() {
+    public Item updateDescription(List<String> lore) {
         if (this.menu == null) return this;
 
-        List<String> lore = new ArrayList<>(this.defaultLore);
+        lore = new ArrayList<>(lore);
         lore.forEach(lr -> PlaceholderAPI.setPlaceholders(this.menu.getPlayer(), lr));
         this.setLore(lore);
         return this;
+    }
+
+    public Item updateDescription() {
+        return this.updateDescription(this.defaultLore);
     }
 
     public Item remove(@NotNull ItemListMenu itemListMenu) {
@@ -202,5 +206,9 @@ public class Item extends NonMenuItem {
         Item copy = (Item) super.clone();
         copy.defaultLore = new ArrayList<>(this.defaultLore);
         return copy;
+    }
+
+    public static boolean isMarkered(ItemStack itemStack) {
+        return itemStack != null && !itemStack.getType().isAir() && NBTManager.hasTag(itemStack, MARKER_NBT);
     }
 }
