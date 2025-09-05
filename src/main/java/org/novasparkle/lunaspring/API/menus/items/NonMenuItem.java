@@ -102,6 +102,22 @@ public class NonMenuItem implements Cloneable {
 
         // DURABILITY
         this.setDurability(section);
+
+        // UNBREAKABLE
+        this.setUnbreakable(section.getBoolean("unbreakable", false));
+    }
+
+    // GETTERS
+
+    public ItemMeta getMeta() {
+        ItemMeta meta = this.itemStack.getItemMeta();
+        if (meta == null) throw new NoItemMetaException(this.itemStack);
+
+        return meta;
+    }
+
+    public boolean isUnbreakable() {
+        return getMeta().isUnbreakable();
     }
 
     // SETTERS
@@ -154,6 +170,13 @@ public class NonMenuItem implements Cloneable {
         return this;
     }
 
+    public NonMenuItem setUnbreakable(boolean value) {
+        ItemMeta meta = this.getMeta();
+        meta.setUnbreakable(value);
+        this.itemStack.setItemMeta(meta);
+        return this;
+    }
+
     public NonMenuItem setAll(Material material, int amount, String displayName, List<String> lore, boolean enchanted) {
         if (material != null)
             this.setMaterial(material);
@@ -182,6 +205,7 @@ public class NonMenuItem implements Cloneable {
         this.applyAttributes(itemSection);
         this.setMetaColor(itemSection.getString("color"));
         this.setDurability(itemSection);
+        this.setUnbreakable(itemSection.getBoolean("unbreakable", false));
 
         this.setAll(newMaterial, amount, displayName, lore, itemSection.getBoolean("enchanted"));
         return this;
@@ -189,9 +213,7 @@ public class NonMenuItem implements Cloneable {
 
     public NonMenuItem update() throws NoItemMetaException {
         this.itemStack.setType(this.material);
-        ItemMeta meta = this.itemStack.getItemMeta();
-        if (meta == null)
-            throw new NoItemMetaException(this.itemStack);
+        ItemMeta meta = this.getMeta();
 
         if (this.displayName != null && !this.displayName.isEmpty())
             meta.setDisplayName(this.displayName);
@@ -249,8 +271,7 @@ public class NonMenuItem implements Cloneable {
     }
 
     public NonMenuItem applyItemFlags(ItemFlag... itemFlags) throws NoItemMetaException {
-        ItemMeta meta = this.itemStack.getItemMeta();
-        if (meta == null) throw new NoItemMetaException(this.itemStack);
+        ItemMeta meta = this.getMeta();
         if (itemFlags != null) {
             this.itemFlags.addAll(List.of(itemFlags));
             meta.addItemFlags(itemFlags);
@@ -347,7 +368,7 @@ public class NonMenuItem implements Cloneable {
     }
 
     public NonMenuItem setMetaColor(Color color) {
-        ItemMeta meta = this.itemStack.getItemMeta();
+        ItemMeta meta = this.getMeta();
         if (meta instanceof LeatherArmorMeta colorMeta) {
             colorMeta.setColor(color);
         }
@@ -379,8 +400,7 @@ public class NonMenuItem implements Cloneable {
     }
 
     public NonMenuItem addAttribute(@NotNull Attribute attribute, @NotNull AttributeModifier modifier) throws NoItemMetaException {
-        ItemMeta meta = this.itemStack.getItemMeta();
-        if (meta == null) throw new NoItemMetaException(this.itemStack);
+        ItemMeta meta = this.getMeta();
         meta.addAttributeModifier(attribute, modifier);
 
         this.itemStack.setItemMeta(meta);
@@ -388,8 +408,7 @@ public class NonMenuItem implements Cloneable {
     }
 
     public void removeAttribute(Attribute attribute, AttributeModifier.Operation operation, double checkedAmount, boolean removeAll) throws NoItemMetaException {
-        ItemMeta meta = this.itemStack.getItemMeta();
-        if (meta == null) throw new NoItemMetaException(this.itemStack);
+        ItemMeta meta = this.getMeta();
 
         Collection<AttributeModifier> modifierMap = meta.getAttributeModifiers(attribute);
         if (modifierMap == null || modifierMap.isEmpty()) return;
@@ -499,6 +518,7 @@ public class NonMenuItem implements Cloneable {
             nonMenuItem.itemFlags = new ArrayList<>(meta.getItemFlags());
         }
 
+        nonMenuItem.enchantments = stack.getEnchantments();
         nonMenuItem.itemStack = stack;
         return nonMenuItem.update();
     }

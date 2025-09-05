@@ -101,10 +101,10 @@ public class MenuManager {
             if (iMenu != null) {
                 iMenu.onClose(event);
                 unregister(iMenu);
-
-                Bukkit.getScheduler().runTaskLater(LunaSpring.getInstance(), () -> cleanInventory(player), 3L);
             }
         }
+
+        Bukkit.getScheduler().runTaskLater(LunaSpring.getInstance(), () -> cleanInventory(player), 3L);
     }
 
     public Stream<Player> getActiveViewers(Class<?> menuClass, boolean hardCheck) {

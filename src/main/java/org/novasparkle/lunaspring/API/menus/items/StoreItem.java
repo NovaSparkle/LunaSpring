@@ -1,7 +1,6 @@
 package org.novasparkle.lunaspring.API.menus.items;
 
 import lombok.Getter;
-import lombok.experimental.Accessors;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
@@ -13,11 +12,11 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 import org.novasparkle.lunaspring.API.menus.ItemListMenu;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
+import org.novasparkle.lunaspring.API.util.service.managers.NBTManager;
 
 import java.util.List;
 
 public abstract class StoreItem extends Item {
-    @Accessors(fluent = true, chain = true)
     private ItemStack storedItem;
 
     public StoreItem(Material material, String displayName, List<String> lore, int amount, @Range(from = 0, to = 53) byte slot) {
@@ -37,11 +36,21 @@ public abstract class StoreItem extends Item {
     }
 
     @Override
+    public ItemStack getItemStack() {
+        return this.storedItem == null ? getSuperItemStack() : this.storedItem;
+    }
+
+    public ItemStack getSuperItemStack() {
+        return super.getItemStack();
+    }
+
+    @Override
     public Item insert() {
         ItemListMenu menu = this.getMenu();
         if (menu == null) return this;
 
-        if (this.storedItem == null) {
+        if (this.storedItem != null) {
+            NBTManager.setBool(this.storedItem, Item.MARKER_NBT, true);
             menu.getInventory().setItem(this.slot, this.storedItem);
         }
         else {
@@ -62,86 +71,111 @@ public abstract class StoreItem extends Item {
             else name = ColorManager.color(name);
         }
 
-        Player player = (Player) e.getWhoClicked();
         if (this.storedItem == null) {
-            if (cursor == null) {
-                this.sendMessage(player, MessageID.NEED_PUT_ITEMS, "player-%-" + player.getName());
-                return this;
-            }
-
-            if (!this.canPutItem(cursor)) {
-                this.sendMessage(player, MessageID.DISABLE_PUTTING, "player-%-" + player.getName(), "item-%-" + name);
-                return this;
-            }
-
-            this.setStoredItems(cursor.clone());
-            e.setCursor(null);
-
-            this.sendMessage(player, MessageID.PUTTING_FULL_ITEMS,
-                    "player-%-" + player.getName(),
-                    "item-%-" + name,
-                    "amount-%-" + this.storedItem.getAmount());
+            this.ifStoragedItemIsNull(e, name);
         }
         else {
-            if (cursor == null) {
-                e.setCursor(this.storedItem.clone());
-                this.removeStoraged();
-
-                this.sendMessage(player, MessageID.PICKUP_ALL_ITEMS, "player-%-" + player.getName());
-                return this;
-            }
-
-            if (this.storedItem.isSimilar(cursor)) {
-                int maxStack = storedItem.getType().getMaxStackSize();
-                int currentAmount = storedItem.getAmount();
-                int availableSpace = maxStack - currentAmount;
-
-                if (availableSpace <= 0) {
-                    sendMessage(player, MessageID.MAX_STACKED, "player-%-" + player.getName());
-                    return this;
-                }
-
-                int cursorAmount = cursor.getAmount();
-                int toTransfer = Math.min(cursorAmount, availableSpace);
-
-                storedItem.setAmount(currentAmount + toTransfer);
-                cursor.setAmount(cursorAmount - toTransfer);
-
-                this.sendMessage(player, MessageID.PUTTING_CONCRETE_VALUE,
-                        "player-%-" + player.getName(),
-                        "item-%-" + name,
-                        "amount-%-" + toTransfer);
-            }
-            else {
-                if (!this.canPutItem(cursor)) {
-                    this.sendMessage(player, MessageID.DISABLE_PUTTING, "player-%-" + player.getName(), "item-%-" + name);
-                    return this;
-                }
-
-                ItemStack tempStack = this.storedItem.clone();
-                this.storedItem = cursor.clone();
-                e.setCursor(tempStack);
-
-                this.sendMessage(player, MessageID.SWITCH_ITEMS,
-                        "player-%-" + player.getName(),
-                        "item-%-" + name,
-                        "amount-%-" + this.storedItem.getAmount());
-            }
+            this.ifStoragedItemNotNull(e, name);
         }
         return this;
+    }
+
+    protected void ifStoragedItemIsNull(InventoryClickEvent e, String itemStackName) {
+        ItemStack cursor = e.getCursor();
+        Player player = (Player) e.getWhoClicked();
+        if (cursor == null) {
+            this.sendMessage(player, MessageID.NEED_PUT_ITEMS, "player-%-" + player.getName());
+            return;
+        }
+
+        if (!this.canPutItem(cursor)) {
+            this.sendMessage(player, MessageID.DISABLE_PUTTING, "player-%-" + player.getName(), "item-%-" + itemStackName);
+            return;
+        }
+
+        this.storedItemStack(cursor.clone());
+        e.setCursor(null);
+
+        this.sendMessage(player, MessageID.PUTTING_FULL_ITEMS,
+                "player-%-" + player.getName(),
+                "item-%-" + itemStackName,
+                "amount-%-" + this.storedItem.getAmount());
+    }
+
+    protected void ifStoragedItemNotNull(InventoryClickEvent e, String itemStackName) {
+        ItemStack cursor = e.getCursor();
+        Player player = (Player) e.getWhoClicked();
+        if (cursor == null) {
+            e.setCursor(this.storedItem.clone());
+            this.removeStoraged();
+
+            this.sendMessage(player, MessageID.PICKUP_ALL_ITEMS, "player-%-" + player.getName());
+            return;
+        }
+
+        if (this.storedItem.isSimilar(cursor)) {
+            int maxStack = storedItem.getType().getMaxStackSize();
+            int currentAmount = storedItem.getAmount();
+            int availableSpace = maxStack - currentAmount;
+
+            if (availableSpace <= 0) {
+                sendMessage(player, MessageID.MAX_STACKED, "player-%-" + player.getName());
+                return;
+            }
+
+            int cursorAmount = cursor.getAmount();
+            int toTransfer = Math.min(cursorAmount, availableSpace);
+
+            storedItem.setAmount(currentAmount + toTransfer);
+            cursor.setAmount(cursorAmount - toTransfer);
+
+            this.sendMessage(player, MessageID.PUTTING_CONCRETE_VALUE,
+                    "player-%-" + player.getName(),
+                    "item-%-" + itemStackName,
+                    "amount-%-" + toTransfer);
+        }
+        else {
+            if (!this.canPutItem(cursor)) {
+                this.sendMessage(player, MessageID.DISABLE_PUTTING, "player-%-" + player.getName(), "item-%-" + itemStackName);
+                return;
+            }
+
+            ItemStack tempStack = this.storedItemStack();
+            this.storedItemStack(cursor.clone());
+            e.setCursor(tempStack);
+
+            this.sendMessage(player, MessageID.SWITCH_ITEMS,
+                    "player-%-" + player.getName(),
+                    "item-%-" + itemStackName,
+                    "amount-%-" + this.storedItem.getAmount());
+        }
     }
 
     protected abstract boolean canPutItem(ItemStack itemStack);
-    public abstract StoreItem sendMessage(CommandSender sender, MessageID messageID, String... rpl);
+    protected abstract StoreItem sendMessage(CommandSender sender, MessageID messageID, String... rpl);
 
     public StoreItem removeStoraged() {
-        return this.setStoredItems(null);
+        return this.storedItemStack(null);
     }
 
-    public StoreItem setStoredItems(@Nullable ItemStack itemStack) {
+    public StoreItem storedItemStack(@Nullable ItemStack itemStack) {
         this.storedItem = itemStack;
         this.insert();
         return this;
+    }
+
+    public ItemStack storedItemStack(boolean removeFromItem) {
+        ItemStack itemStack = this.storedItem.clone();
+        NBTManager.removeKey(itemStack, Item.MARKER_NBT);
+
+        if (removeFromItem)
+            this.removeStoraged();
+
+        return itemStack;
+    }
+
+    public ItemStack storedItemStack() {
+        return this.storedItemStack(false);
     }
 
     @Getter
