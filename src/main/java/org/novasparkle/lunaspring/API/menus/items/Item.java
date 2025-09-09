@@ -19,12 +19,14 @@ import org.novasparkle.lunaspring.API.util.utilities.LunaMath;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Accessors(chain = true, fluent = false)
 @SuppressWarnings({"unused"})
 public class Item extends NonMenuItem {
     public static final String MARKER_NBT = "lunaspring_marker_menu_item";
+    public static final String BASEHEAD_VALUE = "b7bfad8d-6790-453a-bf3c-e1d78eca0ee5";
 
     @Setter protected List<String> defaultLore;
     @Setter protected String defaultName;
@@ -124,41 +126,32 @@ public class Item extends NonMenuItem {
     }
 
     @Override
-    public NonMenuItem setAll(@NotNull ConfigurationSection itemSection) throws SlotIsNotPositiveException {
+    public Item setAll(@NotNull ConfigurationSection itemSection) throws SlotIsNotPositiveException {
         super.setAll(itemSection);
-        int row = itemSection.getInt("slot.row");
-        int column = itemSection.getInt("slot.column");
-        if (row != 0 && column != 0) {
-            this.setSlot(((byte) LunaMath.getIndex(row, column)));
-        } else {
-            int slot = itemSection.getInt("slot");
-            if (slot < 0) throw new SlotIsNotPositiveException();
-            this.setSlot((byte) slot);
-        }
         this.defaultLore = new ArrayList<>(itemSection.getStringList("lore"));
         this.defaultName = itemSection.getString("displayName");
         return this;
     }
 
-    public NonMenuItem setAll(Material material, int amount, String displayName, List<String> lore, boolean enchanted, int slot) {
+    public Item setAll(Material material, int amount, String displayName, List<String> lore, boolean enchanted, int slot) {
         super.setAll(material, amount, displayName, lore, enchanted);
         this.defaultLore = new ArrayList<>(lore);
         this.defaultName = displayName;
-        this.slot = (byte) slot;
+        if (slot >= 0) this.slot = (byte) slot;
         return this;
     }
 
-    public NonMenuItem setAll(Material material, int amount, String displayName, List<String> lore, boolean enchanted, int row, int column) {
-        super.setAll(material, amount, displayName, lore, enchanted);
-        this.defaultLore = new ArrayList<>(lore);
-        this.defaultName = displayName;
-        this.slot = (byte) LunaMath.getIndex(row, column);
-        return this;
+    public Item setAll(Material material, int amount, String displayName, List<String> lore, boolean enchanted, int row, int column) {
+        return this.setAll(material, amount, displayName, lore, enchanted, LunaMath.getIndex(row, column));
+    }
+
+    public Item setAll(Material material, int amount, String displayName, List<String> lore, boolean enchanted) {
+        return this.setAll(material, amount, displayName, lore, enchanted, -1);
     }
 
     public Item applyMenuNBT() {
         if (!this.getClass().isAnnotationPresent(IgnoreMenuNBT.class)) {
-            NBTManager.setBool(this.getItemStack(), MARKER_NBT, true);
+            Item.marker(this.getItemStack());
         }
 
         return this;
@@ -166,28 +159,20 @@ public class Item extends NonMenuItem {
 
     public boolean equalsStacks(ItemStack itemStack) {
         ItemStack forCheckItem = this.getItemStack().clone();
-        NBTManager.removeKey(forCheckItem, MARKER_NBT);
-        return itemStack.equals(forCheckItem);
+        return itemStack.equals(Item.demarker(forCheckItem));
     }
 
     @Override
-    public NonMenuItem update() {
+    public Item update() {
         super.update();
         this.applyMenuNBT();
         return this;
     }
 
-    public Item updateDescription(List<String> lore) {
+    public Item applyPlaceholders() {
         if (this.menu == null) return this;
-
-        lore = new ArrayList<>(lore);
-        lore.forEach(lr -> PlaceholderAPI.setPlaceholders(this.menu.getPlayer(), lr));
-        this.setLore(lore);
+        this.replaceLore(lr -> PlaceholderAPI.setPlaceholders(this.menu.getPlayer(), lr));
         return this;
-    }
-
-    public Item updateDescription() {
-        return this.updateDescription(this.defaultLore);
     }
 
     public Item remove(@NotNull ItemListMenu itemListMenu) {
@@ -210,5 +195,15 @@ public class Item extends NonMenuItem {
 
     public static boolean isMarkered(ItemStack itemStack) {
         return itemStack != null && !itemStack.getType().isAir() && NBTManager.hasTag(itemStack, MARKER_NBT);
+    }
+
+    public static ItemStack marker(@NotNull ItemStack itemStack) {
+        NBTManager.setBool(itemStack, MARKER_NBT, true);
+        return itemStack;
+    }
+
+    public static ItemStack demarker(@NotNull ItemStack itemStack) {
+        NBTManager.removeKey(itemStack, MARKER_NBT);
+        return itemStack;
     }
 }

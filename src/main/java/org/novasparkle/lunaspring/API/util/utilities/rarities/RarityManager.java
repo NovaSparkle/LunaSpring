@@ -48,6 +48,7 @@ public class RarityManager {
     public @NotNull ItemStack calculateItemStack(ConfigurationSection section, Collection<StackRandomizer> randomizers) {
         ItemStack stack = calculateSection(section, ConfigurationSection::getItemStack);
         if (stack == null) stack = new ItemStack(Material.STONE);
+        else stack = stack.clone();
 
         for (StackRandomizer randomizer : randomizers) randomizer.process(stack, randomizers);
         return stack;

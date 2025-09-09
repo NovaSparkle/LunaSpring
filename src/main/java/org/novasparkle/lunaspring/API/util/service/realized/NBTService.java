@@ -13,6 +13,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.novasparkle.lunaspring.API.menus.items.Item;
 import org.novasparkle.lunaspring.API.util.service.PluginService;
 import org.novasparkle.lunaspring.API.util.service.managers.NBTManager;
 
@@ -44,7 +45,7 @@ public class NBTService extends PluginService {
     }
 
     public void base64head(ItemStack head, String value) throws IllegalArgumentException {
-        this.base64head(head, value, UUID.randomUUID());
+        this.base64head(head, value, UUID.fromString(Item.BASEHEAD_VALUE));
     }
 
     public ReadableNBT getRoot(ItemStack item) {

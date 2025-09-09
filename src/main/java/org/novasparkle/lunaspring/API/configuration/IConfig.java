@@ -149,9 +149,13 @@ public class IConfig {
         return this.config.getLong(path);
     }
 
-    public <T> T readObject(String path, Function<ConfigurationSection, T> function) {
+    public <T> T readFields(String path, Function<ConfigurationSection, T> function) {
         ConfigurationSection section = this.getSection(path);
         return section == null ? null : function.apply(section);
+    }
+
+    public <T> T deserialize(Class<T> tClass, String path) {
+        return Utils.Base64.deserialize(tClass, this.getString(path));
     }
 
     /**

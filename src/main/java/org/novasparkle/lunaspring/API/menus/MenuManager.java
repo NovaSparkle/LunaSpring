@@ -53,6 +53,8 @@ public class MenuManager {
     }
 
     public void handleOpen(InventoryOpenEvent event) {
+        cleanInventory((Player) event.getPlayer());
+
         List<IMenu> menus = activeInventories.get(event.getInventory());
         if (menus != null && !menus.isEmpty()) {
             if (menus.size() > 1) {
@@ -126,10 +128,13 @@ public class MenuManager {
     }
 
     public void cleanInventory(final @NotNull Player player) {
-        for (final ItemStack itemStack : player.getInventory().getContents()) {
-            if (itemStack == null || !Item.isMarkered(itemStack)) continue;
+        ItemStack[] contents = player.getInventory().getContents();
 
-            player.getInventory().remove(itemStack);
+        for (int i = 0; i < contents.length; i++) {
+            ItemStack item = contents[i];
+            if (item != null && Item.isMarkered(item)) {
+                player.getInventory().setItem(i, null);
+            }
         }
         player.updateInventory();
     }

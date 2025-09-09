@@ -504,9 +504,9 @@ public class NonMenuItem implements Cloneable {
         return this;
     }
 
-    public static NonMenuItem fromItemStack(ItemStack stack) {
+    public static NonMenuItem fromItemStack(@NotNull ItemStack stack) {
         NonMenuItem nonMenuItem = new NonMenuItem(stack.getType(), stack.getAmount());
-        ItemMeta meta = nonMenuItem.itemStack.getItemMeta();
+        ItemMeta meta = stack.getItemMeta();
         if (meta != null) {
             nonMenuItem.displayName = meta.getDisplayName();
 
@@ -518,7 +518,7 @@ public class NonMenuItem implements Cloneable {
             nonMenuItem.itemFlags = new ArrayList<>(meta.getItemFlags());
         }
 
-        nonMenuItem.enchantments = stack.getEnchantments();
+        nonMenuItem.enchantments = new HashMap<>(stack.getEnchantments());
         nonMenuItem.itemStack = stack;
         return nonMenuItem.update();
     }

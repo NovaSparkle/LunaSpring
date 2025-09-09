@@ -5,8 +5,10 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
+import org.novasparkle.lunaspring.API.util.utilities.Utils;
 
 import java.io.File;
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.List;
 
@@ -118,7 +120,7 @@ public class Configuration extends IConfig {
     }
 
     @SneakyThrows
-    public void writeObject(String path, Object object) {
+    public void writeFields(String path, Object object) {
         Class<?> clazz = object.getClass();
         for (Field field : clazz.getDeclaredFields()) {
             field.setAccessible(true);
@@ -126,6 +128,10 @@ public class Configuration extends IConfig {
 
             this.set(path + field.getName(), field.get(object));
         }
+    }
+
+    public void serialize(String path, Serializable serializable) {
+        this.setString(path, Utils.Base64.serialize(serializable));
     }
 
     /**
