@@ -202,8 +202,6 @@ public class Utils {
                 .toList();
     }
 
-
-
     public void playersAction(Consumer<Player> playerConsumer) {
         Bukkit.getOnlinePlayers().forEach(playerConsumer);
     }
@@ -264,13 +262,13 @@ public class Utils {
         angle = (angle + 360) % 360;
 
         if (angle >= 337.5 || angle < 22.5) return CompassDirection.EAST;
-        if (angle >= 22.5 && angle < 67.5) return CompassDirection.SOUTH_EAST;
+        if (angle >= 22.5 && angle < 67.5) return CompassDirection.NORTH_EAST;
         if (angle >= 67.5 && angle < 112.5) return CompassDirection.NORTH;
-        if (angle >= 112.5 && angle < 157.5) return CompassDirection.SOUTH_WEST;
+        if (angle >= 112.5 && angle < 157.5) return CompassDirection.NORTH_WEST;
         if (angle >= 157.5 && angle < 202.5) return CompassDirection.WEST;
-        if (angle >= 202.5 && angle < 247.5) return CompassDirection.NORTH_WEST;
+        if (angle >= 202.5 && angle < 247.5) return CompassDirection.SOUTH_WEST;
         if (angle >= 247.5 && angle < 292.5) return CompassDirection.SOUTH;
-        return CompassDirection.NORTH_EAST;
+        return CompassDirection.SOUTH_EAST;
     }
 
     public CompassDirection getCompassDirection(Location from, Location to) {
@@ -643,8 +641,11 @@ public class Utils {
                     }
                 }
 
-                if (leftAmount > 0)
-                    player.getWorld().dropItem(dropLocation, itemStack.clone());
+                if (leftAmount > 0) {
+                    itemStack = itemStack.clone();
+                    itemStack.setAmount(leftAmount);
+                    player.getWorld().dropItem(dropLocation, itemStack);
+                }
             }
         }
 

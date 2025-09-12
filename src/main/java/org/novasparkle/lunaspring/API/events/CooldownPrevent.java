@@ -41,7 +41,7 @@ public class CooldownPrevent<T> implements Cloneable {
 
     public long getRemaining(T object) {
         if (this.contains(object)) {
-            return this.cache.get(object, v -> 0L) - System.currentTimeMillis();
+            return this.cache.get(object, v -> System.currentTimeMillis()) - System.currentTimeMillis();
         }
 
         return 0L;
