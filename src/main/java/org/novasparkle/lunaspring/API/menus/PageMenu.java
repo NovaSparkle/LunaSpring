@@ -59,7 +59,6 @@ public abstract class PageMenu<T> extends AMenu {
             super(section, rowCol);
         }
 
-        @Builder(builderMethodName = "nextbuilder", buildMethodName = "nextbuild")
         public NextButton(Material material, String displayName, List<String> lore, int amount, @Range(from = 0, to = 53) byte slot) {
             super(material, displayName, lore, amount, slot);
         }
@@ -75,8 +74,7 @@ public abstract class PageMenu<T> extends AMenu {
         public PreviousButton(ConfigurationSection section, boolean rowCol) {
             super(section, rowCol);
         }
-
-        @Builder(builderMethodName = "previousbuilder", buildMethodName = "previousbuild")
+        
         public PreviousButton(Material material, String displayName, List<String> lore, int amount, @Range(from = 0, to = 53) byte slot) {
             super(material, displayName, lore, amount, slot);
         }
