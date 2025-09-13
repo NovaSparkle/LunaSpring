@@ -575,6 +575,7 @@ public class NonMenuItem implements Cloneable {
     }
 
     public static NonMenuItem fromItemStack(@NotNull ItemStack stack) {
+        stack = stack.clone();
         NonMenuItem nonMenuItem = new NonMenuItem(stack.getType(), stack.getAmount());
 
         ItemMeta meta = stack.getItemMeta();
@@ -585,13 +586,18 @@ public class NonMenuItem implements Cloneable {
             if (lore != null && !lore.isEmpty()) nonMenuItem.lore = new ArrayList<>(lore);
 
             if (meta.hasEnchants()) nonMenuItem.glowing = true;
-
             nonMenuItem.itemFlags = new ArrayList<>(meta.getItemFlags());
 
             if (meta instanceof PotionMeta potionMeta) {
-                ((PotionMeta) nonMenuItem.getMeta()).setBasePotionData(potionMeta.getBasePotionData());
-                for (PotionEffect customEffect : potionMeta.getCustomEffects()) {
-                    nonMenuItem.setPotionEffect(customEffect);
+                PotionMeta nonMenuPotionMeta = nonMenuItem.getMeta(PotionMeta.class);
+                if (nonMenuPotionMeta != null) {
+                    nonMenuPotionMeta.setBasePotionData(potionMeta.getBasePotionData());
+                    nonMenuItem.setMeta(nonMenuPotionMeta);
+
+                    stack.setItemMeta(meta);
+                    for (PotionEffect customEffect : potionMeta.getCustomEffects()) {
+                        nonMenuItem.setPotionEffect(customEffect);
+                    }
                 }
             }
         }
@@ -600,7 +606,8 @@ public class NonMenuItem implements Cloneable {
         if (headValue != null && !headValue.isEmpty()) nonMenuItem.headValue = headValue;
 
         nonMenuItem.enchantments = new HashMap<>(stack.getEnchantments());
-        nonMenuItem.itemStack = stack.clone();
+        nonMenuItem.itemStack = stack;
+
         return nonMenuItem.update();
     }
 

@@ -74,7 +74,7 @@ public abstract class PageMenu<T> extends AMenu {
         public PreviousButton(ConfigurationSection section, boolean rowCol) {
             super(section, rowCol);
         }
-        
+
         public PreviousButton(Material material, String displayName, List<String> lore, int amount, @Range(from = 0, to = 53) byte slot) {
             super(material, displayName, lore, amount, slot);
         }
