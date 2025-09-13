@@ -22,7 +22,10 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.*;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 import org.novasparkle.lunaspring.API.util.exceptions.NoItemMetaException;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
@@ -105,22 +108,50 @@ public class NonMenuItem implements Cloneable {
 
         // UNBREAKABLE
         this.setUnbreakable(section.getBoolean("unbreakable", false));
+
+        // MODELDATA
+        this.applyModelData(section);
+
+        // POTION EFFECTS
+        this.applyPotionEffects(section);
     }
 
     // GETTERS
 
-    public ItemMeta getMeta() {
+    public @NotNull ItemMeta getMeta() {
         ItemMeta meta = this.itemStack.getItemMeta();
         if (meta == null) throw new NoItemMetaException(this.itemStack);
 
         return meta;
     }
 
+    public @Nullable <E extends ItemMeta> E getMeta(Class<E> targetClass) {
+        ItemMeta meta = this.getMeta();
+        try {
+            if (targetClass.isAssignableFrom(meta.getClass())) return targetClass.cast(meta);
+        } catch (ClassCastException ignored) {}
+        return null;
+    }
+
     public boolean isUnbreakable() {
         return getMeta().isUnbreakable();
     }
 
+    public int getModelData() {
+        return getMeta().getCustomModelData();
+    }
+
     // SETTERS
+    
+    public NonMenuItem setMeta(ItemMeta meta) {
+        this.itemStack.setItemMeta(meta);
+        return this;
+    }
+
+    public NonMenuItem setModelData(int modelData) {
+        this.getMeta().setCustomModelData(modelData);
+        return this;
+    }
 
     public NonMenuItem setMaterial(@NotNull Material material) {
         this.material = material;
@@ -132,6 +163,20 @@ public class NonMenuItem implements Cloneable {
         this.amount = Math.max(amount, 1);
         this.update();
         return this;
+    }
+
+    public NonMenuItem setPotionEffect(PotionEffect effect) {
+        ItemMeta meta = this.getMeta();
+        if (meta instanceof PotionMeta potionMeta) {
+            potionMeta.addCustomEffect(effect, true);
+            this.setMeta(potionMeta);
+        }
+        
+        return this;
+    }
+
+    public NonMenuItem setPotionEffect(PotionEffectType effectType, int duration, int amplifier) {
+        return this.setPotionEffect(new PotionEffect(effectType, duration, amplifier));
     }
 
     public NonMenuItem increase() {
@@ -206,6 +251,8 @@ public class NonMenuItem implements Cloneable {
         this.setMetaColor(itemSection.getString("color"));
         this.setDurability(itemSection);
         this.setUnbreakable(itemSection.getBoolean("unbreakable", false));
+        this.applyModelData(itemSection);
+        this.applyPotionEffects(itemSection);
 
         this.setAll(newMaterial, amount, displayName, lore, itemSection.getBoolean("enchanted"));
         return this;
@@ -323,6 +370,11 @@ public class NonMenuItem implements Cloneable {
         return this;
     }
 
+    public NonMenuItem applyModelData(ConfigurationSection section) {
+        if (section.getKeys(false).contains("modeldata")) return this.setModelData(section.getInt("modeldata"));
+        return this;
+    }
+
     public NonMenuItem applyAttributes(ConfigurationSection section) {
         ConfigurationSection aSection = section.getConfigurationSection("attributes");
         if (aSection == null) return this;
@@ -343,6 +395,24 @@ public class NonMenuItem implements Cloneable {
             EquipmentSlot slot = Utils.getEnumValue(EquipmentSlot.class, aSection.getString(key + ".slot"));
             this.addAttribute(attribute, new AttributeModifier(UUID.randomUUID(), Utils.getRKey((byte) 12), value, operation, slot));
         }
+        return this;
+    }
+    
+    public NonMenuItem applyPotionEffects(ConfigurationSection section) {
+        List<String> potions = section.getStringList("potion_effects");
+        if (potions.isEmpty()) return this;
+
+        for (String potion : potions) {
+            String[] split = potion.split(" <S> ");
+            if (split.length == 0) continue;
+
+            PotionEffectType effectType = PotionEffectType.getByName(split[0]);
+            int duration = split.length > 1 ? LunaMath.toInt(split[1],  100) : 100;
+            int amplifier = split.length > 2 ? LunaMath.toInt(split[2]) : 0;
+
+            this.setPotionEffect(effectType, duration, amplifier);
+        }
+
         return this;
     }
 
@@ -506,20 +576,31 @@ public class NonMenuItem implements Cloneable {
 
     public static NonMenuItem fromItemStack(@NotNull ItemStack stack) {
         NonMenuItem nonMenuItem = new NonMenuItem(stack.getType(), stack.getAmount());
+
         ItemMeta meta = stack.getItemMeta();
         if (meta != null) {
             nonMenuItem.displayName = meta.getDisplayName();
 
             List<String> lore = meta.getLore();
-            if (lore != null && !lore.isEmpty()) nonMenuItem.lore = lore;
+            if (lore != null && !lore.isEmpty()) nonMenuItem.lore = new ArrayList<>(lore);
 
             if (meta.hasEnchants()) nonMenuItem.glowing = true;
 
             nonMenuItem.itemFlags = new ArrayList<>(meta.getItemFlags());
+
+            if (meta instanceof PotionMeta potionMeta) {
+                ((PotionMeta) nonMenuItem.getMeta()).setBasePotionData(potionMeta.getBasePotionData());
+                for (PotionEffect customEffect : potionMeta.getCustomEffects()) {
+                    nonMenuItem.setPotionEffect(customEffect);
+                }
+            }
         }
 
+        String headValue = NBTManager.getBase64FromHead(stack);
+        if (headValue != null && !headValue.isEmpty()) nonMenuItem.headValue = headValue;
+
         nonMenuItem.enchantments = new HashMap<>(stack.getEnchantments());
-        nonMenuItem.itemStack = stack;
+        nonMenuItem.itemStack = stack.clone();
         return nonMenuItem.update();
     }
 

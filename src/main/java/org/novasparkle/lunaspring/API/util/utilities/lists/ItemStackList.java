@@ -9,7 +9,7 @@ import org.novasparkle.lunaspring.API.util.utilities.Utils;
 
 import java.util.Collection;
 
-public class ItemStackList extends GenericList<ItemStack> {
+public class ItemStackList extends LunaList<ItemStack> {
     public ItemStackList(int initialCapacity) {
         super(initialCapacity);
     }

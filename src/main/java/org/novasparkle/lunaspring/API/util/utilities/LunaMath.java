@@ -2,6 +2,7 @@ package org.novasparkle.lunaspring.API.util.utilities;
 
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
@@ -75,6 +76,18 @@ public class LunaMath {
         return toByte(text, (byte) 0);
     }
 
+    public float toFloat(String text, float defaultNum) {
+        try {
+            return Float.parseFloat(text);
+        } catch (NumberFormatException e) {
+            return defaultNum;
+        }
+    }
+
+    public float toFloat(String text) {
+        return toFloat(text, 0f);
+    }
+
     public boolean isEven(int num) {
         return num % 2 == 0;
     }
@@ -109,10 +122,15 @@ public class LunaMath {
         return getRandomDouble(numerical, "-");
     }
 
-    public @Nullable <T> T getRandom(List<T> collection) {
-        if (collection.isEmpty()) return null;
+    public @Nullable <T> T getRandom(@Nullable List<T> collection) {
+        if (collection == null || collection.isEmpty()) return null;
         if (collection.size() == 1) return collection.get(0);
         return collection.get(getRandomInt(0, collection.size()));
+    }
+
+    public @NotNull <T> T getRandomIfPresent(@Nullable List<T> collection, @NotNull Returner<T> returner) {
+        T t = getRandom(collection);
+        return t == null ? returner.apply() : t;
     }
 
     public double round(double notRoundedNum, int roundLength) {

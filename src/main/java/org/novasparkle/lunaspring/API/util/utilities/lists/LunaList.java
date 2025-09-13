@@ -10,29 +10,29 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-public class GenericList<E> extends ArrayList<E> {
-    public GenericList(int initialCapacity) {
+public class LunaList<E> extends ArrayList<E> {
+    public LunaList(int initialCapacity) {
         super(initialCapacity);
     }
 
-    public GenericList(@NotNull Collection<? extends E> c) {
+    public LunaList(@NotNull Collection<? extends E> c) {
         super(c);
     }
 
-    public GenericList() {
+    public LunaList() {
         super();
     }
 
-    public GenericList(Class<E> itemClass, String serializableData) {
+    public LunaList(Class<E> itemClass, String serializableData) {
         super(Utils.Base64.deserializeList(itemClass, serializableData));
     }
 
     @SafeVarargs
-    public GenericList(E... elements) {
+    public LunaList(E... elements) {
         this(List.of(elements));
     }
 
-    public GenericList<E> filter(Predicate<E> predicate) {
+    public LunaList<E> filter(Predicate<E> predicate) {
         this.removeIf(predicate);
         return this;
     }

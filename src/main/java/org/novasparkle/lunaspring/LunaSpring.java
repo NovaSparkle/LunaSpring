@@ -63,7 +63,7 @@ public final class LunaSpring extends LunaPlugin {
                 String splittedPath = split[1];
                 splittedPath = Utils.setBracketPlaceholders(offlinePlayer, splittedPath);
 
-                String placeholder = Localization.localize(Utils.setPlaceholders(offlinePlayer, splittedPath));
+                String placeholder = Localization.localize(splittedPath);
                 return placeholder == null || placeholder.isEmpty() ? splittedPath : placeholder;
             }
 

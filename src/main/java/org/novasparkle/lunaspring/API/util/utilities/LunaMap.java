@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
 public class LunaMap<S, E, X> implements Cloneable, Serializable {
-    private Map<S, Element<E, X>> map = new HashMap<>();
+    private HashMap<S, Element<E, X>> map = new HashMap<>();
 
     public void put(S key, E value1, X value2) {
         this.map.put(key, new Element<>(value1, value2));
@@ -16,7 +16,7 @@ public class LunaMap<S, E, X> implements Cloneable, Serializable {
         this.map.put(key, element);
     }
 
-    public Map<S, Element<E, X>> toHashMap() {
+    public HashMap<S, Element<E, X>> toHashMap() {
         return this.map;
     }
 

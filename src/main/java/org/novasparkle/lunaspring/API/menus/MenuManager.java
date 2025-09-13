@@ -132,7 +132,7 @@ public class MenuManager {
 
         for (int i = 0; i < contents.length; i++) {
             ItemStack item = contents[i];
-            if (item != null && Item.isMarkered(item)) {
+            if (Item.isMarkered(item)) {
                 player.getInventory().setItem(i, null);
             }
         }

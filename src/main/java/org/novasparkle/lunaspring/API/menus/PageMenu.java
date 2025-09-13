@@ -1,10 +1,14 @@
 package org.novasparkle.lunaspring.API.menus;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Range;
 import org.novasparkle.lunaspring.API.menus.items.Item;
 
 import java.util.ArrayList;
@@ -12,12 +16,8 @@ import java.util.List;
 
 public abstract class PageMenu<T> extends AMenu {
     protected final List<List<T>> items = new ArrayList<>();
-    @Setter
-    @Getter
-    private int page;
-    @Getter
-    @Setter
-    private List<Integer> itemsOrder;
+    @Getter @Setter private int page;
+    @Getter @Setter private List<Integer> itemsOrder;
     public PageMenu(Player player, List<Integer> itemsOrder) {
         super(player);
         this.itemsOrder = itemsOrder;
@@ -26,12 +26,23 @@ public abstract class PageMenu<T> extends AMenu {
             throw new RuntimeException("Список слотов кнопок не может быть пустым!");
         }
     }
-    public PageMenu(Player player) {
-        super(player);
+
+    public PageMenu(@NotNull Player player, String title, @Range(from = 9L, to = 54) byte size, List<Integer> itemsOrder) {
+        super(player, title, size);
         this.page = 1;
-        if (this.itemsOrder.isEmpty()) {
-            throw new RuntimeException("Список слотов кнопок не может быть пустым!");
-        }
+        this.itemsOrder = itemsOrder;
+    }
+
+    public PageMenu(@NotNull Player player, ConfigurationSection menuSection, List<Integer> itemsOrder) {
+        super(player, menuSection);
+        this.page = 1;
+        this.itemsOrder = itemsOrder;
+    }
+
+    public PageMenu(@NotNull Player player, String title, @Range(from = 9L, to = 54) byte size, ConfigurationSection decorSection, List<Integer> itemsOrder) {
+        super(player, title, size, decorSection);
+        this.page = 1;
+        this.itemsOrder = itemsOrder;
     }
 
     public void partition(List<T> classifiedItems) {
@@ -48,6 +59,11 @@ public abstract class PageMenu<T> extends AMenu {
             super(section, rowCol);
         }
 
+        @Builder(builderMethodName = "nextbuilder", buildMethodName = "nextbuild")
+        public NextButton(Material material, String displayName, List<String> lore, int amount, @Range(from = 0, to = 53) byte slot) {
+            super(material, displayName, lore, amount, slot);
+        }
+
         @Override
         public Item onClick(InventoryClickEvent event) {
             PageMenu.this.reloadPage(PageMenu.this.page + 1);
@@ -56,9 +72,13 @@ public abstract class PageMenu<T> extends AMenu {
     }
 
     public class PreviousButton extends Item {
-
         public PreviousButton(ConfigurationSection section, boolean rowCol) {
             super(section, rowCol);
+        }
+
+        @Builder(builderMethodName = "previousbuilder", buildMethodName = "previousbuild")
+        public PreviousButton(Material material, String displayName, List<String> lore, int amount, @Range(from = 0, to = 53) byte slot) {
+            super(material, displayName, lore, amount, slot);
         }
 
         @Override

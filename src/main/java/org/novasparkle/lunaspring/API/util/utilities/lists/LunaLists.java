@@ -8,12 +8,12 @@ import java.util.Collection;
 @UtilityClass
 public class LunaLists {
     @SafeVarargs
-    public <E> GenericList<E> newList(E... elements) {
-        return new GenericList<>(elements);
+    public <E> LunaList<E> newList(E... elements) {
+        return new LunaList<>(elements);
     }
 
-    public <E> GenericList<E> newList(Collection<E> collection) {
-        return new GenericList<>(collection);
+    public <E> LunaList<E> newList(Collection<E> collection) {
+        return new LunaList<>(collection);
     }
 
     public ItemStackList newStacks(ItemStack... itemStacks) {
@@ -22,5 +22,13 @@ public class LunaLists {
 
     public ItemStackList newStacks(Collection<ItemStack> itemStacks) {
         return new ItemStackList(itemStacks);
+    }
+
+    public StringList newStrings(String... strings) {
+        return new StringList(strings);
+    }
+
+    public StringList newStrings(Collection<String> strings) {
+        return new StringList(strings);
     }
 }

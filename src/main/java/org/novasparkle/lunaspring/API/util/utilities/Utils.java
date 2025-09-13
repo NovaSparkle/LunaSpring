@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -240,19 +241,19 @@ public class Utils {
     }
 
     public String setBracketPlaceholders(OfflinePlayer player, String line) {
-        if (line.contains("{") && line.contains("}")) {
-            Matcher matcher = Pattern.compile("\\{([^}]+)}").matcher(line);
+        Matcher matcher = Pattern.compile("\\{([^}]+)}").matcher(line);
 
-            StringBuilder builder = new StringBuilder();
-            while (matcher.find()) {
-                String replacement = setNakedPlaceholders(player, matcher.group(1));
-                matcher.appendReplacement(builder, Matcher.quoteReplacement(replacement));
-            }
-            matcher.appendTail(builder);
+        StringBuilder result = new StringBuilder();
+        while (matcher.find()) {
+            String raw = matcher.group(1);
+            String replacement = setNakedPlaceholders(player, raw);
+            matcher.appendReplacement(result, Matcher.quoteReplacement(replacement));
         }
 
-        return Utils.setPlaceholders(player, line);
+        matcher.appendTail(result);
+        return Utils.setPlaceholders(player, result.toString());
     }
+
 
     public String setNakedPlaceholders(OfflinePlayer player, String line) {
         return setPlaceholders(player, "%" + line + "%");

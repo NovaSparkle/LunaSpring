@@ -206,4 +206,19 @@ public class NBTService extends PluginService {
     public boolean isSimilar(ItemStack item1, ItemStack item2) {
         return getRoot(item1).equals(getRoot(item2));
     }
+
+    public String getBase64FromHead(ItemStack head) {
+        if (head == null || head.getType() != Material.PLAYER_HEAD) return null;
+
+        SkullMeta skullMeta = (SkullMeta) head.getItemMeta();
+        PlayerProfile profile = skullMeta.getPlayerProfile();
+        if (profile == null) return null;
+
+        ProfileProperty property = profile.getProperties()
+                .stream()
+                .filter(p -> p.getName().equalsIgnoreCase("textures"))
+                .findFirst()
+                .orElse(null);
+        return property == null ? null : property.getValue();
+    }
 }

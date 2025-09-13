@@ -196,6 +196,10 @@ public class NBTManager {
         return nbtService.isSimilar(item1, item2);
     }
 
+    public String getBase64FromHead(ItemStack head) {
+        return nbtService.getBase64FromHead(head);
+    }
+
     public boolean isEnabled() {
         return nbtService.mayUseService();
     }
