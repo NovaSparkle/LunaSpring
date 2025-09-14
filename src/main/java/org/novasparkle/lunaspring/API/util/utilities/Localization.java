@@ -52,7 +52,7 @@ public class Localization {
     }
 
     public Enchantment delocalizeEnchantment(String translatedText) {
-        return delocalize(s -> Enchantment.getByKey(NamespacedKey.minecraft(s)), ENCHANT_PATH, translatedText);
+        return delocalize(Utils::getEnchantment, ENCHANT_PATH, translatedText);
     }
 
     public String delocalize(String translatedText) {
@@ -65,18 +65,19 @@ public class Localization {
 
         Map<E, String> map = Maps.newHashMap();
         for (String key : section.getKeys(false)) {
-            map.put(function.apply(key), section.getString(key));
+            E object = function.apply(key);
+            if (object != null) map.put(object, section.getString(key));
         }
 
         return map;
     }
 
     public Map<Enchantment, String> localizeToEnchantmentMap() {
-        return localizeToMap(k -> Enchantment.getByKey(NamespacedKey.minecraft(k)), ENCHANT_PATH);
+        return localizeToMap(Utils::getEnchantment, ENCHANT_PATH);
     }
 
     public Map<EntityType, String> localizeToEntityTypeMap() {
-        return localizeToMap(EntityType::valueOf, ENTITY_TYPE_PATH);
+        return localizeToMap(k -> Utils.getEnumValue(EntityType.class, k), ENTITY_TYPE_PATH);
     }
 
     public Map<String, String> localizeToMap() {

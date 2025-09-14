@@ -9,6 +9,7 @@ import net.md_5.bungee.api.chat.*;
 import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
@@ -122,6 +123,19 @@ public class Utils {
 
     public <E extends Enum<E>> E getEnumValue(@NotNull Class<E> clazz, @Nullable String string) {
         return getEnumValue(clazz, string, null);
+    }
+
+    public Enchantment getEnchantment(@Nullable String string, Enchantment defaultValue) {
+        if (string == null || string.isEmpty()) return defaultValue;
+        try {
+            return Enchantment.getByKey(NamespacedKey.minecraft(string));
+        } catch (IllegalArgumentException e) {
+            return defaultValue;
+        }
+    }
+
+    public Enchantment getEnchantment(@Nullable String string) {
+        return getEnchantment(string, null);
     }
 
     public <T> @NotNull Optional<T> find(Stream<T> collection, Predicate<T> filterPredicate) {
