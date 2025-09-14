@@ -128,7 +128,7 @@ public class Utils {
     public Enchantment getEnchantment(@Nullable String string, Enchantment defaultValue) {
         if (string == null || string.isEmpty()) return defaultValue;
         try {
-            return Enchantment.getByKey(NamespacedKey.minecraft(string));
+            return Enchantment.getByKey(NamespacedKey.minecraft(string.toLowerCase()));
         } catch (IllegalArgumentException e) {
             return defaultValue;
         }
