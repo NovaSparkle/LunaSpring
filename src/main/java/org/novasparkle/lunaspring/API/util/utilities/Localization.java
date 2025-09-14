@@ -59,27 +59,27 @@ public class Localization {
         return delocalize(s -> s, CUSTOM_PATH, translatedText);
     }
 
-    public Map<String, String> delocalizeToMap(String sectionId) {
+    public <E> Map<E, String> localizeToMap(Function<String, E> function, String sectionId) {
         ConfigurationSection section = getLocalizationConfig().getSection(sectionId);
         if (section == null) return null;
 
-        Map<String, String> map = Maps.newHashMap();
+        Map<E, String> map = Maps.newHashMap();
         for (String key : section.getKeys(false)) {
-            map.put(key, section.getString(key));
+            map.put(function.apply(key), section.getString(key));
         }
 
         return map;
     }
 
-    public Map<String, String> delocalizeToEnchantmentMap() {
-        return delocalizeToMap(ENCHANT_PATH);
+    public Map<Enchantment, String> localizeToEnchantmentMap() {
+        return localizeToMap(k -> Enchantment.getByKey(NamespacedKey.minecraft(k)), ENCHANT_PATH);
     }
 
-    public Map<String, String> delocalizeToEntityTypeMap() {
-        return delocalizeToMap(ENTITY_TYPE_PATH);
+    public Map<EntityType, String> localizeToEntityTypeMap() {
+        return localizeToMap(EntityType::valueOf, ENTITY_TYPE_PATH);
     }
 
-    public Map<String, String> delocalizeToMap() {
-        return delocalizeToMap(CUSTOM_PATH);
+    public Map<String, String> localizeToMap() {
+        return localizeToMap(k -> k, CUSTOM_PATH);
     }
 }
