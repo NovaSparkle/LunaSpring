@@ -16,6 +16,8 @@ public class Decoration implements Cloneable {
     private List<Item> decorationItems;
     public Decoration(ConfigurationSection decorationSection, Inventory inventory) {
         this.decorationItems = new ArrayList<>();
+
+        if (decorationSection == null) return;
         boolean fillType = decorationSection.getBoolean("fillType.enabled");
 
         if (fillType) {

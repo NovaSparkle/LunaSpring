@@ -2,6 +2,8 @@ package org.novasparkle.lunaspring.API.util.utilities.lists;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.novasparkle.lunaspring.API.util.utilities.LunaMath;
+import org.novasparkle.lunaspring.API.util.utilities.Returner;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 
 import java.util.ArrayList;
@@ -63,5 +65,13 @@ public class LunaList<E> extends ArrayList<E> {
 
     public boolean contains(Predicate<E> predicate) {
         return this.first(predicate) != null;
+    }
+
+    public @Nullable E randomElement() {
+        return LunaMath.getRandom(this);
+    }
+
+    public @NotNull E randomElement(Returner<E> returner) {
+        return LunaMath.getRandomIfPresent(this, returner);
     }
 }
