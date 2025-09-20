@@ -1,6 +1,8 @@
 package org.novasparkle.lunaspring.API.util.service.managers.worldguard;
 
 import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldguard.LocalPlayer;
+import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.flags.Flag;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
@@ -8,9 +10,11 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import lombok.experimental.UtilityClass;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.novasparkle.lunaspring.API.util.exceptions.WGFlagGetException;
 import org.novasparkle.lunaspring.API.util.service.realized.GuardService;
 
@@ -24,6 +28,10 @@ public class GuardManager {
     private final GuardService guardService;
     static {
         guardService = new GuardService();
+    }
+
+    public @Nullable LunaFlags flags() {
+        return guardService.flags();
     }
 
     public RegionContainer getRegionContainer() {
@@ -228,6 +236,30 @@ public class GuardManager {
 
     public @NotNull StateFlag getWGFlag(String id) throws WGFlagGetException {
         return guardService.getWGFlag(id);
+    }
+
+    public @Nullable StateFlag getWGFlag(LunaFlags.IState state) {
+        return guardService.getWGFlag(state);
+    }
+
+    public boolean checkState(@NotNull ApplicableRegionSet regions, @NotNull LocalPlayer player, @NotNull StateFlag stateFlag) {
+        return guardService.checkState(regions, player, stateFlag);
+    }
+
+    public boolean checkState(@NotNull Location location, @NotNull LocalPlayer player, @NotNull StateFlag stateFlag) {
+        return guardService.checkState(location, player, stateFlag);
+    }
+
+    public LocalPlayer wrap(@NotNull Player player) {
+        return guardService.wrap(player);
+    }
+
+    public LocalPlayer wrap(@NotNull OfflinePlayer player) {
+        return guardService.wrap(player);
+    }
+
+    public ApplicableRegionSet getRegionSet(@NotNull Location location) {
+        return guardService.getRegionSet(location);
     }
 
     public boolean isEnabled() {

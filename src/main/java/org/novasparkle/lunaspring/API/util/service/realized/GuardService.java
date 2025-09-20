@@ -2,7 +2,9 @@ package org.novasparkle.lunaspring.API.util.service.realized;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldguard.LocalPlayer;
 import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.domains.DefaultDomain;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.flags.Flag;
@@ -15,14 +17,18 @@ import com.sk89q.worldguard.protection.regions.RegionContainer;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.novasparkle.lunaspring.API.util.exceptions.WGFlagGetException;
 import org.novasparkle.lunaspring.API.util.service.LunaService;
 import org.novasparkle.lunaspring.API.util.service.PluginService;
+import org.novasparkle.lunaspring.API.util.service.managers.WorldEditManager;
 import org.novasparkle.lunaspring.API.util.service.managers.worldguard.LFlag;
 import org.novasparkle.lunaspring.API.util.service.managers.worldguard.LState;
+import org.novasparkle.lunaspring.API.util.service.managers.worldguard.LunaFlags;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 
 import java.lang.reflect.Field;
@@ -35,8 +41,14 @@ import java.util.stream.Stream;
 
 @Getter
 public final class GuardService extends PluginService {
+    private final LunaFlags lunaFlags;
     public GuardService() {
         super("WorldGuard");
+        this.lunaFlags = this.mayUseService() ? new LunaFlags() : null;
+    }
+
+    public @Nullable LunaFlags flags() {
+        return this.lunaFlags;
     }
 
     public RegionContainer getRegionContainer() {
@@ -46,7 +58,7 @@ public final class GuardService extends PluginService {
 
     public RegionManager getRegionManager(World world) {
         this.checkService();
-        return this.getRegionContainer().get(BukkitAdapter.adapt(world));
+        return this.getRegionContainer().get(WorldEditManager.adapt(world));
     }
 
     public ProtectedCuboidRegion createRegion(String name, Location minLoc, Location maxLoc) {
@@ -395,9 +407,19 @@ public final class GuardService extends PluginService {
         return this.getWGFlag(flag.name());
     }
 
+    public @Nullable StateFlag getWGFlag(LunaFlags.IState state) {
+        return lunaFlags != null ? lunaFlags.flag(state) : null;
+    }
+
     public @NotNull StateFlag getWGFlag(String id) throws WGFlagGetException {
         this.checkService();
+
         id = id.toUpperCase();
+        if (lunaFlags != null) {
+            StateFlag flag = lunaFlags.flag(id);
+            if (flag != null) return flag;
+        }
+
         try {
             Field field = Flags.class.getField(id);
             field.setAccessible(true);
@@ -412,5 +434,26 @@ public final class GuardService extends PluginService {
         catch (ClassCastException e) {
             throw new WGFlagGetException("Невозможно преобразовать в StateFlag");
         }
+    }
+
+    public boolean checkState(@NotNull ApplicableRegionSet regions, @NotNull LocalPlayer player, @NotNull StateFlag stateFlag) {
+        return regions.testState(player, stateFlag);
+    }
+
+    public boolean checkState(@NotNull Location location, @NotNull LocalPlayer player, @NotNull StateFlag stateFlag) {
+        ApplicableRegionSet regions = getRegionSet(location);
+        return this.checkState(regions, player, stateFlag);
+    }
+
+    public LocalPlayer wrap(Player player) {
+        return WorldGuardPlugin.inst().wrapPlayer(player);
+    }
+
+    public LocalPlayer wrap(OfflinePlayer player) {
+        return WorldGuardPlugin.inst().wrapOfflinePlayer(player);
+    }
+
+    public ApplicableRegionSet getRegionSet(Location location) {
+        return getRegionManager(location.getWorld()).getApplicableRegions(BukkitAdapter.asBlockVector(location));
     }
 }

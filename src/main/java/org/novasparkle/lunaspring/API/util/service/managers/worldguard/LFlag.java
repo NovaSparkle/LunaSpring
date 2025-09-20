@@ -70,5 +70,5 @@ public enum LFlag {
     EXIT,
     EXIT_VIA_TELEPORT,
     ENDERPEARL,
-    CHORUS_TELEPORT
+    CHORUS_TELEPORT;
 }

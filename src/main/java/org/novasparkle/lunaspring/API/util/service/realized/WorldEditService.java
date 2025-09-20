@@ -4,6 +4,8 @@ import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.WorldEditException;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.entity.Entity;
+import com.sk89q.worldedit.entity.Player;
 import com.sk89q.worldedit.extent.clipboard.Clipboard;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormats;
@@ -13,15 +15,21 @@ import com.sk89q.worldedit.function.operation.Operations;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.session.ClipboardHolder;
 import com.sk89q.worldedit.world.biome.BiomeType;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.novasparkle.lunaspring.API.util.service.LunaService;
+import org.novasparkle.lunaspring.API.util.service.PluginService;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-public final class WorldEditService implements LunaService {
+public final class WorldEditService extends PluginService {
+    public WorldEditService() {
+        super("WorldEdit");
+    }
+
     public EditSession getSession(World world) {
         return WorldEdit.getInstance().newEditSession(BukkitAdapter.adapt(world));
     }
@@ -72,5 +80,21 @@ public final class WorldEditService implements LunaService {
     public void undo(EditSession editSession, EditSession newEditSession) {
         editSession.undo(newEditSession);
         editSession.close();
+    }
+
+    public Player adapt(org.bukkit.entity.Player player) {
+        return BukkitAdapter.adapt(player);
+    }
+
+    public com.sk89q.worldedit.world.World adapt(World world) {
+        return BukkitAdapter.adapt(world);
+    }
+
+    public Entity adapt(org.bukkit.entity.Entity entity) {
+        return BukkitAdapter.adapt(entity);
+    }
+
+    public com.sk89q.worldedit.util.Location adapt(Location location) {
+        return BukkitAdapter.adapt(location);
     }
 }

@@ -1,5 +1,6 @@
 package org.novasparkle.lunaspring;
 
+import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.bukkit.Bukkit;
@@ -7,8 +8,11 @@ import org.bukkit.scheduler.BukkitScheduler;
 import org.novasparkle.lunaspring.API.commands.LunaExecutor;
 import org.novasparkle.lunaspring.API.events.ItemMarkeredCleanHandler;
 import org.novasparkle.lunaspring.API.events.MenuHandler;
+import org.novasparkle.lunaspring.API.events.WorldGuardHandler;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
 import org.novasparkle.lunaspring.API.util.service.managers.VaultManager;
+import org.novasparkle.lunaspring.API.util.service.managers.worldguard.GuardManager;
+import org.novasparkle.lunaspring.API.util.service.managers.worldguard.LunaFlags;
 import org.novasparkle.lunaspring.API.util.utilities.Color;
 import org.novasparkle.lunaspring.API.util.utilities.Localization;
 import org.novasparkle.lunaspring.API.util.utilities.LunaTask;
@@ -39,7 +43,19 @@ public final class LunaSpring extends LunaPlugin {
         LunaExecutor.initialize(this, "#.self.commands");
 
         this.registerLunaPlaceholder();
-        Bukkit.getScheduler().runTask(this, VaultManager::initialize);
+        Bukkit.getScheduler().runTask(this, () -> {
+            VaultManager.initialize();
+
+            LunaFlags flags = GuardManager.flags();
+            if (flags != null) {
+                this.registerListeners(new WorldGuardHandler());
+
+                FlagRegistry registry = flags.getRegistry();
+                for (LunaFlags.State value : LunaFlags.State.values()) {
+                    flags.register(registry, value);
+                }
+            }
+        });
     }
 
     private void registerLunaPlaceholder() {

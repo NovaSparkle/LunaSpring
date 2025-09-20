@@ -3,6 +3,8 @@ package org.novasparkle.lunaspring.API.util.service.managers;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.entity.Entity;
+import com.sk89q.worldedit.entity.Player;
 import com.sk89q.worldedit.function.operation.Operation;
 import com.sk89q.worldedit.world.biome.BiomeType;
 import lombok.experimental.UtilityClass;
@@ -61,5 +63,25 @@ public class WorldEditManager {
 
     public void undo(EditSession editSession, World world) {
         undo(editSession, getSession(world));
+    }
+
+    public Player adapt(org.bukkit.entity.Player player) {
+        return weService.adapt(player);
+    }
+
+    public com.sk89q.worldedit.world.World adapt(World world) {
+        return weService.adapt(world);
+    }
+
+    public Entity adapt(org.bukkit.entity.Entity entity) {
+        return weService.adapt(entity);
+    }
+
+    public com.sk89q.worldedit.util.Location adapt(Location location) {
+        return weService.adapt(location);
+    }
+
+    public boolean isEnabled() {
+        return weService.mayUseService();
     }
 }
