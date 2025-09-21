@@ -4,12 +4,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import lombok.experimental.SuperBuilder;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.PotionEffect;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 import org.novasparkle.lunaspring.API.menus.ItemListMenu;
@@ -18,8 +20,8 @@ import org.novasparkle.lunaspring.API.util.service.managers.NBTManager;
 import org.novasparkle.lunaspring.API.util.utilities.LunaMath;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 @Accessors(chain = true, fluent = false)
@@ -52,6 +54,28 @@ public class Item extends NonMenuItem {
 
     public Item(NonMenuItem nonMenuItem, @Range(from = 0, to = 53) byte slot) {
         this(nonMenuItem.getMaterial(), nonMenuItem.getDisplayName(), nonMenuItem.getLore(), nonMenuItem.getAmount(), slot);
+        ItemMeta meta = nonMenuItem.getMeta();
+
+        if (meta.hasEnchants()) nonMenuItem.glowing = true;
+        this.itemFlags = new ArrayList<>(meta.getItemFlags());
+
+        if (meta instanceof PotionMeta potionMeta) {
+            PotionMeta nonMenuPotionMeta = this.getMeta(PotionMeta.class);
+            if (nonMenuPotionMeta != null) {
+                nonMenuPotionMeta.setBasePotionData(potionMeta.getBasePotionData());
+
+                this.setMeta(nonMenuPotionMeta);
+                for (PotionEffect customEffect : potionMeta.getCustomEffects()) {
+                    this.setPotionEffect(customEffect);
+                }
+            }
+        }
+
+        String headValue = nonMenuItem.headValue;
+        if (headValue != null && !headValue.isEmpty()) this.headValue = headValue;
+
+        this.enchantments = new HashMap<>(nonMenuItem.getEnchantments());
+        this.update();
     }
 
     public Item() {

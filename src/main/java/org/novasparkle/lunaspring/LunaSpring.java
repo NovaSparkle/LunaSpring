@@ -1,10 +1,8 @@
 package org.novasparkle.lunaspring;
 
-import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.bukkit.Bukkit;
-import org.bukkit.scheduler.BukkitScheduler;
 import org.novasparkle.lunaspring.API.commands.LunaExecutor;
 import org.novasparkle.lunaspring.API.events.ItemMarkeredCleanHandler;
 import org.novasparkle.lunaspring.API.events.MenuHandler;
@@ -23,13 +21,16 @@ import org.novasparkle.lunaspring.self.lunaengine.LunaEngine;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public final class LunaSpring extends LunaPlugin {
     @Getter private static LunaSpring instance;
     @Getter private final Set<LunaPlugin> hookedPlugins = new HashSet<>();
     private LunaEngine LE;
+
+    @Override
+    public void onLoad() {
+        this.registerFlags();
+    }
 
     @Override
     public void onEnable() {
@@ -43,19 +44,19 @@ public final class LunaSpring extends LunaPlugin {
         LunaExecutor.initialize(this, "#.self.commands");
 
         this.registerLunaPlaceholder();
-        Bukkit.getScheduler().runTask(this, () -> {
-            VaultManager.initialize();
+        if (GuardManager.isEnabled()) this.registerListeners(new WorldGuardHandler());
+        Bukkit.getScheduler().runTask(this, VaultManager::initialize);
+    }
 
-            LunaFlags flags = GuardManager.flags();
-            if (flags != null) {
-                this.registerListeners(new WorldGuardHandler());
+    private void registerFlags() {
+        if (!Utils.hasPlugin("WorldGuard")) return;
 
-                FlagRegistry registry = flags.getRegistry();
-                for (LunaFlags.State value : LunaFlags.State.values()) {
-                    flags.register(registry, value);
-                }
+        LunaFlags flags = GuardManager.flags();
+        if (flags != null) {
+            for (LunaFlags.State value : LunaFlags.State.values()) {
+                flags.register(value);
             }
-        });
+        }
     }
 
     private void registerLunaPlaceholder() {

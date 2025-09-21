@@ -44,7 +44,7 @@ public final class GuardService extends PluginService {
     private final LunaFlags lunaFlags;
     public GuardService() {
         super("WorldGuard");
-        this.lunaFlags = this.mayUseService() ? new LunaFlags() : null;
+        this.lunaFlags = Utils.hasPlugin(this.getPluginName()) ? new LunaFlags() : null;
     }
 
     public @Nullable LunaFlags flags() {

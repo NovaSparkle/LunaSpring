@@ -61,3 +61,19 @@ messages:
     - '    {S}| &fСостояние: {S}[status]'
     - ''
   subCommandClasses: 'В пакете [package] отсканировано [amount] подкоманд: [commands]'
+  flags:
+    lsp-elytra-glide: "{E}Вы не можете глайдить на элитрах здесь!"
+    lsp-elytra-glide-hard: "{E}Вы не можете глайдить на элитрах здесь!"
+    lsp-elytra-boost: "{E}Вы не можете использовать фейерверк для элитр здесь!"
+    lsp-enable-fly: "{E}Вы не можете включить полёт здесь!"
+    lsp-enable-sprint: "{E}Вы не можете пробежаться здесь!"
+    lsp-enable-sneak: "{E}Вы не можете присесть здесь!"
+    lsp-shear-entities: "{E}Вы не можете постричь моба здесь!"
+    lsp-bukket-fill: "{E}Вы не можете заполнить ведро здесь!"
+    lsp-bukket-empty: "{E}Вы не можете опустошить ведро здесь!"
+    lsp-jump: "{E}Вы не можете прыгнуть здесь!"
+    lsp-damage-items: "{E}Вы не можете немного поломать предмет!"
+    lsp-enable-crafts: "{E}Вы не можете скрафтить предмет здесь!"
+    lsp-receive-damage: "{E}Вы не можете получить урон здесь!"
+    lsp-use-portals: "{E}Вы не можете использовать портал!"
+    lsp-pickup-exp: "{E}Вы не можете подобрать опыт здесь!"

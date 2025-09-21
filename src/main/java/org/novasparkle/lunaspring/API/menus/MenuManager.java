@@ -54,6 +54,7 @@ public class MenuManager {
 
     public void handleOpen(InventoryOpenEvent event) {
         cleanInventory((Player) event.getPlayer());
+        if (event.isCancelled()) return;
 
         List<IMenu> menus = activeInventories.get(event.getInventory());
         if (menus != null && !menus.isEmpty()) {
@@ -66,6 +67,8 @@ public class MenuManager {
     }
 
     public void handleClick(InventoryClickEvent event) {
+        if (event.isCancelled()) return;
+
         Player player = (Player) event.getWhoClicked();
         Inventory inventory = event.getInventory();
 
