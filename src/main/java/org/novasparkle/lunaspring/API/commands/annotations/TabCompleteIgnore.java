@@ -8,6 +8,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface TabCompleteIgnore {
+    /**
+     * Массив индентификаторов подкоманд, которые не должны отображаться в таб-комплитере
+     */
     String[] value() default {};
-
 }

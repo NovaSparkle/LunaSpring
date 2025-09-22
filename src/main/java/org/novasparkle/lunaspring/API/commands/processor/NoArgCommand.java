@@ -6,6 +6,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.novasparkle.lunaspring.API.commands.Invocation;
+import org.novasparkle.lunaspring.API.commands.LunaCompleter;
+import org.novasparkle.lunaspring.API.commands.LunaExecutor;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 import org.novasparkle.lunaspring.LunaPlugin;
 import org.novasparkle.lunaspring.self.LSConfig;
@@ -14,32 +16,42 @@ import java.util.Arrays;
 import java.util.List;
 
 @Getter
-public class ZeroArgCommand implements Invocation {
+@Builder
+public class NoArgCommand implements LunaExecutor {
     private final LunaPlugin plugin;
     private final String appliedCommand;
-    private final List<ZeroArgCommand.AccessFlag> flags;
+    private final List<NoArgCommand.AccessFlag> flags;
     private final List<String> permissions;
-    private final Invocation invocation;
 
-    @Builder(buildMethodName = "zerobuild", builderMethodName = "zerobuilder")
-    public ZeroArgCommand(LunaPlugin lunaPlugin, String appliedCommand, AccessFlag[] flags, String[] permissions, Invocation invocation) {
+    private final Invocation invocation;
+    private LunaCompleter tabCompleter;
+
+    public NoArgCommand(LunaPlugin lunaPlugin, String appliedCommand, AccessFlag[] flags, String[] permissions, Invocation invocation, LunaCompleter tabCompleter) {
         this.plugin = lunaPlugin;
-        this.appliedCommand = appliedCommand;
+        this.appliedCommand = appliedCommand == null ? plugin.getName().toLowerCase() : appliedCommand;
         this.flags = List.of(flags);
-        this.permissions = Arrays.stream(permissions)
-                .map(p -> p.replace("@", plugin.getName().toLowerCase()).replace("#", appliedCommand))
-                .toList();
         this.invocation = invocation;
+        this.permissions = Arrays.stream(permissions)
+                .map(p -> p.replace("@", plugin.getName().toLowerCase()).replace("#", this.appliedCommand))
+                .toList();
     }
+
 
     public void invoke(CommandSender sender, String[] args) {
-        if (permissions.isEmpty() || this.hasPermission(sender) && this.invokeFlags(sender))
-            this.getInvocation().invoke(sender, args);
+        if (permissions.isEmpty() || this.hasPermission(sender) && this.checkFlags(sender))
+            invocation.invoke(sender, args);
     }
 
-    protected final boolean invokeFlags(CommandSender sender) {
-        for (AccessFlag flag : this.flags) {
-            if (!flag.invoke(sender)) return false;
+    public List<String> tabComplete(CommandSender sender, List<String> args) {
+        if (this.tabCompleter != null) {
+            return tabCompleter.tabComplete(sender, args);
+        }
+        return List.of();
+    }
+
+    protected final boolean checkFlags(CommandSender sender) {
+        for (AccessFlag flag : flags) {
+            if (!flag.check(sender)) return false;
         }
         return true;
     }
@@ -56,6 +68,9 @@ public class ZeroArgCommand implements Invocation {
         return permissions.isEmpty() || permissions.stream().anyMatch(sender::hasPermission) || sender.hasPermission("lunaspring.*");
     }
 
+
+
+
     public enum AccessFlag {
         PLAYER_ONLY(Player.class),
         CONSOLE_ONLY(ConsoleCommandSender.class);
@@ -65,7 +80,7 @@ public class ZeroArgCommand implements Invocation {
             this.senderClass = senderClass;
         }
 
-        public boolean invoke(CommandSender sender) {
+        public boolean check(CommandSender sender) {
             if (this.senderClass.isAssignableFrom(sender.getClass()) || sender.getClass().isInstance(this.senderClass)) return true;
 
             sender.sendMessage(Utils.applyReplacements(LSConfig.getMessage("invalidSender"),

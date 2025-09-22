@@ -1,7 +1,7 @@
 package org.novasparkle.lunaspring.self.commands;
 
 import org.bukkit.command.CommandSender;
-import org.novasparkle.lunaspring.API.commands.LunaCompleter;
+import org.novasparkle.lunaspring.API.commands.LunaExecutor;
 import org.novasparkle.lunaspring.API.commands.annotations.Check;
 import org.novasparkle.lunaspring.API.commands.annotations.SubCommand;
 import org.novasparkle.lunaspring.LunaPlugin;
@@ -12,9 +12,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-@SubCommand(commandIdentifiers = {"hooked"}, appliedCommand = "lunaspring")
-@Check(permissions = {"lunaspring.hooked"}, flags = {})
-public class HookedSubCommand implements LunaCompleter {
+@SubCommand(commandIdentifiers = "hooked", appliedCommand = "lunaspring")
+@Check(permissions = "#.hooked", flags = {})
+public class HookedSubCommand implements LunaExecutor {
+
     @Override
     public void invoke(CommandSender sender, String[] args) {
         String hooked = LSConfig.getMessage("hooked");

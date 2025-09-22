@@ -24,7 +24,7 @@ public class ConnectionPool {
     private final int validationTimeout;
 
     @SneakyThrows
-    public ConnectionPool(ConfigurationSection section) {
+    ConnectionPool(ConfigurationSection section) {
         if (section == null) throw new IllegalArgumentException("ConfigurationSection не может быть null!");
 
         String driverClass = Objects.requireNonNull(section.getString("driverClass"), "Driver Class базы данных не может быть null!");

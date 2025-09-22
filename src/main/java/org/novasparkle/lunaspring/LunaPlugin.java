@@ -9,7 +9,7 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.novasparkle.lunaspring.API.commands.processor.LunaSpringCommandProcessor;
+import org.novasparkle.lunaspring.API.commands.processor.CommandProcessor;
 import org.novasparkle.lunaspring.API.commands.annotations.LunaCommand;
 import org.novasparkle.lunaspring.API.events.LunaHandler;
 import org.novasparkle.lunaspring.API.util.exceptions.InvalidImplementationException;
@@ -33,7 +33,7 @@ import java.util.*;
 
 public abstract class LunaPlugin extends JavaPlugin {
     @Accessors(fluent = true)
-    private final List<LunaSpringCommandProcessor> processors = new ArrayList<>();
+    private final List<CommandProcessor> processors = new ArrayList<>();
 
     private void startMessage(List<String> startMessage) {
         String textColorString = LSConfig.getString("on_load_plugin_text_colors");
@@ -112,7 +112,7 @@ public abstract class LunaPlugin extends JavaPlugin {
         registerTabCompleter(tabExecutor, stringCommand);
     }
 
-    public void registerCommandProcessor(LunaSpringCommandProcessor processor) {
+    public void registerCommandProcessor(CommandProcessor processor) {
         this.registerTabExecutor(processor, processor.appliedCommand());
         if (!this.processors.contains(processor)) this.processors.add(processor);
     }
@@ -290,7 +290,7 @@ public abstract class LunaPlugin extends JavaPlugin {
         return this.getClass().isAnnotationPresent(PaidPlugin.class);
     }
 
-    public LunaSpringCommandProcessor getProcessor(String appliedCommand) {
+    public CommandProcessor getProcessor(String appliedCommand) {
         return Utils.find(this.processors, p -> p.appliedCommand().equalsIgnoreCase(appliedCommand)).orElse(null);
     }
 }

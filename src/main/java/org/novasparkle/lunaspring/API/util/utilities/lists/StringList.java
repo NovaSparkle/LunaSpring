@@ -15,8 +15,7 @@ public class StringList extends LunaList<String> {
         super(c);
     }
 
-    public StringList() {
-    }
+    public StringList() {}
 
     public StringList(String serializableData) {
         super(String.class, serializableData);

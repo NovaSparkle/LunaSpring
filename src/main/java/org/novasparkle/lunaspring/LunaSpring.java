@@ -3,8 +3,8 @@ package org.novasparkle.lunaspring;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.bukkit.Bukkit;
-import org.novasparkle.lunaspring.API.commands.LunaExecutor;
-import org.novasparkle.lunaspring.API.events.ItemMarkeredCleanHandler;
+import org.novasparkle.lunaspring.API.commands.CommandInitializer;
+import org.novasparkle.lunaspring.API.events.MarkedItemsEraser;
 import org.novasparkle.lunaspring.API.events.MenuHandler;
 import org.novasparkle.lunaspring.API.events.WorldGuardHandler;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
@@ -40,8 +40,8 @@ public final class LunaSpring extends LunaPlugin {
         this.LE = new LunaEngine();
 
         this.loadFile("localization.yml");
-        this.registerListeners(new MenuHandler(), new ItemMarkeredCleanHandler());
-        LunaExecutor.initialize(this, "#.self.commands");
+        this.registerListeners(new MenuHandler(), new MarkedItemsEraser());
+        CommandInitializer.initialize(this, "#.self.commands");
 
         this.registerLunaPlaceholder();
         if (!Utils.isPluginEnabled("WorldGuard")) this.registerListeners(new WorldGuardHandler());

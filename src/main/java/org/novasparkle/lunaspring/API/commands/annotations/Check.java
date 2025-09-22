@@ -1,6 +1,6 @@
 package org.novasparkle.lunaspring.API.commands.annotations;
 
-import org.novasparkle.lunaspring.API.commands.processor.LunaSpringSubCommand;
+import org.novasparkle.lunaspring.API.commands.processor.SubCommand;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -11,5 +11,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface Check {
     String[] permissions();
-    LunaSpringSubCommand.AccessFlag[] flags();
+    SubCommand.AccessFlag[] flags();
 }

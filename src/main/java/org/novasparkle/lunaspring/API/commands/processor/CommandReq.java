@@ -5,8 +5,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.List;
 
-public record CommandReq(String[] permissions, ZeroArgCommand.AccessFlag[] accessFlags, List<String> tabCompleteIgnore, int maxArgs, int minArgs) {
-    public CommandReq(String[] permissions, ZeroArgCommand.AccessFlag[] accessFlags, List<String> tabCompleteIgnore, int maxArgs, int minArgs) {
+public record CommandReq(String[] permissions, NoArgCommand.AccessFlag[] accessFlags, List<String> tabCompleteIgnore, int maxArgs, int minArgs) {
+    public CommandReq(String[] permissions, NoArgCommand.AccessFlag[] accessFlags, List<String> tabCompleteIgnore, int maxArgs, int minArgs) {
         this.permissions = permissions;
         this.accessFlags = accessFlags;
         this.tabCompleteIgnore = tabCompleteIgnore;

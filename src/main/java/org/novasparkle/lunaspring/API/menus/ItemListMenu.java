@@ -31,9 +31,9 @@ public interface ItemListMenu extends IMenu {
     boolean itemClick(@NotNull ItemStack itemStack, int slot, InventoryClickEvent event);
     boolean itemClick(@NotNull InventoryClickEvent event);
 
-    void addItems(Item... items);
-    Collection<Item> addItems(Collection<Item> items);
+    void addItems(boolean insert, Item... items);
+    Collection<Item> addItems(Collection<Item> items, boolean insert);
 
-    Collection<Item> insertAllItems();
+    Collection<Item> insertAll();
     void clear();
 }

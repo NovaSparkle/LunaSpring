@@ -13,7 +13,7 @@ public interface IMenu extends Cloneable {
     Player getPlayer();
     void onOpen(InventoryOpenEvent event);
     void onClick(InventoryClickEvent event);
-    void onClose(InventoryCloseEvent event);
+    default void onClose(InventoryCloseEvent event) {}
     void onDrag(InventoryDragEvent event);
     boolean isCancelled(Cancellable event, int slot);
 }

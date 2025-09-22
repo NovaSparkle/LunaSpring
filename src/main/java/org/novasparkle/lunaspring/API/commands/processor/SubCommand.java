@@ -2,7 +2,6 @@ package org.novasparkle.lunaspring.API.commands.processor;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 import org.bukkit.command.CommandSender;
 import org.novasparkle.lunaspring.API.commands.Invocation;
 import org.novasparkle.lunaspring.API.commands.LunaCompleter;
@@ -12,20 +11,18 @@ import org.novasparkle.lunaspring.self.LSConfig;
 import java.util.List;
 
 @Getter
-public class LunaSpringSubCommand extends ZeroArgCommand implements LunaCompleter {
+public class SubCommand extends NoArgCommand {
     private final CommandReq commandRequirements;
-
     private final List<String> commandIdentifiers;
-    @Setter
-    private LunaCompleter tabCompleter;
 
     @Builder
-    public LunaSpringSubCommand(LunaPlugin lunaPlugin, String appliedCommand, CommandReq commandReq, String[] commandIdentifiers, Invocation invocation) {
-        super(lunaPlugin, appliedCommand, commandReq.accessFlags(), commandReq.permissions(), invocation);
+    public SubCommand(LunaPlugin plugin, String appliedCommand, CommandReq commandReq, String[] commandIdentifiers, Invocation invocation, LunaCompleter tabCompleter) {
+        super(plugin, appliedCommand, commandReq.accessFlags(), commandReq.permissions(), invocation, tabCompleter);
 
         this.commandRequirements = commandReq;
         this.commandIdentifiers = List.of(commandIdentifiers);
     }
+
 
     public void invoke(CommandSender sender, String[] args) {
         if (this.getPermissions().isEmpty() || this.hasPermission(sender) && checkArgs(sender, args))
@@ -48,11 +45,5 @@ public class LunaSpringSubCommand extends ZeroArgCommand implements LunaComplete
         return this.commandIdentifiers.contains(inputIdentifier);
     }
 
-    @Override
-    public List<String> tabComplete(CommandSender sender, List<String> args) {
-        if (this.tabCompleter != null) {
-            return tabCompleter.tabComplete(sender, args);
-        }
-        return List.of();
-    }
+
 }

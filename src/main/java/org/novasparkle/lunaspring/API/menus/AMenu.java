@@ -10,6 +10,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -89,6 +90,19 @@ public abstract class AMenu implements ItemListMenu {
             this.decoration = new Decoration(decorSection, this.inventory);
             this.decoration.insert(this.inventory);
         }
+    }
+
+    @Override
+    public void onClick(InventoryClickEvent event) {
+        ItemStack clickedItem = event.getCurrentItem();
+        if (clickedItem != null) {
+            this.itemClick(event);
+        }
+    }
+
+    @Override
+    public void onDrag(InventoryDragEvent event) {
+        event.setCancelled(event.getRawSlots().stream().anyMatch(s -> s < inventory.getSize()));
     }
 
     @Override
@@ -221,19 +235,24 @@ public abstract class AMenu implements ItemListMenu {
     }
 
     @Override
-    public Collection<Item> insertAllItems() {
+    public Collection<Item> insertAll() {
         this.itemList.forEach(i -> i.insert(this));
         return this.itemList;
     }
 
     @Override
-    public void addItems(Item... items) {
-        this.itemList.addAll(Arrays.asList(items));
+    public void addItems(boolean insert, Item... items) {
+        List<Item> itemList = List.of(items);
+        this.itemList.addAll(itemList);
+        if (insert) itemList.forEach(i -> i.insert(this));
     }
 
     @Override
-    public Collection<Item> addItems(Collection<Item> items) {
+    public Collection<Item> addItems(Collection<Item> items, boolean insert) {
         this.itemList.addAll(items);
+        if (insert) {
+            items.forEach(i -> i.insert(this));
+        }
         return this.itemList;
     }
 

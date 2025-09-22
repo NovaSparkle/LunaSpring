@@ -13,12 +13,15 @@ import java.util.function.Consumer;
 
 @Getter @RequiredArgsConstructor @SuppressWarnings("deprecation")
 public enum StackRandomizer {
+
     ADVANCED_AMOUNT(null, i -> {
         if (i.getAmount() > 1) i.setAmount(LunaMath.getRandomInt(1, i.getAmount()));
     }),
+
     AMOUNT(ADVANCED_AMOUNT, i -> {
         i.setAmount(LunaMath.getRandomInt(1, i.getMaxStackSize()));
     }),
+
     ADVANCED_ENCHANTS(null, i -> {
         Map<Enchantment, Integer> enchantments = new HashMap<>(i.getEnchantments());
         for (Enchantment enchantment : enchantments.keySet()) {
@@ -26,6 +29,7 @@ public enum StackRandomizer {
             i.addUnsafeEnchantment(enchantment, LunaMath.getRandomInt(1, enchantments.get(enchantment) + 1));
         }
     }),
+
     ENCHANTS(ADVANCED_ENCHANTS, i -> {
         List<Enchantment> enchantments = new ArrayList<>(i.getEnchantments().keySet());
         for (Enchantment enchantment : enchantments) {
@@ -33,9 +37,11 @@ public enum StackRandomizer {
             i.addUnsafeEnchantment(enchantment, LunaMath.getRandomInt(1, enchantment.getMaxLevel() + 1));
         }
     }),
+
     ADVANCED_DURABILITY(null, i -> {
         if (i.getType().getMaxDurability() > 0) i.setDurability((short) LunaMath.getRandomInt(0, i.getType().getMaxDurability() - i.getDurability()));
     }),
+
     DURABILITY(ADVANCED_DURABILITY, i -> {
         if (i.getType().getMaxDurability() > 0) i.setDurability((short) LunaMath.getRandomInt(0, i.getType().getMaxDurability()));
     });

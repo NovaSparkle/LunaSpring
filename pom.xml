@@ -6,7 +6,7 @@
 
   <groupId>org.novasparkle.lunaspring</groupId>
   <artifactId>LunaSpring</artifactId>
-  <version>3.6.15</version>
+  <version>3.7.0</version>
   <packaging>jar</packaging>
 
   <name>LunaSpring</name>
@@ -22,11 +22,11 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-jar-plugin</artifactId>
             <version>3.4.2</version>
-<!--            <configuration>-->
-<!--                <outputDirectory>-->
-<!--                    C:\Users\ahrem\OneDrive\Рабочий стол\SateSpaceTest\plugins-->
-<!--                </outputDirectory>-->
-<!--            </configuration>-->
+            <configuration>
+                <outputDirectory>
+                    C:\Users\Nova\Desktop\Compiled Plugins
+                </outputDirectory>
+            </configuration>
         </plugin>
 
       <plugin>
@@ -37,6 +37,20 @@
         <configuration>
           <source>16</source>
           <target>16</target>
+            <annotationProcessorPaths>
+                <!-- JavaPoet -->
+                <annotationProcessorPath>
+                    <groupId>com.squareup</groupId>
+                    <artifactId>javapoet</artifactId>
+                    <version>1.13.0</version>
+                </annotationProcessorPath>
+                <!-- AutoService -->
+                <annotationProcessorPath>
+                    <groupId>com.google.auto.service</groupId>
+                    <artifactId>auto-service</artifactId>
+                    <version>1.0.1</version>
+                </annotationProcessorPath>
+            </annotationProcessorPaths>
         </configuration>
       </plugin>
 
@@ -153,6 +167,19 @@
           <artifactId>caffeine</artifactId>
           <version>3.1.8</version>
           <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+          <groupId>com.squareup</groupId>
+          <artifactId>javapoet</artifactId>
+          <version>1.13.0</version>
+      </dependency>
+
+      <dependency>
+          <groupId>com.google.auto.service</groupId>
+          <artifactId>auto-service</artifactId>
+          <version>1.0.1</version>
+          <optional>true</optional>
       </dependency>
   </dependencies>
 </project>
