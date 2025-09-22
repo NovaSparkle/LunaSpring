@@ -48,7 +48,7 @@ public class ConfigManagerProcessor extends AbstractProcessor {
                     .addStaticBlock(staticBlock);
 
             // Добавляем методы делегирования
-            TypeElement configElement = processingEnv.getElementUtils().getTypeElement("org.novasparkle.lunaspring.API.configuration.IConfig");
+            TypeElement configElement = processingEnv.getElementUtils().getTypeElement(processingEnv.getElementUtils().getModuleElement("org.novasparkle.lunaspring.API.configuration"), "IConfig");
             for (Element enclosed : configElement.getEnclosedElements()) {
                 if (enclosed.getKind() == ElementKind.METHOD &&
                         enclosed.getModifiers().contains(Modifier.PUBLIC) &&
