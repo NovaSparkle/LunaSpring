@@ -26,7 +26,7 @@ public class ColorManager {
     /**
      * Поскраска текста.
      */
-    public String color(String text) {
+    public static String color(String text) {
         return colorService.color(text);
     }
 

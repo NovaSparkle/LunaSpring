@@ -23,15 +23,12 @@ public final class CommandProcessor implements TabExecutor {
     private final String appliedCommand;
     private NoArgCommand noArgCommand;
 
-
     @SneakyThrows
     public CommandProcessor(@NotNull String appliedCommand) {
         this.subCommands = new ArrayList<>();
         this.commandIdentifiers = new ArrayList<>();
         this.appliedCommand = appliedCommand;
     }
-
-
 
 
     @Override

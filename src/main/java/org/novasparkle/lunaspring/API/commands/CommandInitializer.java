@@ -82,14 +82,14 @@ public final class CommandInitializer {
             completer = (LunaCompleter) commandInstance;
         }
 
-        NoArgCommand noArgCommand = NoArgCommand.builder()
+        NoArgCommand noArgCommand = NoArgCommand.zBuilder()
                 .plugin(lunaPlugin)
                 .appliedCommand(processor.appliedCommand())
-                .flags(List.of(flags))
+                .flags(flags)
                 .invocation(commandInstance)
                 .tabCompleter(completer)
-                .permissions(List.of(permissions))
-                .build();
+                .permissions(permissions)
+                .zBuild();
         processor.registerZeroArgCommand(noArgCommand);
     }
 
@@ -154,7 +154,6 @@ public final class CommandInitializer {
             SubCommand subCommand = SubCommand.builder()
                     .plugin(lunaPlugin)
                     .appliedCommand(command)
-                    .commandReq(commandReq)
                     .commandIdentifiers(subCommandAnnotation.commandIdentifiers())
                     .invocation(commandInstance)
                     .tabCompleter(completer)

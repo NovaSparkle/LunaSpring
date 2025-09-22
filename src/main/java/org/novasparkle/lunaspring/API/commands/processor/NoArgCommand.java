@@ -16,7 +16,6 @@ import java.util.Arrays;
 import java.util.List;
 
 @Getter
-@Builder
 public class NoArgCommand implements LunaExecutor {
     private final LunaPlugin plugin;
     private final String appliedCommand;
@@ -26,13 +25,14 @@ public class NoArgCommand implements LunaExecutor {
     private final Invocation invocation;
     private LunaCompleter tabCompleter;
 
-    public NoArgCommand(LunaPlugin lunaPlugin, String appliedCommand, AccessFlag[] flags, String[] permissions, Invocation invocation, LunaCompleter tabCompleter) {
-        this.plugin = lunaPlugin;
-        this.appliedCommand = appliedCommand == null ? plugin.getName().toLowerCase() : appliedCommand;
-        this.flags = List.of(flags);
+    @Builder(builderMethodName = "zBuilder", buildMethodName = "zBuild")
+    public NoArgCommand(LunaPlugin plugin, String appliedCommand, AccessFlag[] flags, String[] permissions, Invocation invocation, LunaCompleter tabCompleter) {
+        this.plugin = plugin;
+        this.appliedCommand = appliedCommand == null ? this.plugin.getName().toLowerCase() : appliedCommand;
+        this.flags = Arrays.asList(flags);
         this.invocation = invocation;
         this.permissions = Arrays.stream(permissions)
-                .map(p -> p.replace("@", plugin.getName().toLowerCase()).replace("#", this.appliedCommand))
+                .map(p -> p.replace("@", this.plugin.getName().toLowerCase()).replace("#", this.appliedCommand))
                 .toList();
     }
 
