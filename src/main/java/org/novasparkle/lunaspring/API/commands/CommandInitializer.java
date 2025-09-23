@@ -157,6 +157,7 @@ public final class CommandInitializer {
                     .commandIdentifiers(subCommandAnnotation.commandIdentifiers())
                     .invocation(commandInstance)
                     .tabCompleter(completer)
+                    .commandReq(commandReq)
                     .build();
 
 
