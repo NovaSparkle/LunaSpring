@@ -3,9 +3,11 @@ package org.novasparkle.lunaspring.API.util.utilities.rarities.loot;
 import lombok.Setter;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.novasparkle.lunaspring.API.util.utilities.LunaMath;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Setter
 public abstract class InventoryLoot<T, E> extends Loot<T, E> {
@@ -25,14 +27,14 @@ public abstract class InventoryLoot<T, E> extends Loot<T, E> {
         for (byte i = 0; i < this.getMaximumItems(); i++) {
             if (attempts >= this.attempts || list.isEmpty()) break;
 
-            byte slot = (byte) LunaMath.getRandom().nextInt(inventory.getSize());
+            byte slot = (byte) ThreadLocalRandom.current().nextInt(inventory.getSize());
             ItemStack itemStack = inventory.getItem(slot);
             if (itemStack != null && itemStack.getType().isAir()) {
                 attempts++;
                 continue;
             }
 
-            int index = LunaMath.getRandom().nextInt(list.size());
+            int index = ThreadLocalRandom.current().nextInt(list.size());
             T item = list.get(index);
             list.remove(index);
 

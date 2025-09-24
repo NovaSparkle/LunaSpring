@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import org.novasparkle.lunaspring.API.util.utilities.LunaMath;
 
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.BiFunction;
 import java.util.function.ToDoubleFunction;
 
@@ -24,7 +25,7 @@ public class RarityManager {
 
     public @Nullable <R> R calculate(Collection<R> collection, ToDoubleFunction<R> getChanceFunction) {
         double allChances = collection.stream().mapToDouble(getChanceFunction).sum();
-        double randomValue = allChances * LunaMath.getRandom().nextDouble();
+        double randomValue = allChances * ThreadLocalRandom.current().nextDouble();
 
         double currentSum = 0.0;
         for (R rarity : collection) {
