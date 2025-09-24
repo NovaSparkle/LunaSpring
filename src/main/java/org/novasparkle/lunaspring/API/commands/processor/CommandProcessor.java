@@ -30,7 +30,6 @@ public final class CommandProcessor implements TabExecutor {
         this.appliedCommand = appliedCommand;
     }
 
-
     @Override
     @SneakyThrows
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {

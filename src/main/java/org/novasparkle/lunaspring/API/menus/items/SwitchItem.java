@@ -54,6 +54,7 @@ public class SwitchItem extends Item {
         super(section, rowCol);
         this.menuFunction = menuFunction;
     }
+
     @Override
     public SwitchItem onClick(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();

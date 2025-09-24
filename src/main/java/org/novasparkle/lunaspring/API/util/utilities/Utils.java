@@ -13,6 +13,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.jetbrains.annotations.NotNull;
@@ -239,7 +240,7 @@ public class Utils {
     public EquipmentSlot getEquipmentSlot(Material material) {
         String name = material.name();
         if (name.endsWith("_HELMET")) return EquipmentSlot.HEAD;
-        if (name.endsWith("_CHESTPLATE")) return EquipmentSlot.CHEST;
+        if (name.endsWith("_CHESTPLATE") || material == Material.ELYTRA) return EquipmentSlot.CHEST;
         if (name.endsWith("_LEGGINGS")) return EquipmentSlot.LEGS;
         if (name.endsWith("_BOOTS")) return EquipmentSlot.FEET;
 
@@ -635,9 +636,19 @@ public class Utils {
                     continue;
                 }
 
-                HashMap<Integer, ? extends ItemStack> finds = inventory.all(itemStack);
+                ItemMeta checkedMeta = itemStack.getItemMeta();
+                List<? extends ItemStack> finds = inventory.all(itemStack).values()
+                        .stream()
+                        .filter(i -> {
+                            ItemMeta meta = i.getItemMeta();
+                            return (meta == null && checkedMeta == null)
+                                    || (checkedMeta != null && checkedMeta.equals(meta))
+                                    || (meta != null && meta.equals(checkedMeta));
+                        })
+                        .toList();
+
                 int leftAmount = itemStack.getAmount();
-                for (ItemStack value : finds.values()) {
+                for (ItemStack value : finds) {
                     int maxStack = value.getType().getMaxStackSize();
                     if (value.getAmount() >= maxStack) continue;
 
