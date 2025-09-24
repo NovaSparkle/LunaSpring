@@ -70,16 +70,10 @@ public final class CommandInitializer {
 
 
         Invocation commandInstance;
-        LunaCompleter completer = null;
         try {
             commandInstance = (Invocation) clazz.getDeclaredConstructor().newInstance();
         } catch (Exception e) {
             throw new RuntimeException("Не удалось создать класс " + clazz.getName(), e);
-        }
-
-
-        if (commandInstance instanceof LunaCompleter) {
-            completer = (LunaCompleter) commandInstance;
         }
 
         NoArgCommand noArgCommand = NoArgCommand.zBuilder()
@@ -87,7 +81,6 @@ public final class CommandInitializer {
                 .appliedCommand(processor.appliedCommand())
                 .flags(flags)
                 .invocation(commandInstance)
-                .tabCompleter(completer)
                 .permissions(permissions)
                 .zBuild();
         processor.registerZeroArgCommand(noArgCommand);

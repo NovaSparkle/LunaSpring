@@ -40,8 +40,10 @@ public final class CommandProcessor implements TabExecutor {
                 subCommand.invoke(sender, args);
                 break;
             }
-        } else if (this.noArgCommand != null) this.noArgCommand.invoke(sender, args);
-          else LSConfig.sendMessage(sender, "wrongArguments");
+        } else if (this.noArgCommand != null)
+              this.noArgCommand.invoke(sender, args);
+          else
+              LSConfig.sendMessage(sender, "wrongArguments");
 
         return true;
     }
@@ -52,8 +54,7 @@ public final class CommandProcessor implements TabExecutor {
         if (args.length == 1) {
             List<SubCommand> subCommands = this.subCommands.stream()
                     .filter(sc ->
-                            sc.getCommandIdentifiers().stream()
-                                    .anyMatch(identifier ->
+                            sc.getCommandIdentifiers().stream().anyMatch(identifier ->
                                             identifier.startsWith(args[0])) && sc.hasPermissionNoMessage(sender)).toList();
             if (!subCommands.isEmpty()) {
                 List<String> allCommandIdentifiers = Utils.tabCompleterFiltering(subCommands.stream().flatMap(sc -> sc.getCommandIdentifiers().stream()).collect(Collectors.toList()), args[0]);
@@ -68,7 +69,7 @@ public final class CommandProcessor implements TabExecutor {
                 return subCommand.tabComplete(sender, arguments);
             }
         }
-        return List.of();
+        return null;
     }
 
     public void registerSubCommand(SubCommand subCommand) {

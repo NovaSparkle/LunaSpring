@@ -15,8 +15,6 @@ import org.novasparkle.lunaspring.API.util.utilities.Color;
 import org.novasparkle.lunaspring.API.util.utilities.Localization;
 import org.novasparkle.lunaspring.API.util.utilities.LunaTask;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
-import org.novasparkle.lunaspring.self.PaidPlugin;
-import org.novasparkle.lunaspring.self.lunaengine.LunaEngine;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -25,7 +23,6 @@ import java.util.Set;
 public final class LunaSpring extends LunaPlugin {
     @Getter private static LunaSpring instance;
     @Getter private final Set<LunaPlugin> hookedPlugins = new HashSet<>();
-    private LunaEngine LE;
 
     @Override
     public void onLoad() {
@@ -37,7 +34,6 @@ public final class LunaSpring extends LunaPlugin {
         instance = this;
         this.saveDefaultConfig();
         super.onEnable();
-        this.LE = new LunaEngine();
 
         this.loadFile("localization.yml");
         this.registerListeners(new MenuHandler(), new MarkedItemsEraser());
@@ -112,19 +108,6 @@ public final class LunaSpring extends LunaPlugin {
     @SneakyThrows
     public void hookPlugin(LunaPlugin lunaPlugin) {
         if (lunaPlugin != instance) {
-            Class<?> pluginClass = lunaPlugin.getClass();
-            if (pluginClass.isAnnotationPresent(PaidPlugin.class)) {
-                if (this.LE.getConnection() == null || this.LE.getConnection().isClosed()) this.LE.connect();
-
-                if (!this.LE.checkPlugin(lunaPlugin)) {
-                    this.getPluginLoader().disablePlugin(lunaPlugin);
-
-                    this.warning("{E}Виртуальный ключ для плагина не найден!");
-                    this.warning("{S}Для работы с ним, необходимо получить ключ у администрации -> https://t.me/LunaEngineBot");
-                    return;
-                }
-            }
-
             this.hookedPlugins.add(lunaPlugin);
         }
     }

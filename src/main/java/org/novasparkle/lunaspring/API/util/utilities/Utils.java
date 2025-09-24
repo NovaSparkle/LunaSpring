@@ -5,8 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
 import me.clip.placeholderapi.PlaceholderAPI;
-import net.md_5.bungee.api.chat.*;
-import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
@@ -21,7 +19,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.novasparkle.lunaspring.API.menus.items.Item;
 import org.novasparkle.lunaspring.API.util.exceptions.SerializerException;
-import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -29,7 +26,7 @@ import java.io.IOException;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.function.BiFunction;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -51,7 +48,6 @@ public class Utils {
 
     /**
      * Получить случайную последовательность.
-     * <p>
      * @param size Длина строки
      * @param hasDuplicates Дублирование символов
      * @param kit Список символов
@@ -62,7 +58,7 @@ public class Utils {
 
         if (!hasDuplicates && size > kitSize) size = kitSize;
         for (byte i = 0; i < size;) {
-            char c = kit.charAt(LunaMath.getRandom().nextInt(kitSize));
+            char c = kit.charAt(ThreadLocalRandom.current().nextInt(kitSize));
             if (!hasDuplicates && endValue.toString().contains(String.valueOf(c))) continue;
 
             endValue.append(c);
@@ -90,8 +86,8 @@ public class Utils {
         if (world == null) return null;
         if (maxX == 0 || maxZ == 0) return findRandomLocation(world);
 
-        int x = LunaMath.getRandom().nextInt(maxX * 2) - maxX;
-        int z = LunaMath.getRandom().nextInt(maxZ * 2) - maxZ;
+        int x = ThreadLocalRandom.current().nextInt(maxX * 2) - maxX;
+        int z = ThreadLocalRandom.current().nextInt(maxZ * 2) - maxZ;
         int y = world.getHighestBlockYAt(x, z);
 
         return new Location(world, x, y, z);

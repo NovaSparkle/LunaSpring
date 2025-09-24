@@ -1,20 +1,16 @@
 package org.novasparkle.lunaspring.API.util.utilities;
 
-import lombok.Getter;
 import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Collection;
 import java.util.List;
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 @UtilityClass
 public class LunaMath {
-    @Getter
-    private final Random random = new Random();
 
     public int getIndex(int row, int col) {
         return (row - 1) * 9 + col - 1;
@@ -94,7 +90,7 @@ public class LunaMath {
 
     public int getRandomInt(int minValue, int maxValue) {
         if (minValue >= maxValue) return maxValue;
-        return random.nextInt(maxValue - minValue) + minValue;
+        return ThreadLocalRandom.current().nextInt(maxValue - minValue) + minValue;
     }
 
     public int getRandomInt(String numerical, String splitRegex) {
