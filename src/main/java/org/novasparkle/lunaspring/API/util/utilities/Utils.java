@@ -270,6 +270,12 @@ public class Utils {
         return setPlaceholders(player, "%" + line + "%");
     }
 
+    public void cancelTask(int taskId) {
+        if (Bukkit.getScheduler().isQueued(taskId) || Bukkit.getScheduler().isCurrentlyRunning(taskId)) {
+            Bukkit.getScheduler().cancelTask(taskId);
+        }
+    }
+
     public CompassDirection getCompassDirection(double angle) {
         angle = (angle + 360) % 360;
 
