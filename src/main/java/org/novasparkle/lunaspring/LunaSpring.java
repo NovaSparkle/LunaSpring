@@ -40,7 +40,7 @@ public final class LunaSpring extends LunaPlugin {
         CommandInitializer.initialize(this, "#.self.commands");
 
         this.registerLunaPlaceholder();
-        if (!Utils.isPluginEnabled("WorldGuard")) this.registerListeners(new WorldGuardHandler());
+        if (Utils.isPluginEnabled("WorldGuard")) this.registerListeners(new WorldGuardHandler());
         Bukkit.getScheduler().runTask(this, VaultManager::initialize);
     }
 
