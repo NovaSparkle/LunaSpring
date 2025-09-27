@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Supplier;
 
 @UtilityClass
 public class LunaMath {
@@ -124,9 +125,9 @@ public class LunaMath {
         return collection.get(getRandomInt(0, collection.size()));
     }
 
-    public @NotNull <T> T getRandomIfPresent(@Nullable List<T> collection, @NotNull Returner<T> returner) {
+    public @NotNull <T> T getRandomIfPresent(@Nullable List<T> collection, @NotNull Supplier<T> returner) {
         T t = getRandom(collection);
-        return t == null ? returner.apply() : t;
+        return t == null ? returner.get() : t;
     }
 
     public double round(double notRoundedNum, int roundLength) {

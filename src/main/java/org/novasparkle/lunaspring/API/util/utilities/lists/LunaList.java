@@ -3,13 +3,13 @@ package org.novasparkle.lunaspring.API.util.utilities.lists;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.novasparkle.lunaspring.API.util.utilities.LunaMath;
-import org.novasparkle.lunaspring.API.util.utilities.Returner;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 public class LunaList<E> extends ArrayList<E> {
@@ -71,7 +71,7 @@ public class LunaList<E> extends ArrayList<E> {
         return LunaMath.getRandom(this);
     }
 
-    public @NotNull E randomElement(Returner<E> returner) {
+    public @NotNull E randomElement(Supplier<E> returner) {
         return LunaMath.getRandomIfPresent(this, returner);
     }
 }
