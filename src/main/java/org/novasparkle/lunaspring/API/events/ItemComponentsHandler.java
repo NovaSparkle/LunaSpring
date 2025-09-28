@@ -5,6 +5,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -78,5 +79,15 @@ public class ItemComponentsHandler implements Listener {
         ComponentStorage.getRealizedComponents(QuitItemComponent.class).forEach(c -> {
             c.onQuit(player, ComponentStorage.scanInventory(playerInventory, c));
         });
+    }
+
+    @EventHandler
+    public void onPickup(PlayerAttemptPickupItemEvent e) {
+        ItemStack itemStack = e.getItem().getItemStack();
+        PickupItemComponent component = ComponentStorage.getComponent(itemStack, PickupItemComponent.class);
+        if (component == null) return;
+
+        if (this.cache.isCancelled(e, e.getPlayer().getUniqueId())) return;
+        component.onPickup(e, itemStack);
     }
 }
