@@ -5,15 +5,13 @@ import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitScheduler;
+import org.novasparkle.lunaspring.API.util.service.managers.TaskManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter @RequiredArgsConstructor
 public abstract class LunaTask extends BukkitRunnable {
-    @Getter
-    private static final List<LunaTask> tasks = new ArrayList<>();
-
     private final long ticks;
     private boolean isActive;
 
@@ -22,7 +20,7 @@ public abstract class LunaTask extends BukkitRunnable {
     @Override
     public void run() {
         if (this.isActive) return;
-        tasks.add(this);
+        TaskManager.register(this);
 
         this.isActive = true;
         this.start();
@@ -33,10 +31,8 @@ public abstract class LunaTask extends BukkitRunnable {
         this.isActive = false;
 
         int id = this.getTaskId();
-        tasks.remove(this);
+        TaskManager.unregister(this);
 
-        BukkitScheduler scheduler = Bukkit.getScheduler();
-        if (scheduler.isQueued(id) || scheduler.isCurrentlyRunning(id))
-            scheduler.cancelTask(id);
+        Utils.cancelTask(id);
     }
 }

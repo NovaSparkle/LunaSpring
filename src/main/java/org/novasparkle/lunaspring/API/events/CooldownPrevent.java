@@ -4,7 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.bukkit.event.Cancellable;
-import org.novasparkle.lunaspring.API.util.service.realized.Cache;
+import org.novasparkle.lunaspring.API.util.utilities.Cache;
 
 import java.util.concurrent.TimeUnit;
 

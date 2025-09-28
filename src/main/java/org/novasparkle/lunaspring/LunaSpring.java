@@ -4,10 +4,13 @@ import lombok.Getter;
 import lombok.SneakyThrows;
 import org.bukkit.Bukkit;
 import org.novasparkle.lunaspring.API.commands.CommandInitializer;
+import org.novasparkle.lunaspring.API.events.ItemComponentsHandler;
 import org.novasparkle.lunaspring.API.events.MarkedItemsEraser;
 import org.novasparkle.lunaspring.API.events.MenuHandler;
 import org.novasparkle.lunaspring.API.events.WorldGuardHandler;
+import org.novasparkle.lunaspring.API.items.ComponentStorage;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
+import org.novasparkle.lunaspring.API.util.service.managers.TaskManager;
 import org.novasparkle.lunaspring.API.util.service.managers.VaultManager;
 import org.novasparkle.lunaspring.API.util.service.managers.worldguard.GuardManager;
 import org.novasparkle.lunaspring.API.util.service.managers.worldguard.LunaFlags;
@@ -36,7 +39,7 @@ public final class LunaSpring extends LunaPlugin {
         super.onEnable();
 
         this.loadFile("localization.yml");
-        this.registerListeners(new MenuHandler(), new MarkedItemsEraser());
+        this.registerListeners(new MenuHandler(), new MarkedItemsEraser(), new ItemComponentsHandler());
         CommandInitializer.initialize(this, "#.self.commands");
 
         this.registerLunaPlaceholder();
@@ -118,7 +121,7 @@ public final class LunaSpring extends LunaPlugin {
 
     @Override
     public void onDisable() {
-        new ArrayList<>(LunaTask.getTasks()).forEach(LunaTask::cancel);
+        TaskManager.stopAll();
         super.onDisable();
     }
 }

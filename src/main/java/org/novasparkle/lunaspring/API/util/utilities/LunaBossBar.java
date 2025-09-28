@@ -108,6 +108,10 @@ public class LunaBossBar {
         return this;
     }
 
+    public LunaBossBar addPlayers(Player... players) {
+        return this.addPlayers(List.of(players));
+    }
+
     public LunaBossBar removePlayer(Player player) {
         this.bar.removePlayer(player);
         return this;
@@ -118,11 +122,16 @@ public class LunaBossBar {
         return this;
     }
 
+    public LunaBossBar removePlayers(Player... players) {
+        return this.removePlayers(List.of(players));
+    }
+
     public List<Player> getPlayers() {
         return this.bar.getPlayers();
     }
 
     public final LunaBossBar addFlag(BarFlag barFlag) {
+        if (this.flags.contains(barFlag)) return this;
         this.flags.add(barFlag);
         this.bar.addFlag(barFlag);
         return this;

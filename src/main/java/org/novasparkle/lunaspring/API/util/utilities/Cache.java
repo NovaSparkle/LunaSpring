@@ -1,4 +1,4 @@
-package org.novasparkle.lunaspring.API.util.service.realized;
+package org.novasparkle.lunaspring.API.util.utilities;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
 import lombok.Getter;
