@@ -191,16 +191,16 @@ public class IConfig {
 
             String newLine = line
                     .replace("[ACTION_BAR] ", "")
-                    .replace("[SOUND_ALL]", "")
+                    .replace("[SOUND_ALL] ", "")
                     .replace("[BROADCAST] ", "")
                     .replace("[TITLE] ", "")
-                    .replace("[TITLE_ALL]", "")
+                    .replace("[TITLE_ALL] ", "")
                     .replace("[SUGGESTCOMMAND] ", "")
                     .replace("[RUNCOMMAND] ", "")
                     .replace("[URL] ", "")
                     .replace("[CLIPBOARDCOPY] ", "")
                     .replace("[SOUND] ", "")
-                    .replace("[HOVER]", "");
+                    .replace("[HOVER] ", "");
 
             if (line.startsWith("[SUGGESTCOMMAND]")) {
                 sender.spigot().sendMessage(ComponentUtils.createClickableText(newLine, ClickEvent.Action.SUGGEST_COMMAND));
