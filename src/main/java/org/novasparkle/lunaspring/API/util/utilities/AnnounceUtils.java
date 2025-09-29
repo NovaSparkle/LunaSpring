@@ -26,7 +26,8 @@ public class AnnounceUtils {
     }
 
     public boolean sound(Player player, String sound, float volume) {
-        if (Arrays.stream(Sound.values()).noneMatch(s -> s.name().equalsIgnoreCase(sound))) return false;
+        Sound s =  Utils.getEnumValue(Sound.class, sound);
+        if (s == null) return false;
 
         sound(player, Sound.valueOf(sound), volume);
         return true;

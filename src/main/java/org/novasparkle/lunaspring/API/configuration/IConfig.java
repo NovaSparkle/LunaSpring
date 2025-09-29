@@ -191,8 +191,10 @@ public class IConfig {
 
             String newLine = line
                     .replace("[ACTION_BAR] ", "")
+                    .replace("[SOUND_ALL]", "")
                     .replace("[BROADCAST] ", "")
                     .replace("[TITLE] ", "")
+                    .replace("[TITLE_ALL]", "")
                     .replace("[SUGGESTCOMMAND] ", "")
                     .replace("[RUNCOMMAND] ", "")
                     .replace("[URL] ", "")
