@@ -8,6 +8,7 @@ import org.novasparkle.lunaspring.API.util.utilities.Utils;
 import org.novasparkle.lunaspring.API.util.utilities.lists.LunaList;
 import org.novasparkle.lunaspring.API.util.utilities.lists.LunaLists;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -41,7 +42,7 @@ public class TaskManager {
         tasksId.forEach(Utils::cancelTask);
         tasksId.clear();
 
-        tasks.forEach(LunaTask::cancel);
+        new ArrayList<>(tasks).forEach(LunaTask::cancel);
         tasks.clear();
     }
 

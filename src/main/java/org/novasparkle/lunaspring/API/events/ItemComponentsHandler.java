@@ -56,6 +56,7 @@ public class ItemComponentsHandler implements Listener {
         if (component == null) return;
 
         if (this.cache.isCancelled(e, player.getUniqueId())) return;
+
         component.onClick(e);
     }
 
