@@ -578,13 +578,13 @@ public class Utils {
         }
 
         @SuppressWarnings("all")
-        public void remove(@NotNull ItemStack[] storage, Function<ItemStack, Boolean> checkFunction, final int amount) {
+        public void remove(@NotNull ItemStack[] storage, Predicate<ItemStack> checkFunction, final int amount) {
             int left = amount;
             for (ItemStack itemStack : storage) {
                 if (left <= 0) break;
 
                 if (itemStack == null) continue;
-                if (checkFunction == null || checkFunction.apply(itemStack)) {
+                if (checkFunction == null || checkFunction.test(itemStack)) {
                     int different = left - itemStack.getAmount();
                     left -= different > 0 ? itemStack.getAmount() : left;
 

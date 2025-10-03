@@ -52,12 +52,21 @@ public class ItemComponentsHandler implements Listener {
         ItemStack item = e.getCurrentItem();
         if (item == null || item.getType().isAir()) return;
 
+        boolean isCursored = false;
         InventoryClickItemComponent component = ComponentStorage.getComponent(item, InventoryClickItemComponent.class);
-        if (component == null) return;
+        if (component == null) {
+            item = e.getCursor();
+            if (item == null || item.getType().isAir()) return;
+
+            component = ComponentStorage.getComponent(item, InventoryClickItemComponent.class);
+            if (component == null) return;
+
+            isCursored = true;
+        }
 
         if (this.cache.isCancelled(e, player.getUniqueId())) return;
 
-        component.onClick(e);
+        component.onClick(e, item, isCursored);
     }
 
     @EventHandler
