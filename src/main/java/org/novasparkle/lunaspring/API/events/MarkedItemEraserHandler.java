@@ -10,7 +10,7 @@ import org.novasparkle.lunaspring.API.menus.MenuManager;
 import org.novasparkle.lunaspring.API.menus.items.Item;
 import org.novasparkle.lunaspring.LunaSpring;
 
-public class MarkedItemsEraser implements Listener {
+public class MarkedItemEraserHandler implements Listener {
     @EventHandler
     private void onPickup(EntityPickupItemEvent event) {
         org.bukkit.entity.Item item = event.getItem();

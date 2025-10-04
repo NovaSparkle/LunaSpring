@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.novasparkle.lunaspring.API.menus.items.Item;
 import org.novasparkle.lunaspring.API.util.exceptions.SerializerException;
+import org.novasparkle.lunaspring.API.util.service.managers.VanishManager;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -203,6 +204,7 @@ public class Utils {
     public List<String> getPlayerNicks(String tabCompleterValueFilter) {
         return tabCompleterFiltering(Bukkit.getOnlinePlayers()
                 .stream()
+                .filter(p -> !VanishManager.isVanished(p))
                 .map(Player::getName).toList(),
                 tabCompleterValueFilter);
     }
@@ -214,8 +216,14 @@ public class Utils {
                 .toList();
     }
 
+    public void playersAction(Consumer<Player> playerConsumer, boolean containsVanished) {
+        Bukkit.getOnlinePlayers().forEach(p -> {
+            if (containsVanished || !VanishManager.isVanished(p)) playerConsumer.accept(p);
+        });
+    }
+
     public void playersAction(Consumer<Player> playerConsumer) {
-        Bukkit.getOnlinePlayers().forEach(playerConsumer);
+        playersAction(playerConsumer, true);
     }
 
     public String applyReplacements(String starterLine, String... replacements) {

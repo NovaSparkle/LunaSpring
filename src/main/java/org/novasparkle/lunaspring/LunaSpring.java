@@ -5,10 +5,9 @@ import lombok.SneakyThrows;
 import org.bukkit.Bukkit;
 import org.novasparkle.lunaspring.API.commands.CommandInitializer;
 import org.novasparkle.lunaspring.API.events.ItemComponentsHandler;
-import org.novasparkle.lunaspring.API.events.MarkedItemsEraser;
+import org.novasparkle.lunaspring.API.events.MarkedItemEraserHandler;
 import org.novasparkle.lunaspring.API.events.MenuHandler;
 import org.novasparkle.lunaspring.API.events.WorldGuardHandler;
-import org.novasparkle.lunaspring.API.items.ComponentStorage;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
 import org.novasparkle.lunaspring.API.util.service.managers.TaskManager;
 import org.novasparkle.lunaspring.API.util.service.managers.VaultManager;
@@ -16,10 +15,8 @@ import org.novasparkle.lunaspring.API.util.service.managers.worldguard.GuardMana
 import org.novasparkle.lunaspring.API.util.service.managers.worldguard.LunaFlags;
 import org.novasparkle.lunaspring.API.util.utilities.Color;
 import org.novasparkle.lunaspring.API.util.utilities.Localization;
-import org.novasparkle.lunaspring.API.util.utilities.LunaTask;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -39,7 +36,7 @@ public final class LunaSpring extends LunaPlugin {
         super.onEnable();
 
         this.loadFile("localization.yml");
-        this.registerListeners(new MenuHandler(), new MarkedItemsEraser(), new ItemComponentsHandler());
+        this.registerListeners(new MenuHandler(), new MarkedItemEraserHandler(), new ItemComponentsHandler());
         CommandInitializer.initialize(this, "#.self.commands");
 
         this.registerLunaPlaceholder();
