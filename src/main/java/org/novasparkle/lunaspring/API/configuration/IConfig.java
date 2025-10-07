@@ -173,7 +173,6 @@ public class IConfig {
     *    - "[SOUND] UI_BUTTON_CLICK"<br>
      */
 
-    @SuppressWarnings("deprecation")
     public void sendMessage(String messagesPath, CommandSender sender, String id, String... replacements) {
         String path = String.format("%s.%s", messagesPath, id);
 
@@ -183,66 +182,7 @@ public class IConfig {
             if (stringMessage != null && !stringMessage.isEmpty()) message.add(stringMessage);
         }
 
-        for (String line : message) {
-            line = Utils.applyReplacements(line, replacements);
-
-            Player player = sender instanceof Player p ? p : null;
-            if (player != null) line = Utils.setPlaceholders(player, line);
-
-            String newLine = line
-                    .replace("[ACTION_BAR] ", "")
-                    .replace("[SOUND_ALL] ", "")
-                    .replace("[BROADCAST] ", "")
-                    .replace("[TITLE] ", "")
-                    .replace("[TITLE_ALL] ", "")
-                    .replace("[SUGGESTCOMMAND] ", "")
-                    .replace("[RUNCOMMAND] ", "")
-                    .replace("[URL] ", "")
-                    .replace("[CLIPBOARDCOPY] ", "")
-                    .replace("[SOUND] ", "")
-                    .replace("[HOVER] ", "");
-
-            if (line.startsWith("[SUGGESTCOMMAND]")) {
-                sender.spigot().sendMessage(ComponentUtils.createClickableText(newLine, ClickEvent.Action.SUGGEST_COMMAND));
-                continue;
-            } else if (line.startsWith("[RUNCOMMAND]")) {
-                sender.spigot().sendMessage(ComponentUtils.createClickableText(newLine, ClickEvent.Action.RUN_COMMAND));
-                continue;
-            } else if (line.startsWith("[HOVER]")) {
-                sender.spigot().sendMessage(ComponentUtils.createHoverableText(newLine));
-                continue;
-            } else if (line.startsWith("[URL]")) {
-                sender.spigot().sendMessage(ComponentUtils.createClickableText(newLine, ClickEvent.Action.OPEN_URL));
-                continue;
-            } else if (line.startsWith("[CLIPBOARDCOPY]")) {
-                sender.spigot().sendMessage(ComponentUtils.createClickableText(newLine, ClickEvent.Action.COPY_TO_CLIPBOARD));
-                continue;
-            }
-
-            newLine = ColorManager.color(newLine);
-            if (line.startsWith("[ACTION_BAR]")) {
-                if (player == null) continue;
-                player.sendActionBar(newLine);
-            }
-            else if (line.startsWith("[SOUND]")) {
-                if (player == null) continue;
-                AnnounceUtils.sound(player, newLine);
-            }
-            else if (line.startsWith("[SOUND_ALL]")) {
-                AnnounceUtils.soundAll(newLine);
-            }
-            else if (line.startsWith("[TITLE]")) {
-                if (player == null) continue;
-                AnnounceUtils.title(player, newLine);
-            }
-            else if (line.startsWith("[TITLE_ALL]")) {
-                AnnounceUtils.titleAll(newLine);
-            }
-            else if (line.startsWith("[BROADCAST]")) {
-                AnnounceUtils.broadcast(newLine);
-            }
-            else sender.sendMessage(newLine);
-        }
+        AnnounceUtils.sendMessage(sender, message, replacements);
     }
 
     public void sendMessage(CommandSender sender, String id, String... replacements) {

@@ -1,18 +1,33 @@
 package org.novasparkle.lunaspring.API.util.utilities;
 
+import lombok.Getter;
+import lombok.experimental.Accessors;
 import lombok.experimental.UtilityClass;
+import net.md_5.bungee.api.chat.ClickEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarFlag;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
+import org.novasparkle.lunaspring.API.util.utilities.lists.LunaList;
+import org.novasparkle.lunaspring.API.util.utilities.lists.LunaLists;
 
 import java.util.Arrays;
+import java.util.Collection;
 
 @UtilityClass
 public class AnnounceUtils {
+    @Getter @Accessors(fluent = true)
+    private final LunaList<IMessageAction<? extends CommandSender>> messageActions = LunaLists.newList();
+
+    public void registerAction(IMessageAction<? extends CommandSender> messageAction) {
+        messageActions.add(messageAction);
+    }
+
     public void broadcast(String message) {
         Utils.playersAction(p -> p.sendMessage(message));
     }
@@ -132,5 +147,40 @@ public class AnnounceUtils {
 
     public void hideBar(BossBar bar) {
         bar.removeAll();
+    }
+
+    public void sendMessage(CommandSender sender, Collection<String> message, String... replacements) {
+        for (String line : message) {
+            line = Utils.applyReplacements(line, replacements);
+
+            Player player = sender instanceof Player p ? p : null;
+            if (player != null) line = Utils.setPlaceholders(player, line);
+
+            String finalLine = line;
+            IMessageAction<? extends CommandSender> action = messageActions.first(a -> finalLine.startsWith("[" + a.getId() + "] "));
+            if (action == null) {
+                sender.sendMessage(finalLine);
+                continue;
+            }
+
+            IMessageAction.safeExecute(action, sender, finalLine.replace("[" + action.getId() + "] ", ""));
+        }
+    }
+
+    public interface IMessageAction<E extends CommandSender> {
+        String getId();
+        void execute(E target, String line);
+        boolean canCast(CommandSender sender);
+
+        @SuppressWarnings("unchecked")
+        default E cast(CommandSender sender) {
+            return (E) sender;
+        }
+
+        private static <E extends CommandSender> void safeExecute(IMessageAction<E> action, CommandSender sender, String line) {
+            if (action.canCast(sender)) {
+                action.execute(action.cast(sender), line);
+            }
+        }
     }
 }

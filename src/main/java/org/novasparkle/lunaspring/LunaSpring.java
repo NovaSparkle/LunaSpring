@@ -3,6 +3,7 @@ package org.novasparkle.lunaspring;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.novasparkle.lunaspring.API.commands.CommandInitializer;
 import org.novasparkle.lunaspring.API.events.ItemComponentsHandler;
 import org.novasparkle.lunaspring.API.events.MarkedItemEraserHandler;
@@ -13,11 +14,16 @@ import org.novasparkle.lunaspring.API.util.service.managers.TaskManager;
 import org.novasparkle.lunaspring.API.util.service.managers.VaultManager;
 import org.novasparkle.lunaspring.API.util.service.managers.worldguard.GuardManager;
 import org.novasparkle.lunaspring.API.util.service.managers.worldguard.LunaFlags;
+import org.novasparkle.lunaspring.API.util.utilities.AnnounceUtils;
 import org.novasparkle.lunaspring.API.util.utilities.Color;
 import org.novasparkle.lunaspring.API.util.utilities.Localization;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
+import org.novasparkle.lunaspring.API.util.utilities.reflection.AnnotationScanner;
+import org.novasparkle.lunaspring.API.util.utilities.reflection.ClassEntry;
+import org.novasparkle.lunaspring.self.messageActions.abs.MessageAction;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public final class LunaSpring extends LunaPlugin {
@@ -40,6 +46,8 @@ public final class LunaSpring extends LunaPlugin {
         CommandInitializer.initialize(this, "#.self.commands");
 
         this.registerLunaPlaceholder();
+        this.registerDefaultMessageActions();
+
         if (Utils.isPluginEnabled("WorldGuard")) this.registerListeners(new WorldGuardHandler());
         Bukkit.getScheduler().runTask(this, VaultManager::initialize);
     }
@@ -106,6 +114,14 @@ public final class LunaSpring extends LunaPlugin {
     }
 
     @SneakyThrows
+    private void registerDefaultMessageActions() {
+        Set<ClassEntry<MessageAction>> set = AnnotationScanner.findAnnotatedClasses(this, MessageAction.class, "#.self.messageActions");
+        for (ClassEntry<MessageAction> messageActionClassEntry : set) {
+            AnnounceUtils.registerAction((AnnounceUtils.IMessageAction<? extends CommandSender>)
+                    messageActionClassEntry.getClazz().getDeclaredConstructor().newInstance());
+        }
+    }
+
     public void hookPlugin(LunaPlugin lunaPlugin) {
         if (lunaPlugin != instance) {
             this.hookedPlugins.add(lunaPlugin);

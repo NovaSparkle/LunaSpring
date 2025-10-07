@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 @Setter @Getter
 public class VanishDisableEvent extends PlayerEvent implements Cancellable {
-    private static final HandlerList handlerList = new HandlerList();
+    private static final HandlerList handlers = new HandlerList();
 
     private boolean cancelled = false;
     public VanishDisableEvent(@NotNull Player who) {
@@ -19,6 +19,10 @@ public class VanishDisableEvent extends PlayerEvent implements Cancellable {
 
     @Override
     public @NotNull HandlerList getHandlers() {
-        return handlerList;
+        return handlers;
+    }
+
+    public static @NotNull HandlerList getHandlerList() {
+        return handlers;
     }
 }
