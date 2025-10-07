@@ -197,6 +197,10 @@ public class NBTManager {
         setString(block, tag, String.join(" <]- ", stringList));
     }
 
+    public String getString(Block block, String tag) {
+        return nbtService.getString(block, tag);
+    }
+
     public int getInt(Block block, String tag) {
         return nbtService.getInt(block, tag);
     }
