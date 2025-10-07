@@ -131,6 +131,10 @@ public class NBTService extends PluginService {
         NBTManager.set(item, nbt -> nbt.setLong(tag, value));
     }
 
+    public void setFloat(ItemStack item, String tag, float value) {
+        NBTManager.set(item, nbt -> nbt.setFloat(tag, value));
+    }
+
     public void setDouble(ItemStack item, String tag, double value) {
         NBTManager.set(item, nbt -> nbt.setDouble(tag, value));
     }
@@ -149,6 +153,46 @@ public class NBTService extends PluginService {
 
     public void setList(ItemStack item, String tag, List<String> stringList) {
         setString(item, tag, String.join(" <]- ", stringList));
+    }
+
+    public void setList(Block block, String tag, List<String> stringList) {
+        setString(block, tag, String.join(" <]- ", stringList));
+    }
+
+    public String getString(Block block, String tag) {
+        return getBlockData(block).getString(tag);
+    }
+
+    public int getInt(Block block, String tag) {
+        return getBlockData(block).getInteger(tag);
+    }
+
+    public double getDouble(Block block, String tag) {
+        return getBlockData(block).getDouble(tag);
+    }
+
+    public float getFloat(Block block, String tag) {
+        return getBlockData(block).getFloat(tag);
+    }
+
+    public long getLong(Block block, String tag) {
+        return getBlockData(block).getLong(tag);
+    }
+
+    public byte getByte(Block block, String tag) {
+        return getBlockData(block).getByte(tag);
+    }
+
+    public UUID getUUID(Block block, String tag) {
+        return getBlockData(block).getUUID(tag);
+    }
+
+    public List<String> getList(Block block, String tag) {
+        String value = getString(block, tag);
+
+        List<String> list = new ArrayList<>();
+        if (value != null && !value.isEmpty()) list.addAll(List.of(value.split(" <]- ")));
+        return list;
     }
 
     public List<String> getList(ItemStack item, String tag) {

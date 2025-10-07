@@ -9,6 +9,7 @@ import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
 import org.novasparkle.lunaspring.API.util.service.realized.NBTService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -190,6 +191,42 @@ public class NBTManager {
 
     public String getBase64FromHead(ItemStack head) {
         return nbtService.getBase64FromHead(head);
+    }
+
+    public void setList(Block block, String tag, List<String> stringList) {
+        setString(block, tag, String.join(" <]- ", stringList));
+    }
+
+    public int getInt(Block block, String tag) {
+        return nbtService.getInt(block, tag);
+    }
+
+    public double getDouble(Block block, String tag) {
+        return nbtService.getDouble(block, tag);
+    }
+
+    public float getFloat(Block block, String tag) {
+        return nbtService.getFloat(block, tag);
+    }
+
+    public long getLong(Block block, String tag) {
+        return nbtService.getLong(block, tag);
+    }
+
+    public byte getByte(Block block, String tag) {
+        return nbtService.getByte(block, tag);
+    }
+
+    public UUID getUUID(Block block, String tag) {
+        return nbtService.getUUID(block, tag);
+    }
+
+    public List<String> getList(Block block, String tag) {
+        return nbtService.getList(block, tag);
+    }
+
+    public void setFloat(ItemStack item, String tag, float value) {
+        nbtService.setFloat(item, tag, value);
     }
 
     public boolean isEnabled() {
