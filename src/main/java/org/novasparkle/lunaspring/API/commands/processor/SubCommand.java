@@ -24,7 +24,6 @@ public class SubCommand extends NoArgCommand {
         this.commandIdentifiers = List.of(commandIdentifiers);
     }
 
-
     public void invoke(CommandSender sender, String[] args) {
         if (this.getPermissions().isEmpty() || this.hasPermission(sender) && checkArgs(sender, args))
             this.getInvocation().invoke(sender, args);

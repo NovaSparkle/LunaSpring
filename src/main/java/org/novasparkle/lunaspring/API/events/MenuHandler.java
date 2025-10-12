@@ -40,7 +40,7 @@ public class MenuHandler implements Listener {
         Player player = e.getPlayer();
         if (player.isOp() || player.hasPermission("lunaspring.moveignore")) return;
 
-        if (e.hasChangedOrientation() && (player.isGliding() || player.isFlying())) {
+        if (e.hasChangedOrientation() && player.isGliding()) {
             this.closeIMenu(player);
             return;
         }

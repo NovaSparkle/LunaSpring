@@ -347,14 +347,14 @@ public class NonMenuItem implements Cloneable {
 
     public NonMenuItem applyEnchantment(Enchantment enchantment, int level) {
         this.enchantments.put(enchantment, level);
-        this.itemStack.addUnsafeEnchantment(enchantment, level);
+        Utils.Items.enchant(this.itemStack, enchantment, level);
         return this;
     }
 
     public NonMenuItem applyEnchantments(Map<Enchantment, Integer> enchants) {
         if (enchants != null) {
             this.enchantments.putAll(enchants);
-            this.itemStack.addUnsafeEnchantments(enchants);
+            Utils.Items.enchant(this.itemStack, enchants);
         }
         return this;
     }
@@ -363,9 +363,9 @@ public class NonMenuItem implements Cloneable {
         ConfigurationSection eSection = section.getConfigurationSection("enchants");
         if (eSection != null)
             eSection.getValues(false).forEach((enchant, level) -> {
-                        Enchantment enchantment = new EnchantmentWrapper(enchant);
+                        Enchantment enchantment = Enchantment.getByName(enchant);
                         this.enchantments.put(enchantment, (Integer) level);
-                        this.itemStack.addUnsafeEnchantment(enchantment, (Integer) level);
+                        Utils.Items.enchant(this.itemStack, enchantment, (Integer) level);
                     });
         return this;
     }

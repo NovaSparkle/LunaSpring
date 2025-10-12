@@ -153,7 +153,6 @@ public final class CommandInitializer {
                     .commandReq(commandReq)
                     .build();
 
-
             processor.registerSubCommand(subCommand);
         }
 

@@ -13,6 +13,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
@@ -703,6 +704,30 @@ public class Utils {
 
         public void give(@NotNull Player player, ItemStack... itemStacks) {
             give(player, true, itemStacks);
+        }
+
+        public void enchant(ItemStack itemStack, Enchantment enchantment, int level) {
+            ItemMeta meta = itemStack.getItemMeta();
+            if (meta instanceof EnchantmentStorageMeta storageMeta) {
+                storageMeta.addStoredEnchant(enchantment, level, true);
+
+                itemStack.setItemMeta(storageMeta);
+                return;
+            }
+
+            itemStack.addUnsafeEnchantment(enchantment, level);
+        }
+
+        public void enchant(ItemStack itemStack, Map<Enchantment, Integer> map) {
+            ItemMeta meta = itemStack.getItemMeta();
+            if (meta instanceof EnchantmentStorageMeta storageMeta) {
+                map.forEach((e, i) -> storageMeta.addStoredEnchant(e, i, true));
+
+                itemStack.setItemMeta(storageMeta);
+                return;
+            }
+
+            itemStack.addUnsafeEnchantments(map);
         }
     }
 }
