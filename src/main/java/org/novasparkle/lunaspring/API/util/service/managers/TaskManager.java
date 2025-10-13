@@ -30,7 +30,7 @@ public class TaskManager {
         tasks.remove(task);
     }
 
-    public void unregister(int id) {
+    public void unregister(Integer id) {
         tasksId.remove(id);
     }
 
