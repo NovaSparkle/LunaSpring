@@ -159,7 +159,7 @@ public class AnnounceUtils {
             String finalLine = line;
             IMessageAction<? extends CommandSender> action = messageActions.first(a -> finalLine.startsWith("[" + a.getId() + "] "));
             if (action == null) {
-                sender.sendMessage(finalLine);
+                sender.sendMessage(ColorManager.color(finalLine));
                 continue;
             }
 

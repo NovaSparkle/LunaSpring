@@ -729,5 +729,14 @@ public class Utils {
 
             itemStack.addUnsafeEnchantments(map);
         }
+
+        public Map<Enchantment, Integer> getEnchantments(ItemStack itemStack) {
+            ItemMeta meta = itemStack.getItemMeta();
+            if (meta instanceof EnchantmentStorageMeta storageMeta) {
+                return storageMeta.getStoredEnchants();
+            }
+
+            return itemStack.getEnchantments();
+        }
     }
 }
