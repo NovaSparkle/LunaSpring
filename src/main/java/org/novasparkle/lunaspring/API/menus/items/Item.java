@@ -56,7 +56,7 @@ public class Item extends NonMenuItem {
         this(nonMenuItem.getMaterial(), nonMenuItem.getDisplayName(), nonMenuItem.getLore(), nonMenuItem.getAmount(), slot);
         ItemMeta meta = nonMenuItem.getMeta();
 
-        if (meta.hasEnchants()) nonMenuItem.glowing = true;
+        if (meta.hasEnchants()) this.glowing = true;
         this.itemFlags = new ArrayList<>(meta.getItemFlags());
 
         if (meta instanceof PotionMeta potionMeta) {

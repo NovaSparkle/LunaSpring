@@ -3,6 +3,7 @@ package org.novasparkle.lunaspring.API.util.service.realized;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.novasparkle.lunaspring.API.configuration.IConfig;
+import org.novasparkle.lunaspring.API.util.exceptions.ColorSectionException;
 import org.novasparkle.lunaspring.API.util.service.LunaService;
 import org.novasparkle.lunaspring.API.util.utilities.Color;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
@@ -20,16 +21,19 @@ public final class ColorService implements LunaService {
         this.reload();
     }
 
-    public void reload() {
-        ConfigurationSection section = this.config.getSection("colors");
-        if (section == null) throw new RuntimeException("Секция с цветами не найдена, нужная секция: colors");
+    public <E extends Color> void reload(Class<E> targetReloadClass, ConfigurationSection section) throws ColorSectionException {
+        if (section == null) throw new ColorSectionException();
 
-        this.colorList.clear();
+        this.colorList.removeIf(c -> targetReloadClass.equals(c.getClass()));
         for (String key : section.getKeys(false)) {
             ConfigurationSection colorSection = section.getConfigurationSection(key);
             assert colorSection != null;
             this.colorList.add(new Color(colorSection.getString("abbr"), colorSection.getString("variable")));
         }
+    }
+
+    public void reload() throws ColorSectionException {
+        this.reload(Color.class, this.config.getSection("colors"));
     }
 
     public String color(String text) {

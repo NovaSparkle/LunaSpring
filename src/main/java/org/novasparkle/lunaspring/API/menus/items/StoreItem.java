@@ -16,6 +16,7 @@ import org.novasparkle.lunaspring.API.util.service.managers.NBTManager;
 
 import java.util.List;
 
+@SuppressWarnings("deprecation")
 public abstract class StoreItem extends Item {
     private ItemStack storedItem;
 
@@ -60,7 +61,7 @@ public abstract class StoreItem extends Item {
         return this;
     }
 
-    @Override @SuppressWarnings("deprecation")
+    @Override
     public Item onClick(InventoryClickEvent e) {
         super.onClick(e);
         ItemStack cursor = e.getCursor();

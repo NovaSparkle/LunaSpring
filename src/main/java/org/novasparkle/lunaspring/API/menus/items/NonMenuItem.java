@@ -118,14 +118,14 @@ public class NonMenuItem implements Cloneable {
 
     // GETTERS
 
-    public @NotNull ItemMeta getMeta() {
+    public @NotNull ItemMeta getMeta() throws NoItemMetaException {
         ItemMeta meta = this.itemStack.getItemMeta();
         if (meta == null) throw new NoItemMetaException(this.itemStack);
 
         return meta;
     }
 
-    public @Nullable <E extends ItemMeta> E getMeta(Class<E> targetClass) {
+    public @Nullable <E extends ItemMeta> E getMeta(Class<E> targetClass) throws NoItemMetaException {
         ItemMeta meta = this.getMeta();
         try {
             if (targetClass.isAssignableFrom(meta.getClass())) return targetClass.cast(meta);
@@ -237,7 +237,7 @@ public class NonMenuItem implements Cloneable {
 
     public NonMenuItem setAll(@NotNull ConfigurationSection itemSection) {
         String strMaterial = itemSection.getString("material");
-        Material newMaterial = strMaterial == null || strMaterial.isEmpty() ? null : Material.valueOf(strMaterial);
+        Material newMaterial = strMaterial == null || strMaterial.isEmpty() ? null : Material.getMaterial(strMaterial);
 
         int amount = itemSection.getInt("amount");
         String displayName = itemSection.getString("displayName");
@@ -363,7 +363,7 @@ public class NonMenuItem implements Cloneable {
         ConfigurationSection eSection = section.getConfigurationSection("enchants");
         if (eSection != null)
             eSection.getValues(false).forEach((enchant, level) -> {
-                        Enchantment enchantment = Enchantment.getByName(enchant);
+                        Enchantment enchantment = Utils.getEnchantment(enchant);
                         this.enchantments.put(enchantment, (Integer) level);
                         Utils.Items.enchant(this.itemStack, enchantment, (Integer) level);
                     });

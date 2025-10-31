@@ -3,8 +3,10 @@ package org.novasparkle.lunaspring.API.util.service.managers;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
+import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.Nullable;
 import org.novasparkle.lunaspring.API.configuration.IConfig;
+import org.novasparkle.lunaspring.API.util.exceptions.ColorSectionException;
 import org.novasparkle.lunaspring.API.util.service.realized.ColorService;
 import org.novasparkle.lunaspring.API.util.utilities.Color;
 
@@ -19,7 +21,11 @@ public class ColorManager {
         colorService = new ColorService(config);
     }
 
-    public void reloadColors() {
+    public <E extends Color> void reloadColors(Class<E> targetColorClass, ConfigurationSection section) throws ColorSectionException {
+        colorService.reload(targetColorClass, section);
+    }
+
+    public void reloadColors() throws ColorSectionException {
         colorService.reload();
     }
 
