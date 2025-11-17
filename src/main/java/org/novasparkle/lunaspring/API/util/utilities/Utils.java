@@ -40,6 +40,7 @@ import java.util.stream.Stream;
 
 @UtilityClass
 public class Utils {
+    public final Pattern PLACEHOLDER_BRACKET_PATTERN = Pattern.compile("\\{([^}]+)}");
 
     /**
      * Покраска текста
@@ -57,7 +58,7 @@ public class Utils {
      */
     public String getRKey(byte size, String kit, boolean hasDuplicates) {
         StringBuilder endValue = new StringBuilder();
-        byte kitSize = (byte) kit.toCharArray().length;
+        byte kitSize = (byte) kit.length();
 
         if (!hasDuplicates && size > kitSize) size = kitSize;
         for (byte i = 0; i < size;) {
@@ -256,12 +257,31 @@ public class Utils {
         return EquipmentSlot.HAND;
     }
 
-    public String setPlaceholders(OfflinePlayer offlinePlayer, String line) {
-        return isPluginEnabled("PlaceholderAPI") ? PlaceholderAPI.setPlaceholders(offlinePlayer, line) : line;
+    @Deprecated
+    public String setOldPlaceholders(OfflinePlayer player, String line) {
+        if (!isPluginEnabled("PlaceholderAPI") || line == null || line.isEmpty()) return line;
+        return PlaceholderAPI.setPlaceholders(player, line);
+    }
+
+    public String setPlaceholders(OfflinePlayer player, String line) {
+        if (!isPluginEnabled("PlaceholderAPI") || line == null || line.isEmpty()) return line;
+
+        String previous;
+        String current = line;
+
+        int maxIterations = 10;
+        int count = 0;
+        do {
+            previous = current;
+            current = PlaceholderAPI.setPlaceholders(player, previous);
+            count++;
+        } while (!current.equals(previous) && count < maxIterations);
+
+        return current;
     }
 
     public String setBracketPlaceholders(OfflinePlayer player, String line) {
-        Matcher matcher = Pattern.compile("\\{([^}]+)}").matcher(line);
+        Matcher matcher = PLACEHOLDER_BRACKET_PATTERN.matcher(line);
 
         StringBuilder result = new StringBuilder();
         while (matcher.find()) {

@@ -87,7 +87,10 @@ public abstract class LunaPlugin extends JavaPlugin {
      * Загрузить все перечисленные файлы из resources
      */
     public boolean loadFiles(String... paths) {
-        return Arrays.stream(paths).allMatch(this::loadFile);
+        boolean r = true;
+        for (String s : paths)
+            if (!this.loadFile(s)) r = false;
+        return r;
     }
 
     /**

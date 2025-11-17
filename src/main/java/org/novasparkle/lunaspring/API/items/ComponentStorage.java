@@ -10,23 +10,27 @@ import org.novasparkle.lunaspring.API.util.utilities.reflection.AnnotationScanne
 import org.novasparkle.lunaspring.API.util.utilities.reflection.ClassEntry;
 import org.novasparkle.lunaspring.LunaPlugin;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Stream;
 
 @UtilityClass
 public class ComponentStorage {
-    @Getter
-    private final Set<ItemComponent> realizedComponents = new HashSet<>();
+    @Getter private final Set<ItemComponent> realizedComponents = new HashSet<>();
 
     public void register(ItemComponent itemComponent) {
         realizedComponents.add(itemComponent);
     }
 
+    public void register(Collection<ItemComponent> collection) {
+        collection.forEach(ComponentStorage::register);
+    }
+
     public void unregister(ItemComponent itemComponent) {
         realizedComponents.remove(itemComponent);
+    }
+
+    public void unregister(Collection<ItemComponent> collection) {
+        collection.forEach(ComponentStorage::unregister);
     }
 
     public <C extends ItemComponent> Stream<C> getComponents(ItemStack itemStack, Class<C> componentClass) {
