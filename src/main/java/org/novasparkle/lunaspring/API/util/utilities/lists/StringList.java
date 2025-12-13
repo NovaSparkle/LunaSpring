@@ -28,4 +28,16 @@ public class StringList extends LunaList<String> {
     public List<String> tabComplete(String argument) {
         return Utils.tabCompleterFiltering(this, argument);
     }
+
+    public boolean containsCased(String element) {
+        return this.first(s -> s.equalsIgnoreCase(element)) != null;
+    }
+
+    public boolean containsStarted(String element) {
+        return this.first(s -> s.startsWith(element)) != null;
+    }
+
+    public boolean containsEnded(String element) {
+        return this.first(s -> s.endsWith(element)) != null;
+    }
 }

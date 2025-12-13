@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Supplier;
@@ -85,6 +86,38 @@ public class LunaMath {
         return toFloat(text, 0f);
     }
 
+    public boolean toBoolean(String text, boolean defaultVal) {
+        if ("true".equalsIgnoreCase(text)) {
+            return true;
+        }
+
+        if  ("false".equalsIgnoreCase(text)) {
+            return false;
+        }
+
+        return defaultVal;
+    }
+
+    public boolean toBoolean(String text) {
+        return toBoolean(text, false);
+    }
+
+    public boolean toBoolean(int value, boolean defaultVal) {
+        if (value == 0) {
+            return false;
+        }
+
+        if (value == 1) {
+            return true;
+        }
+
+        return defaultVal;
+    }
+
+    public boolean toBoolean(int value) {
+        return toBoolean(value, false);
+    }
+
     public boolean isEven(int num) {
         return num % 2 == 0;
     }
@@ -135,5 +168,35 @@ public class LunaMath {
         return BigDecimal.valueOf(notRoundedNum)
                 .setScale(roundLength, RoundingMode.HALF_UP)
                 .doubleValue();
+    }
+
+    public int sum(Integer... integers) {
+        return integers.length == 0 ? 0 : Arrays.stream(integers)
+                .mapToInt(Integer::intValue)
+                .sum();
+    }
+
+    public double sum(Double... doubles) {
+        return doubles.length == 0 ? 0 : Arrays.stream(doubles)
+                .mapToDouble(Double::doubleValue)
+                .sum();
+    }
+
+    public long sum(Long... longs) {
+        return longs.length == 0 ? 0 : Arrays.stream(longs)
+                .mapToLong(Long::longValue)
+                .sum();
+    }
+
+    public int average(Integer... integers) {
+        return sum(integers) / integers.length;
+    }
+
+    public double average(Double... doubles) {
+        return sum(doubles) / doubles.length;
+    }
+
+    public long average(Long... longs) {
+        return sum(longs) / longs.length;
     }
 }

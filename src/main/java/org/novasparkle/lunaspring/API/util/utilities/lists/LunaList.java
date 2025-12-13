@@ -43,12 +43,12 @@ public class LunaList<E> extends ArrayList<E> {
         return this.stream();
     }
 
-    public E first(Predicate<E> predicate, E orElse) {
-        return Utils.find(this.s(), predicate).orElse(orElse);
+    public E first(Predicate<E> predicate, Supplier<E> orElse) {
+        return Utils.find(this.s(), predicate).orElse(orElse.get());
     }
 
     public @Nullable E first(Predicate<E> predicate) {
-        return this.first(predicate, null);
+        return this.first(predicate, () -> null);
     }
 
     public @Nullable E first() {

@@ -12,6 +12,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.novasparkle.lunaspring.API.menus.items.Item;
+import org.novasparkle.lunaspring.API.util.utilities.Utils;
 import org.novasparkle.lunaspring.LunaSpring;
 
 import java.util.ArrayList;
@@ -131,6 +132,7 @@ public class MenuManager {
     }
 
     public void cleanInventory(final @NotNull Player player) {
+        if (!Utils.isPluginEnabled("NBTAPI")) return;
         ItemStack[] contents = player.getInventory().getContents();
 
         for (int i = 0; i < contents.length; i++) {
