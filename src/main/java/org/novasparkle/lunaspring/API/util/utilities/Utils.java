@@ -15,6 +15,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.jetbrains.annotations.NotNull;
@@ -51,12 +52,50 @@ public class Utils {
         print(message, true);
     }
 
+    public void print(Collection<String> messages, boolean inCaseColoring) {
+        messages.forEach(l -> print(l, inCaseColoring));
+    }
+
+    public void print(Collection<String> messages) {
+        print(messages, true);
+    }
+
+    public void print(@NotNull Plugin plugin, String message, boolean inCaseColoring) {
+        print("[" + plugin.getName() + "] " + message, inCaseColoring);
+    }
+
+    public void print(@NotNull Plugin plugin, String message) {
+        print(plugin, message, true);
+    }
+
+    public void print(@NotNull Plugin plugin, Collection<String> messages, boolean inCaseColoring) {
+        messages.forEach(l -> print(plugin, l, inCaseColoring));
+    }
+
+    public void print(@NotNull Plugin plugin, Collection<String> messages) {
+        print(plugin, messages, true);
+    }
+
     /**
      * Покраска текста
      */
-    public String color(String text) {
-        if (text != null && !text.isEmpty()) return ChatColor.translateAlternateColorCodes('&', text);
+    public String color(String text, Collection<Character> chars) {
+        if (text != null && !text.isEmpty()) {
+            char[] b = text.toCharArray();
+            for(int i = 0; i < b.length - 1; ++i) {
+                if (chars.contains(b[i]) && "0123456789AaBbCcDdEeFfKkLlMmNnOoRrXx".indexOf(b[i + 1]) > -1) {
+                    b[i] = 167;
+                    b[i + 1] = Character.toLowerCase(b[i + 1]);
+                }
+            }
+
+            return new String(b);
+        }
         return null;
+    }
+
+    public String color(String text) {
+        return color(text, Set.of('&', '§'));
     }
 
     /**

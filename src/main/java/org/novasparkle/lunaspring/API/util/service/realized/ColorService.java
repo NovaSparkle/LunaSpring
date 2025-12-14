@@ -51,11 +51,7 @@ public final class ColorService implements LunaService {
             text = text.replaceAll(color.abbr(), color.variable());
         }
 
-        text = parseHexColors(text);
-        text = ChatColor.translateAlternateColorCodes('§', text);
-        text = Utils.color(text);
-
-        return text;
+        return Utils.color(text);
     }
 
 
