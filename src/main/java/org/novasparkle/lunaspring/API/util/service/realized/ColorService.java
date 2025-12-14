@@ -36,13 +36,28 @@ public final class ColorService implements LunaService {
         this.reload(Color.class, this.config.getSection("colors"));
     }
 
+//    public String color(String text) {
+//        if (text == null || text.isEmpty()) return "";
+//        for (Color color : this.colorList) {
+//            text = text.replaceAll(color.abbr(), color.variable());
+//        }
+//        return Utils.color(text);
+//    }
+
     public String color(String text) {
         if (text == null || text.isEmpty()) return "";
+
         for (Color color : this.colorList) {
             text = text.replaceAll(color.abbr(), color.variable());
         }
-        return Utils.color(text);
+
+        text = parseHexColors(text);
+        text = ChatColor.translateAlternateColorCodes('§', text);
+        text = Utils.color(text);
+
+        return text;
     }
+
 
     public Color getColor(String abbr) {
         return Utils.find(this.colorList, c -> c.abbr().equals(abbr)).orElse(null);
@@ -58,17 +73,18 @@ public final class ColorService implements LunaService {
     }
 
     public String parseHexColors(String text) {
-        Matcher matcher = Pattern.compile("(&x(&[0-9a-fA-F]){6})").matcher(text);
+        Matcher matcher = Pattern.compile("([&§]x[&§][0-9a-fA-F][&§][0-9a-fA-F][&§][0-9a-fA-F][&§][0-9a-fA-F][&§][0-9a-fA-F][&§][0-9a-fA-F])").matcher(text);
         StringBuilder buffer = new StringBuilder();
 
         while (matcher.find()) {
             String hexCode = matcher.group(1)
-                    .replace("&x", "")
-                    .replace("&", "");
+                    .replaceAll("[&§]x", "")
+                    .replaceAll("[&§]", "");
             matcher.appendReplacement(buffer, ChatColor.of("#" + hexCode).toString());
         }
         matcher.appendTail(buffer);
 
         return buffer.toString();
     }
+
 }
