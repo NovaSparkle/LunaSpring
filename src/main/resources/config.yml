@@ -1,3 +1,5 @@
+# Включить дебаг всех LunaPlugin?
+debug: false
 # * Переменные цветов. Могут использоваться в любом плагине LunaSpring *
 colors:
   PREFIX:

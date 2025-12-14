@@ -24,6 +24,8 @@ import org.novasparkle.lunaspring.API.menus.items.Item;
 import org.novasparkle.lunaspring.API.util.exceptions.SerializerException;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
 import org.novasparkle.lunaspring.API.util.service.managers.VanishManager;
+import org.novasparkle.lunaspring.LunaSpring;
+import org.novasparkle.lunaspring.self.LSConfig;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -96,6 +98,38 @@ public class Utils {
 
     public String color(String text) {
         return color(text, Set.of('&', '§'));
+    }
+
+    public void debug(String text, boolean inCaseColoring) {
+        if (LSConfig.isDebugEnabled()) {
+            print("LSDebug: " + text, inCaseColoring);
+        }
+    }
+
+    public void debug(String text) {
+        debug(text, true);
+    }
+
+    public void debug(Collection<String> text) {
+        debug(text, true);
+    }
+
+    public void debug(Collection<String> text, boolean inCaseColoring) {
+        if (LSConfig.isDebugEnabled()) {
+            print(text.stream().map(s -> "LSDebug: " + s).toList(), inCaseColoring);
+        }
+    }
+
+    public void debug(String prefix, Object... objects) {
+        if (LSConfig.isDebugEnabled()) {
+            for (Object object : objects) {
+                System.out.println(prefix + " " + object);
+            }
+        }
+    }
+
+    public void debug(Object... objects) {
+        debug("LSDebug:", objects);
     }
 
     /**

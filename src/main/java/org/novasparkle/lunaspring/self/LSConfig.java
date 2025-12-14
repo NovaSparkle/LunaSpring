@@ -13,13 +13,16 @@ import java.util.stream.Collectors;
 
 public final class LSConfig {
     @Getter private static final IConfig config;
+    @Getter private static boolean debugEnabled;
     static {
         config = new IConfig(LunaSpring.getInstance());
         ColorManager.init(config);
+        debugEnabled = getBoolean("debug");
     }
 
     public static void reload() {
         config.reload(LunaSpring.getInstance());
+        debugEnabled = getBoolean("debug");
     }
 
     public static String getMessage(String path) {
