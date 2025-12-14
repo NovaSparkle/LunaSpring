@@ -33,7 +33,8 @@ public abstract class LunaScheduler {
         long initialDelay;
         if (now.isBefore(targetTime)) {
             initialDelay = now.until(targetTime, ChronoUnit.MILLIS);
-        } else {
+        }
+        else {
             initialDelay = now.until(targetTime, ChronoUnit.MILLIS) + TimeUnit.DAYS.toMillis(1);
         }
 

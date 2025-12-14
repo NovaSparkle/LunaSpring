@@ -123,9 +123,7 @@ public final class LunaSpring extends LunaPlugin {
     }
 
     public void hookPlugin(LunaPlugin lunaPlugin) {
-        if (lunaPlugin != instance) {
-            this.hookedPlugins.add(lunaPlugin);
-        }
+        if (lunaPlugin != instance) this.hookedPlugins.add(lunaPlugin);
     }
 
     public LunaPlugin getLunaPlugin(String name) {

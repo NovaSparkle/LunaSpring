@@ -185,10 +185,12 @@ public class Utils {
             if (line.contains("-")) {
                 String[] split = line.split("-");
                 for (int i = LunaMath.toInt(split[0]); i <= LunaMath.toInt(split[1]); i++) set.add(i);
-            } else if (line.contains(",")) {
+            }
+            else if (line.contains(",")) {
                 String[] split = line.split(",");
                 for (String string : split) set.add(LunaMath.toInt(string.replace(" ", "")));
-            } else set.add(LunaMath.toInt(line));
+            }
+            else set.add(LunaMath.toInt(line));
         }
         return set;
     }

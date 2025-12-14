@@ -6,7 +6,7 @@
 
   <groupId>org.novasparkle.lunaspring</groupId>
   <artifactId>LunaSpring</artifactId>
-  <version>3.9.3</version>
+  <version>3.9.3f</version>
   <packaging>jar</packaging>
 
   <name>LunaSpring</name>

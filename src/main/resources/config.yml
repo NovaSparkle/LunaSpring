@@ -45,6 +45,7 @@ messages:
   listenerRegistered: '{S}Оcновной обработчик событий LunaSpring зарегистрирован'
   placeholderRegistered: '{S}Плейсхолдер {M}[identifier] {S}зарегистрирован!'
   hooked: "{P}&f| {S}[plugin] &f| "
+  hooked-count: "{P} &f| Кол-во загруженных LunaPlugin: {S}[count]"
   version: '{S}[version] &f|'
   showVersion: '[pluginName] [version]'
   server-info:

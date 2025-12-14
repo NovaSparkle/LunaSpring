@@ -22,7 +22,6 @@ public class AnnotationScanner {
         allowedPackages = Arrays.stream(allowedPackages).map(p -> p.replace("#", plugin.getClass().getPackage().getName())).toList().toArray(new String[0]);
         try (JarFile jar = new JarFile(plugin.getJar())) {
             Enumeration<JarEntry> e = jar.entries();
-
             while (e.hasMoreElements()) {
                 JarEntry jarEntry = e.nextElement();
                 if (jarEntry.getName().endsWith(".class")) {

@@ -7,14 +7,6 @@ import java.io.Serializable;
 
 @SuppressWarnings("all")
 public record Color(@Getter String abbr, @Getter String variable) implements Serializable {
-    @Override
-    public String toString() {
-        return "Color{" +
-                "abbr='" + abbr + '\'' +
-                ", variable='" + variable + '\'' +
-                '}';
-    }
-
     public String toHex() {
         if (this.isLegacy())
             return this.variable.replaceAll("&", "").replace("x", "#");
@@ -32,9 +24,17 @@ public record Color(@Getter String abbr, @Getter String variable) implements Ser
             for (char i : newString.toCharArray()) {
                 builder.append('&').append(i);
             }
-            return builder.toString();
 
+            return builder.toString();
         }
         return "";
+    }
+
+    @Override
+    public String toString() {
+        return "Color{" +
+                "abbr='" + abbr + '\'' +
+                ", variable='" + variable + '\'' +
+                '}';
     }
 }

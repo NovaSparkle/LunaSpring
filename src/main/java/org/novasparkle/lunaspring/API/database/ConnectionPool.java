@@ -221,7 +221,6 @@ public class ConnectionPool {
     public <T> List<T> executeQuery(String sql,
                                     ResultSetHandler<T> handler,
                                     Object... params) throws SQLException {
-
         Objects.requireNonNull(sql, "SQL не может быть null!");
         Objects.requireNonNull(handler, "ResultSetHandler не может быть null!");
         Connection connection = this.getConnection();
@@ -229,7 +228,6 @@ public class ConnectionPool {
 
         final int maxRows = 100_000;
         List<T> result = new ArrayList<>();
-
         try (PreparedStatement stmt = connection.prepareStatement(
                 sql,
                 ResultSet.TYPE_FORWARD_ONLY,
@@ -241,7 +239,6 @@ public class ConnectionPool {
 
             try (ResultSet rs = stmt.executeQuery()) {
                 int rowCount = 0;
-
                 while (rs.next()) {
                     if (rowCount >= maxRows) {
                         throw new SQLException("Превышен лимит результатов (" + maxRows + " строк)");

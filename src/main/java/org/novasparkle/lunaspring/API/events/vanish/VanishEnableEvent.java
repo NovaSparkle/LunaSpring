@@ -13,7 +13,7 @@ import java.util.function.Predicate;
 
 @Setter @Getter
 public class VanishEnableEvent extends PlayerEvent implements Cancellable {
-    private static final HandlerList handlers= new HandlerList();
+    private static final HandlerList handlers = new HandlerList();
 
     private boolean cancelled = false;
     private Predicate<Player> checkViewPredicate;

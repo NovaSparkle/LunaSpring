@@ -188,15 +188,15 @@ public class LunaMath {
                 .sum();
     }
 
-    public int average(Integer... integers) {
+    public int avg(Integer... integers) {
         return sum(integers) / integers.length;
     }
 
-    public double average(Double... doubles) {
+    public double avg(Double... doubles) {
         return sum(doubles) / doubles.length;
     }
 
-    public long average(Long... longs) {
+    public long avg(Long... longs) {
         return sum(longs) / longs.length;
     }
 }

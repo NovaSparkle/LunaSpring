@@ -24,7 +24,6 @@ public final class CommandInitializer {
         Set<String> commands = plugin.getDescription().getCommands().keySet();
 
         Set<ClassEntry<ZeroArgCommand>> zeroArgSubCommandsList = AnnotationScanner.findAnnotatedClasses(plugin, ZeroArgCommand.class, allowedPackages);
-
         for (String command : commands) {
             CommandProcessor processor = new CommandProcessor(command);
 
@@ -47,17 +46,15 @@ public final class CommandInitializer {
 
         String[] permissions = new String[] { };
         SubCommand.AccessFlag[] flags = new SubCommand.AccessFlag[] { };
-
         if (!Invocation.class.isAssignableFrom(clazz))
             throw new InvalidImplementationException(clazz, Invocation.class);
-
 
         Check checkAnnotation = (Check) entry.getAdditionalAnnotations().stream().filter(a -> a.annotationType().equals(Check.class)).findFirst().orElse(null);
         if (checkAnnotation != null) {
             permissions = checkAnnotation.permissions();
             flags = checkAnnotation.flags();
-
-        } else {
+        }
+        else {
             Permissions permissionsAnnotation = (Permissions) Utils.find(entry.getAdditionalAnnotations(), a -> a.annotationType().equals(Permissions.class)).orElse(null);
             if (permissionsAnnotation != null) {
                 permissions = permissionsAnnotation.value();
@@ -67,7 +64,6 @@ public final class CommandInitializer {
                 flags = flagsAnnotation.value();
             }
         }
-
 
         Invocation commandInstance;
         try {

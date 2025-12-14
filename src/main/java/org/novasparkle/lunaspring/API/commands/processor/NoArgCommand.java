@@ -15,12 +15,10 @@ import java.util.List;
 
 @Getter
 public class NoArgCommand implements Invocation {
-
     private final LunaPlugin plugin;
     private final String appliedCommand;
     private final List<NoArgCommand.AccessFlag> flags;
     private final List<String> permissions;
-
     private final Invocation invocation;
 
     @Builder(builderMethodName = "zBuilder", buildMethodName = "zBuild")

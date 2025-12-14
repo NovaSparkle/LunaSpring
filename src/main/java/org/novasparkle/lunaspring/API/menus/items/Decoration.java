@@ -27,7 +27,8 @@ public class Decoration implements Cloneable {
             for (int i = 0; i < inventory.getSize(); i++) {
                 if (inventory.getItem(i) == null) this.decorationItems.add(new Item(section, i));
             }
-        } else {
+        }
+        else {
             for (String key : decorationSection.getKeys(false)) {
                 ConfigurationSection itemSection = decorationSection.getConfigurationSection(key);
                 assert itemSection != null;

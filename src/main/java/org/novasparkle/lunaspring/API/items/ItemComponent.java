@@ -7,8 +7,8 @@ import org.novasparkle.lunaspring.API.util.service.managers.NBTManager;
 @Component
 public interface ItemComponent {
     String getId();
+    NonMenuItem createItem();
     default boolean itemIsComponent(ItemStack itemStack) {
         return itemStack != null && !itemStack.getType().isAir() && NBTManager.hasTag(itemStack, getId());
     }
-    NonMenuItem createItem();
 }

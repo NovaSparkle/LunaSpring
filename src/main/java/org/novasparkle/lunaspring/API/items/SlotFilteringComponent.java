@@ -5,6 +5,5 @@ import org.jetbrains.annotations.Nullable;
 
 @Component
 public interface SlotFilteringComponent extends ItemComponent {
-    @Nullable
-    EquipmentSlot[] getEnabledSlots();
+    @Nullable EquipmentSlot[] getEnabledSlots();
 }

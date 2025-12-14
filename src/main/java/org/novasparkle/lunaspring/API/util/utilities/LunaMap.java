@@ -110,7 +110,6 @@ public class LunaMap<S, E, X> implements Cloneable, Serializable {
     public LunaMap<S, E, X> clone() {
         try {
             LunaMap<S, E, X> clone = (LunaMap<S, E, X>) super.clone();
-
             clone.map = new HashMap<>();
             clone.map.putAll(this.map);
 
