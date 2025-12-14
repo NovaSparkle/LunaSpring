@@ -21,6 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.novasparkle.lunaspring.API.menus.items.Item;
 import org.novasparkle.lunaspring.API.util.exceptions.SerializerException;
+import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
 import org.novasparkle.lunaspring.API.util.service.managers.VanishManager;
 
 import java.io.ByteArrayInputStream;
@@ -41,6 +42,14 @@ import java.util.stream.Stream;
 @UtilityClass
 public class Utils {
     public final Pattern PLACEHOLDER_BRACKET_PATTERN = Pattern.compile("\\{([^}]+)}");
+
+    public void print(String message, boolean inCaseColoring) {
+        Bukkit.getConsoleSender().sendMessage(inCaseColoring ? ColorManager.color(message) : message);
+    }
+
+    public void print(String message) {
+        print(message, true);
+    }
 
     /**
      * Покраска текста

@@ -48,7 +48,7 @@ public abstract class LunaPlugin extends JavaPlugin {
                     .replace("[pluginVersion]", this.getVersion())
                     .replace("[pluginAuthors]", authors == null || authors.isEmpty() ? "" : String.format("(by %s)", authors))
                     .replace("[LSVersion]", LunaSpring.getInstance().getVersion());
-            this.info(line);
+            Utils.print(line);
         });
     }
 
@@ -138,6 +138,10 @@ public abstract class LunaPlugin extends JavaPlugin {
      */
     public void warning(String text) {
         this.getLogger().warning(ColorManager.color(text));
+    }
+
+    public void print(String text) {
+        Utils.print(text);
     }
 
     /**
