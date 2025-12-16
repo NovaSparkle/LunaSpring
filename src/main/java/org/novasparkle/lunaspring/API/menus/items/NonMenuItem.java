@@ -393,7 +393,19 @@ public class NonMenuItem implements Cloneable {
 
             double value = aSection.getDouble(key + ".value");
             EquipmentSlot slot = Utils.getEnumValue(EquipmentSlot.class, aSection.getString(key + ".slot"));
-            this.addAttribute(attribute, new AttributeModifier(UUID.randomUUID(), Utils.getRKey((byte) 12), value, operation, slot));
+
+            String stringUUID = aSection.getString(key + ".uuid");
+            UUID uuid;
+            if (stringUUID == null || stringUUID.isEmpty()) uuid =  UUID.randomUUID();
+            else uuid = UUID.fromString(stringUUID);
+
+            String name = aSection.getString(key + ".name");
+            name = name == null || name.isEmpty() ? Utils.getRKey((byte) 12) : name;
+            this.addAttribute(attribute, new AttributeModifier(uuid,
+                    name,
+                    value,
+                    operation,
+                    slot));
         }
         return this;
     }
