@@ -1,0 +1,41 @@
+name: LunaSpring
+version: '${project.version}'
+main: org.novasparkle.lunaspring.LunaSpring
+api-version: '1.16'
+commands:
+  lunaspring:
+    aliases:
+      - lsp
+      - ls
+      - spring
+      - lspring
+  plugins:
+    aliases:
+      - pl
+authors:
+  - NovaSparkle
+  - ProGiple
+softdepend:
+  - PlaceholderAPI
+  - NBTAPI
+  - WorldEdit
+  - WorldGuard
+  - Vault
+libraries:
+  - com.github.ben-manes.caffeine:caffeine:3.1.8
+
+permissions:
+  lunaspring.*:
+    default: false
+  lunaspring.reload:
+    default: op
+  lunaspring.server-info:
+    default: op
+  lunaspring.hooked:
+    default: op
+  lunaspring.plugins:
+    default: op
+  lunaspring.version:
+    default: op
+  lunaspring.moveignore:
+    default: op
