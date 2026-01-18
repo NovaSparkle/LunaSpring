@@ -11,6 +11,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.novasparkle.lunaspring.API.menus.IMenu;
 import org.novasparkle.lunaspring.API.menus.MenuManager;
 import org.novasparkle.lunaspring.API.menus.MoveIgnored;
+import org.novasparkle.lunaspring.self.LSConfig;
 
 public class MenuHandler implements Listener {
     private final Class<MoveIgnored> CACHED_ANNOTATION = MoveIgnored.class;
@@ -37,6 +38,8 @@ public class MenuHandler implements Listener {
 
     @EventHandler @SuppressWarnings("deprecation")
     public void onMove(PlayerMoveEvent e) {
+        if (!LSConfig.isMoveCheckingEnabled()) return;
+
         Player player = e.getPlayer();
         if (player.isOp() || player.hasPermission("lunaspring.moveignore")) return;
 

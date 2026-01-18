@@ -14,15 +14,18 @@ import java.util.stream.Collectors;
 public final class LSConfig {
     @Getter private static final IConfig config;
     @Getter private static boolean debugEnabled;
+    @Getter private static boolean moveCheckingEnabled;
     static {
         config = new IConfig(LunaSpring.getInstance());
         ColorManager.init(config);
         debugEnabled = getBoolean("debug");
+        moveCheckingEnabled = getBoolean("moveCheckingEnabled");
     }
 
     public static void reload() {
         config.reload(LunaSpring.getInstance());
         debugEnabled = getBoolean("debug");
+        moveCheckingEnabled = getBoolean("moveCheckingEnabled");
     }
 
     public static String getMessage(String path) {

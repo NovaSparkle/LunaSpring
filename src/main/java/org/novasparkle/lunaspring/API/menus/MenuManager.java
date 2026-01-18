@@ -132,7 +132,6 @@ public class MenuManager {
     }
 
     public void cleanInventory(final @NotNull Player player) {
-        if (!Utils.isPluginEnabled("NBTAPI")) return;
         ItemStack[] contents = player.getInventory().getContents();
 
         for (int i = 0; i < contents.length; i++) {

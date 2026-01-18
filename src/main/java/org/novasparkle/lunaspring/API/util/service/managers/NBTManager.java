@@ -1,25 +1,25 @@
 package org.novasparkle.lunaspring.API.util.service.managers;
 
-import de.tr7zw.nbtapi.NBTCompound;
-import de.tr7zw.nbtapi.iface.ReadWriteItemNBT;
-import de.tr7zw.nbtapi.iface.ReadableNBT;
 import lombok.experimental.UtilityClass;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
 import org.novasparkle.lunaspring.API.util.service.realized.NBTService;
+import org.novasparkle.lunaspring.API.util.service.realized.PersistentDataService;
+import org.novasparkle.lunaspring.API.util.service.realized.abs.INBTService;
+import org.novasparkle.lunaspring.API.util.utilities.Utils;
+import org.novasparkle.lunaspring.LunaSpring;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import java.util.function.Consumer;
 
 @UtilityClass
 public class NBTManager {
-    private final NBTService nbtService;
+    private final INBTService<?> nbtService;
     static {
-        nbtService = new NBTService();
+        boolean hasNBTAPI = Utils.isPluginEnabled("NBTAPI");
+        nbtService = hasNBTAPI ? new NBTService() : new PersistentDataService(LunaSpring.getInstance());
     }
 
     public void base64head(ItemStack head, OfflinePlayer player) throws IllegalArgumentException {
@@ -34,20 +34,12 @@ public class NBTManager {
         nbtService.base64head(head, value);
     }
 
-    public ReadableNBT getRoot(ItemStack item) {
-        return nbtService.getRoot(item);
+    public <E> E getRoot(ItemStack item) {
+        return (E) nbtService.getRoot(item);
     }
 
     public boolean hasTag(ItemStack item, String tag) {
         return nbtService.hasTag(item, tag);
-    }
-
-    public void set(ItemStack item, Consumer<ReadWriteItemNBT> consumer) {
-        nbtService.set(item, consumer);
-    }
-    
-    public NBTCompound getBlockData(Block block) {
-        return nbtService.getBlockData(block);
     }
     
     public boolean hasTag(Block block, String key) {
@@ -231,9 +223,5 @@ public class NBTManager {
 
     public void setFloat(ItemStack item, String tag, float value) {
         nbtService.setFloat(item, tag, value);
-    }
-
-    public boolean isEnabled() {
-        return nbtService.mayUseService();
     }
 }

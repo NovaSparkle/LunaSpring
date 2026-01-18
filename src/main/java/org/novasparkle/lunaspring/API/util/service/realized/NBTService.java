@@ -1,51 +1,23 @@
 package org.novasparkle.lunaspring.API.util.service.realized;
 
-import com.destroystokyo.paper.profile.PlayerProfile;
-import com.destroystokyo.paper.profile.ProfileProperty;
 import de.tr7zw.nbtapi.NBT;
 import de.tr7zw.nbtapi.NBTBlock;
 import de.tr7zw.nbtapi.NBTCompound;
 import de.tr7zw.nbtapi.iface.ReadWriteItemNBT;
 import de.tr7zw.nbtapi.iface.ReadableNBT;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.SkullMeta;
-import org.novasparkle.lunaspring.API.menus.items.Item;
 import org.novasparkle.lunaspring.API.util.service.PluginService;
 import org.novasparkle.lunaspring.API.util.service.managers.NBTManager;
+import org.novasparkle.lunaspring.API.util.service.realized.abs.INBTService;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public class NBTService extends PluginService {
+public class NBTService extends PluginService implements INBTService<ReadableNBT> {
     public NBTService() {
         super("NBTAPI");
-    }
-
-    public void base64head(ItemStack head, OfflinePlayer player) throws IllegalArgumentException {
-        UUID uuid = player.getUniqueId();
-        this.base64head(head, uuid.toString().replace("-", ""), uuid);
-    }
-
-    public void base64head(ItemStack head, String value, UUID uuid) throws IllegalArgumentException {
-        if (value != null && !value.isEmpty()) {
-            if (!head.getType().equals(Material.PLAYER_HEAD)) throw new IllegalArgumentException("ItemStack должен иметь материал PLAYER_HEAD! Текущий: " + head.getType().name());
-            SkullMeta meta = (SkullMeta) head.getItemMeta();
-            PlayerProfile playerProfile = Bukkit.createProfile(uuid);
-            playerProfile.setProperty(new ProfileProperty("textures", value));
-            meta.setPlayerProfile(playerProfile);
-            head.setItemMeta(meta);
-        }
-    }
-
-    public void base64head(ItemStack head, String value) throws IllegalArgumentException {
-        this.base64head(head, value, UUID.fromString(Item.BASEHEAD_VALUE));
     }
 
     public ReadableNBT getRoot(ItemStack item) {
@@ -109,54 +81,46 @@ public class NBTService extends PluginService {
     }
 
     public void removeKey(ItemStack item, String key) {
-        NBTManager.set(item, nbt -> nbt.removeKey(key));
+        this.set(item, nbt -> nbt.removeKey(key));
     }
 
     public void removeKey(Block block, String key) {
-        NBTManager.getBlockData(block).removeKey(key);
+        this.getBlockData(block).removeKey(key);
     }
 
     public void setString(ItemStack item, String tag, String value) {
-        NBTManager.set(item, nbt -> nbt.setString(tag, value));
+        this.set(item, nbt -> nbt.setString(tag, value));
     }
     public void setInt(ItemStack item, String tag, int value) {
-        NBTManager.set(item, nbt -> nbt.setInteger(tag, value));
+        this.set(item, nbt -> nbt.setInteger(tag, value));
     }
 
     public void setByte(ItemStack item, String tag, byte value) {
-        NBTManager.set(item, nbt -> nbt.setByte(tag, value));
+        this.set(item, nbt -> nbt.setByte(tag, value));
     }
 
     public void setLong(ItemStack item, String tag, long value) {
-        NBTManager.set(item, nbt -> nbt.setLong(tag, value));
+        this.set(item, nbt -> nbt.setLong(tag, value));
     }
 
     public void setFloat(ItemStack item, String tag, float value) {
-        NBTManager.set(item, nbt -> nbt.setFloat(tag, value));
+        this.set(item, nbt -> nbt.setFloat(tag, value));
     }
 
     public void setDouble(ItemStack item, String tag, double value) {
-        NBTManager.set(item, nbt -> nbt.setDouble(tag, value));
+        this.set(item, nbt -> nbt.setDouble(tag, value));
     }
 
     public void setBool(ItemStack item, String tag, boolean value) {
-        NBTManager.set(item, nbt -> nbt.setBoolean(tag, value));
+        this.set(item, nbt -> nbt.setBoolean(tag, value));
     }
 
     public void setUUID(ItemStack item, String tag, UUID value) {
-        NBTManager.set(item, nbt -> nbt.setUUID(tag, value));
+        this.set(item, nbt -> nbt.setUUID(tag, value));
     }
 
     public void setItem(ItemStack item, String tag, ItemStack value) {
-        NBTManager.set(item, nbt -> nbt.setItemStack(tag, value));
-    }
-
-    public void setList(ItemStack item, String tag, List<String> stringList) {
-        setString(item, tag, String.join(" <]- ", stringList));
-    }
-
-    public void setList(Block block, String tag, List<String> stringList) {
-        setString(block, tag, String.join(" <]- ", stringList));
+        this.set(item, nbt -> nbt.setItemStack(tag, value));
     }
 
     public String getString(Block block, String tag) {
@@ -185,22 +149,6 @@ public class NBTService extends PluginService {
 
     public UUID getUUID(Block block, String tag) {
         return getBlockData(block).getUUID(tag);
-    }
-
-    public List<String> getList(Block block, String tag) {
-        String value = getString(block, tag);
-
-        List<String> list = new ArrayList<>();
-        if (value != null && !value.isEmpty()) list.addAll(List.of(value.split(" <]- ")));
-        return list;
-    }
-
-    public List<String> getList(ItemStack item, String tag) {
-        String value = getString(item, tag);
-
-        List<String> list = new ArrayList<>();
-        if (value != null && !value.isEmpty()) list.addAll(List.of(value.split(" <]- ")));
-        return list;
     }
 
     public String getString(ItemStack item, String tag) {
@@ -249,20 +197,5 @@ public class NBTService extends PluginService {
 
     public boolean isSimilar(ItemStack item1, ItemStack item2) {
         return getRoot(item1).equals(getRoot(item2));
-    }
-
-    public String getBase64FromHead(ItemStack head) {
-        if (head == null || head.getType() != Material.PLAYER_HEAD) return null;
-
-        SkullMeta skullMeta = (SkullMeta) head.getItemMeta();
-        PlayerProfile profile = skullMeta.getPlayerProfile();
-        if (profile == null) return null;
-
-        ProfileProperty property = profile.getProperties()
-                .stream()
-                .filter(p -> p.getName().equalsIgnoreCase("textures"))
-                .findFirst()
-                .orElse(null);
-        return property == null ? null : property.getValue();
     }
 }
