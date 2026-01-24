@@ -11,6 +11,6 @@ public interface UpdatableIMenu extends ItemListMenu {
     @Override
     default void onOpen(InventoryOpenEvent e) {
         if (this.getRunnable() == null) return;
-        this.getRunnable().runTaskTimerAsynchronously(LunaSpring.getInstance(), 0, this.getRunnable().getTicks());
+        this.getRunnable().runTaskAsynchronously(LunaSpring.getInstance());
     }
 }
