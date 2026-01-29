@@ -218,7 +218,7 @@ public class ConnectionPool {
      * @param sql - Запрос SQL к БД
      * @param handler - Шаблон по которому создаются объекты
      * @param params - параметры для вставки в SQL выражение (По порядку)
-     * @return
+     * @return Список объектов типа <T>
      * @param <T> - Объект, создание которого описывает ResultSetHandler
      */
     public <T> List<T> executeQuery(String sql,
