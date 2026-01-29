@@ -5,7 +5,7 @@ import lombok.SneakyThrows;
 import lombok.experimental.Accessors;
 import org.novasparkle.lunaspring.API.menus.updatable.UpdatableIMenu;
 import org.novasparkle.lunaspring.API.menus.updatable.UpdatableItem;
-import org.novasparkle.lunaspring.API.util.utilities.LunaTask;
+import org.novasparkle.lunaspring.API.util.utilities.tasks.LunaTask;
 
 import java.util.Collection;
 import java.util.stream.Collectors;

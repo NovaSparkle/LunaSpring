@@ -151,20 +151,24 @@ public class AnnounceUtils {
 
     public void sendMessage(CommandSender sender, Collection<String> message, String... replacements) {
         for (String line : message) {
-            line = Utils.applyReplacements(line, replacements);
-
-            Player player = sender instanceof Player p ? p : null;
-            if (player != null) line = Utils.setPlaceholders(player, line);
-
-            String finalLine = line;
-            IMessageAction<? extends CommandSender> action = messageActions.first(a -> finalLine.startsWith("[" + a.getId() + "] "));
-            if (action == null) {
-                sender.sendMessage(ColorManager.color(finalLine));
-                continue;
-            }
-
-            IMessageAction.safeExecute(action, sender, finalLine.replace("[" + action.getId() + "] ", ""));
+            sendMessage(sender, line, replacements);
         }
+    }
+
+    public void sendMessage(CommandSender sender, final String message, String... replacements) {
+        String line = Utils.applyReplacements(message, replacements);
+
+        Player player = sender instanceof Player p ? p : null;
+        if (player != null) line = Utils.setPlaceholders(player, line);
+
+        String finalLine = line;
+        IMessageAction<? extends CommandSender> action = messageActions.first(a -> finalLine.startsWith("[" + a.getId() + "] "));
+        if (action == null) {
+            sender.sendMessage(ColorManager.color(finalLine));
+            return;
+        }
+
+        IMessageAction.safeExecute(action, sender, finalLine.replace("[" + action.getId() + "] ", ""));
     }
 
     public interface IMessageAction<E extends CommandSender> {
@@ -177,7 +181,7 @@ public class AnnounceUtils {
             return (E) sender;
         }
 
-        private static <E extends CommandSender> void safeExecute(IMessageAction<E> action, CommandSender sender, String line) {
+        static <E extends CommandSender> void safeExecute(IMessageAction<E> action, CommandSender sender, String line) {
             if (action.canCast(sender)) {
                 action.execute(action.cast(sender), line);
             }

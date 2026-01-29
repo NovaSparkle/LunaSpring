@@ -91,6 +91,10 @@ public abstract class LunaPlugin extends JavaPlugin {
         return r;
     }
 
+    public boolean dirExists() {
+        return this.getDataFolder().exists();
+    }
+
     /**
      * Зарегистрировать команду плагина
      */
@@ -272,10 +276,17 @@ public abstract class LunaPlugin extends JavaPlugin {
                 TabExecutor tabExecutor = (TabExecutor) clazz.getDeclaredConstructor().newInstance();
                 this.registerTabExecutor(tabExecutor, command);
 
-            } else if (CommandExecutor.class.isAssignableFrom(clazz)) {
+            }
+            else if (CommandExecutor.class.isAssignableFrom(clazz)) {
                 CommandExecutor tabExecutor = (CommandExecutor) clazz.getDeclaredConstructor().newInstance();
                 this.registerCommand(tabExecutor, command);
-            } else throw new InvalidImplementationException(clazz, CommandExecutor.class);
+            }
+            else if (TabCompleter.class.isAssignableFrom(clazz)) {
+                TabCompleter completer = (TabCompleter) clazz.getDeclaredConstructor().newInstance();
+                this.registerTabCompleter(completer, command);
+            }
+            else
+                throw new InvalidImplementationException(clazz, CommandExecutor.class);
         }
     }
 
@@ -287,7 +298,8 @@ public abstract class LunaPlugin extends JavaPlugin {
             if (Listener.class.isAssignableFrom(entry.getClazz())) {
                 Listener listener = (Listener) clazz.getDeclaredConstructor().newInstance();
                 this.registerListeners(listener);
-            } else throw new InvalidImplementationException(clazz, Listener.class);
+            }
+            else throw new InvalidImplementationException(clazz, Listener.class);
         }
     }
 

@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.experimental.UtilityClass;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.*;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -22,9 +23,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.novasparkle.lunaspring.API.menus.items.Item;
 import org.novasparkle.lunaspring.API.util.exceptions.SerializerException;
+import org.novasparkle.lunaspring.API.util.modules.managers.VanishManager;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
-import org.novasparkle.lunaspring.API.util.service.managers.VanishManager;
-import org.novasparkle.lunaspring.LunaSpring;
 import org.novasparkle.lunaspring.self.LSConfig;
 
 import java.io.ByteArrayInputStream;
@@ -35,16 +35,14 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @UtilityClass
 public class Utils {
-    public final Pattern PLACEHOLDER_BRACKET_PATTERN = Pattern.compile("\\{([^}]+)}");
+    public final UtilsObjects utilsObjects = new UtilsObjects();
 
     public void print(String message, boolean inCaseColoring) {
         Bukkit.getConsoleSender().sendMessage(inCaseColoring ? ColorManager.color(message) : message);
@@ -97,7 +95,7 @@ public class Utils {
     }
 
     public String color(String text) {
-        return color(text, Set.of('&', '§'));
+        return color(text, utilsObjects.colorCollection);
     }
 
     public void debug(String text, boolean inCaseColoring) {
@@ -162,6 +160,27 @@ public class Utils {
         return Utils.getRKey(size, kit, hasDuplicates);
     }
 
+    public Set<Location> generateCircleLocations(Location location,
+                                                  int points,
+                                                  double radius) {
+        World world = location.getWorld();
+        double centerX = location.getX() + 0.5;
+        double centerY = location.getY() + 0.5;
+        double centerZ = location.getZ() + 0.5;
+
+        Set<Location> locations = new HashSet<>();
+        for (int i = 0; i < points; i++) {
+            double angle = 2 * Math.PI * i / points;
+
+            double x = centerX + radius * Math.cos(angle);
+            double z = centerZ + radius * Math.sin(angle);
+
+            locations.add(new Location(world, x, centerY, z));
+        }
+
+        return locations;
+    }
+
     /**
      * Получить случайную локацию.
      * @param world Мир
@@ -187,6 +206,19 @@ public class Utils {
         if (border == 0) return null;
 
         return findRandomLocation(world, border, border);
+    }
+
+    public @Nullable Location findRandomLocations(World world,
+                                        int maxX,
+                                        int maxZ,
+                                        final int maxAttempts,
+                                        Predicate<Location> filter) {
+        int attempt = maxAttempts;
+        while (attempt-- > 0) {
+            Location loc = findRandomLocation(world, maxX, maxZ);
+            if (filter.test(loc)) return loc;
+        }
+        return null;
     }
 
     public Material getMaterial(@Nullable String string) {
@@ -287,12 +319,21 @@ public class Utils {
      * @param tabCompleterValueFilter - значение фильтра
      * @return List<String> list
      */
-    public List<String> getPlayerNicks(String tabCompleterValueFilter) {
+    public List<String> getPlayerNicks(String tabCompleterValueFilter, Predicate<Player> filter) {
         return tabCompleterFiltering(Bukkit.getOnlinePlayers()
                 .stream()
-                .filter(p -> !VanishManager.isVanished(p))
+                .filter(p -> filter == null || filter.test(p))
                 .map(Player::getName).toList(),
                 tabCompleterValueFilter);
+    }
+
+    public List<String> getPlayerNicks(String tabCompleterValueFilter) {
+        return getPlayerNicks(tabCompleterValueFilter, (Predicate<Player>) null);
+    }
+
+    public List<String> getPlayerNicks(String tabCompleterValueFilter, CommandSender viewer) {
+        boolean check = VanishManager.mayUse();
+        return getPlayerNicks(tabCompleterValueFilter, p -> !check || VanishManager.view(viewer, p));
     }
 
     public List<String> tabCompleterFiltering(Collection<String> collection, String tabCompleterValueFilter) {
@@ -319,10 +360,10 @@ public class Utils {
         for (String replacement : replacements) {
             if (replacement.contains("-%-")) {
                 String[] mass = replacement.split("-%-");
-                if (mass.length >= 2) {
-                    line = line.replace("[" + mass[0] + "]", mass[1]);
-                    continue;
-                }
+
+                String value = mass.length >= 2 ? mass[1] : "";
+                line = line.replace("[" + mass[0] + "]", value);
+                continue;
             }
 
             line = line.replace("[" + index + "]", replacement);
@@ -331,14 +372,9 @@ public class Utils {
         return line;
     }
 
-    public EquipmentSlot getEquipmentSlot(Material material) {
-        String name = material.name();
-        if (name.endsWith("_HELMET")) return EquipmentSlot.HEAD;
-        if (name.endsWith("_CHESTPLATE") || material == Material.ELYTRA) return EquipmentSlot.CHEST;
-        if (name.endsWith("_LEGGINGS")) return EquipmentSlot.LEGS;
-        if (name.endsWith("_BOOTS")) return EquipmentSlot.FEET;
-
-        return EquipmentSlot.HAND;
+    @Deprecated
+    public @NotNull EquipmentSlot getEquipmentSlot(Material material) {
+        return material.getEquipmentSlot();
     }
 
     @Deprecated
@@ -365,7 +401,7 @@ public class Utils {
     }
 
     public String setBracketPlaceholders(OfflinePlayer player, String line) {
-        Matcher matcher = PLACEHOLDER_BRACKET_PATTERN.matcher(line);
+        Matcher matcher = utilsObjects.PLACEHOLDER_BRACKET_PATTERN.matcher(line);
 
         StringBuilder result = new StringBuilder();
         while (matcher.find()) {

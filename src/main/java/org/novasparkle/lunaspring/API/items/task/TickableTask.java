@@ -8,7 +8,7 @@ import org.bukkit.inventory.PlayerInventory;
 import org.novasparkle.lunaspring.API.items.ComponentStorage;
 import org.novasparkle.lunaspring.API.items.secondary.TimedItemComponent;
 import org.novasparkle.lunaspring.API.util.service.managers.TaskManager;
-import org.novasparkle.lunaspring.API.util.utilities.LunaTask;
+import org.novasparkle.lunaspring.API.util.utilities.tasks.LunaTask;
 
 import java.util.List;
 
@@ -16,7 +16,6 @@ import java.util.List;
 public class TickableTask extends LunaTask {
     private final Player player;
     public TickableTask(Player player) {
-        super(0);
         this.player = player;
     }
 

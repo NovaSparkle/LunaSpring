@@ -2,6 +2,7 @@ package org.novasparkle.lunaspring.API.events.vanish;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
@@ -16,10 +17,10 @@ public class VanishEnableEvent extends PlayerEvent implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
 
     private boolean cancelled = false;
-    private Predicate<Player> checkViewPredicate;
-    public VanishEnableEvent(@NotNull Player who, @Nullable Predicate<Player> checkViewPermission) {
+    private Predicate<CommandSender> checkViewPredicate;
+    public VanishEnableEvent(@NotNull Player who, @Nullable Predicate<CommandSender> checkViewPredicate) {
         super(who);
-        this.checkViewPredicate = checkViewPermission;
+        this.checkViewPredicate = checkViewPredicate;
     }
 
     @Override

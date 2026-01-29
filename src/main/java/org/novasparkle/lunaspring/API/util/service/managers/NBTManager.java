@@ -4,9 +4,9 @@ import lombok.experimental.UtilityClass;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
-import org.novasparkle.lunaspring.API.util.service.realized.NBTService;
-import org.novasparkle.lunaspring.API.util.service.realized.PersistentDataService;
-import org.novasparkle.lunaspring.API.util.service.realized.abs.INBTService;
+import org.novasparkle.lunaspring.API.util.service.realized.nbt.NBTService;
+import org.novasparkle.lunaspring.API.util.service.realized.nbt.PersistentDataService;
+import org.novasparkle.lunaspring.API.util.service.realized.nbt.INBTService;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 import org.novasparkle.lunaspring.LunaSpring;
 

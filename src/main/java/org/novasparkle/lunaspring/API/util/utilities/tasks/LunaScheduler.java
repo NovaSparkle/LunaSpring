@@ -1,4 +1,4 @@
-package org.novasparkle.lunaspring.API.util.utilities;
+package org.novasparkle.lunaspring.API.util.utilities.tasks;
 
 import lombok.Getter;
 import org.bukkit.Bukkit;

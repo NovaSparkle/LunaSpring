@@ -1,4 +1,4 @@
-package org.novasparkle.lunaspring.API.util.service.realized.abs;
+package org.novasparkle.lunaspring.API.util.service.realized.nbt;
 
 import com.destroystokyo.paper.profile.PlayerProfile;
 import com.destroystokyo.paper.profile.ProfileProperty;

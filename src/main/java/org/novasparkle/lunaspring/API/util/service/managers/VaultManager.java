@@ -7,8 +7,7 @@ import org.novasparkle.lunaspring.API.util.service.realized.VaultService;
 
 @UtilityClass
 public class VaultManager {
-    @Getter
-    private VaultService vaultService;
+    @Getter private VaultService vaultService;
 
     public void initialize() {
         vaultService = new VaultService();

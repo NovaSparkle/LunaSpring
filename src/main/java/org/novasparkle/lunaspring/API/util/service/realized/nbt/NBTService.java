@@ -1,4 +1,4 @@
-package org.novasparkle.lunaspring.API.util.service.realized;
+package org.novasparkle.lunaspring.API.util.service.realized.nbt;
 
 import de.tr7zw.nbtapi.NBT;
 import de.tr7zw.nbtapi.NBTBlock;
@@ -8,8 +8,6 @@ import de.tr7zw.nbtapi.iface.ReadableNBT;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
 import org.novasparkle.lunaspring.API.util.service.PluginService;
-import org.novasparkle.lunaspring.API.util.service.managers.NBTManager;
-import org.novasparkle.lunaspring.API.util.service.realized.abs.INBTService;
 
 import java.util.Set;
 import java.util.UUID;
