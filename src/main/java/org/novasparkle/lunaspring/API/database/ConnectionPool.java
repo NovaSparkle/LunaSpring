@@ -193,6 +193,7 @@ public class ConnectionPool {
                     }
                     this.executeUpdate(query, currentAttempt + 1, params);
                     return;
+
                 } catch (InterruptedException ie) {
                     Thread.currentThread().interrupt();
                     throw new SQLException("Поток прерван при повторной попытке выполнения запроса", ie);
@@ -202,11 +203,13 @@ public class ConnectionPool {
             throw e;
         } finally {
             try {
+                connection.commit();
                 connection.setAutoCommit(true);
             } catch (SQLException e) {
                 LunaSpring.getInstance().warning("Ошибка при восстановлении autoCommit: " + e.getMessage());
+                connection.rollback();
             }
-            releaseConnection(connection);
+            this.releaseConnection(connection);
         }
     }
 
@@ -260,6 +263,7 @@ public class ConnectionPool {
             this.releaseConnection(connection);
         }
     }
+
     @SneakyThrows
     public void closeAll() {
         SQLException lastError = null;

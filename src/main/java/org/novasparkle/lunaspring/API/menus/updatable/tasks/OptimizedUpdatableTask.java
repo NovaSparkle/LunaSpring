@@ -6,7 +6,10 @@ import org.novasparkle.lunaspring.API.menus.updatable.UpdatableItem;
 import java.util.Collection;
 
 public class OptimizedUpdatableTask extends UpdatableTask {
+
     private final Collection<UpdatableItem> updatableItems;
+
+
     public OptimizedUpdatableTask(UpdatableIMenu updatableIMenu, int tickDelay) {
         super(updatableIMenu, tickDelay);
         this.updatableItems = super.getItems();
