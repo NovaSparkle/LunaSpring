@@ -45,6 +45,7 @@ messages:
   undefinedCommand: '{E}Неизвестная команда!'
   noDependency: '{E}Зависимость &n[dependency] &r{E}не обнаружена, соответствующий менеджер выключен!'
   noVaultProvider: '{E}Плагин реализующий экономику Vault отсутствует! (Essentials, CMI, SateCore)'
+  noVanishProvider: '{E}Плагин реализующий систему Ваниша отсутствует! (SateCore)'
   reloaded: '{P}{S}Библиотека перезагружена'
   savedSource: '{S}Ресурс [file] сохранен'
   loadedSource: '{S}Ресурс [file] загружен'
@@ -86,3 +87,5 @@ messages:
     lsp-pickup-exp: "{E}Вы не можете подобрать опыт здесь!"
     lsp-open-inventory: "{E}Вы не можете открыть инвентарь здесь!"
     lsp-click-inventory: "{E}Вы не можете нажать по инвентарю здесь!"
+    lsp-regenerate-food-level: "{E}Вы не можете восполнить голод здесь!"
+    lsp-disable-exhaust-food-level: "{E}Вы не можете потратить голод здесь!"

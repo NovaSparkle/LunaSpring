@@ -93,7 +93,9 @@ public class LunaFlags {
         USE_PORTALS_FLAG("lsp-use-portals", true),
         OPEN_INVENTORY_FLAG("lsp-open-inventory", true),
         CLICK_INVENTORY_FLAG("lsp-click-inventory", true),
-        PICKUP_EXP_FLAG("lsp-pickup-exp", true);
+        PICKUP_EXP_FLAG("lsp-pickup-exp", true),
+        REGENERATE_FOOD_FLAG("lsp-regenerate-food-level", true),
+        DISABLE_EXHAUST_FOOD_FLAG("lsp-disable-exhaust-food-level", false);
 
         private final String id;
         @Accessors(fluent = true) private final boolean defaultValue;
@@ -105,7 +107,7 @@ public class LunaFlags {
 
             StateFlag stateFlag = flags.flag(State.this);
             boolean b = stateFlag == null || GuardManager.checkState(loc, GuardManager.wrap(player), stateFlag);
-            if (!b) LSConfig.sendMessage(player, "flags." + id);
+            if (b != defaultValue) LSConfig.sendMessage(player, "flags." + id);
             return b;
         }
     }

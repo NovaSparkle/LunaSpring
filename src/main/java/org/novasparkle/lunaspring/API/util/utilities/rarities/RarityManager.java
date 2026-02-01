@@ -7,6 +7,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.novasparkle.lunaspring.API.util.utilities.LunaMath;
+import org.novasparkle.lunaspring.API.util.utilities.Utils;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -20,7 +21,11 @@ public class RarityManager {
     }
 
     public @Nullable <R> R calculate(Map<R, Double> tMap) {
-        return calculate(tMap.keySet(), tMap::get);
+        return calculate(tMap, tMap::get);
+    }
+
+    public @Nullable <K, V> K calculate(Map<K, V> tMap, ToDoubleFunction<K> getChanceFunction) {
+        return calculate(tMap.keySet(), getChanceFunction);
     }
 
     public @Nullable <R> R calculate(Collection<R> collection, ToDoubleFunction<R> getChanceFunction) {

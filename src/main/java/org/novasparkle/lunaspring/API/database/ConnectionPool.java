@@ -203,9 +203,9 @@ public class ConnectionPool {
             throw e;
         } finally {
             try {
-                connection.commit();
                 connection.setAutoCommit(true);
-            } catch (SQLException e) {
+            }
+            catch (SQLException e) {
                 LunaSpring.getInstance().warning("Ошибка при восстановлении autoCommit: " + e.getMessage());
                 connection.rollback();
             }

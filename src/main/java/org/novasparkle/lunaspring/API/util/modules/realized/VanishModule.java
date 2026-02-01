@@ -13,6 +13,7 @@ import org.jetbrains.annotations.Nullable;
 import org.novasparkle.lunaspring.API.events.vanish.VanishDisableEvent;
 import org.novasparkle.lunaspring.API.events.vanish.VanishEnableEvent;
 import org.novasparkle.lunaspring.API.util.modules.LunaModule;
+import org.novasparkle.lunaspring.API.util.modules.realized.abs.IVanishModule;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 import org.novasparkle.lunaspring.LunaPlugin;
 import org.novasparkle.lunaspring.LunaSpring;
@@ -25,7 +26,7 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 @Getter
-public class VanishModule implements LunaModule {
+public class VanishModule implements IVanishModule {
     private final Set<UUID> vanished = new HashSet<>();
     private final LunaPlugin ownPlugin;
     private final Predicate<CommandSender> checkView;

@@ -5,10 +5,8 @@ import lombok.SneakyThrows;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.novasparkle.lunaspring.API.commands.CommandInitializer;
-import org.novasparkle.lunaspring.API.events.ItemComponentsHandler;
-import org.novasparkle.lunaspring.API.events.MarkedItemEraserHandler;
-import org.novasparkle.lunaspring.API.events.MenuHandler;
-import org.novasparkle.lunaspring.API.events.WorldGuardHandler;
+import org.novasparkle.lunaspring.API.events.*;
+import org.novasparkle.lunaspring.API.util.modules.Modules;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
 import org.novasparkle.lunaspring.API.util.service.managers.TaskManager;
 import org.novasparkle.lunaspring.API.util.service.managers.VaultManager;
@@ -42,14 +40,14 @@ public final class LunaSpring extends LunaPlugin {
         super.onEnable();
 
         this.loadFile("localization.yml");
-        this.registerListeners(new MenuHandler(), new MarkedItemEraserHandler(), new ItemComponentsHandler());
+        this.registerListeners(new MenuHandler(), new MarkedItemEraserHandler(), new ItemComponentsHandler(), new ModuleHandlers());
         CommandInitializer.initialize(this, "#.self.commands");
 
         this.registerLunaPlaceholder();
         this.registerDefaultMessageActions();
 
         if (Utils.isPluginEnabled("WorldGuard")) this.registerListeners(new WorldGuardHandler());
-        Bukkit.getScheduler().runTask(this, VaultManager::initialize);
+        Modules.initializeServices(this);
     }
 
     private void registerFlags() {

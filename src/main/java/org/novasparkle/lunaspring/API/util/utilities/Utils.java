@@ -23,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.novasparkle.lunaspring.API.menus.items.Item;
 import org.novasparkle.lunaspring.API.util.exceptions.SerializerException;
-import org.novasparkle.lunaspring.API.util.modules.managers.VanishManager;
+import org.novasparkle.lunaspring.API.util.service.managers.VanishManager;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
 import org.novasparkle.lunaspring.self.LSConfig;
 
@@ -221,9 +221,14 @@ public class Utils {
         return null;
     }
 
+    public Material getMaterial(@Nullable String string, boolean legacy) {
+        if (string == null || string.isEmpty()) return null;
+        return Material.matchMaterial(string, legacy);
+    }
+
     public Material getMaterial(@Nullable String string) {
         if (string == null || string.isEmpty()) return null;
-        return Material.getMaterial(string);
+        return Material.matchMaterial(string);
     }
 
     public <E extends Enum<E>> E getEnumValue(@NotNull Class<E> clazz, @Nullable String string, E defaultValue) {
@@ -332,8 +337,7 @@ public class Utils {
     }
 
     public List<String> getPlayerNicks(String tabCompleterValueFilter, CommandSender viewer) {
-        boolean check = VanishManager.mayUse();
-        return getPlayerNicks(tabCompleterValueFilter, p -> !check || VanishManager.view(viewer, p));
+        return getPlayerNicks(tabCompleterValueFilter, p -> VanishManager.view(viewer, p));
     }
 
     public List<String> tabCompleterFiltering(Collection<String> collection, String tabCompleterValueFilter) {

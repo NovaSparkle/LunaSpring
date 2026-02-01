@@ -4,6 +4,7 @@ import lombok.Getter;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.plugin.RegisteredServiceProvider;
+import org.novasparkle.lunaspring.API.util.modules.Modules;
 import org.novasparkle.lunaspring.API.util.service.LunaService;
 import org.novasparkle.lunaspring.API.util.service.PluginService;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
@@ -20,13 +21,12 @@ public class VaultService extends PluginService {
         super("Vault");
         if (!Utils.hasPlugin("Vault") || !Utils.isPluginEnabled("Vault")) {
             LunaSpring.getInstance().warning(LSConfig.getMessage("noDependency").replace("[dependency]", "Vault"));
-        } else {
-            RegisteredServiceProvider<Economy> registeredServiceProvider = getServer().getServicesManager().getRegistration(Economy.class);
-            if (registeredServiceProvider == null) {
+        }
+        else {
+            this.economy = Modules.provide(Economy.class, () -> {
                 LunaSpring.getInstance().warning(LSConfig.getMessage("noVaultProvider"));
-            } else {
-                this.economy = registeredServiceProvider.getProvider();
-            }
+                return null;
+            });
         }
     }
 
