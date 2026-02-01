@@ -45,7 +45,6 @@ messages:
   undefinedCommand: '{E}Неизвестная команда!'
   noDependency: '{E}Зависимость &n[dependency] &r{E}не обнаружена, соответствующий менеджер выключен!'
   noVaultProvider: '{E}Плагин реализующий экономику Vault отсутствует! (Essentials, CMI, SateCore)'
-  noVanishProvider: '{E}Плагин реализующий систему Ваниша отсутствует! (SateCore)'
   reloaded: '{P}{S}Библиотека перезагружена'
   savedSource: '{S}Ресурс [file] сохранен'
   loadedSource: '{S}Ресурс [file] загружен'

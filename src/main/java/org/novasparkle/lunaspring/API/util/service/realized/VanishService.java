@@ -8,11 +8,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.jetbrains.annotations.NotNull;
 import org.novasparkle.lunaspring.API.util.modules.Modules;
+import org.novasparkle.lunaspring.API.util.modules.realized.BasicVanishModule;
 import org.novasparkle.lunaspring.API.util.modules.realized.abs.IVanishModule;
 import org.novasparkle.lunaspring.API.util.service.LunaService;
 import org.novasparkle.lunaspring.LunaPlugin;
 import org.novasparkle.lunaspring.LunaSpring;
-import org.novasparkle.lunaspring.self.LSConfig;
 
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -21,10 +21,7 @@ import java.util.function.Supplier;
 public class VanishService implements LunaService {
     private final IVanishModule module;
     public VanishService() {
-        this.module = Modules.provide(IVanishModule.class, () -> {
-            LunaSpring.getInstance().warning(LSConfig.getMessage("noVanishProvider"));
-            return null;
-        });
+        this.module = Modules.provide(IVanishModule.class, () -> new BasicVanishModule(LunaSpring.getInstance(), null));
     }
 
     public LunaPlugin getOwnPlugin() {
