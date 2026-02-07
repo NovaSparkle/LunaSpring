@@ -7,29 +7,42 @@ import org.bukkit.plugin.ServicePriority;
 import org.jetbrains.annotations.NotNull;
 import org.novasparkle.lunaspring.API.util.service.managers.VanishManager;
 import org.novasparkle.lunaspring.API.util.service.managers.VaultManager;
+import org.novasparkle.lunaspring.LunaPlugin;
 import org.novasparkle.lunaspring.LunaSpring;
 
+import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Set;
 import java.util.function.Supplier;
 
 import static org.bukkit.Bukkit.getServer;
 
 @UtilityClass
 public class Modules {
-    public <E extends LunaModule> boolean register(E realizedModule) {
-        Class<?> serviceClass = Arrays.stream(realizedModule.getClass().getInterfaces())
-                .filter(LunaModule.class::isAssignableFrom)
-                .findFirst()
-                .orElse(null);
-        if (serviceClass == null) return false;
+    public final Set<Class<?>> IGNORED_CLASSES = Set.of(
+            Serializable.class, LunaModule.class, Cloneable.class);
 
+    public <E extends LunaModule> boolean register(E realizedModule) {
+        Class<?> clazz = null;
+        for (Class<?> anInterface : realizedModule.getClass().getInterfaces()) {
+            if (IGNORED_CLASSES.contains(anInterface)) continue;
+            clazz = anInterface;
+            break;
+        }
+
+        if (clazz == null) return false;
+
+        safeRegister(clazz.cast(realizedModule), clazz, realizedModule.getOwnPlugin());
+        return true;
+    }
+
+    public <T> void safeRegister(Object realizedModule, Class<T> targetClass, LunaPlugin plugin) {
         Bukkit.getServer().getServicesManager().register(
-                (Class<LunaModule>) serviceClass,
-                realizedModule,
-                realizedModule.getOwnPlugin(),
+                targetClass,
+                targetClass.cast(realizedModule),
+                plugin,
                 ServicePriority.Highest
         );
-        return true;
     }
 
     public <E> E provide(Class<E> targetClass, @NotNull Supplier<E> ifProviderIsNullConsumer) {
