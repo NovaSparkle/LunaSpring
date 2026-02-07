@@ -3,7 +3,9 @@ package org.novasparkle.lunaspring.API.util.utilities.reflection;
 import com.google.common.collect.Sets;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
+import org.novasparkle.lunaspring.API.util.utilities.Utils;
 import org.novasparkle.lunaspring.LunaPlugin;
+import org.novasparkle.lunaspring.LunaSpring;
 
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
@@ -31,6 +33,7 @@ public class AnnotationScanner {
                     Class<?> clazz = Class.forName(className);
                     if (ignoredClasses != null && !ignoredClasses.isEmpty() && ignoredClasses.contains(clazz)) continue;
 
+                    Utils.debug(LunaSpring.getInstance(), clazz.getName() + ": " + annotationClass.getSimpleName());
                     if (clazz.isAnnotationPresent(annotationClass)) {
                         ClassEntry<A> classEntry = new ClassEntry<>(clazz, annotationClass);
                         annotatedClasses.add(classEntry);

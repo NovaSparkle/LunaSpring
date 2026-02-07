@@ -77,7 +77,7 @@ public abstract class LunaPlugin extends JavaPlugin {
     public boolean loadFile(String path) {
         if (new File(this.getDataFolder(), path).exists()) return false;
         this.saveResource(path, false);
-        this.info(LSConfig.getMessage("loadedSource").replace("[file]", path));
+        this.print(LSConfig.getMessage("loadedSource").replace("[file]", path));
         return true;
     }
 
@@ -167,7 +167,7 @@ public abstract class LunaPlugin extends JavaPlugin {
             if (identifier == null || identifier.isEmpty()) identifier = this.getName().toLowerCase();
             boolean registered = new LunaPAPIExpansion(this, identifier, request).register();
 
-            if (registered) this.info(LSConfig.getMessage("placeholderRegistered").replace("[identifier]", identifier));
+            if (registered) this.print(LSConfig.getMessage("placeholderRegistered").replace("[identifier]", identifier));
             return registered;
         }
         return false;
