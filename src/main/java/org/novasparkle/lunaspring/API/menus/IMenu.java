@@ -7,13 +7,20 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
+import org.novasparkle.lunaspring.API.menus.updatable.UpdatableIMenu;
+import org.novasparkle.lunaspring.API.menus.updatable.tasks.UpdatableTask;
 
 public interface IMenu extends Cloneable {
     Inventory getInventory();
     Player getPlayer();
     void onOpen(InventoryOpenEvent event);
     void onClick(InventoryClickEvent event);
-    default void onClose(InventoryCloseEvent event) {}
+    default void onClose(InventoryCloseEvent event) {
+        if (IMenu.this instanceof UpdatableIMenu updatableMenu) {
+            UpdatableTask task = updatableMenu.getRunnable();
+            if (task != null) task.cancel();
+        }
+    }
     void onDrag(InventoryDragEvent event);
     boolean isCancelled(Cancellable event, int slot);
 }

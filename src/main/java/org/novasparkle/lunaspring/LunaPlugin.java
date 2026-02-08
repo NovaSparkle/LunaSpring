@@ -275,7 +275,6 @@ public abstract class LunaPlugin extends JavaPlugin {
             if (TabExecutor.class.isAssignableFrom(clazz)) {
                 TabExecutor tabExecutor = (TabExecutor) clazz.getDeclaredConstructor().newInstance();
                 this.registerTabExecutor(tabExecutor, command);
-
             }
             else if (CommandExecutor.class.isAssignableFrom(clazz)) {
                 CommandExecutor tabExecutor = (CommandExecutor) clazz.getDeclaredConstructor().newInstance();

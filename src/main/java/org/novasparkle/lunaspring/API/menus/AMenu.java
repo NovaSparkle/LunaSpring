@@ -96,6 +96,12 @@ public abstract class AMenu implements ItemListMenu {
     @Override
     public void onClick(InventoryClickEvent event) {
         ItemStack clickedItem = event.getCurrentItem();
+        if (this.getDecoration() != null &&
+                this.getDecoration().checkAll(clickedItem, (byte) event.getSlot())) {
+            event.setCancelled(true);
+            return;
+        }
+
         if (clickedItem != null) {
             this.itemClick(event);
         }

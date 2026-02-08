@@ -102,6 +102,10 @@ public class Item extends NonMenuItem {
         this.applyMenuNBT();
     }
 
+    public Item(@NotNull ConfigurationSection section) {
+        this(section, section.getInt("slot"));
+    }
+
     public Item(@NotNull ConfigurationSection section, boolean rowCol) {
         this(section, 0);
         if (rowCol)
