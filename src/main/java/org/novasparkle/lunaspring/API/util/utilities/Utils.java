@@ -95,7 +95,7 @@ public class Utils {
     }
 
     public String color(String text) {
-        return color(text, utilsObjects.colorCollection);
+        return color(text, utilsObjects.CHAR_COLORS_COLLECTION);
     }
 
     public void debug(String text, boolean inCaseColoring) {
@@ -128,6 +128,28 @@ public class Utils {
 
     public void debug(Object... objects) {
         debug("LSDebug:", objects);
+    }
+
+    public void processCommandsWithActions(CommandSender sender, List<String> commands, String... replacements) {
+        for (String line : commands) {
+            String command = Utils.applyReplacements(line, replacements);
+            if (command.startsWith("[CONSOLE] ")) {
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("[CONSOLE] ", ""));
+                continue;
+            }
+
+            if (command.startsWith("[PLAYER] ")) {
+                Bukkit.dispatchCommand(sender, command.replace("[PLAYER] ", ""));
+                continue;
+            }
+
+            if (command.startsWith("[SENDER] ")) {
+                Bukkit.dispatchCommand(sender, command.replace("[SENDER] ", ""));
+                continue;
+            }
+
+            AnnounceUtils.sendMessage(sender, command);
+        }
     }
 
     /**

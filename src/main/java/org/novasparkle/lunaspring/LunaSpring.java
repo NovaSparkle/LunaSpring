@@ -2,14 +2,17 @@ package org.novasparkle.lunaspring;
 
 import lombok.Getter;
 import lombok.SneakyThrows;
+import org.bstats.bukkit.Metrics;
+import org.bstats.charts.SingleLineChart;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.novasparkle.lunaspring.API.commands.CommandInitializer;
+import org.novasparkle.lunaspring.API.conditions.Conditions;
 import org.novasparkle.lunaspring.API.events.*;
+import org.novasparkle.lunaspring.API.messageActions.IMessageAction;
 import org.novasparkle.lunaspring.API.util.modules.Modules;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
 import org.novasparkle.lunaspring.API.util.service.managers.TaskManager;
-import org.novasparkle.lunaspring.API.util.service.managers.VaultManager;
 import org.novasparkle.lunaspring.API.util.service.managers.worldguard.GuardManager;
 import org.novasparkle.lunaspring.API.util.service.managers.worldguard.LunaFlags;
 import org.novasparkle.lunaspring.API.util.utilities.AnnounceUtils;
@@ -18,15 +21,18 @@ import org.novasparkle.lunaspring.API.util.utilities.Localization;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 import org.novasparkle.lunaspring.API.util.utilities.reflection.AnnotationScanner;
 import org.novasparkle.lunaspring.API.util.utilities.reflection.ClassEntry;
-import org.novasparkle.lunaspring.self.messageActions.abs.MessageAction;
+import org.novasparkle.lunaspring.API.messageActions.MessageAction;
+import org.novasparkle.lunaspring.self.LSConfig;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
+@Getter
 public final class LunaSpring extends LunaPlugin {
     @Getter private static LunaSpring instance;
-    @Getter private final Set<LunaPlugin> hookedPlugins = new HashSet<>();
+    private final Set<LunaPlugin> hookedPlugins = new HashSet<>();
+    private Metrics metrics;
+
 
     @Override
     public void onLoad() {
@@ -45,9 +51,14 @@ public final class LunaSpring extends LunaPlugin {
 
         this.registerLunaPlaceholder();
         this.registerDefaultMessageActions();
+        Conditions.load(this, "#.self.conditions");
 
         if (Utils.isPluginEnabled("WorldGuard")) this.registerListeners(new WorldGuardHandler());
         Modules.initializeServices(this);
+
+        if (LSConfig.getBoolean("enableMetrics")) {
+            this.initializeMetrics();
+        }
     }
 
     private void registerFlags() {
@@ -115,7 +126,7 @@ public final class LunaSpring extends LunaPlugin {
     private void registerDefaultMessageActions() {
         Set<ClassEntry<MessageAction>> set = AnnotationScanner.findAnnotatedClasses(this, MessageAction.class, "#.self.messageActions");
         for (ClassEntry<MessageAction> messageActionClassEntry : set) {
-            AnnounceUtils.registerAction((AnnounceUtils.IMessageAction<? extends CommandSender>)
+            AnnounceUtils.registerAction((IMessageAction<? extends CommandSender>)
                     messageActionClassEntry.getClazz().getDeclaredConstructor().newInstance());
         }
     }
@@ -126,6 +137,11 @@ public final class LunaSpring extends LunaPlugin {
 
     public LunaPlugin getLunaPlugin(String name) {
         return Utils.find(this.hookedPlugins, pl -> pl.getName().equals(name)).orElse(null);
+    }
+
+    private void initializeMetrics() {
+        this.metrics = new Metrics(this, 29601);
+        metrics.addCustomChart(new SingleLineChart("hooked_lunaplugins", this.hookedPlugins::size));
     }
 
     @Override

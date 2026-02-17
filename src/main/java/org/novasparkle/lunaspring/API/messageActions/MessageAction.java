@@ -1,4 +1,4 @@
-package org.novasparkle.lunaspring.self.messageActions.abs;
+package org.novasparkle.lunaspring.API.messageActions;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

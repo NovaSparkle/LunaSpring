@@ -12,6 +12,7 @@ import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.novasparkle.lunaspring.API.messageActions.IMessageAction;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
 import org.novasparkle.lunaspring.API.util.utilities.lists.LunaList;
 import org.novasparkle.lunaspring.API.util.utilities.lists.LunaLists;
@@ -169,22 +170,5 @@ public class AnnounceUtils {
         }
 
         IMessageAction.safeExecute(action, sender, finalLine.replace("[" + action.getId() + "] ", ""));
-    }
-
-    public interface IMessageAction<E extends CommandSender> {
-        String getId();
-        void execute(E target, String line);
-        boolean canCast(CommandSender sender);
-
-        @SuppressWarnings("unchecked")
-        default E cast(CommandSender sender) {
-            return (E) sender;
-        }
-
-        static <E extends CommandSender> void safeExecute(IMessageAction<E> action, CommandSender sender, String line) {
-            if (action.canCast(sender)) {
-                action.execute(action.cast(sender), line);
-            }
-        }
     }
 }

@@ -1,4 +1,4 @@
-package org.novasparkle.lunaspring.self.messageActions.abs;
+package org.novasparkle.lunaspring.API.messageActions;
 
 import lombok.Getter;
 import org.bukkit.command.CommandSender;

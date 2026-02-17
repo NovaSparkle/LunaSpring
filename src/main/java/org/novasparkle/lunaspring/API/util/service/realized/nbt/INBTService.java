@@ -7,6 +7,7 @@ import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.novasparkle.lunaspring.API.menus.items.Item;
 
@@ -117,4 +118,7 @@ public interface INBTService<E> {
                 .orElse(null);
         return property == null ? null : property.getValue();
     }
+
+//    PlayerInventory loadInventory(UUID targetUUID);
+//    boolean saveInventory(UUID targetUUID, PlayerInventory inventory);
 }

@@ -1,14 +1,19 @@
 package org.novasparkle.lunaspring.API.util.service.realized.nbt;
 
-import de.tr7zw.nbtapi.NBT;
-import de.tr7zw.nbtapi.NBTBlock;
-import de.tr7zw.nbtapi.NBTCompound;
-import de.tr7zw.nbtapi.iface.ReadWriteItemNBT;
-import de.tr7zw.nbtapi.iface.ReadableNBT;
+import de.tr7zw.nbtapi.*;
+import de.tr7zw.nbtapi.iface.*;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
+import org.jetbrains.annotations.Nullable;
 import org.novasparkle.lunaspring.API.util.service.PluginService;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -196,4 +201,151 @@ public class NBTService extends PluginService implements INBTService<ReadableNBT
     public boolean isSimilar(ItemStack item1, ItemStack item2) {
         return getRoot(item1).equals(getRoot(item2));
     }
+
+//    @Override
+//    public @Nullable PlayerInventory loadInventory(UUID targetUUID) {
+//        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(targetUUID);
+//        if (offlinePlayer.isOnline() && offlinePlayer instanceof Player player) {
+//            return player.getInventory();
+//        }
+//
+//        File worldFolder = Bukkit.getWorlds().get(0).getWorldFolder();
+//        File playerDataFile = new File(worldFolder, "playerdata/" + targetUUID + ".dat");
+//        if (!playerDataFile.exists()) {
+//            return null;
+//        }
+//
+//        try {
+//            NBTFileHandle nbtFile = NBT.getFileHandle(playerDataFile);
+//            ReadWriteNBTCompoundList inventory = nbtFile.getCompoundList("Inventory");
+//
+//            PlayerInventory playerInventory = (PlayerInventory) Bukkit.createInventory(null, InventoryType.PLAYER);
+//            for (ReadWriteNBT itemNBT : inventory) {
+//                int slot = itemNBT.getByte("Slot");
+//
+//                ItemStack item = NBT.itemStackFromNBT(itemNBT);
+//                if (slot >= 0 && slot < 36) {
+//                    playerInventory.setItem(slot, item);
+//                }
+//                else if (slot >= 100 && slot <= 103) {
+//                    // Броня
+//                    int armorSlot = slot - 100;
+//                    playerInventory.setItem(36 + armorSlot, item);
+//                }
+//                else if (slot == -106) {
+//                    // оффхэнд
+//                    playerInventory.setItem(40, item);
+//                }
+//            }
+//
+//            return playerInventory;
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            return null;
+//        }
+//    }
+
+//    @Override
+//    public boolean saveInventory(UUID uuid, PlayerInventory inventory) {
+//        File worldFolder = Bukkit.getWorlds().get(0).getWorldFolder();
+//        File playerDataFile = new File(worldFolder, "playerdata/" + uuid + ".dat");
+//        if (!playerDataFile.exists()) {
+//            Bukkit.getLogger().warning("Файл данных игрока не найден: " + playerDataFile.getPath());
+//            return false;
+//        }
+//
+//        File backupFile = null;
+//        try {
+//            backupFile = new File(worldFolder, "playerdata/" + uuid + ".dat.backup_" + System.currentTimeMillis());
+//            try {
+//                java.nio.file.Files.copy(playerDataFile.toPath(), backupFile.toPath());
+//            } catch (IOException e) {
+//                Bukkit.getLogger().warning("Не удалось создать бэкап: " + e.getMessage());
+//                return false;
+//            }
+//
+//            NBTFile nbtFile = new NBTFile(playerDataFile);
+//            NBTCompoundList inventoryList = nbtFile.getCompoundList("Inventory");
+//            inventoryList.clear(); // Очищаем старый инвентарь
+//
+//            for (int slot = 0; slot < 36; slot++) {
+//                ItemStack item = inventory.getItem(slot);
+//                if (item != null) {
+//                    saveItemToNBTList(inventoryList, item, slot);
+//                }
+//            }
+//
+//            // 2. Броня (слоты 100-103)
+//            // Порядок в Minecraft: 100-обувь, 101-поножи, 102-нагрудник, 103-шлем
+//            // В PlayerInventory: armor[0]-обувь, armor[1]-поножи, armor[2]-нагрудник, armor[3]-шлем
+//            ItemStack[] armor = inventory.getArmorContents();
+//            for (int i = 0; i < armor.length; i++) {
+//                if (armor[i] != null) {
+//                    saveItemToNBTList(inventoryList, armor[i], 100 + i);
+//                }
+//            }
+//
+//            // 3. Оффхенд (слот -106)
+//            ItemStack offhand = inventory.getItemInOffHand();
+//            if (offhand != null) {
+//                saveItemToNBTList(inventoryList, offhand, -106);
+//            }
+//
+//            // 4. Элитра (слот -114) - если используется
+//            ItemStack chestplate = inventory.getChestplate();
+//            if (chestplate != null && chestplate.getType().name().contains("ELYTRA")) {
+//                // Элитра сохраняется как часть брони (слот 102)
+//                // Уже сохранена выше, ничего не делаем
+//            }
+//
+//            // Сохраняем изменения
+//            nbtFile.save();
+//
+//            Bukkit.getLogger().info("Инвентарь сохранен в файл игрока " + offlinePlayer.getName());
+//            return true;
+//
+//        } catch (Exception e) {
+//            Bukkit.getLogger().severe("Ошибка при сохранении инвентаря: " + e.getMessage());
+//            e.printStackTrace();
+//
+//            // Восстанавливаем из бэкапа при ошибке
+//            if (backupFile != null && backupFile.exists()) {
+//                try {
+//                    java.nio.file.Files.copy(backupFile.toPath(), playerDataFile.toPath(),
+//                            java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+//                    Bukkit.getLogger().info("Восстановлен бэкап для " + offlinePlayer.getName());
+//                } catch (IOException ex) {
+//                    Bukkit.getLogger().severe("Не удалось восстановить бэкап: " + ex.getMessage());
+//                }
+//            }
+//
+//            return false;
+//        } finally {
+//            // Удаляем бэкап после успешного сохранения
+//            if (backupFile != null && backupFile.exists()) {
+//                // Можно оставить для отладки или удалить
+//                // backupFile.delete();
+//            }
+//        }
+//    }
+//
+//    private void saveItemToNBTList(NBTCompoundList inventoryList, ItemStack item, int slot) {
+//        try {
+//            NBTItem nbtItem = new NBTItem(item, true);
+//            NBTCompound itemCompound = nbtItem.getCompound();
+//            NBTContainer container = new NBTContainer();
+//
+//            container.mergeCompound(itemCompound);
+//
+//            // Устанавливаем слот
+//            container.setByte("Slot", (byte) slot);
+//
+//            // Добавляем в список
+//            inventoryList.addCompound(container);
+//
+//        } catch (Exception e) {
+//            Bukkit.getLogger().warning("Ошибка при сохранении предмета в слот " + slot + ": " + e.getMessage());
+//        }
+//    }
 }

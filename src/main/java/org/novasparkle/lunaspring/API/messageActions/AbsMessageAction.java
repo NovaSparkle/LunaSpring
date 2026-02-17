@@ -1,4 +1,4 @@
-package org.novasparkle.lunaspring.self.messageActions.abs;
+package org.novasparkle.lunaspring.API.messageActions;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -7,7 +7,7 @@ import org.novasparkle.lunaspring.API.util.exceptions.InvalidAnnotationPresentEx
 import org.novasparkle.lunaspring.API.util.utilities.AnnounceUtils;
 
 @Getter @RequiredArgsConstructor
-public abstract class AbsMessageAction<E extends CommandSender> implements AnnounceUtils.IMessageAction<E> {
+public abstract class AbsMessageAction<E extends CommandSender> implements IMessageAction<E> {
     private final String id;
     public AbsMessageAction() {
         MessageAction annot = this.getClass().getAnnotation(MessageAction.class);

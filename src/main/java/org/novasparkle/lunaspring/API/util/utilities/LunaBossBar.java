@@ -8,10 +8,12 @@ import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarFlag;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.KeyedBossBar;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
+import org.novasparkle.lunaspring.LunaSpring;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,23 +40,36 @@ public class LunaBossBar {
 
     @Builder
     public LunaBossBar(@NotNull String title, BarColor barColor, BarStyle barStyle, @NotNull Plugin plugin) {
-        this(title, barColor, barStyle, new NamespacedKey(plugin, "lunabar-" + Utils.getRKey((byte) 12)));
+        this(title, barColor, barStyle, generateKey(plugin));
     }
 
     public LunaBossBar(@NotNull String title, @NotNull NamespacedKey namespacedKey) {
         this(title, (BarColor) null, null, namespacedKey);
     }
 
-    @Builder
+    @Builder(builderMethodName = "strBuilder")
     public LunaBossBar(@NotNull String title, String strBarColor, String strBarStyle, @NotNull NamespacedKey namespacedKey) {
         this(title, strBarColor == null || strBarColor.isEmpty() ? null : BarColor.valueOf(strBarColor),
                 strBarStyle == null || strBarStyle.isEmpty() ? null : BarStyle.valueOf(strBarStyle),
                 namespacedKey);
     }
 
-    @Builder
+    @Builder(builderMethodName = "strBuilder")
     public LunaBossBar(@NotNull String title, String strBarColor, String strBarStyle, @NotNull Plugin plugin) {
-        this(title, strBarColor, strBarStyle, new NamespacedKey(plugin, "lunabar-" + Utils.getRKey((byte) 12)));
+        this(title, strBarColor, strBarStyle, generateKey(plugin));
+    }
+
+    @SuppressWarnings("all")
+    public LunaBossBar(@NotNull ConfigurationSection section, @NotNull NamespacedKey key) {
+        this(
+                section.getString("title"),
+                Utils.getEnumValue(BarColor.class, section.getString("color")),
+                Utils.getEnumValue(BarStyle.class, section.getString("style")),
+                key);
+    }
+
+    public LunaBossBar(@NotNull ConfigurationSection section, @NotNull Plugin plugin) {
+        this(section, generateKey(plugin));
     }
 
     public LunaBossBar update() {
@@ -74,25 +89,25 @@ public class LunaBossBar {
         Bukkit.removeBossBar(this.bar.getKey());
     }
 
-    public final LunaBossBar setProgress(float value) {
+    public LunaBossBar setProgress(float value) {
         this.progress = value;
         this.bar.setProgress(Math.max(Math.min(this.progress, 1.0), 0));
         return this;
     }
 
-    public final LunaBossBar setColor(BarColor barColor) {
+    public LunaBossBar setColor(BarColor barColor) {
         this.barColor = barColor;
         this.bar.setColor(this.barColor);
         return this;
     }
 
-    public final LunaBossBar setStyle(BarStyle barStyle) {
+    public LunaBossBar setStyle(BarStyle barStyle) {
         this.barStyle = barStyle;
         this.bar.setStyle(this.barStyle);
         return this;
     }
 
-    public final LunaBossBar updateTitle(String title) {
+    public LunaBossBar updateTitle(String title) {
         this.title = title;
         this.bar.setTitle(this.title);
         return this;
@@ -145,5 +160,10 @@ public class LunaBossBar {
 
     public NamespacedKey getKey() {
         return this.bar.getKey();
+    }
+
+    private static NamespacedKey generateKey(Plugin plugin) {
+        String id = "lunabar-" + plugin.getName().toLowerCase() + "-" + Utils.getRKey((byte) 12);
+        return new NamespacedKey(plugin, id);
     }
 }

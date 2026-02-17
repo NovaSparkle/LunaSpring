@@ -3,7 +3,6 @@ package org.novasparkle.lunaspring.API.util.utilities.tasks;
 import lombok.Getter;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.novasparkle.lunaspring.API.util.service.managers.TaskManager;
-import org.novasparkle.lunaspring.API.util.utilities.Utils;
 
 @Getter
 public abstract class LunaTask extends BukkitRunnable implements LunaRunnable {
