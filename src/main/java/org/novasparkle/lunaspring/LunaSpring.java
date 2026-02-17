@@ -140,7 +140,7 @@ public final class LunaSpring extends LunaPlugin {
     }
 
     private void initializeMetrics() {
-        this.metrics = new Metrics(this, 29601);
+        this.metrics = new Metrics(this, 29603);
         metrics.addCustomChart(new SingleLineChart("hooked_lunaplugins", this.hookedPlugins::size));
     }
 
