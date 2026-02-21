@@ -1,5 +1,6 @@
 package org.novasparkle.lunaspring;
 
+import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.experimental.Accessors;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
@@ -16,25 +17,32 @@ import org.novasparkle.lunaspring.API.util.exceptions.InvalidImplementationExcep
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
 import org.novasparkle.lunaspring.API.util.utilities.LunaMath;
 import org.novasparkle.lunaspring.API.util.utilities.LunaPAPIExpansion;
+import org.novasparkle.lunaspring.API.util.utilities.TripleConsumer;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 import org.novasparkle.lunaspring.API.util.utilities.reflection.AnnotationScanner;
 import org.novasparkle.lunaspring.API.util.utilities.reflection.ClassEntry;
-import org.novasparkle.lunaspring.self.LSConfig;
+import org.novasparkle.lunaspring.self.configuration.LSConfig;
 
 import javax.annotation.OverridingMethodsMustInvokeSuper;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
+@Getter @Accessors(fluent = true)
 public abstract class LunaPlugin extends JavaPlugin {
-    @Accessors(fluent = true)
-    private final List<CommandProcessor> processors = new ArrayList<>();
+    private final List<CommandProcessor> processors;
+    private final double versionNumber;
+    public LunaPlugin() {
+        super();
+        this.processors = new ArrayList<>();
+        this.versionNumber = Utils.toDoubleVersion(this.getVersion());
+    }
 
-    private void startMessage(List<String> startMessage) {
+    protected final void startMessage(List<String> startMessage) {
         String textColorString = LSConfig.getString("on_load_plugin_text_colors");
         char endedColor = textColorString == null || textColorString.isEmpty() ? ' ' : textColorString.charAt(LunaMath.getRandomInt(0, textColorString.length()));
         String formattedEndedColor = endedColor == ' ' ? "" : "&" + endedColor;
@@ -56,6 +64,30 @@ public abstract class LunaPlugin extends JavaPlugin {
      */
     public String getAuthors() {
         return String.join(", ", this.getDescription().getAuthors());
+    }
+
+    // пример urlPath: https://raw.githubusercontent.com/NovaSparkle/LunaSpring/master/VERSION
+    public void checkUpdates(String urlPath,
+                             TripleConsumer<String, Double, UpdateCheckerStatus> response) {
+        Bukkit.getScheduler().runTaskLaterAsynchronously(this, () -> {
+            try (BufferedReader reader =
+                         new BufferedReader(
+                                 new InputStreamReader(
+                                         new URL(urlPath).openStream()))) {
+                String gitVer = reader.readLine().trim();
+
+                double gitVerDouble = Utils.toDoubleVersion(gitVer);
+                UpdateCheckerStatus s =
+                        this.versionNumber < gitVerDouble ? UpdateCheckerStatus.YOUR_VERSION_IS_LOW :
+                        this.versionNumber == gitVerDouble ? UpdateCheckerStatus.VERSIONS_ARE_EQUALS :
+                        UpdateCheckerStatus.YOUR_VERSION_IS_HIGH;
+
+                response.accept(gitVer, gitVerDouble, s);
+            }
+            catch (IOException e) {
+                this.warning(e.getLocalizedMessage());
+            }
+        }, 30L);
     }
 
     /**
@@ -304,5 +336,11 @@ public abstract class LunaPlugin extends JavaPlugin {
 
     public CommandProcessor getProcessor(String appliedCommand) {
         return Utils.find(this.processors, p -> p.appliedCommand().equalsIgnoreCase(appliedCommand)).orElse(null);
+    }
+
+    public enum UpdateCheckerStatus {
+        YOUR_VERSION_IS_LOW,
+        YOUR_VERSION_IS_HIGH,
+        VERSIONS_ARE_EQUALS
     }
 }

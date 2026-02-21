@@ -5,7 +5,7 @@ import org.novasparkle.lunaspring.API.commands.Invocation;
 import org.novasparkle.lunaspring.API.commands.annotations.Check;
 import org.novasparkle.lunaspring.API.commands.annotations.SubCommand;
 import org.novasparkle.lunaspring.LunaSpring;
-import org.novasparkle.lunaspring.self.LSConfig;
+import org.novasparkle.lunaspring.self.configuration.LSConfig;
 
 @SubCommand(commandIdentifiers = {"version", "-v"}, appliedCommand = "lunaspring")
 @Check(permissions = {"lunaspring.version"}, flags = {})

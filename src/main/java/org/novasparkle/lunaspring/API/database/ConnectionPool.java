@@ -5,7 +5,7 @@ import org.apache.commons.lang.StringUtils;
 import org.bukkit.configuration.ConfigurationSection;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 import org.novasparkle.lunaspring.LunaSpring;
-import org.novasparkle.lunaspring.self.LSConfig;
+import org.novasparkle.lunaspring.self.configuration.LSConfig;
 
 import java.sql.*;
 import java.util.ArrayList;

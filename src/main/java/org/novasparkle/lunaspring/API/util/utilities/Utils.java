@@ -16,6 +16,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.permissions.ServerOperator;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
@@ -25,7 +26,7 @@ import org.novasparkle.lunaspring.API.menus.items.Item;
 import org.novasparkle.lunaspring.API.util.exceptions.SerializerException;
 import org.novasparkle.lunaspring.API.util.service.managers.VanishManager;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
-import org.novasparkle.lunaspring.self.LSConfig;
+import org.novasparkle.lunaspring.self.configuration.LSConfig;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -130,21 +131,64 @@ public class Utils {
         debug("LSDebug:", objects);
     }
 
+    public String leaveNumbers(String startText) {
+        StringBuilder sb = new StringBuilder();
+        for (char c : startText.toCharArray()) {
+            if (c >= '0' && c <= '9') {
+                sb.append(c);
+            }
+        }
+
+        return sb.toString();
+    }
+
+    public double toDoubleVersion(String version) {
+        String[] split = version.split("\\.");
+
+        StringBuilder builder = new StringBuilder(leaveNumbers(split[0]) + ".");
+        for (int i = 1; i < split.length; i++) {
+            if (split[i].contains("-")) {
+                String[] partSplit = split[i].split("-");
+                if (partSplit.length >= 2) {
+                    String result = switch (partSplit[1].toUpperCase()) {
+                        case "SNAPSHOT", "SNAP", "S" -> "001";
+                        case "ALPHA", "A" -> "002";
+                        case "BETA", "B" -> "003";
+                        case "GAMMA", "G" -> "004";
+                        case "FIX", "FIXED", "F" -> "006";
+                        case "RELEASE", "REL", "R" -> "007";
+                        default -> "005";
+                    };
+
+                    builder.append(leaveNumbers(partSplit[0])).append(result);
+                    continue;
+                }
+            }
+
+            builder.append(leaveNumbers(split[i]));
+        }
+
+        return LunaMath.toDouble(builder.toString());
+    }
+
     public void processCommandsWithActions(CommandSender sender, List<String> commands, String... replacements) {
         for (String line : commands) {
             String command = Utils.applyReplacements(line, replacements);
             if (command.startsWith("[CONSOLE] ")) {
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("[CONSOLE] ", ""));
+                command = setPlaceholders(sender, command.replace("[CONSOLE] ", ""));
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
                 continue;
             }
 
             if (command.startsWith("[PLAYER] ")) {
-                Bukkit.dispatchCommand(sender, command.replace("[PLAYER] ", ""));
+                command = setPlaceholders(sender, command.replace("[PLAYER] ", ""));
+                Bukkit.dispatchCommand(sender, command);
                 continue;
             }
 
             if (command.startsWith("[SENDER] ")) {
-                Bukkit.dispatchCommand(sender, command.replace("[SENDER] ", ""));
+                command = setPlaceholders(sender, command.replace("[SENDER] ", ""));
+                Bukkit.dispatchCommand(sender, command);
                 continue;
             }
 
@@ -384,6 +428,8 @@ public class Utils {
 
         String line = starterLine;
         for (String replacement : replacements) {
+            if (replacement == null) continue;
+
             if (replacement.contains("-%-")) {
                 String[] mass = replacement.split("-%-");
 
@@ -409,13 +455,16 @@ public class Utils {
         return PlaceholderAPI.setPlaceholders(player, line);
     }
 
-    public String setPlaceholders(OfflinePlayer player, String line) {
-        if (!isPluginEnabled("PlaceholderAPI") || line == null || line.isEmpty()) return line;
+    public String setPlaceholders(ServerOperator sender, String line) {
+        if (!isPluginEnabled("PlaceholderAPI")
+                || line == null
+                || line.isEmpty()
+                || !(sender instanceof OfflinePlayer player)) return line;
 
         String previous;
         String current = line;
 
-        int maxIterations = 10;
+        int maxIterations = 8;
         int count = 0;
         do {
             previous = current;

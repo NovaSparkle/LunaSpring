@@ -1,15 +1,17 @@
 package org.novasparkle.lunaspring.self.conditions;
 
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.novasparkle.lunaspring.API.conditions.abs.ConditionId;
+import org.novasparkle.lunaspring.API.conditions.abs.ConditionNullable;
 import org.novasparkle.lunaspring.API.conditions.abs.StringCondition;
 import org.novasparkle.lunaspring.API.util.utilities.LunaMath;
 
-@ConditionId("STRING_LENGTH")
+@ConditionId("STRING_LENGTH") @ConditionNullable
 public class StringLengthCondition implements StringCondition {
     @Override
-    public boolean check(Player player, String[] strings) {
+    public boolean check(OfflinePlayer player, String[] strings) {
         if (strings.length == 0) return false;
 
         int length = strings[0].length();

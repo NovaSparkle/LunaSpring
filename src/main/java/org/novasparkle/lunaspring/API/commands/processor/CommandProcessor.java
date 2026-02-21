@@ -8,8 +8,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.novasparkle.lunaspring.API.commands.LunaCompleter;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
-import org.novasparkle.lunaspring.self.LSConfig;
+import org.novasparkle.lunaspring.self.configuration.LSConfig;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,12 +38,14 @@ public final class CommandProcessor implements TabExecutor {
             for (SubCommand subCommand : this.subCommands) {
                 if (!subCommand.hasIdentifier(args[0])) continue;
                 subCommand.invoke(sender, args);
-                break;
+                return true;
             }
-        } else if (this.noArgCommand != null)
-              this.noArgCommand.invoke(sender, args);
-          else
-              LSConfig.sendMessage(sender, "wrongArguments");
+        }
+
+        if (this.noArgCommand != null)
+            this.noArgCommand.invoke(sender, args);
+        else
+            LSConfig.sendMessage(sender, "wrongArguments");
 
         return true;
     }
@@ -68,6 +71,11 @@ public final class CommandProcessor implements TabExecutor {
                 return subCommand.tabComplete(sender, arguments);
             }
         }
+
+        if (this.noArgCommand.getInvocation() instanceof LunaCompleter completer) {
+            return completer.tabComplete(sender, List.of(args).subList(1, args.length));
+        }
+
         return null;
     }
 

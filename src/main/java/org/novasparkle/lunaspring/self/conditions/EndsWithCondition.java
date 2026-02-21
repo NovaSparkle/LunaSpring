@@ -1,14 +1,15 @@
 package org.novasparkle.lunaspring.self.conditions;
 
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
 import org.novasparkle.lunaspring.API.conditions.abs.ConditionId;
+import org.novasparkle.lunaspring.API.conditions.abs.ConditionNullable;
 import org.novasparkle.lunaspring.API.conditions.abs.StringCondition;
 
-@ConditionId("ENDS_WITH")
+@ConditionId("ENDS_WITH") @ConditionNullable
 public class EndsWithCondition implements StringCondition {
     @Override
-    public boolean check(Player player, String[] strings) {
+    public boolean check(OfflinePlayer player, String[] strings) {
         return strings.length >= 2 && strings[0].endsWith(strings[1]);
     }
 

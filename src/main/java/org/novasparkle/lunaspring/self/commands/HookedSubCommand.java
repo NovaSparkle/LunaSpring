@@ -6,10 +6,8 @@ import org.novasparkle.lunaspring.API.commands.annotations.Check;
 import org.novasparkle.lunaspring.API.commands.annotations.SubCommand;
 import org.novasparkle.lunaspring.LunaPlugin;
 import org.novasparkle.lunaspring.LunaSpring;
-import org.novasparkle.lunaspring.self.LSConfig;
-import org.novasparkle.lunaspring.self.configuration.Message;
+import org.novasparkle.lunaspring.self.configuration.LSConfig;
 
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 

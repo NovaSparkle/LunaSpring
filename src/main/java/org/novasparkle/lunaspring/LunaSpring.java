@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.SneakyThrows;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SingleLineChart;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.novasparkle.lunaspring.API.commands.CommandInitializer;
 import org.novasparkle.lunaspring.API.conditions.Conditions;
@@ -22,8 +21,9 @@ import org.novasparkle.lunaspring.API.util.utilities.Utils;
 import org.novasparkle.lunaspring.API.util.utilities.reflection.AnnotationScanner;
 import org.novasparkle.lunaspring.API.util.utilities.reflection.ClassEntry;
 import org.novasparkle.lunaspring.API.messageActions.MessageAction;
-import org.novasparkle.lunaspring.self.LSConfig;
+import org.novasparkle.lunaspring.self.configuration.LSConfig;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -58,6 +58,21 @@ public final class LunaSpring extends LunaPlugin {
 
         if (LSConfig.getBoolean("enableMetrics")) {
             this.initializeMetrics();
+        }
+
+        if (LSConfig.getBoolean("checkUpdates")) {
+            String path = "https://raw.githubusercontent.com/NovaSparkle/LunaSpring/master/VERSION";
+            this.checkUpdates(path, (ver, dver, status) -> {
+                if (status != UpdateCheckerStatus.YOUR_VERSION_IS_LOW) return;
+                this.startMessage(Arrays.asList(
+                        "",
+                        "        [color] [+] &fУ вас установлена старая версия &lLunaSpring!",
+                        "        [color] [+] &fТекущая версия [color]-> v[LSVersion]",
+                        "        [color] [+] &fВерсия на GitHub [color]-> v" + ver,
+                        "&7Установите новую версию на &nhttps://github.com/NovaSparkle/LunaSpring/",
+                        ""
+                ));
+            });
         }
     }
 

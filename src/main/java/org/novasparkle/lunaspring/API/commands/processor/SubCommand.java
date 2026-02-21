@@ -6,7 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.novasparkle.lunaspring.API.commands.Invocation;
 import org.novasparkle.lunaspring.API.commands.LunaCompleter;
 import org.novasparkle.lunaspring.LunaPlugin;
-import org.novasparkle.lunaspring.self.LSConfig;
+import org.novasparkle.lunaspring.self.configuration.LSConfig;
 
 import java.util.List;
 

@@ -2,7 +2,6 @@ package org.novasparkle.lunaspring.self.configuration;
 
 import lombok.Getter;
 import org.bukkit.command.CommandSender;
-import org.novasparkle.lunaspring.self.LSConfig;
 
 @Getter
 public enum Message {

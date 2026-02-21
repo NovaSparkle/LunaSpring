@@ -1,11 +1,10 @@
-package org.novasparkle.lunaspring.self;
+package org.novasparkle.lunaspring.self.configuration;
 
 import lombok.Getter;
 import org.bukkit.command.CommandSender;
 import org.novasparkle.lunaspring.API.configuration.IConfig;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
 import org.novasparkle.lunaspring.LunaSpring;
-import org.novasparkle.lunaspring.self.configuration.Message;
 
 import java.util.List;
 import java.util.stream.Collectors;

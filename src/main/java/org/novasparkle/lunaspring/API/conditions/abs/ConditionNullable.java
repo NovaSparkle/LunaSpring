@@ -7,7 +7,5 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface ConditionId {
-    String value();
-    boolean hasNegativeVersion() default true;
+public @interface ConditionNullable {
 }

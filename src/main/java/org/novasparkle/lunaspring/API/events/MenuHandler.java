@@ -11,7 +11,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.novasparkle.lunaspring.API.menus.IMenu;
 import org.novasparkle.lunaspring.API.menus.MenuManager;
 import org.novasparkle.lunaspring.API.menus.MoveIgnored;
-import org.novasparkle.lunaspring.self.LSConfig;
+import org.novasparkle.lunaspring.self.configuration.LSConfig;
 
 public class MenuHandler implements Listener {
     private final Class<MoveIgnored> CACHED_ANNOTATION = MoveIgnored.class;

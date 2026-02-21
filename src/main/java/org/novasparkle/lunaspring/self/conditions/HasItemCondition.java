@@ -1,12 +1,15 @@
 package org.novasparkle.lunaspring.self.conditions;
 
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.novasparkle.lunaspring.API.conditions.abs.Condition;
 import org.novasparkle.lunaspring.API.conditions.abs.ConditionId;
-import org.novasparkle.lunaspring.API.conditions.abs.PlayerCondition;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
 import org.novasparkle.lunaspring.API.util.service.managers.NBTManager;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
@@ -15,11 +18,11 @@ import java.util.HashSet;
 import java.util.List;
 
 @ConditionId("HAS_ITEM")
-public class HasItemCondition implements PlayerCondition {
+public class HasItemCondition implements Condition<Inventory> {
     // MATERIAL AMOUNT DISPLAYNAME LORE MODEL_DATA NBT_KEYS
 
     @Override
-    public boolean check(Player player, Object... objects) {
+    public boolean check(Inventory inventory, Object... objects) {
         if (objects.length == 0) return false;
 
         Material material = Material.matchMaterial((String) objects[0]);
@@ -29,7 +32,7 @@ public class HasItemCondition implements PlayerCondition {
         int modelData = objects.length > 4 && objects[4] != null ? (int) objects[4] : -1;
         List<String> nbts = objects.length > 5 && objects[5] != null ? (List<String>) objects[5] : null;
 
-        ItemStack[] storage = Utils.Items.getStorage(player.getInventory());
+        ItemStack[] storage = Utils.Items.getStorage(inventory);
         int get = Utils.Items.getAmount(storage, i -> {
             if (i.getType() != material) return false;
 
@@ -71,5 +74,10 @@ public class HasItemCondition implements PlayerCondition {
                 section.getInt("modelData", -1),
                 section.getStringList("nbt"),
         };
+    }
+
+    @Override
+    public Inventory cast(OfflinePlayer player) {
+        return player instanceof HumanEntity e ? e.getInventory() : null;
     }
 }

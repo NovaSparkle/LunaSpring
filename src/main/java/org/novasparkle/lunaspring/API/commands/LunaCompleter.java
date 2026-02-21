@@ -6,8 +6,8 @@ import java.util.List;
 
 /**
  * Интерфейс, описывающий логику автозаполенения команды<br><br>
- * <b>Сохраняет индексацию аргументов!</b><br>
- * То есть в SubCommand args.get(0) == идентификатор подкоманды
+ * <b>НЕ сохраняет индексацию аргументов!</b><br>
+ * То есть args.get(0) == первый аргумент после аргумента подкоманды
  */
 public interface LunaCompleter {
     List<String> tabComplete(CommandSender sender, List<String> args);
