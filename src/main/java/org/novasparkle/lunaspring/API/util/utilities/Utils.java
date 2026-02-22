@@ -171,28 +171,32 @@ public class Utils {
         return LunaMath.toDouble(builder.toString());
     }
 
+    public void processCommandsWithActions(CommandSender sender, String line, String... replacements) {
+        String command = Utils.applyReplacements(line, replacements);
+        if (command.startsWith("[CONSOLE] ")) {
+            command = setPlaceholders(sender, command.replace("[CONSOLE] ", ""));
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+            return;
+        }
+
+        if (command.startsWith("[PLAYER] ")) {
+            command = setPlaceholders(sender, command.replace("[PLAYER] ", ""));
+            Bukkit.dispatchCommand(sender, command);
+            return;
+        }
+
+        if (command.startsWith("[SENDER] ")) {
+            command = setPlaceholders(sender, command.replace("[SENDER] ", ""));
+            Bukkit.dispatchCommand(sender, command);
+            return;
+        }
+
+        AnnounceUtils.sendMessage(sender, command);
+    }
+
     public void processCommandsWithActions(CommandSender sender, List<String> commands, String... replacements) {
         for (String line : commands) {
-            String command = Utils.applyReplacements(line, replacements);
-            if (command.startsWith("[CONSOLE] ")) {
-                command = setPlaceholders(sender, command.replace("[CONSOLE] ", ""));
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
-                continue;
-            }
-
-            if (command.startsWith("[PLAYER] ")) {
-                command = setPlaceholders(sender, command.replace("[PLAYER] ", ""));
-                Bukkit.dispatchCommand(sender, command);
-                continue;
-            }
-
-            if (command.startsWith("[SENDER] ")) {
-                command = setPlaceholders(sender, command.replace("[SENDER] ", ""));
-                Bukkit.dispatchCommand(sender, command);
-                continue;
-            }
-
-            AnnounceUtils.sendMessage(sender, command);
+            processCommandsWithActions(sender, line, replacements);
         }
     }
 

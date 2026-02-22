@@ -84,17 +84,17 @@ public class Configuration extends IConfig {
         if (asLocation)
             this.config.set(path, value);
         else {
-            this.config.set(String.format("%s.world", path), value.getWorld().getName());
+            this.config.set(path + ".world", value.getWorld().getName());
             if (asBlock) {
-                this.config.set(String.format("%s.x", path), value.getBlockX());
-                this.config.set(String.format("%s.y", path), value.getBlockY());
-                this.config.set(String.format("%s.z", path), value.getBlockZ());
+                this.config.set(path + ".x", value.getBlockX());
+                this.config.set(path + ".y", value.getBlockY());
+                this.config.set(path + ".z", value.getBlockZ());
             } else {
-                this.config.set(String.format("%s.x", path), value.getX());
-                this.config.set(String.format("%s.y", path), value.getY());
-                this.config.set(String.format("%s.z", path), value.getZ());
-                this.config.set(String.format("%s.yaw", path), value.getYaw());
-                this.config.set(String.format("%s.pitch", path), value.getPitch());
+                this.config.set(path + ".x", value.getX());
+                this.config.set(path + ".y", value.getY());
+                this.config.set(path + ".z", value.getZ());
+                this.config.set(path + ".yaw", value.getYaw());
+                this.config.set(path + ".pitch", value.getPitch());
             }
         }
     }

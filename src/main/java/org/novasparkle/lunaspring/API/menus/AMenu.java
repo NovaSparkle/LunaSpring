@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -39,14 +40,22 @@ public abstract class AMenu implements ItemListMenu {
         this.player = player;
         this.title = title;
         this.inventory = Bukkit.createInventory(this.player, size, Utils.color(title));
+    }
 
+    public AMenu(@NotNull Player player, String title, InventoryType type) {
+        this.player = player;
+        this.title = title;
+        this.inventory = Bukkit.createInventory(this.player, type, Utils.color(title));
     }
 
     public AMenu(@NotNull Player player, ConfigurationSection menuSection) {
         this.player = player;
         this.title = menuSection.getString("title");
-        this.inventory = Bukkit.createInventory(this.player,
-                Math.min(menuSection.getInt("size"), 54), ColorManager.color(this.title));
+
+        InventoryType type = Utils.getEnumValue(InventoryType.class, menuSection.getString("type"));
+        if (type == null) this.inventory = Bukkit.createInventory(this.player, Math.min(menuSection.getInt("size"), 54), ColorManager.color(this.title));
+        else this.inventory = Bukkit.createInventory(this.player, type, ColorManager.color(this.title));
+
         this.decoration = new Decoration(Objects.requireNonNull(menuSection.getConfigurationSection("decoration")), this.inventory);
         this.decoration.insert(this.inventory);
     }
@@ -55,6 +64,14 @@ public abstract class AMenu implements ItemListMenu {
         this.player = player;
         this.title = title;
         this.inventory = Bukkit.createInventory(this.player, size, ColorManager.color(title));
+        this.decoration = new Decoration(decorSection, this.inventory);
+        this.decoration.insert(this.inventory);
+    }
+
+    public AMenu(@NotNull Player player, String title, InventoryType type, ConfigurationSection decorSection) {
+        this.player = player;
+        this.title = title;
+        this.inventory = Bukkit.createInventory(this.player, type, ColorManager.color(title));
         this.decoration = new Decoration(decorSection, this.inventory);
         this.decoration.insert(this.inventory);
     }
@@ -81,7 +98,16 @@ public abstract class AMenu implements ItemListMenu {
     }
 
     public void initialize(ConfigurationSection section, boolean decorate) {
-        this.initialize(section.getString("title"), (byte) section.getInt("size"), section.getConfigurationSection("decoration"), decorate);
+        String title = section.getString("title");
+        ConfigurationSection decoration = section.getConfigurationSection("decoration");
+
+        InventoryType type = Utils.getEnumValue(InventoryType.class, section.getString("type"));
+        if (type == null) this.initialize(title, (byte) section.getInt("size"), decoration, decorate);
+        else this.initialize(title, type, decoration, decorate);
+    }
+
+    public void initialize(ConfigurationSection section) {
+        this.initialize(section, true);
     }
 
     public void initialize(String title, byte size, ConfigurationSection decorSection, boolean decorate) {
@@ -91,6 +117,23 @@ public abstract class AMenu implements ItemListMenu {
             this.decoration = new Decoration(decorSection, this.inventory);
             this.decoration.insert(this.inventory);
         }
+    }
+
+    public void initialize(String title, byte size, ConfigurationSection decorSection) {
+        this.initialize(title, size, decorSection, true);
+    }
+
+    public void initialize(String title, InventoryType type, ConfigurationSection decorSection, boolean decorate) {
+        this.inventory = Bukkit.createInventory(this.player, type, ColorManager.color(title));
+        this.title = title;
+        if (decorate) {
+            this.decoration = new Decoration(decorSection, this.inventory);
+            this.decoration.insert(this.inventory);
+        }
+    }
+
+    public void initialize(String title, InventoryType type, ConfigurationSection decorSection) {
+        this.initialize(title, type, decorSection, true);
     }
 
     @Override

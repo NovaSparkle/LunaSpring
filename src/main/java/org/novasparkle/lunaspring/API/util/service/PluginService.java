@@ -7,15 +7,13 @@ import org.novasparkle.lunaspring.API.util.utilities.Utils;
 @Getter
 public abstract class PluginService implements LunaService {
     private final String pluginName;
+    private final boolean enabled;
     public PluginService(String pluginName) {
         this.pluginName = pluginName;
-    }
-
-    public boolean mayUseService() {
-        return Utils.isPluginEnabled(this.pluginName);
+        this.enabled = Utils.isPluginEnabled(this.pluginName);
     }
 
     public void checkService() throws NoProvidingPluginException {
-        if (!this.mayUseService()) throw new NoProvidingPluginException(this.pluginName);
+        if (!this.enabled) throw new NoProvidingPluginException(this.pluginName);
     }
 }

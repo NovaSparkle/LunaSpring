@@ -1,10 +1,16 @@
 package org.novasparkle.lunaspring;
 
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SingleLineChart;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.messaging.PluginMessageRecipient;
 import org.novasparkle.lunaspring.API.commands.CommandInitializer;
 import org.novasparkle.lunaspring.API.conditions.Conditions;
 import org.novasparkle.lunaspring.API.events.*;
@@ -55,6 +61,8 @@ public final class LunaSpring extends LunaPlugin {
 
         if (Utils.isPluginEnabled("WorldGuard")) this.registerListeners(new WorldGuardHandler());
         Modules.initializeServices(this);
+
+        this.setUpBungeeCordMessaging();
 
         if (LSConfig.getBoolean("enableMetrics")) {
             this.initializeMetrics();
@@ -163,6 +171,21 @@ public final class LunaSpring extends LunaPlugin {
     public void onDisable() {
         TaskManager.stopAll();
         super.onDisable();
+    }
+
+    @SuppressWarnings("all")
+    public void connect(PluginMessageRecipient recipient, String server) {
+        ByteArrayDataOutput out = ByteStreams.newDataOutput();
+
+        try {
+            out.writeUTF("Connect");
+            out.writeUTF(server);
+        } catch (Exception e) {
+            String name = recipient instanceof CommandSender sender ? sender.getName() : "NullName";
+            System.out.println("There was a problem attempting to send " + name + " to server " + server + "!");
+        }
+
+        recipient.sendPluginMessage(this, "BungeeCord", out.toByteArray());
     }
 }
 

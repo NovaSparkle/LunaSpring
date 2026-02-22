@@ -1,5 +1,7 @@
 package org.novasparkle.lunaspring;
 
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.experimental.Accessors;
@@ -8,6 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.command.TabExecutor;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.novasparkle.lunaspring.API.commands.processor.CommandProcessor;
@@ -64,6 +67,10 @@ public abstract class LunaPlugin extends JavaPlugin {
      */
     public String getAuthors() {
         return String.join(", ", this.getDescription().getAuthors());
+    }
+
+    public void setUpBungeeCordMessaging() {
+        Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
     }
 
     // пример urlPath: https://raw.githubusercontent.com/NovaSparkle/LunaSpring/master/VERSION
