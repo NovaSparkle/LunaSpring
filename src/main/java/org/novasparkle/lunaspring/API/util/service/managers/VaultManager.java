@@ -30,6 +30,6 @@ public class VaultManager {
     }
 
     public boolean isEnabled() {
-        return vaultService.mayUseService();
+        return vaultService.isEnabled();
     }
 }

@@ -263,6 +263,6 @@ public class GuardManager {
     }
 
     public boolean isEnabled() {
-        return guardService.mayUseService();
+        return guardService.isEnabled();
     }
 }

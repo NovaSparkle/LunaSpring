@@ -45,4 +45,9 @@ public class VaultService extends PluginService {
         this.checkService();
         return this.getBalance(player) >= amount;
     }
+
+    @Override
+    public boolean isEnabled() {
+        return super.isEnabled() && this.economy != null && this.economy.isEnabled();
+    }
 }

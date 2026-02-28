@@ -82,6 +82,6 @@ public class WorldEditManager {
     }
 
     public boolean isEnabled() {
-        return weService.mayUseService();
+        return weService.isEnabled();
     }
 }
