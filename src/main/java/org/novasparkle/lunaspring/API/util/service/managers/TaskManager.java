@@ -21,27 +21,27 @@ public class TaskManager {
     @Getter private final List<Integer> tasksId = Lists.newArrayList();
     @Getter private final LunaList<LunaRunnable> tasks = LunaLists.newList();
 
-    public void register(LunaRunnable task) {
+    public synchronized void register(LunaRunnable task) {
         tasks.add(task);
     }
 
-    public void register(int id) {
+    public synchronized void register(int id) {
         tasksId.add(id);
     }
 
-    public void unregister(LunaRunnable task) {
+    public synchronized void unregister(LunaRunnable task) {
         tasks.remove(task);
     }
 
-    public void unregister(Integer id) {
+    public synchronized void unregister(Integer id) {
         tasksId.remove(id);
     }
 
-    public boolean check(LunaRunnable task) {
+    public synchronized boolean check(LunaRunnable task) {
         return tasks.contains(task);
     }
 
-    public void stopAll() {
+    public synchronized void stopAll() {
         tasksId.forEach(Utils::cancelTask);
         tasksId.clear();
 
@@ -49,17 +49,23 @@ public class TaskManager {
         tasks.clear();
     }
 
-    public <T extends LunaRunnable> void stopAll(Class<T> clazz, Predicate<T> predicate) {
-        List<T> runnables = getAll(clazz, predicate).toList();
+    public synchronized <T extends LunaRunnable> void stopAll(Class<T> clazz, Predicate<T> predicate) {
+        List<T> runnables = getAllInList(clazz, predicate);
         runnables.forEach(LunaRunnable::cancel);
         tasks.removeAll(runnables);
     }
 
-    public <T extends LunaRunnable> Stream<T> getAll(Class<T> clazz, Predicate<T> predicate) {
+    @Deprecated
+    public synchronized <T extends LunaRunnable> Stream<T> getAll(Class<T> clazz, Predicate<T> predicate) {
+        return getAllInList(clazz, predicate).stream();
+    }
+
+    public <T extends LunaRunnable> List<T> getAllInList(Class<T> clazz, Predicate<T> predicate) {
         return tasks.s()
                 .filter(t -> t != null && clazz.isAssignableFrom(t.getClass()))
                 .map(clazz::cast)
-                .filter(t -> predicate == null || predicate.test(t));
+                .filter(t -> predicate == null || predicate.test(t))
+                .toList();
     }
 
     public <T extends LunaRunnable> Optional<T> get(Class<T> clazz, Predicate<T> predicate) {
