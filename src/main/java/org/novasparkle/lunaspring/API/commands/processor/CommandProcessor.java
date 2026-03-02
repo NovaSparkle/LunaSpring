@@ -72,7 +72,7 @@ public final class CommandProcessor implements TabExecutor {
             }
         }
 
-        if (this.noArgCommand.getInvocation() instanceof LunaCompleter completer) {
+        if (this.noArgCommand != null && this.noArgCommand.getInvocation() instanceof LunaCompleter completer) {
             return completer.tabComplete(sender, List.of(args).subList(1, args.length));
         }
 
