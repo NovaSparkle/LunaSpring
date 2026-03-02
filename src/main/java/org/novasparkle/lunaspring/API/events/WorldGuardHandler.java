@@ -13,12 +13,13 @@ import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.*;
+import org.novasparkle.lunaspring.API.util.service.managers.worldguard.GuardManager;
 import org.novasparkle.lunaspring.API.util.service.managers.worldguard.LunaFlags;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 
 public class WorldGuardHandler implements Listener {
     private boolean isDisabled() {
-        return !Utils.isPluginEnabled("WorldGuard");
+        return !GuardManager.isEnabled();
     }
     
     @EventHandler

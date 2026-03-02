@@ -101,14 +101,18 @@ public class LunaFlags {
         @Accessors(fluent = true) private final boolean defaultValue;
 
         public boolean check(Player player) {
-            Location loc = player.getLocation();
-            LunaFlags flags = GuardManager.flags();
-            if (flags == null) return true;
+            try {
+                Location loc = player.getLocation();
+                LunaFlags flags = GuardManager.flags();
+                if (flags == null) return true;
 
-            StateFlag stateFlag = flags.flag(State.this);
-            boolean b = stateFlag == null || GuardManager.checkState(loc, GuardManager.wrap(player), stateFlag);
-            if (b != defaultValue) LSConfig.sendMessage(player, "flags." + id);
-            return b;
+                StateFlag stateFlag = flags.flag(State.this);
+                boolean b = stateFlag == null || GuardManager.checkState(loc, GuardManager.wrap(player), stateFlag);
+                if (b != defaultValue) LSConfig.sendMessage(player, "flags." + id);
+                return b;
+            } catch (Throwable t) {
+                return defaultValue;
+            }
         }
     }
 }
