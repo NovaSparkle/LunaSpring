@@ -57,7 +57,7 @@ public class TaskManager {
 
     public <T extends LunaRunnable> Stream<T> getAll(Class<T> clazz, Predicate<T> predicate) {
         return tasks.s()
-                .filter(t -> clazz.isAssignableFrom(t.getClass()))
+                .filter(t -> t != null && clazz.isAssignableFrom(t.getClass()))
                 .map(clazz::cast)
                 .filter(t -> predicate == null || predicate.test(t));
     }
