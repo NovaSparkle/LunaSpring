@@ -104,10 +104,12 @@ public class LunaFlags {
             try {
                 Location loc = player.getLocation();
                 LunaFlags flags = GuardManager.flags();
-                if (flags == null) return true;
+                if (flags == null) return defaultValue;
 
                 StateFlag stateFlag = flags.flag(State.this);
-                boolean b = stateFlag == null || GuardManager.checkState(loc, GuardManager.wrap(player), stateFlag);
+                if (stateFlag == null) return defaultValue;
+
+                boolean b = GuardManager.checkState(loc, GuardManager.wrap(player), stateFlag);
                 if (b != defaultValue) LSConfig.sendMessage(player, "flags." + id);
                 return b;
             } catch (Throwable t) {

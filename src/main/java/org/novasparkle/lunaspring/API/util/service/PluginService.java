@@ -10,7 +10,7 @@ public abstract class PluginService implements LunaService {
     private final boolean enabled;
     public PluginService(String pluginName) {
         this.pluginName = pluginName;
-        this.enabled = Utils.isPluginEnabled(this.pluginName);
+        this.enabled = Utils.hasPlugin(this.pluginName);
     }
 
     public void checkService() throws NoProvidingPluginException {
