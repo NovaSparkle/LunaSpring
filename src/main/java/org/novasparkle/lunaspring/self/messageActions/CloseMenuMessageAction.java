@@ -13,7 +13,13 @@ import org.novasparkle.lunaspring.LunaSpring;
 public class CloseMenuMessageAction extends AbsMessageAction<HumanEntity> {
     @Override
     public void execute(HumanEntity target, String line) {
-        InventoryCloseEvent.Reason reason = Utils.getEnumValue(InventoryCloseEvent.Reason.class, line, InventoryCloseEvent.Reason.PLUGIN);
+        InventoryCloseEvent.Reason reason;
+        if (line != null && !line.isEmpty()) {
+            reason = Utils.getEnumValue(InventoryCloseEvent.Reason.class, line, InventoryCloseEvent.Reason.PLUGIN);
+        }
+        else
+            reason = InventoryCloseEvent.Reason.PLUGIN;
+
         Bukkit.getScheduler().runTask(LunaSpring.getInstance(), () -> {
             target.closeInventory(reason);
         });

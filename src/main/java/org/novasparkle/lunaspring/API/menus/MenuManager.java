@@ -105,8 +105,14 @@ public class MenuManager {
         if (menus != null && !menus.isEmpty()) {
             IMenu iMenu = menus.stream().filter(m -> m.getPlayer().getUniqueId().equals(player.getUniqueId())).findFirst().orElse(null);
             if (iMenu != null) {
-                iMenu.onClose(event);
-                unregister(iMenu);
+                if (iMenu.onCloseFirstUnregisterFlag()) {
+                    unregister(iMenu);
+                    iMenu.onClose(event);
+                }
+                else {
+                    iMenu.onClose(event);
+                    unregister(iMenu);
+                }
             }
         }
 

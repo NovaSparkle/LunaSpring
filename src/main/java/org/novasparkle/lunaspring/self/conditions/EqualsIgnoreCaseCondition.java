@@ -4,9 +4,12 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.novasparkle.lunaspring.API.conditions.abs.ConditionId;
 import org.novasparkle.lunaspring.API.conditions.abs.ConditionNullable;
+import org.novasparkle.lunaspring.API.conditions.abs.ConditionParams;
 import org.novasparkle.lunaspring.API.conditions.abs.StringCondition;
 
-@ConditionId("EQUALS_IGNORE_CASE") @ConditionNullable
+@ConditionId("EQUALS_IGNORE_CASE")
+@ConditionNullable
+@ConditionParams(identifiers = {"input", "check"}, idClasses = {String.class, String.class})
 public class EqualsIgnoreCaseCondition implements StringCondition {
     @Override
     public boolean check(OfflinePlayer player, String[] strings) {

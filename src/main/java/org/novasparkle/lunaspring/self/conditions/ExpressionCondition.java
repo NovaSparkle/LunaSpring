@@ -2,16 +2,18 @@ package org.novasparkle.lunaspring.self.conditions;
 
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
 import org.novasparkle.lunaspring.API.conditions.abs.ConditionId;
 import org.novasparkle.lunaspring.API.conditions.abs.ConditionNullable;
+import org.novasparkle.lunaspring.API.conditions.abs.ConditionParams;
 import org.novasparkle.lunaspring.API.conditions.abs.StringCondition;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 
 import java.util.Arrays;
 import java.util.regex.Matcher;
 
-@ConditionId("EXPRESSION") @ConditionNullable
+@ConditionId("EXPRESSION")
+@ConditionNullable
+@ConditionParams(identifiers = "expression", idClasses = String.class)
 public class ExpressionCondition implements StringCondition {
 
     @Override

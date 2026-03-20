@@ -3,9 +3,11 @@ package org.novasparkle.lunaspring.self.conditions;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.novasparkle.lunaspring.API.conditions.abs.ConditionId;
+import org.novasparkle.lunaspring.API.conditions.abs.ConditionParams;
 import org.novasparkle.lunaspring.API.conditions.abs.PlayerCondition;
 
 @ConditionId("EXP")
+@ConditionParams(identifiers = {"exp", "checkLevel"}, idClasses = {int.class, boolean.class})
 public class ExpCondition implements PlayerCondition {
     @Override
     public boolean check(Player player, Object... objects) {

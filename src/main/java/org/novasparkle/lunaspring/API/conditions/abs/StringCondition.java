@@ -16,8 +16,8 @@ public interface StringCondition extends OfflinePlayerCondition {
         boolean hasPlayer = player != null;
 
         Function<Object, String> func = hasPlayer ?
-                o -> Utils.setPlaceholders(player, (String) o) :
-                o -> (String) o;
+                o -> Utils.setPlaceholders(player, o.toString()) :
+                Object::toString;
         String[] strings = Arrays.stream(objects)
                 .filter(o -> o instanceof String)
                 .map(func)

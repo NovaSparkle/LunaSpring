@@ -79,14 +79,13 @@ public class Conditions {
         return getCondition(type);
     }
 
-    public <E> boolean checkCondition(@Nullable OfflinePlayer player,
-                                  @Nullable Condition<E> condition,
-                                  @NotNull ConfigurationSection section,
-                                  boolean printErrorMessage) {
+    public <E> boolean checkGenericCondition(@Nullable E handler,
+                                             @Nullable Condition<E> condition,
+                                             @NotNull ConfigurationSection section,
+                                             boolean printErrorMessage) {
         if (condition == null) return false;
 
-        E object = condition.cast(player);
-        if (object == null && !condition.getClass().isAnnotationPresent(CACHED_ANNOTATION)) {
+        if (handler == null && !condition.getClass().isAnnotationPresent(CACHED_ANNOTATION)) {
             if (condition.unknownCheck(section)) return true;
 
             if (printErrorMessage)
@@ -98,7 +97,7 @@ public class Conditions {
         }
 
         try {
-            if (condition.check(object, condition.generateObjects(section))) return true;
+            if (condition.check(handler, condition.generateObjects(section))) return true;
         }
         catch (Exception e) {
             String name = condition.getClass().getSimpleName();
@@ -106,18 +105,24 @@ public class Conditions {
         }
 
         if (printErrorMessage) {
-            CommandSender sender = player != null && player.isOnline() ?
-                    player.getPlayer() :
-                    Bukkit.getConsoleSender();
-
-            String name = player == null ? sender.getName() : player.getName();
+            CommandSender sender = handler instanceof Player p ? p : Bukkit.getConsoleSender();
             Utils.processCommandsWithActions(
                     sender,
                     getErrorMessagesFunction.apply(section),
-                    "player-%-" + name);
+                    "player-%-" + sender.getName());
         }
 
         return false;
+    }
+
+    public <E> boolean checkCondition(@Nullable OfflinePlayer player,
+                                  @Nullable Condition<E> condition,
+                                  @NotNull ConfigurationSection section,
+                                  boolean printErrorMessage) {
+        if (condition == null) return false;
+
+        E object = condition.cast(player);
+        return checkGenericCondition(object, condition, section, printErrorMessage);
     }
 
     public boolean checkCondition(@Nullable OfflinePlayer player,

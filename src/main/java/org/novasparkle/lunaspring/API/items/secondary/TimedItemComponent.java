@@ -5,9 +5,13 @@ import org.bukkit.inventory.ItemStack;
 import org.novasparkle.lunaspring.API.items.Component;
 import org.novasparkle.lunaspring.API.items.SlotFilteringComponent;
 
+import java.util.List;
 import java.util.stream.Stream;
 
 @Component
 public interface TimedItemComponent extends SlotFilteringComponent {
-    void tick(Player handler, Stream<ItemStack> componentItems);
+    default boolean isAsync() {
+        return true;
+    }
+    void tick(Player handler, List<ItemStack> componentItems);
 }

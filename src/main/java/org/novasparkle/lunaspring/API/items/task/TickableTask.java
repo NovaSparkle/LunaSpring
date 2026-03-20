@@ -2,6 +2,7 @@ package org.novasparkle.lunaspring.API.items.task;
 
 import lombok.Getter;
 import lombok.SneakyThrows;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -9,6 +10,7 @@ import org.novasparkle.lunaspring.API.items.ComponentStorage;
 import org.novasparkle.lunaspring.API.items.secondary.TimedItemComponent;
 import org.novasparkle.lunaspring.API.util.service.managers.TaskManager;
 import org.novasparkle.lunaspring.API.util.utilities.tasks.LunaTask;
+import org.novasparkle.lunaspring.LunaSpring;
 
 import java.util.List;
 
@@ -29,7 +31,15 @@ public class TickableTask extends LunaTask {
             PlayerInventory inventory = this.player.getInventory();
             ComponentStorage.getRealizedComponents(TimedItemComponent.class).forEach(c -> {
                 List<ItemStack> list = ComponentStorage.scanInventory(inventory, c).toList();
-                if (!list.isEmpty()) c.tick(this.player, list.stream());
+                if (!list.isEmpty()) {
+                    if (c.isAsync()) {
+                        c.tick(this.player, list);
+                    }
+                    else {
+                        Bukkit.getScheduler().runTask(LunaSpring.getInstance(), () ->
+                                c.tick(this.player, list));
+                    }
+                }
             });
         }
     }

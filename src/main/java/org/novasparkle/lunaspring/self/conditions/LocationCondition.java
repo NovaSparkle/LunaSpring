@@ -6,9 +6,13 @@ import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.novasparkle.lunaspring.API.conditions.abs.ConditionId;
+import org.novasparkle.lunaspring.API.conditions.abs.ConditionParams;
 import org.novasparkle.lunaspring.API.conditions.abs.PlayerCondition;
 
 @ConditionId("LOCATION")
+@ConditionParams(
+        identifiers = {"radius", "world", "x", "y", "z"},
+        idClasses = {double.class, String.class, double.class, double.class, double.class})
 public class LocationCondition implements PlayerCondition {
     // x;y;z;world;r
 

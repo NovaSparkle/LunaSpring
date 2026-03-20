@@ -4,12 +4,12 @@ import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.novasparkle.lunaspring.API.conditions.abs.Condition;
 import org.novasparkle.lunaspring.API.conditions.abs.ConditionId;
+import org.novasparkle.lunaspring.API.conditions.abs.ConditionParams;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
 import org.novasparkle.lunaspring.API.util.service.managers.NBTManager;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
@@ -18,6 +18,9 @@ import java.util.HashSet;
 import java.util.List;
 
 @ConditionId("HAS_ITEM")
+@ConditionParams(
+        identifiers = {"material", "amount", "displayName", "lore", "modelData", "nbt"},
+        idClasses = {String.class, int.class, String.class, List.class, int.class, List.class})
 public class HasItemCondition implements Condition<Inventory> {
     // MATERIAL AMOUNT DISPLAYNAME LORE MODEL_DATA NBT_KEYS
 

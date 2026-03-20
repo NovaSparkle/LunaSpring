@@ -566,7 +566,7 @@ public class NonMenuItem implements Cloneable {
 
     public void give(@NotNull Player player) {
         this.replaceLore(lr -> PlaceholderAPI.setPlaceholders(player, lr));
-        Utils.Items.give(player, false, this.itemStack);
+        Utils.Items.give(player, this.itemStack);
     }
 
     public NonMenuItem serialize(@NotNull ConfigurationSection section, boolean asItemStack) {

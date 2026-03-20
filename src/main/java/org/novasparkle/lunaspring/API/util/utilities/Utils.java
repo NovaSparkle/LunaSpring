@@ -445,6 +445,22 @@ public class Utils {
             line = line.replace("[" + index + "]", replacement);
             index++;
         }
+
+        return line;
+    }
+
+    public String applyLinkedReplacements(String starterLine, Object... replacements) {
+        int size = replacements.length;
+        if (!LunaMath.isEven(size)) size--;
+
+        String line = starterLine;
+        for (int i = 0; i < size; i++) {
+            String key = "[" + replacements[i] + "]";
+
+            Object objValue = replacements[++i];
+            line = line.replace(key, objValue == null ? "" : objValue.toString());
+        }
+
         return line;
     }
 
@@ -468,13 +484,12 @@ public class Utils {
         String previous;
         String current = line;
 
-        int maxIterations = 8;
         int count = 0;
         do {
             previous = current;
             current = PlaceholderAPI.setPlaceholders(player, previous);
             count++;
-        } while (!current.equals(previous) && count < maxIterations);
+        } while (!current.equals(previous) && count < utilsObjects.MAX_ATTEMPTS_ON_REPLACE_PLACEHOLDERS);
 
         return current;
     }
@@ -806,7 +821,7 @@ public class Utils {
         }
 
         @SuppressWarnings("all")
-        public void remove(@NotNull ItemStack[] storage, Predicate<ItemStack> checkFunction, final int amount) {
+        public int remove(@NotNull ItemStack[] storage, Predicate<ItemStack> checkFunction, final int amount) {
             int left = amount;
             for (ItemStack itemStack : storage) {
                 if (left <= 0) break;
@@ -819,14 +834,16 @@ public class Utils {
                     itemStack.setAmount(different >= 0 ? 0 : Math.abs(different));
                 }
             }
+
+            return left;
         }
 
-        public void remove(@NotNull ItemStack[] storage, @NotNull ItemStack similarItem, final int amount) {
-            remove(storage, i -> i != null && i.isSimilar(similarItem), amount);
+        public int remove(@NotNull ItemStack[] storage, @NotNull ItemStack similarItem, final int amount) {
+            return remove(storage, i -> i != null && i.isSimilar(similarItem), amount);
         }
 
-        public void remove(@NotNull ItemStack[] storage, @NotNull Material material, final int amount) {
-            remove(storage, i -> i != null && i.getType() == material, amount);
+        public int remove(@NotNull ItemStack[] storage, @NotNull Material material, final int amount) {
+            return remove(storage, i -> i != null && i.getType() == material, amount);
         }
 
         public Stream<ItemStack> get(@NotNull ItemStack[] storage, Predicate<ItemStack> predicate) {
@@ -853,76 +870,111 @@ public class Utils {
             return getAmount(storage, i -> i != null && i.getType() == material);
         }
 
-        public void give(@NotNull Player player, Location dropLocation, Collection<ItemStack> itemList, boolean putOnArmor) {
-            PlayerInventory inventory = player.getInventory();
-            for (ItemStack itemStack : itemList) {
-                EquipmentSlot equipmentSlot = Utils.getEquipmentSlot(itemStack.getType());
-                if (putOnArmor && equipmentSlot != EquipmentSlot.HAND) {
-                    ItemStack armor = inventory.getItem(equipmentSlot);
-                    if (armor == null || armor.getType().isAir()) {
-                        inventory.setItem(equipmentSlot, itemStack.clone());
+        public void give(@NotNull Player player,
+                         Collection<ItemStack> itemList,
+                         boolean putOnArmor,
+                         Consumer<ItemStack> leftoverConsumer) {
+            PlayerInventory inv = player.getInventory();
+            for (ItemStack item : itemList) {
+                if (item == null || item.getType().isAir()) continue;
+
+                ItemStack toGive = item.clone();
+                if (putOnArmor) {
+                    EquipmentSlot slot = Utils.getEquipmentSlot(toGive.getType());
+
+                    ItemStack slotItem = inv.getItem(slot);
+                    if (slot != EquipmentSlot.HAND && (slotItem == null || slotItem.getType().isAir())) {
+                        inv.setItem(slot, toGive);
                         continue;
                     }
                 }
 
-                if (inventory.firstEmpty() > -1) {
-                    inventory.addItem(itemStack.clone());
-                    continue;
-                }
-
-                ItemMeta checkedMeta = itemStack.getItemMeta();
-                List<? extends ItemStack> finds = inventory.all(itemStack).values()
-                        .stream()
-                        .filter(i -> {
-                            ItemMeta meta = i.getItemMeta();
-                            return (meta == null && checkedMeta == null)
-                                    || (checkedMeta != null && checkedMeta.equals(meta))
-                                    || (meta != null && meta.equals(checkedMeta));
-                        })
-                        .toList();
-
-                int leftAmount = itemStack.getAmount();
-                for (ItemStack value : finds) {
-                    int maxStack = value.getType().getMaxStackSize();
-                    if (value.getAmount() >= maxStack) continue;
-
-                    int different = maxStack - value.getAmount();
-                    if (different >= leftAmount) {
-                        value.setAmount(value.getAmount() + leftAmount);
-                        leftAmount = 0;
-                        break;
-                    } else {
-                        leftAmount -= different;
-                        value.setAmount(maxStack);
-                    }
-                }
-
-                if (leftAmount > 0) {
-                    itemStack = itemStack.clone();
-                    itemStack.setAmount(leftAmount);
-                    player.getWorld().dropItem(dropLocation, itemStack);
+                HashMap<Integer, ItemStack> leftover = inv.addItem(toGive);
+                if (!leftover.isEmpty()) {
+                    leftover.values().forEach(leftoverConsumer);
                 }
             }
         }
 
+//        public void give(@NotNull Player player, Location dropLocation, Collection<ItemStack> itemList, boolean putOnArmor) {
+//            PlayerInventory inventory = player.getInventory();
+//            for (ItemStack itemStack : itemList) {
+//                EquipmentSlot equipmentSlot = Utils.getEquipmentSlot(itemStack.getType());
+//                if (putOnArmor && equipmentSlot != EquipmentSlot.HAND) {
+//                    ItemStack armor = inventory.getItem(equipmentSlot);
+//                    if (armor == null || armor.getType().isAir()) {
+//                        inventory.setItem(equipmentSlot, itemStack.clone());
+//                        continue;
+//                    }
+//                }
+//
+//                if (inventory.firstEmpty() > -1) {
+//                    inventory.addItem(itemStack.clone());
+//                    continue;
+//                }
+//
+//                ItemMeta checkedMeta = itemStack.getItemMeta();
+//                List<? extends ItemStack> finds = inventory.all(itemStack).values()
+//                        .stream()
+//                        .filter(i -> {
+//                            ItemMeta meta = i.getItemMeta();
+//                            return (meta == null && checkedMeta == null)
+//                                    || (checkedMeta != null && checkedMeta.equals(meta))
+//                                    || (meta != null && meta.equals(checkedMeta));
+//                        })
+//                        .toList();
+//
+//                int leftAmount = itemStack.getAmount();
+//                for (ItemStack value : finds) {
+//                    int maxStack = value.getType().getMaxStackSize();
+//                    if (value.getAmount() >= maxStack) continue;
+//
+//                    int different = maxStack - value.getAmount();
+//                    if (different >= leftAmount) {
+//                        value.setAmount(value.getAmount() + leftAmount);
+//                        leftAmount = 0;
+//                        break;
+//                    } else {
+//                        leftAmount -= different;
+//                        value.setAmount(maxStack);
+//                    }
+//                }
+//
+//                if (leftAmount > 0) {
+//                    itemStack = itemStack.clone();
+//                    itemStack.setAmount(leftAmount);
+//                    player.getWorld().dropItem(dropLocation, itemStack);
+//                }
+//            }
+//        }
+
         public void give(@NotNull Player player, Collection<ItemStack> itemList, boolean putOnArmor) {
-            give(player, player.getLocation(), itemList, putOnArmor);
+            give(player,
+                    itemList,
+                    putOnArmor,
+                    i -> utilsObjects.DROP_ITEM_CONSUMER.accept(player.getLocation(), i));
         }
 
         public void give(@NotNull Player player, Collection<ItemStack> itemList) {
             give(player, itemList, true);
         }
 
-        public void give(@NotNull Player player, Location dropLocation, boolean putOnArmor, ItemStack... itemStacks) {
-            give(player, dropLocation, List.of(itemStacks), putOnArmor);
+        public void give(@NotNull Player player,
+                         boolean putOnArmor,
+                         Consumer<ItemStack> leftoverConsumer,
+                         ItemStack... itemStacks) {
+            give(player, List.of(itemStacks), putOnArmor, leftoverConsumer);
         }
 
-        public void give(@NotNull Player player, boolean putOnArmor, ItemStack... itemStacks) {
-            give(player, player.getLocation(), putOnArmor, itemStacks);
+        public void give(@NotNull Player player, Consumer<ItemStack> leftoverConsumer, ItemStack... itemStacks) {
+            give(player, true, leftoverConsumer, itemStacks);
         }
 
         public void give(@NotNull Player player, ItemStack... itemStacks) {
-            give(player, true, itemStacks);
+            give(player,
+                    false,
+                    i -> utilsObjects.DROP_ITEM_CONSUMER.accept(player.getLocation(), i),
+                    itemStacks);
         }
 
         public void enchant(ItemStack itemStack, Enchantment enchantment, int level) {

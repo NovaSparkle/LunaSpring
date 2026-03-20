@@ -5,9 +5,11 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.permissions.Permissible;
 import org.novasparkle.lunaspring.API.conditions.abs.Condition;
 import org.novasparkle.lunaspring.API.conditions.abs.ConditionId;
+import org.novasparkle.lunaspring.API.conditions.abs.ConditionParams;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 
 @ConditionId("PERMISSION")
+@ConditionParams(identifiers = "permission", idClasses = String.class)
 public class PermissionCondition implements Condition<Permissible> {
     @Override
     public boolean check(Permissible permissible, Object... objects) {

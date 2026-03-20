@@ -5,10 +5,13 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.novasparkle.lunaspring.API.conditions.abs.ConditionId;
 import org.novasparkle.lunaspring.API.conditions.abs.ConditionNullable;
+import org.novasparkle.lunaspring.API.conditions.abs.ConditionParams;
 import org.novasparkle.lunaspring.API.conditions.abs.StringCondition;
 import org.novasparkle.lunaspring.API.util.utilities.LunaMath;
 
-@ConditionId("STRING_LENGTH") @ConditionNullable
+@ConditionId("STRING_LENGTH")
+@ConditionNullable
+@ConditionParams(identifiers = {"input", "min", "max"}, idClasses = {String.class, int.class, int.class})
 public class StringLengthCondition implements StringCondition {
     @Override
     public boolean check(OfflinePlayer player, String[] strings) {
@@ -30,8 +33,8 @@ public class StringLengthCondition implements StringCondition {
     public Object[] generateObjects(ConfigurationSection section) {
         return new Object[]{
                 section.getString("input"),
-                section.getString("min"),
-                section.getString("max")
+                section.getInt("min"),
+                section.getInt("max")
         };
     }
 }

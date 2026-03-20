@@ -3,6 +3,9 @@ package org.novasparkle.lunaspring.API.conditions.abs;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Map;
 
 @RequiredArgsConstructor
 public class NegativeCondition<E> implements Condition<E> {
@@ -26,5 +29,25 @@ public class NegativeCondition<E> implements Condition<E> {
     @Override
     public boolean unknownCheck(ConfigurationSection section) {
         return condition.unknownCheck(section);
+    }
+
+    @Override
+    public @Nullable Class<?> getParamClass(String param) {
+        return condition.getParamClass(param);
+    }
+
+    @Override
+    public @Nullable Class<?>[] getParamsClasses() {
+        return condition.getParamsClasses();
+    }
+
+    @Override
+    public @Nullable Map<String, Class<?>> getMapParams() {
+        return condition.getMapParams();
+    }
+
+    @Override
+    public @Nullable String[] getParams() {
+        return condition.getParams();
     }
 }
