@@ -7,7 +7,7 @@ import org.novasparkle.lunaspring.API.util.service.managers.TaskManager;
 @Getter
 public abstract class LunaTask extends BukkitRunnable implements LunaRunnable {
     private final long ticks;
-    private boolean isActive;
+    private volatile boolean isActive;
 
     public LunaTask(long ticks) {
         this.ticks = ticks;

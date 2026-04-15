@@ -2,6 +2,7 @@ package org.novasparkle.lunaspring.API.commands.processor;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.command.CommandSender;
 import org.novasparkle.lunaspring.API.commands.Invocation;
 import org.novasparkle.lunaspring.API.commands.LunaCompleter;
@@ -10,11 +11,11 @@ import org.novasparkle.lunaspring.self.configuration.LSConfig;
 
 import java.util.List;
 
-@Getter
+@Getter @Setter
 public class SubCommand extends NoArgCommand {
-    private final CommandReq commandRequirements;
     private final List<String> commandIdentifiers;
-    private final LunaCompleter tabCompleter;
+    private CommandReq commandRequirements;
+    private LunaCompleter tabCompleter;
 
     @Builder
     public SubCommand(LunaPlugin plugin, String appliedCommand, CommandReq commandReq, String[] commandIdentifiers, Invocation invocation, LunaCompleter tabCompleter) {

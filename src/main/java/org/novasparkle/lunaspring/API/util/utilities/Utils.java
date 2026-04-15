@@ -37,6 +37,7 @@ import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -169,6 +170,17 @@ public class Utils {
         }
 
         return LunaMath.toDouble(builder.toString());
+    }
+
+    public <K, V, M extends Map<V, K>> M reverseMap(Map<K, V> original, Supplier<M> mapSupplier) {
+        return original.entrySet()
+                .stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getValue,
+                        Map.Entry::getKey,
+                        (existing, replacement) -> existing,
+                        mapSupplier
+                ));
     }
 
     public void processCommandsWithActions(CommandSender sender, String line, String... replacements) {
@@ -411,8 +423,11 @@ public class Utils {
     }
 
     public List<String> tabCompleterFiltering(Collection<String> collection, String tabCompleterValueFilter) {
-        return collection
-                .stream()
+        return tabCompleterFiltering(collection.stream(), tabCompleterValueFilter);
+    }
+
+    public List<String> tabCompleterFiltering(Stream<String> stream, String tabCompleterValueFilter) {
+        return stream
                 .filter(n -> n.toUpperCase().startsWith(tabCompleterValueFilter.toUpperCase()))
                 .toList();
     }

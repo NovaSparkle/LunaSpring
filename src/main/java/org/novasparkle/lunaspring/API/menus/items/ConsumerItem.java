@@ -52,6 +52,11 @@ public class ConsumerItem extends Item {
         this.consumer = consumer;
     }
 
+    public ConsumerItem(@NotNull ConfigurationSection section, BiConsumer<Player, InventoryClickEvent> consumer) {
+        super(section);
+        this.consumer = consumer;
+    }
+
     @Override
     public ConsumerItem onClick(InventoryClickEvent e) {
         this.consumer.accept((Player) e.getWhoClicked(), e);

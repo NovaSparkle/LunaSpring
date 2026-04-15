@@ -212,6 +212,10 @@ public abstract class LunaPlugin extends JavaPlugin {
         return false;
     }
 
+    public void async(Runnable runnable) {
+        Bukkit.getScheduler().runTaskAsynchronously(this, runnable);
+    }
+
     public boolean createPlaceholder(LunaPAPIExpansion.Request request) {
         return this.createPlaceholder(null, request);
     }

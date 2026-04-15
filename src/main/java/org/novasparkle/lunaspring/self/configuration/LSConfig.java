@@ -4,6 +4,7 @@ import lombok.Getter;
 import org.bukkit.command.CommandSender;
 import org.novasparkle.lunaspring.API.configuration.IConfig;
 import org.novasparkle.lunaspring.API.util.service.managers.ColorManager;
+import org.novasparkle.lunaspring.API.util.utilities.localization.Localization;
 import org.novasparkle.lunaspring.LunaSpring;
 
 import java.util.List;
@@ -25,6 +26,7 @@ public final class LSConfig {
         config.reload(LunaSpring.getInstance());
         debugEnabled = getBoolean("debug");
         moveCheckingEnabled = getBoolean("moveCheckingEnabled");
+        Localization.load();
     }
 
     public static String getMessage(String path) {

@@ -36,6 +36,10 @@ public abstract class StoreItem extends Item {
         super(section, slot);
     }
 
+    public StoreItem(@NotNull ConfigurationSection section) {
+        super(section);
+    }
+
     @Override
     public ItemStack getItemStack() {
         return this.storedItem == null ? getSuperItemStack() : this.storedItem;

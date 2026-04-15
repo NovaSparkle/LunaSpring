@@ -6,10 +6,7 @@ import lombok.Getter;
 import lombok.SneakyThrows;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SingleLineChart;
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageRecipient;
 import org.novasparkle.lunaspring.API.commands.CommandInitializer;
 import org.novasparkle.lunaspring.API.conditions.Conditions;
@@ -22,8 +19,8 @@ import org.novasparkle.lunaspring.API.util.service.managers.worldguard.GuardMana
 import org.novasparkle.lunaspring.API.util.service.managers.worldguard.LunaFlags;
 import org.novasparkle.lunaspring.API.util.utilities.AnnounceUtils;
 import org.novasparkle.lunaspring.API.util.utilities.Color;
-import org.novasparkle.lunaspring.API.util.utilities.Localization;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
+import org.novasparkle.lunaspring.API.util.utilities.localization.Localization;
 import org.novasparkle.lunaspring.API.util.utilities.reflection.AnnotationScanner;
 import org.novasparkle.lunaspring.API.util.utilities.reflection.ClassEntry;
 import org.novasparkle.lunaspring.API.messageActions.MessageAction;
@@ -42,12 +39,12 @@ public final class LunaSpring extends LunaPlugin {
 
     @Override
     public void onLoad() {
+        instance = this;
         this.registerFlags();
     }
 
     @Override
     public void onEnable() {
-        instance = this;
         this.saveDefaultConfig();
         super.onEnable();
 
@@ -82,10 +79,12 @@ public final class LunaSpring extends LunaPlugin {
                 ));
             });
         }
+
+        async(Localization::load);
     }
 
     private void registerFlags() {
-        if (!Utils.hasPlugin("WorldGuard")) return;
+        if (!Utils.hasPlugin("WorldGuard") || !LSConfig.getBoolean("enableWorldGuardFlags")) return;
 
         LunaFlags flags = GuardManager.flags();
         if (flags != null) {
@@ -116,8 +115,8 @@ public final class LunaSpring extends LunaPlugin {
                 String splittedPath = split[1];
                 splittedPath = Utils.setBracketPlaceholders(offlinePlayer, splittedPath);
 
-                String placeholder = Localization.localize(splittedPath);
-                return placeholder == null || placeholder.isEmpty() ? splittedPath : placeholder;
+                String finalSplittedPath = splittedPath;
+                return Localization.translate(splittedPath, () -> split.length > 2 ? split[2] : finalSplittedPath);
             }
 
             if (params.startsWith("color-")) {

@@ -1,6 +1,7 @@
 package org.novasparkle.lunaspring.API.commands.processor;
 
 import lombok.Getter;
+import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.experimental.Accessors;
 import org.bukkit.command.Command;
@@ -16,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Getter
+@Getter @Setter
 public final class CommandProcessor implements TabExecutor {
     private final List<SubCommand> subCommands;
     private final List<String> commandIdentifiers;

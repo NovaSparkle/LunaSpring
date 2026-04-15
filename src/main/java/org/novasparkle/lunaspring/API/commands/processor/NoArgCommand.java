@@ -2,6 +2,7 @@ package org.novasparkle.lunaspring.API.commands.processor;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -13,13 +14,13 @@ import org.novasparkle.lunaspring.self.configuration.LSConfig;
 import java.util.Arrays;
 import java.util.List;
 
-@Getter
+@Getter @Setter
 public class NoArgCommand implements Invocation {
     private final LunaPlugin plugin;
     private final String appliedCommand;
     private final List<NoArgCommand.AccessFlag> flags;
     private final List<String> permissions;
-    private final Invocation invocation;
+    private Invocation invocation;
 
     @Builder(builderMethodName = "zBuilder", buildMethodName = "zBuild")
     public NoArgCommand(LunaPlugin plugin, String appliedCommand, AccessFlag[] flags, String[] permissions, Invocation invocation) {

@@ -7,6 +7,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.jetbrains.annotations.NotNull;
 import org.novasparkle.lunaspring.API.menus.IMenu;
 import org.novasparkle.lunaspring.API.menus.MenuManager;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
@@ -52,6 +53,15 @@ public class SwitchItem extends Item {
 
     public SwitchItem(ConfigurationSection section, boolean rowCol, Function<Player, IMenu> menuFunction) {
         super(section, rowCol);
+        this.menuFunction = menuFunction;
+    }
+
+    public SwitchItem(@NotNull ConfigurationSection section, Function<Player, IMenu> menuFunction) {
+        super(section);
+        this.menuFunction = menuFunction;
+    }
+
+    public SwitchItem(Function<Player, IMenu> menuFunction) {
         this.menuFunction = menuFunction;
     }
 

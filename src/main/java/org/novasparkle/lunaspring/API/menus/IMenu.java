@@ -1,5 +1,6 @@
 package org.novasparkle.lunaspring.API.menus;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -10,6 +11,7 @@ import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.Nullable;
 import org.novasparkle.lunaspring.API.menus.updatable.UpdatableIMenu;
 import org.novasparkle.lunaspring.API.menus.updatable.tasks.UpdatableTask;
+import org.novasparkle.lunaspring.LunaSpring;
 
 public interface IMenu extends Cloneable {
     default boolean onCloseFirstUnregisterFlag() {
@@ -29,6 +31,10 @@ public interface IMenu extends Cloneable {
     boolean isCancelled(Cancellable event, int slot);
     default IMenu open() {
         MenuManager.openInventory(this);
+        return this;
+    }
+    default IMenu open(int afterTick) {
+        Bukkit.getScheduler().runTaskLater(LunaSpring.getInstance(), () -> open(), afterTick);
         return this;
     }
     default void close(@Nullable InventoryCloseEvent.Reason reason) {
