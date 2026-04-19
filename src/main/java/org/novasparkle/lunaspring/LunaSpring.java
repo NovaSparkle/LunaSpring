@@ -33,13 +33,16 @@ import java.util.Set;
 @Getter
 public final class LunaSpring extends LunaPlugin {
     @Getter private static LunaSpring instance;
+
     private final Set<LunaPlugin> hookedPlugins = new HashSet<>();
     private Metrics metrics;
 
+    public LunaSpring() {
+        instance = this;
+    }
 
     @Override
     public void onLoad() {
-        instance = this;
         this.registerFlags();
     }
 
@@ -52,7 +55,9 @@ public final class LunaSpring extends LunaPlugin {
         this.registerListeners(new MenuHandler(), new MarkedItemEraserHandler(), new ItemComponentsHandler(), new ModuleHandlers());
         CommandInitializer.initialize(this, "#.self.commands");
 
-        this.registerLunaPlaceholder();
+        this.registerLunaPlaceholder("lunaspring");
+        this.registerLunaPlaceholder("lsp");
+
         this.registerDefaultMessageActions();
         Conditions.load(this, "#.self.conditions");
 
@@ -94,8 +99,8 @@ public final class LunaSpring extends LunaPlugin {
         }
     }
 
-    private void registerLunaPlaceholder() {
-        this.createPlaceholder(((offlinePlayer, params) -> {
+    private void registerLunaPlaceholder(String identifier) {
+        this.createPlaceholder(identifier, ((offlinePlayer, params) -> {
             if (params.equalsIgnoreCase("hooked")) {
                 return String.join(", ", this.hookedPlugins.stream().map(LunaPlugin::getName).toList()); // Список луна плагинов
             }
