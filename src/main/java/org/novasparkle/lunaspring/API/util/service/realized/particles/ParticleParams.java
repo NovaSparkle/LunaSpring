@@ -9,7 +9,7 @@ public record ParticleParams(Particle particle,
                              double[] params,
                              ConfigurationSection basicSection) {
 
-    static ParticleParams load(ConfigurationSection section) {
+    public static ParticleParams load(ConfigurationSection section) {
         if (section == null) return null;
 
         Particle particle = Utils.getEnumValue(Particle.class, section.getString("type"), Particle.FLAME);
