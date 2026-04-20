@@ -39,14 +39,14 @@ public abstract class Loot<T, E> {
 
     protected abstract void generate(E object);
 
-    public static @NotNull ItemStack getStackFromSection(ConfigurationSection parentSection, String key) {
-        ItemStack itemStack = parentSection.getItemStack(key);
+    public static ItemStack getStackFromSection(@NotNull ConfigurationSection itemSection) {
+        ItemStack itemStack = itemSection.getItemStack("item");
         if (itemStack == null) {
-            ConfigurationSection itemSection = parentSection.getConfigurationSection(key);
-            assert itemSection != null;
-
             return new NonMenuItem(itemSection).getItemStack();
-        } else itemStack = itemStack.clone();
+        }
+        else
+            itemStack = itemStack.clone();
+
         return itemStack;
     }
 }

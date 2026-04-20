@@ -20,8 +20,11 @@ public class StackRarity extends AdvancedRarity<ItemStack> {
 
         if (section == null) return;
         for (String key : section.getKeys(false)) {
-            ItemStack itemStack = Loot.getStackFromSection(section, key);
-            this.add(itemStack, section.getDouble(key + ".chance", 100));
+            var itemSection = section.getConfigurationSection(key);
+            if (itemSection == null) continue;
+
+            ItemStack itemStack = Loot.getStackFromSection(itemSection);
+            this.add(itemStack, itemSection.getDouble("chance", 100));
         }
     }
 

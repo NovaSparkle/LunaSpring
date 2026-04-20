@@ -1,17 +1,18 @@
 package org.novasparkle.lunaspring.API.util.utilities.rarities.loot;
 
+import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.novasparkle.lunaspring.API.util.utilities.LunaMath;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Supplier;
 
-@Setter
+@Setter @Getter
 public abstract class InventoryLoot<T, E> extends Loot<T, E> {
-    private byte attempts = 15;
+    private boolean mayDuplicate = true;
     public InventoryLoot(E object, Collection<T> collection, int maximumItems) {
         super(object, collection, maximumItems);
     }
@@ -21,27 +22,26 @@ public abstract class InventoryLoot<T, E> extends Loot<T, E> {
     }
 
     public void insert(Inventory inventory) {
-        List<T> list = new ArrayList<>(this.getList());
+        List<T> list = mayDuplicate ? this.getList() : new ArrayList<>(this.getList());
 
-        byte attempts = 0;
+        Set<Integer> leftSlots = new HashSet<>();
+        for (int i = 0; i < inventory.getSize(); i++) leftSlots.add(i);
+
         for (byte i = 0; i < this.getMaximumItems(); i++) {
-            if (attempts >= this.attempts || list.isEmpty()) break;
+            if (list.isEmpty()) break;
 
-            byte slot = (byte) ThreadLocalRandom.current().nextInt(inventory.getSize());
-            ItemStack itemStack = inventory.getItem(slot);
-            if (itemStack != null && itemStack.getType().isAir()) {
-                attempts++;
-                continue;
-            }
+            Integer slot = LunaMath.getRandom(leftSlots);
+            if (slot == null) break;
+
+            leftSlots.remove(slot);
 
             int index = ThreadLocalRandom.current().nextInt(list.size());
             T item = list.get(index);
-            list.remove(index);
+            if (mayDuplicate) list.remove(index);
 
             this.insert(inventory, slot, item);
-            attempts = 0;
         }
     }
 
-    public abstract void insert(Inventory inventory, byte slot, T item);
+    public abstract void insert(Inventory inventory, int slot, T item);
 }

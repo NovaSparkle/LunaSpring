@@ -6,8 +6,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Supplier;
 
@@ -160,6 +162,33 @@ public class LunaMath {
 
     public @NotNull <T> T getRandomIfPresent(@Nullable List<T> collection, @NotNull Supplier<T> returner) {
         T t = getRandom(collection);
+        return t == null ? returner.get() : t;
+    }
+
+    public @Nullable <T> T getRandom(Set<T> set) {
+        if (set == null || set.isEmpty()) {
+            return null;
+        }
+
+        if (set.size() <= 1000) {
+            List<T> list = new ArrayList<>(set);
+            return getRandom(list);
+        }
+
+        int randomIndex = getRandomInt(0, set.size());
+        int i = 0;
+        for (T value : set) {
+            if (i == randomIndex) {
+                return value;
+            }
+            i++;
+        }
+
+        return null;
+    }
+
+    public @NotNull <T> T getRandom(Set<T> set, @NotNull Supplier<T> returner) {
+        T t = getRandom(set);
         return t == null ? returner.get() : t;
     }
 

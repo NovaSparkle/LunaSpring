@@ -20,7 +20,7 @@ public class RarityLoot extends InventoryLoot<ItemStack, StackRarity> {
     }
 
     @Override
-    public void insert(Inventory inventory, byte slot, ItemStack item) {
+    public void insert(Inventory inventory, int slot, ItemStack item) {
         inventory.setItem(slot, item);
     }
 

@@ -16,7 +16,7 @@ public class SectionLoot extends InventoryLoot<ItemStack, ConfigurationSection> 
     }
 
     @Override
-    public void insert(Inventory inventory, byte slot, ItemStack item) {
+    public void insert(Inventory inventory, int slot, ItemStack item) {
         inventory.setItem(slot, item);
     }
 
@@ -31,9 +31,14 @@ public class SectionLoot extends InventoryLoot<ItemStack, ConfigurationSection> 
         if (items == null) return;
 
         List<String> itemKeys = new ArrayList<>(items.getKeys(false));
-        if (!itemKeys.isEmpty()) for (int i = 0; i < this.getMaximumItems(); i++) {
-            String key = itemKeys.get(LunaMath.getRandomInt(0, itemKeys.size()));
-            this.add(Loot.getStackFromSection(items, key));
-        }
+        if (!itemKeys.isEmpty())
+            for (int i = 0; i < this.getMaximumItems(); i++) {
+                String key = itemKeys.get(LunaMath.getRandomInt(0, itemKeys.size()));
+
+                ConfigurationSection itemSection = items.getConfigurationSection(key);
+                if (itemSection == null) continue;
+
+                this.add(Loot.getStackFromSection(itemSection));
+            }
     }
 }
