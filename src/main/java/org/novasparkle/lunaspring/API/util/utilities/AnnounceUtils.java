@@ -42,10 +42,10 @@ public class AnnounceUtils {
     }
 
     public boolean sound(Player player, String sound, float volume) {
-        Sound s =  Utils.getEnumValue(Sound.class, sound);
+        Sound s =  Utils.getSound(sound);
         if (s == null) return false;
 
-        sound(player, Sound.valueOf(sound), volume);
+        sound(player, s, volume);
         return true;
     }
 

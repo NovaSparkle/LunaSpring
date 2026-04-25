@@ -1,6 +1,7 @@
 package org.novasparkle.lunaspring.API.util.utilities;
 
 import lombok.Getter;
+import org.bukkit.Material;
 
 @Getter
 public enum MaterialAttribute {

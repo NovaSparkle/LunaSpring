@@ -78,6 +78,7 @@ messages:
     - '    {S}| &fСостояние: {S}[status]'
     - ''
   subCommandClasses: 'В пакете [package] отсканировано [amount] подкоманд: [commands]'
+  subNoPermission: {}
   flags:
     lsp-elytra-glide: "{E}Вы не можете глайдить на элитрах здесь!"
     lsp-elytra-glide-hard: "{E}Вы не можете глайдить на элитрах здесь!"

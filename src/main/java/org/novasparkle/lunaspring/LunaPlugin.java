@@ -1,7 +1,5 @@
 package org.novasparkle.lunaspring;
 
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.experimental.Accessors;
@@ -10,7 +8,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.command.TabExecutor;
-import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.novasparkle.lunaspring.API.commands.processor.CommandProcessor;
@@ -32,8 +29,6 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 @Getter @Accessors(fluent = true)
 public abstract class LunaPlugin extends JavaPlugin {
@@ -171,6 +166,7 @@ public abstract class LunaPlugin extends JavaPlugin {
     /**
      * Вывод информации в консоль
      */
+    @Deprecated
     public void info(String text) {
         this.getLogger().info(ColorManager.color(text));
     }
@@ -226,7 +222,7 @@ public abstract class LunaPlugin extends JavaPlugin {
      * @param destinationPath - путь файла, который будет создан сразу с содержимым из файла по пути copyResourcePath
      * @param copyResourcePath - путь до файла, из которого будет браться код для копирования
      */
-    @SneakyThrows
+    @SneakyThrows @Deprecated
     public void copyFile(String destinationPath, String copyResourcePath) {
         Files.createDirectories(Paths.get(destinationPath).getParent());
 

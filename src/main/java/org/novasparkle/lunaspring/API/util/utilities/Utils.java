@@ -317,7 +317,7 @@ public class Utils {
         if (string == null || string.isEmpty()) return defaultValue;
         try {
             return Enum.valueOf(clazz, string);
-        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
             return defaultValue;
         }
     }
@@ -326,11 +326,24 @@ public class Utils {
         return getEnumValue(clazz, string, null);
     }
 
+    public Sound getSound(@Nullable String string, Sound defaultValue) {
+        if (string == null || string.isEmpty()) return defaultValue;
+        try {
+            return Sound.valueOf(string);
+        } catch (Exception e) {
+            return defaultValue;
+        }
+    }
+
+    public Sound getSound(@Nullable String string) {
+        return getSound(string, null);
+    }
+
     public Enchantment getEnchantment(@Nullable String string, Enchantment defaultValue) {
         if (string == null || string.isEmpty()) return defaultValue;
         try {
             return Enchantment.getByKey(NamespacedKey.minecraft(string.toLowerCase()));
-        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
             return defaultValue;
         }
     }

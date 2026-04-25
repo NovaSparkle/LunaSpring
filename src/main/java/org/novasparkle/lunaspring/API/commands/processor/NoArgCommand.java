@@ -7,29 +7,43 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.novasparkle.lunaspring.API.commands.Invocation;
+import org.novasparkle.lunaspring.API.util.utilities.TripleFunction;
 import org.novasparkle.lunaspring.API.util.utilities.Utils;
 import org.novasparkle.lunaspring.LunaPlugin;
 import org.novasparkle.lunaspring.self.configuration.LSConfig;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.BiFunction;
 
 @Getter @Setter
 public class NoArgCommand implements Invocation {
+    public static final TripleFunction<LunaPlugin, String, String, String> REPLACE_FUNCTION =
+            (p, c, s) -> s == null ? null : s
+                    .replace("@", p.getName().toLowerCase())
+                    .replace("#", c);
+
     private final LunaPlugin plugin;
     private final String appliedCommand;
     private final List<NoArgCommand.AccessFlag> flags;
     private final List<String> permissions;
+    private String permissionMessagePath;
     private Invocation invocation;
 
     @Builder(builderMethodName = "zBuilder", buildMethodName = "zBuild")
-    public NoArgCommand(LunaPlugin plugin, String appliedCommand, AccessFlag[] flags, String[] permissions, Invocation invocation) {
+    public NoArgCommand(LunaPlugin plugin,
+                        String appliedCommand,
+                        AccessFlag[] flags,
+                        String permissionMessagePath,
+                        String[] permissions,
+                        Invocation invocation) {
         this.plugin = plugin;
         this.appliedCommand = appliedCommand == null ? this.plugin.getName().toLowerCase() : appliedCommand;
         this.flags = Arrays.asList(flags);
         this.invocation = invocation;
+        this.permissionMessagePath = REPLACE_FUNCTION.apply(plugin, appliedCommand, permissionMessagePath);
         this.permissions = Arrays.stream(permissions)
-                .map(p -> p.replace("@", this.plugin.getName().toLowerCase()).replace("#", this.appliedCommand))
+                .map(p -> REPLACE_FUNCTION.apply(plugin, appliedCommand, p))
                 .toList();
     }
 
@@ -48,7 +62,9 @@ public class NoArgCommand implements Invocation {
 
     protected boolean hasPermission(CommandSender sender) {
         if (permissions.stream().noneMatch(sender::hasPermission) && !sender.hasPermission("lunaspring.*")) {
-            sender.sendMessage(LSConfig.getMessage("noPermission"));
+            String path = permissionMessagePath == null || permissionMessagePath.isEmpty() ?
+                    "noPermission" : "subNoPermission." + permissionMessagePath;
+            LSConfig.sendMessage(sender, path);
             return false;
         }
         return true;

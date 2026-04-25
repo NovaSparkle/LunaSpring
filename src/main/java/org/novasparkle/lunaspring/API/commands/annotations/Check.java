@@ -9,6 +9,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
+@Deprecated
 public @interface Check {
     String[] permissions();
     SubCommand.AccessFlag[] flags();

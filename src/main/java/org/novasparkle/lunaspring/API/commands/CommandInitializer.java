@@ -45,6 +45,7 @@ public final class CommandInitializer {
         Class<?> clazz = entry.getClazz();
 
         String[] permissions = new String[] { };
+        String permissionPathMessage = null;
         SubCommand.AccessFlag[] flags = new SubCommand.AccessFlag[] { };
         if (!Invocation.class.isAssignableFrom(clazz))
             throw new InvalidImplementationException(clazz, Invocation.class);
@@ -58,7 +59,9 @@ public final class CommandInitializer {
             Permissions permissionsAnnotation = (Permissions) Utils.find(entry.getAdditionalAnnotations(), a -> a.annotationType().equals(Permissions.class)).orElse(null);
             if (permissionsAnnotation != null) {
                 permissions = permissionsAnnotation.value();
+                permissionPathMessage = permissionsAnnotation.errorMessagePath();
             }
+
             Flags flagsAnnotation = (Flags) Utils.find(entry.getAdditionalAnnotations(), a -> a.annotationType().equals(Flags.class)).orElse(null);
             if (flagsAnnotation != null) {
                 flags = flagsAnnotation.value();
@@ -75,6 +78,7 @@ public final class CommandInitializer {
         NoArgCommand noArgCommand = NoArgCommand.zBuilder()
                 .plugin(lunaPlugin)
                 .appliedCommand(processor.appliedCommand())
+                .permissionMessagePath(permissionPathMessage)
                 .flags(flags)
                 .invocation(commandInstance)
                 .permissions(permissions)
@@ -93,6 +97,7 @@ public final class CommandInitializer {
                 throw new InvalidImplementationException(clazz, Invocation.class);
 
             Check checkAnnotation = (Check) classEntry.getAdditionalAnnotations().stream().filter(a -> a.annotationType().equals(Check.class)).findFirst().orElse(null);
+            String permissionErrorMessagePath = null;
             String[] permissions = new String[] { };
             SubCommand.AccessFlag[] flags = new NoArgCommand.AccessFlag[] { };
             String[] ignoreTabCompleting = new String[] { };
@@ -102,11 +107,14 @@ public final class CommandInitializer {
             if (checkAnnotation != null) {
                 permissions = checkAnnotation.permissions();
                 flags = checkAnnotation.flags();
-            } else {
+            }
+            else {
                 Permissions permissionsAnnotation = (Permissions) Utils.find(classEntry.getAdditionalAnnotations(), a -> a.annotationType().equals(Permissions.class)).orElse(null);
                 if (permissionsAnnotation != null) {
                     permissions = permissionsAnnotation.value();
+                    permissionErrorMessagePath = permissionsAnnotation.errorMessagePath();
                 }
+
                 Flags flagsAnnotation = (Flags) Utils.find(classEntry.getAdditionalAnnotations(), a -> a.annotationType().equals(Flags.class)).orElse(null);
                 if (flagsAnnotation != null) {
                     flags = flagsAnnotation.value();
@@ -126,7 +134,15 @@ public final class CommandInitializer {
                 } else
                     ignoreTabCompleting = tabCompleteIgnore.value();
             }
-            CommandReq commandReq = new CommandReq(permissions, flags, List.of(ignoreTabCompleting), maxArgs, minArgs);
+
+            CommandReq commandReq = new CommandReq(
+                    permissionErrorMessagePath,
+                    permissions,
+                    flags,
+                    List.of(ignoreTabCompleting),
+                    maxArgs,
+                    minArgs
+            );
 
             Invocation commandInstance;
             try {

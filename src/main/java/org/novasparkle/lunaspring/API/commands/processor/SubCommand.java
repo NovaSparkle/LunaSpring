@@ -19,7 +19,7 @@ public class SubCommand extends NoArgCommand {
 
     @Builder
     public SubCommand(LunaPlugin plugin, String appliedCommand, CommandReq commandReq, String[] commandIdentifiers, Invocation invocation, LunaCompleter tabCompleter) {
-        super(plugin, appliedCommand, commandReq.accessFlags(), commandReq.permissions(), invocation);
+        super(plugin, appliedCommand, commandReq.accessFlags(), commandReq.permissionMessagePath(), commandReq.permissions(), invocation);
         this.tabCompleter = tabCompleter;
         this.commandRequirements = commandReq;
         this.commandIdentifiers = List.of(commandIdentifiers);
