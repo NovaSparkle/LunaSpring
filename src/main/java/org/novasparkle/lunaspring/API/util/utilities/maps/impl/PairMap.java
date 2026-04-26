@@ -14,10 +14,6 @@ import java.util.*;
  * @param <V>  тип значения
  */
 public class PairMap<K1, K2, V> implements IPairMap<Pair<K1, K2>, V> {
-
-    private static final int DEFAULT_CAPACITY = 16;
-    private static final float DEFAULT_LOAD_FACTOR = 0.75f;
-    private static final int MAXIMUM_CAPACITY = 1 << 30;
     private static final Object DELETED = new Entry<>(null, null, null);
 
     private Entry<K1, K2, V>[] table;
