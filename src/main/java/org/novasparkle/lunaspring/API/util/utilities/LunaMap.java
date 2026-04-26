@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@SuppressWarnings("unused")
+@SuppressWarnings("unused") @Deprecated
 public class LunaMap<S, E, X> implements Cloneable, Serializable {
     private HashMap<S, Element<E, X>> map = new HashMap<>();
 

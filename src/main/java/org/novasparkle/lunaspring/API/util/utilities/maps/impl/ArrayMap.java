@@ -1,6 +1,7 @@
-package org.novasparkle.lunaspring.API.util.utilities;
+package org.novasparkle.lunaspring.API.util.utilities.maps.impl;
 
 import org.jetbrains.annotations.NotNull;
+import org.novasparkle.lunaspring.API.util.utilities.maps.LunaMap;
 
 import java.util.*;
 
@@ -10,7 +11,7 @@ import java.util.*;
  * @param <K> тип ключей
  * @param <V> тип значений
  */
-public class ArrayMap<K, V> implements Map<K, V> {
+public class ArrayMap<K, V> implements LunaMap<K, V> {
     private static final int DEFAULT_CAPACITY = 8;
     private static final float GROWTH_FACTOR = 1.5f;
 
@@ -40,11 +41,6 @@ public class ArrayMap<K, V> implements Map<K, V> {
     @Override
     public int size() {
         return size;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return size == 0;
     }
 
     @Override

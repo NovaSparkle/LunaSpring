@@ -187,7 +187,7 @@ public class LunaMath {
         return null;
     }
 
-    public @NotNull <T> T getRandom(Set<T> set, @NotNull Supplier<T> returner) {
+    public @NotNull <T> T getRandomIfPresent(Set<T> set, @NotNull Supplier<T> returner) {
         T t = getRandom(set);
         return t == null ? returner.get() : t;
     }
